@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Roadmap"
+  short_description: "Roadmapa greenfield z PRD prosto do GitHuba"
+  default_prompt: "Użyj $raven-roadmap, aby utworzyć roadmapę greenfield z ustalonego PRD i od razu opublikować changes w GitHubie."

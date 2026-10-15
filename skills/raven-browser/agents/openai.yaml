@@ -1,0 +1,6 @@
+interface:
+  display_name: "Raven Browser"
+  short_description: "Testuj zmiany w swoim Brave przez Playwright MCP"
+  default_prompt: "Użyj $raven-browser, aby podłączyć moje Brave przez Playwright MCP i zweryfikować zaimplementowaną funkcjonalność."
+policy:
+  allow_implicit_invocation: true

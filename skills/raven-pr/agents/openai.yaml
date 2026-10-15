@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven PR"
+  short_description: "Publikacja PR z opisem zmian i kompromisów"
+  default_prompt: "Użyj $raven-pr, aby utworzyć lub zaktualizować PR z opisem zmian, linkiem do issue i istotnymi kompromisami niewyjaśnionymi w jego artefaktach."

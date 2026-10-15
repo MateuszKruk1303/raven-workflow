@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Implement"
+  short_description: "Manualny etap Raven z GitHub: Implement"
+  default_prompt: "Użyj $raven-implement dla wskazanego change w GitHubie, zachowując manualny workflow Raven."

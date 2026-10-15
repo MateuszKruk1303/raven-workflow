@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Test Plan"
+  short_description: "Raven Test Plan: jakość i testy z GitHubem"
+  default_prompt: "Użyj $raven-test-plan dla bieżącego projektu Raven i zapisz wynik zgodnie z kontraktem GitHub."

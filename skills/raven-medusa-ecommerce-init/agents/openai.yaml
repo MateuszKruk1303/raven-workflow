@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Medusa Ecommerce Init"
+  short_description: "Medusa + Next.js: kompletny lokalny setup monorepo"
+  default_prompt: "Użyj $raven-medusa-ecommerce-init, aby uruchomić w bieżącym folderze lokalny projekt Medusa + Next.js z Docker Compose i kompletnymi plikami env."

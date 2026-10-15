@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Workflow"
+  short_description: "Mapa skilli, etapów i wznowienia workflow Raven"
+  default_prompt: "Użyj $raven-workflow, aby ustalić stan projektu lub change i właściwy następny krok w trybie manual albo auto."
