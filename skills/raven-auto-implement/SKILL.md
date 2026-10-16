@@ -5,9 +5,11 @@ description: Realizuj lub wznów zatwierdzony plan change z GitHuba przez raven-
 
 # Raven Auto Implement
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 ## Procedury własne
 
-Przed wykonaniem przeczytaj lokalne procedury Raven: [implement](../raven-implement/references/procedures/implement/procedure.md); [impl-review](../raven-implement-review/references/procedures/impl-review/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
+Procedury do odczytu przez wykonawcę właściwej roli (E2E tylko gdy wybrano tę warstwę): [implement](../raven-implement/references/procedures/implement/procedure.md); [impl-review](../raven-implement-review/references/procedures/impl-review/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż ścieżki procedur jego roli oraz kontrakt GH; koordynator nie musi ładować instrukcji wykonawczych innych ról. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
 
 
 Jesteś koordynatorem cyklu: **implementator → niezależny tester → automatyczne poprawki niespełnionych wymagań i ponowne testy → review finalnego kodu → odbiór użytkownika**. Zachowaj mechanikę Raven; dodaj orkiestrację i trwałe przekazanie pracy, zamiast projektować drugi proces implementacji. Nie implementuj ani nie oceniaj własnego kodu w roli koordynatora.
@@ -16,7 +18,7 @@ Jesteś koordynatorem cyklu: **implementator → niezależny tester → automaty
 
 Najpierw przeczytaj [wspólny kontrakt GitHub](../raven-auto-plan/references/github-contract.md). GitHub przechowuje plan, postęp, raporty i decyzje; lokalne pliki Raven są wyłącznie kopiami roboczymi w artifact_dir. Kontrakt ten ma pierwszeństwo w kwestiach transportu i przechowywania.
 
-Przeczytaj wskazane wyżej lokalne procedury oraz ich implementation-discipline.md i progress-format.md. Agentom przekaż rzeczywiste absolutne ścieżki tych plików.
+Implementator czyta procedurę implementacji, implementation-discipline.md i progress-format.md; reviewer procedurę review. Agentom przekaż rzeczywiste absolutne ścieżki tych plików.
 
 Zachowaj z Raven: plan i `change.md`, fazy, `## Progress` jako format postępu (kanoniczne dane w taskach GH), klasyfikację Minor/Structural, preflight bramek, dyscyplinę implementacji, weryfikację i limit prób naprawienia bramki, celowy staging, commity kodu faz (bez epilogu lokalnych artefaktów), sześć wymiarów review, dowody, ważność uwag i zapis raportu. Respektuj instrukcje projektu oraz uzgodniony zakres testów; nie dodawaj E2E ani infrastruktury dlatego, że skill jest używany.
 
@@ -73,7 +75,7 @@ Sprawdź, że HEAD i wymagania nadal odpowiadają zielonemu raportowi testera. Z
 
 Uruchom NOWEGO reviewera bez dziedziczenia rozmowy implementatora. Przekaż mu surowe źródła: wymagania, plan, instrukcje repo, base/reviewed SHA, wcześniejszy raport i decyzje użytkownika. Podsumowanie implementatora jest twierdzeniem do sprawdzenia, nie dowodem poprawności.
 
-Reviewer czyta i wykonuje `raven-implement-review`: analizuje zgodność, zakres, bezpieczeństwo i jakość, architekturę, wzorce oraz kryteria sukcesu. Jawnie nadpisz źródłowy wybór wyłącznie faz z kompletem [x]: review obejmuje WSZYSTKIE dostarczone fazy i cały wskazany diff kodu, także gdy manual checks lub późniejsze testy są oczekujące. Wymień ocenione fazy, a brakujące kontrole/odbiór raportuj oddzielnie bez deklarowania PASS lub pełnego ukończenia planu. Może delegować przewidziane przez Raven odczyty w dostępnych slotach. Nie zmienia kodu, planu, testów ani statusów GitHuba; zapisuje tylko własny raport i wykonuje niezbędną weryfikację bez destrukcyjnych skutków.
+Reviewer czyta i wykonuje `raven-implement-review`: analizuje zgodność, zakres, bezpieczeństwo i jakość, architekturę, wzorce oraz kryteria sukcesu. Zgodnie ze wspólną procedurą review obejmuje WSZYSTKIE dostarczone fazy i cały wskazany diff kodu, także gdy manual checks lub późniejsze testy są oczekujące. Wymień ocenione fazy, a brakujące kontrole/odbiór raportuj oddzielnie bez deklarowania PASS lub pełnego ukończenia planu. Może delegować przewidziane przez Raven odczyty w dostępnych slotach. Nie zmienia kodu, planu, testów ani statusów GitHuba; zapisuje tylko własny raport i wykonuje niezbędną weryfikację bez destrukcyjnych skutków.
 
 Reviewer zwraca raport w artifact_dir, zachowując format i marker raportu Raven. Koordynator publikuje oddzielny komentarz każdej rundy w głównym change issue zgodnie z kontraktem GH. Dodaj ocenione SHA i zakres. Zachowuj ID `F1`, `F2` itd. między rundami; nowe uwagi otrzymują kolejne nieużyte ID. Dla każdej uwagi zachowaj dowód `path:line`, skutek, ważność i konkretną propozycję rozwiązania. Nie wymuszaj liczby uwag.
 

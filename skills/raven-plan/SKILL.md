@@ -5,6 +5,8 @@ description: Przygotuj lub popraw plan change w GitHubie interaktywnie i bez aut
 
 # Raven Plan
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 ## Procedury własne
 
 Przed wykonaniem przeczytaj lokalne procedury Raven: [plan](references/procedures/plan/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
@@ -29,3 +31,9 @@ Zakończ na planie: pokaż zwięzły zakres, decyzje, wersję, link i stan publi
 Po oddaniu implementacji i sprawdzeniu użytkownika, przed PR, workflow wymaga raven-test. Plan wydziela odpowiednie fazy unit/integration/E2E dla tego etapu. Implementacja wykonuje swoje bieżące bramki, lecz nie realizuje odroczonych faz trwałych testów i nie uruchamia raven-test automatycznie. W handoffie wskaż go jako wymagany następny etap przed publikacją PR.
 
 Etap trwałych testów ma dwa warianty: raven-test → osobno raven-test-review (manual) albo raven-auto-test (pisanie, uruchomienie, niezależne review i poprawki wad testów w jednym cyklu). Oba używają tego samego change i źródeł; wybór należy do użytkownika. Samo ukończenie manualnego raven-test nie oznacza ukończenia review testów.
+
+## Przejęcie researchu i architektury
+
+Jeśli przygotowanie rozpoczął `raven-research`, kontynuuj to samo change i jego Preparing. Tożsamość jest już zapewniona; nie twórz drugiego issue ani nie powtarzaj new. Przed wywiadem odczytaj raporty wskazane w indeksie oraz kolejne rundy i decyzje. Porównaj ich wejściowe wymagania, SHA/dowody i dirty state z bieżącym kodem. Ponownie badaj tylko zmienione lub sprzeczne ustalenia; rekomendacji nie traktuj jako decyzji użytkownika.
+
+W planie/briefie podaj research ID/URL, przejęte wnioski, rozstrzygnięcia i pozostałe do weryfikacji ryzyka. Przeczytaj `context/foundation/architecture.md`, jeśli istnieje, i respektuj uzgodnione zasady; propozycje i odroczenia nie są zatwierdzonymi kontraktami. Materiały researchu i architekturę przekaż także delegowanemu planiście/reviewerowi. Sam research nie zastępuje planu, review ani akceptacji użytkownika.

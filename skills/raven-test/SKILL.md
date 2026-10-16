@@ -5,14 +5,16 @@ description: Implementuj i zweryfikuj trwałe testy unit, integration i E2E dla 
 
 # Raven Test
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 ## Procedury własne
 
-Przed wykonaniem przeczytaj lokalne procedury Raven: [implement](../raven-implement/references/procedures/implement/procedure.md); [e2e-setup](references/procedures/e2e-setup/procedure.md); [e2e](references/procedures/e2e/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
+Procedury do odczytu przez wykonawcę właściwej roli (E2E tylko gdy wybrano tę warstwę): [implement](../raven-implement/references/procedures/implement/procedure.md); [e2e-setup](references/procedures/e2e-setup/procedure.md); [e2e](references/procedures/e2e/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż ścieżki procedur jego roli oraz kontrakt GH; koordynator nie musi ładować instrukcji wykonawczych innych ról. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
 
 
 To wykonawca trwałych testów po oddaniu implementacji, przed raven-pr. raven-test-plan ustala strategię; ten skill pisze i uruchamia testy w repo. Nie zastępuj ich raportem browser-review z raven-auto-implement. Etap jest obowiązkowy, ale nie każda zmiana potrzebuje wszystkich trzech warstw ani nowych testów, jeśli istniejące już chronią jej zachowanie.
 
-Przeczytaj [kontrakt GH](../raven-auto-plan/references/github-contract.md) i [adapter](../raven-plan/references/manual-github.md). Wykonuj lokalną procedurę implementacji faz testowych oraz procedury setupu i wykonania E2E wskazane powyżej. Dla już gotowej funkcji nie odtwarzaj implementacji tylko po to, by udawać test-first.
+Przeczytaj [kontrakt GH](../raven-auto-plan/references/github-contract.md) i [adapter](../raven-plan/references/manual-github.md). Wykonuj lokalną procedurę implementacji faz testowych oraz, tylko dla E2E, procedury setupu i wykonania E2E wskazane powyżej. Dla już gotowej funkcji nie odtwarzaj implementacji tylko po to, by udawać test-first.
 
 Przeczytaj i stosuj [kontrakt źródeł i niezależnego review](../raven-test/references/test-review.md) przed przekazaniem pracy autorowi oraz reviewerowi.
 

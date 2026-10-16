@@ -6,11 +6,15 @@ Obowiązkowa część review funkcjonalności dostępnej przez przeglądarkę. W
 
 Koordynator uruchamia NOWEGO testera (`fork_turns="none"` lub odpowiednik), innego niż implementator i reviewer kodu, bez ich transkryptów. Przekazuje pełną treść ticketa/change i kryteriów sub-issues, zaakceptowany snapshot planu, decyzje produktowe, repo/worktree, oceniany SHA, URL aplikacji, sposób startu, dostępne dane testowe, tę instrukcję i absolutną ścieżkę `raven-browser/SKILL.md`. Podsumowanie implementatora nie zastępuje wymagań.
 
-Tester czyta raven-browser i stosuje jego połączenie z istniejącym Brave przez MCP, własną kartę, snapshoty, dobór interakcji i ochronę sesji użytkownika. **W roli testera nie stosuje polecenia raven-browser „Napraw znalezioną regresję”**: nie edytuje kodu, testów, wymagań, konfiguracji ani danych rzeczywistych. Zgłasza problem i kończy scenariusz. Potwierdzone niespełnienie wymagania uruchamia naprawę przez implementatora zgodnie z poniższą pętlą; tester pozostaje niezależny i sam nie naprawia kodu.
+Tester czyta raven-browser i stosuje jego wybór trybu: domyślnie Playwright CLI we własnej nazwanej sesji; Brave przez MCP tylko na wyraźne polecenie lub zgodę użytkownika na użycie przeglądarki. Przy potwierdzonym ograniczeniu CLI tester może przekazać koordynatorowi uzasadnioną prośbę o osobistą przeglądarkę zgodnie z raven-browser; przełączenie wymaga zgody użytkownika. Koordynator przekazuje polecenie lub zgodę, jeśli padły; samo zlecenie browser-review nie wybiera MCP. W obu trybach obowiązują snapshoty, dobór interakcji i ochrona sesji użytkownika. **W roli testera nie stosuje polecenia raven-browser „Napraw znalezioną regresję”**: nie edytuje kodu, testów, wymagań, konfiguracji ani danych rzeczywistych. Zgłasza problem i kończy scenariusz. Potwierdzone niespełnienie wymagania uruchamia naprawę przez implementatora zgodnie z poniższą pętlą; tester pozostaje niezależny i sam nie naprawia kodu.
 
 Przed testem zweryfikuj, że serwer obsługuje wskazany worktree/build i oceniany SHA. Sam dostępny localhost nie wystarcza. Zapisz URL, środowisko, sposób ustalenia wersji i stan danych. Nie restartuj obcych serwerów ani prywatnej przeglądarki bez uprawnienia. Brak narzędzi, logowania, poprawnego serwera lub danych to BLOCKED/NOT VERIFIED, nie PASS. Nie zastępuj wizyty w przeglądarce samym HTTP, analizą kodu lub twierdzeniem implementatora.
 
 Koordynator zamraża kod na czas sprawdzenia przez testera. Techniczny reviewer nie jest jeszcze uruchamiany: jego etap zaczyna się dopiero po potwierdzeniu wszystkich wymagań przez testera. Implementator poprawia kod między przebiegami testera, nigdy równolegle z nimi. Jeden agent steruje wspólną przeglądarką w danym czasie. Jeśli wersja kodu/serwera zmieni się podczas testu, oznacz dotknięte wyniki jako nieaktualne i sprawdź je ponownie na ustalonej wersji.
+
+## Izolacja i sprzątanie
+
+Przed scenariuszem ustal fixture/seed, unikalny identyfikator danych bieżącego przebiegu i sposób cleanup. Używaj środowiska oraz kont testowych. W bloku końcowym usuń wyłącznie własne dane i zamknij własną sesję CLI, także po FAIL; nie resetuj cudzej bazy. Zapisz nieudany cleanup jako blokadę powtarzalności. Nie przenoś storageState ani sekretów osobistej przeglądarki do testów, repo lub raportu.
 
 ## Pokrycie wymagań
 

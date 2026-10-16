@@ -5,6 +5,8 @@ description: "Inicjalizuj lub dokończ lokalne monorepo Medusa + Next.js z oficj
 
 # Raven Medusa Ecommerce Init
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Uruchom kompletne środowisko developerskie w bieżącym katalogu projektu. Domyślnie aplikacje działają na hoście z hot reload, a PostgreSQL i Redis w Docker Compose. Każdy sklep jest osobną aplikacją, repozytorium i zestawem danych. Reużywalny jest ten workflow.
 
 ## Wynik

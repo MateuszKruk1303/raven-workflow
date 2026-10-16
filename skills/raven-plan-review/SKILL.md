@@ -5,6 +5,8 @@ description: Oceń plan change z GitHuba pod kątem wykonalności i zgodności z
 
 # Raven Plan Review
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 ## Procedury własne
 
 Przed wykonaniem przeczytaj lokalne procedury Raven: [plan-review](references/procedures/plan-review/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.

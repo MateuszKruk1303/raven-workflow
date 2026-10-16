@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Create Skill"
+  short_description: "Dopracuj skill i zintegruj go z workflow Raven"
+  default_prompt: "Użyj $raven-create-skill, aby dopracować mój pomysł, stworzyć skill i sprawdzić jego integrację z Raven."

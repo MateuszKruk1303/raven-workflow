@@ -1,25 +1,35 @@
 ---
 name: raven-research
-description: Na zlecenie użytkownika zbadaj pytanie dotyczące change w GitHubie, z dowodami z kodu i źródeł. Zapisz research w komentarzu tego change; osobny etap przed planowaniem, bez automatycznej implementacji.
+description: "Rozpocznij lub wznów badanie zleconego change: zapewnij jego tożsamość w GitHubie, zbadaj kod i źródła oraz zapisz wersjonowany raport dla późniejszego raven-plan lub raven-auto-plan. Bez planu wykonania i implementacji."
 ---
 # Badanie bazy kodu
 
-Uruchamiaj na wyraźne zlecenie użytkownika, nie jako automatyczny krok planowania. Przed odczytem i publikacją przeczytaj [wspólny kontrakt GitHub](../raven-auto-plan/references/github-contract.md); jest częścią tego skilla. Zachowaj poniższą mechanikę badania, zmieniając jedynie wejście i miejsce zapisu.
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
 
-Odpowiedz na pytanie badawcze użytkownika, korzystając z aktualnych ustaleń popartych źródłami. Zachowaj implementację, decyzje produktowe i zmiany cyklu życia poza zakresem badania, chyba że zostaną osobno zażądane.
+Uruchamiaj na wyraźne zlecenie użytkownika, nie jako automatyczny krok planowania. Przed odczytem i publikacją przeczytaj [wspólny kontrakt GitHub](../raven-auto-plan/references/github-contract.md); jest częścią tego skilla. Obowiązuje poniższe wejście do change oraz mechanika badania i publikacji.
+
+Odpowiedz na pytanie badawcze użytkownika, korzystając z aktualnych ustaleń popartych źródłami. Research może oficjalnie rozpocząć przygotowanie change. Nie implementuje, nie zatwierdza planu i nie rozstrzyga za użytkownika wyborów produktowych lub architektonicznych.
 
 ## Zacznij od dostarczonego żądania
 
 Jeśli dostarczono pytanie, change-id lub plik, zacznij od tego kontekstu; nie pytaj ponownie o to samo żądanie. Dla `/raven-research <issue-url|numer|Raven-ID>` przeczytaj opis change i związane komentarze/research/decyzje, aby ustalić pytanie. Poproś o brakujące pytanie tylko wtedy, gdy ani wiadomość, ani te artefakty go nie definiują.
 
-Rozwiąż aktywną zmianę przed jakimikolwiek zapisami. Jawnie zarchiwizowana zmiana jest tylko do odczytu: wyjaśnij, że potrzebna jest nowa zmiana, i zakończ przed zapisem w niej. Jeśli nie wskazano change, ustal jednoznaczne istniejące issue z rozmowy lub zapytaj o cel przed publikacją. Nie twórz nowego change ani lokalnego folderu na podstawie samego tematu.
+## Tożsamość zmiany i rozpoczęcie pracy
+
+Przyjmij istniejący URL/numer issue, Raven ID, „następny change” albo opis nowej zleconej zmiany. Przeczytaj github.json, zweryfikuj repo/Project i odczytaj pełny kontekst: opis, komentarze, raporty, sub-issues, zależności i status. Dla istniejącej tożsamości nie twórz kopii issue. Dla „następnego” użyj Raven Order i zależności. Zamknięte/Done pozostają historyczne; nowe wymaganie po ukończeniu potrzebuje nowego change, bez cichego otwierania starego.
+
+Jeżeli użytkownik zleca research nowej konkretnej zmiany i nie ma jej tożsamości, utwórz change według [kontraktu publikacji](../raven-roadmap/references/github-publication.md): po sprawdzeniu duplikatów w otwartych i zamkniętych issues, marker/ID, zakres, źródła, etykieta, membership i rzeczywiste pola Project. Nie generuj całej roadmapy. Niepewne kryteria opisz jako pytania do rozstrzygnięcia, nie jako zaakceptowane wymagania. Brak poprawnego powiązania GH blokuje publikację, nie niezależne badanie lokalne; nie uruchamiaj setupu samodzielnie.
+
+Samo ogólne pytanie o technologię nie jest zleceniem nowej zmiany. Gdy nie wiadomo, czy pytanie dotyczy konkretnego taska, ustal cel przed tworzeniem issue. Prośba wyłącznie o status lub dyskusję nie upoważnia do mutacji.
+
+Przy rozpoczęciu zleconego badania ustaw Backlog → Preparing (także nowy change), zachowując późniejsze statusy. Preparing oznacza przygotowanie przez research lub planowanie, nie implementację. Przy konkretnej blokadzie opisz potrzebną akcję zgodnie z kontraktem GH; nie ustawiaj Blocked za samą obecność pytań badawczych. Research nie tworzy tasków implementacyjnych, planu, snapshotu planu ani Ready/Done. Zapis zakończonego raportu pozostawia Preparing; dalsze planowanie wymaga zlecenia.
 
 ## 1. Ustal dowody i zakres
 
 - Jeśli użytkownik wspomina konkretne pliki (tickety, dokumenty, JSON), przeczytaj je najpierw W CAŁOŚCI (bez limitu/offsetu)
 - **KRYTYCZNE**: Przeczytaj te pliki samodzielnie w głównym kontekście przed uruchomieniem jakichkolwiek podzadań
 
-Przeczytaj `context/foundation/lessons.md`, jeśli istnieje, i traktuj jego wpisy jako uprzednio znane wzorce podczas kształtowania obszarów badawczych — powtarzające się reguły już zaakceptowane przez zespół zawężają to, co warto ponownie badać.
+Przeczytaj PRD, istotną dokumentację, `context/foundation/architecture.md` i `context/foundation/lessons.md`, jeśli istnieją, i traktuj zaakceptowane wpisy lessons jako uprzednio znane wzorce podczas kształtowania obszarów badawczych — powtarzające się reguły już zaakceptowane przez zespół zawężają to, co warto ponownie badać.
 
 Prowadź zwięzłą listę pytań wymagających odpowiedzi, istniejących dowodów, nierozwiązanych sprzeczności i kolejnych kontroli. Skoncentrowane pytanie może wymagać jednego lokalnego wyszukania; kompleksowy zakres domyślnie wymaga pokrycia każdego uzgodnionego obszaru, delegowanego równolegle (krok 2).
 
@@ -43,9 +53,9 @@ Zakończ, gdy uzgodnione pytania mają wystarczające dowody, a istotne konflikt
 
 ## 4. Zapisz i zweryfikuj artefakt badawczy
 
-Zapisz raport jako oznaczony komentarz w istniejącym change issue, zgodnie z kontraktem GitHub. To autoryzowany output wywołania; nie pytaj osobno o publikację, jeśli użytkownik zlecił research. Nie twórz kanonicznego research.md ani change.md w repo. Nie zmieniaj planu, tasków, statusu Project ani cyklu życia issue. Na tym etapie przeczytaj [references/research-document.md](references/research-document.md), aby poznać format raportu.
+Zapisz raport jako oznaczony komentarz w istniejącym change issue, zgodnie z kontraktem GitHub. To autoryzowany output wywołania; nie pytaj osobno o publikację, jeśli użytkownik zlecił research. Nie twórz kanonicznego research.md ani change.md w repo. Nie zmieniaj planu ani tasków; jedyną zwykłą zmianą statusu jest rozpoczęcie Preparing opisane powyżej. Na tym etapie przeczytaj [references/research-document.md](references/research-document.md), aby poznać format raportu.
 
-Przy pierwszym raporcie nadaj stabilny research ID w ramach change. Kontynuacja aktualizuje ten sam komentarz po sprawdzeniu jego bieżącej wersji, zachowując ludzkie dopiski i wskazując zastąpione wnioski. Oddzielne pytanie badawcze może mieć osobny raport. Odczytaj zapisane body i dodaj/uzupełnij odsyłacz w indeksie kontekstu change. Przy timeout wyszukaj marker przed ponowieniem. Przy braku dostępu przedstaw wynik jako nieopublikowany; nie udawaj zapisu ani nie twórz alternatywnego źródła prawdy.
+Każda opublikowana runda ma kolejny research ID i niezmienny komentarz z markerem `<!-- raven:research change=C-03 research=N -->`. Kontynuacja publikuje nową rundę z linkiem do poprzedniej, wskazuje nowe dowody i zastąpione wnioski; nie nadpisuje wcześniejszego raportu ani ludzkich dopisków. Przed ponowieniem sprawdź marker, aby nie dublować tej samej rundy. Odczytaj zapisane body i dodaj/uzupełnij odsyłacz w indeksie kontekstu change. Przy timeout wyszukaj marker przed ponowieniem. Przy braku dostępu przedstaw wynik jako nieopublikowany; nie udawaj zapisu ani nie twórz alternatywnego źródła prawdy.
 
 Przed publikacją raportu zastosuj kontrole ograniczonych twierdzeń oraz prozy/JSON z tego odwołania. Każde ilościowe lub uniwersalne twierdzenie w prozie wymaga jawnego warunku, kwantyfikatora (dokładnego zbioru, liczby lub „this inspected path”) oraz kotwicy źródłowej. Nie pisz „always”, „never”, „every”, „only” ani „on the first attempt”, chyba że nazwany warunek i sprawdzona ścieżka faktycznie mają taki zakres. Rozstrzygaj każde twierdzenie historyczne osobno: dokument nieaktualny pod względem liczebności może nadal być poprawny w innym polu; pozytywna lista nie jest zbiorem wyłącznym, chyba że źródło tak mówi.
 
@@ -72,9 +82,9 @@ Jeśli host zabrania zapisów, przedstaw badanie i jawny status niezapisania w r
 
 ## 5. Przedstaw ustalenia i obsłuż kontynuacje
 
-Zacznij od odpowiedzi, lokalizacji artefaktu lub stanu niezapisania, decydujących referencji oraz istotnych ograniczeń. Badanie nie oznacza zatwierdzenia planu ani implementacji. Przy przekazaniu do planowania ujawnij rozstrzygnięte fakty, ich źródła, objęte kontrakty oraz nierozwiązane wybory produktowe, aby `/raven-plan i /raven-auto-plan` mógł na nich budować bez ponownego odkrywania.
+Zacznij od odpowiedzi, lokalizacji artefaktu lub stanu niezapisania, decydujących referencji oraz istotnych ograniczeń. Badanie nie oznacza zatwierdzenia planu ani implementacji. Przy przekazaniu do planowania ujawnij rozstrzygnięte fakty, ich źródła, objęte kontrakty oraz nierozwiązane wybory produktowe, aby `raven-plan` lub `raven-auto-plan` budował na nich w tym samym issue bez ponownego odkrywania. Raport wskazuje wejściowe wymagania i ich wersję/hash, SHA kodu i dirty state, zgodność z architecture.md, opcje z rekomendacją i kompromisami, ryzyka, luki oraz pytania wymagające decyzji użytkownika. Zalecenie badacza nie jest zaakceptowaną decyzją. Nie rozpisuj faz implementacji, kontraktów per plik ani Progress; to wynik późniejszego planowania.
 
-Dodaj ustalenia z kontynuacji do tego samego komentarza badawczego, zaktualizuj `last_updated`, `last_updated_by` i `last_updated_note` oraz wskaż wnioski zastąpione przez nowe dowody. Ponownie użyj niezmienionych wyników; zbadaj wyłącznie nowe lub unieważnione pytania. Zachowaj zakres, uprawnienia hosta oraz wszelkie pośrednie edycje dokonane przez ludzi.
+Opublikuj ustalenia z kontynuacji jako nową rundę, z bieżącymi metadanymi, linkiem do poprzedniej i wskazaniem wniosków zastąpionych przez nowe dowody. Ponownie użyj niezmienionych wyników; zbadaj wyłącznie nowe lub unieważnione pytania. Zachowaj zakres, uprawnienia hosta oraz wszelkie pośrednie edycje dokonane przez ludzi.
 ## Brownfield: Deep Focus
 
 Gdy pytanie dotyczy istniejącej funkcji, odczytaj aktualną mapę raven-repo-map z GH, jeśli jest dostępna. Sprawdź jej zakres/SHA i użyj punktów wejścia oraz stref ryzyka do zawężenia pracy; nie traktuj mapy jako dowodu aktualnego zachowania. Brak mapy nie blokuje badania i nie uruchamia automatycznie mapowania całego repo.

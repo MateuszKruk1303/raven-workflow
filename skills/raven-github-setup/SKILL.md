@@ -5,6 +5,8 @@ description: Przygotuj lub uzupełnij prywatne repozytorium GitHub i prywatny Pr
 
 # Raven GitHub Setup
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Przygotuj GitHub jako miejsce roadmapy, changes i tasków projektu. Działa dla greenfield i brownfield. Wynik: **prywatne repozytorium, prywatny GitHub Project, zweryfikowane pola/etykiety oraz powiązanie w `context/foundation/github.json`**. Pełny wynik i następny krok przedstaw w czacie, bez osobnego handoff.md.
 
 Wywołanie setupu upoważnia do utworzenia brakujących zasobów i addytywnego uzupełnienia konfiguracji w jednoznacznie wskazanym celu. Nie pytaj o zgodę na każdą etykietę czy pole. Samo tworzenie lub omawianie tego skilla nie uruchamia setupu.

@@ -33,16 +33,9 @@ Utwórz zadanie: „Przegląd implementacji” z aktywnym statusem „Wczytywani
 1. **Przeczytaj cały plik planu** — bez limitu/offsetu.
 2. **Przeczytaj `context/foundation/lessons.md`, jeśli istnieje**, i użyj zaakceptowanych reguł jako priorytetów podczas skanowania ustaleń — odstępstwo naruszające znaną powtarzającą się regułę jest silniejszym sygnałem niż ogólna uwaga stylistyczna.
 3. **Odczytaj stan kanoniczny z sekcji `## Progress` planu** (zobacz `references/progress-format.md`): ukończenie = `count([x]) / count([ ] + [x])`; bieżąca faza = faza zawierająca pierwsze `- [ ]` (lub ostatnia faza, jeśli wszystko jest ukończone). Przeczytaj także sąsiedni `change.md` dla `status` i `updated`.
-4. **Zakres**: zażądano konkretnej fazy → tylko ta faza; w przeciwnym razie wszystkie fazy, których pola wyboru Progress są w pełni `[x]` (tj. ukończone fazy).
-   Dopasuj opisowe nagłówki `## Phase N:` i `## Faza N:` do Progress według numeru; zachowaj język. Zapisz dokładne numery faktycznie sprawdzonych faz, także dla pełnego przeglądu (który może obejmować wyłącznie ukończone fazy).
+4. **Zakres**: wskazana faza → ta faza i jej zależności; w przeciwnym razie wszystkie dostarczone fazy oraz cały ustalony diff. Oczekujące pola Manual lub późniejsze testy nie wykluczają dostarczonego kodu z review. Wymień dokładne numery ocenionych faz, a niewykonane kontrole raportuj oddzielnie.
 5. **Wyodrębnij** z faz objętych przeglądem: ścieżki plików z „Changes Required”, decyzje architektoniczne, kryteria sukcesu (punkty Automated/Manual w blokach Phase + ich odzwierciedlenie `[ ]`/`[x]` w Progress) oraz listę „What We're NOT Doing” (bariery zakresu).
-6. **Wykrywanie zakresu Git** — co faktycznie się zmieniło:
-   ```bash
-   PLAN_DATE="<YYYY-MM-DD from filename>"
-   git log --oneline --after="${PLAN_DATE}" -- .
-   git diff --name-only $(git log --reverse --after="${PLAN_DATE}" --format="%H" | head -1)^..HEAD 2>/dev/null
-   ```
-   Jeśli zakresu nie da się jednoznacznie określić, użyj jako rozwiązania awaryjnego commitów, których komunikaty odnoszą się do planu/funkcji.
+6. **Zakres Git**: odczytaj zapisane base_sha i reviewed_sha z przekazania/checkpointu GH, zweryfikuj je i odczytaj pełny diff. Nie wyznaczaj bazy z daty dokumentu lub komunikatów commitów. Gdy baza jest nieznana, ustal ją z historią brancha/PR i zgłoś niejednoznaczność przed werdyktem kompletności.
 
 Porównaj listę zmienionych plików z listą plików planu:
 - **W planie I w diffie** → oczekiwana zmiana, zweryfikuj, czy treść odpowiada intencji
@@ -55,7 +48,7 @@ Nie wczytuj wcześniej każdego zmienionego pliku do głównego kontekstu — po
 
 Zaktualizuj status zadania na „Zbieranie dowodów”.
 
-Uruchom jednocześnie **dwóch** równoległych agentów przeglądu. Każdy otrzymuje ukierunkowany kontekst — nie przekazuj pełnego planu obu agentom.
+Świeży reviewer Astra ocenia oba poniższe wymiary. Dodatkowych reviewerów uruchamiaj tylko dla odrębnych istotnych ryzyk lub dużego zakresu; każdy również używa Astry i dostaje wymagania oraz kontrakty potrzebne do swojej oceny. Mała zmiana nie wymaga dwóch kolejnych agentów.
 
 **Agent 1 — Wykrywanie odchyleń od planu** (`general-purpose`)
 
@@ -92,7 +85,7 @@ Zaktualizuj status zadania na „Weryfikowanie kryteriów sukcesu”.
 
 Dla każdej sprawdzanej fazy:
 
-**Automatyczne**: uruchom w shellu każde polecenie z pól wyboru „Automated Verification”. Zapisz polecenie, powodzenie/błąd, rzeczywiste wyjście (skróć, jeśli jest ogromne).
+**Automatyczne**: oceń dowody wszystkich wymaganych kontroli według wspólnej polityki dowodów Raven. Uruchom brakujące, nieaktualne i potrzebne do niezależnego rozstrzygnięcia ryzyk kontrole. Zapisz, co uruchomiono, a co wykorzystano ponownie, wraz z poleceniem, wersją, wynikiem i źródłem dowodu.
 
 **Ręczne**: w sekcji `## Progress` sprawdź elementy Manual jako `- [x]` względem `- [ ]`. Oznacz elementy oznaczone jako ukończone, którym brakuje obserwowalnych dowodów w diffie (możliwe pozorne odhaczenie); uznaj nieodhaczone elementy za oczekujące.
 

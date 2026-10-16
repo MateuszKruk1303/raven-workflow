@@ -1,6 +1,6 @@
 # PRD Schema (canonical reference)
 
-This doc is the single source of truth for the shape of `context/foundation/prd.md` produced by `/raven-prd`, and for the `checkpoint:` block written into `context/foundation/shape-notes.md` by `/raven-shape`. Both skills load this file by relative path (`skills/raven-prd/references/prd-schema.md`) and conform to it.
+This doc defines the schema of `context/foundation/prd.md` produced by `/raven-prd`. The source notes have their own format linked below; they need not use PRD headings or formatting.
 
 Two contracts live here:
 
@@ -142,11 +142,11 @@ Examples:
 
 ## Business Logic
 
-**One sentence first.** A single declarative sentence that captures the domain rule that makes this product non-trivial. If you cannot write this sentence, the product is empty CRUD and the PRD is hollow.
+**Summarize the rule first.** Derive the domain rule from the supplied content, regardless of its input formatting. A simple records product can have valid user value without additional domain logic; when the source explicitly establishes this, state that no additional domain rule applies and preserve the rationale. Do not invent a rule to satisfy the template.
 
 After the one-sentence rule, supporting paragraphs (≤ 3) explain: what inputs the rule consumes (as user-facing inputs, not system components), what its output is, and how the user encounters it in the product flow. Do NOT name the components or actors that *perform* the computation ("the LLM does X", "the SRS library decides Y") — those are downstream architecture choices, not domain rule. State the rule as if the implementation were unknown.
 
-If `/raven-shape` flagged the empty-CRUD anti-pattern and the user accepted the warning, this section still exists with the user's chosen domain rule. If they overrode without choosing one, the section reads `# TODO: domain rule — see Open Questions` and `## Open Questions` carries an entry naming the gap.
+If a necessary domain decision is genuinely missing, use `# TODO: domain rule — see Open Questions` and name the gap. An explicitly justified absence of additional logic is not a missing decision.
 
 ## Access Control
 
@@ -253,43 +253,12 @@ Same structure and rules as greenfield. Numbered list with owner and resolution 
 
 # shape-notes.md checkpoint format
 
-`/raven-shape` writes `context/foundation/shape-notes.md` with a frontmatter `checkpoint:` block that drives resume behavior. The block's shape is fixed; the body of `shape-notes.md` (the captured discussion, draft FRs, draft user stories) is freeform and may evolve.
-
-```yaml
----
-project: <string|null>                     # mirrors PRD frontmatter; null until phase 1 lands
-context_type: <enum>                       # greenfield | brownfield — set during Step 0.7, load-bearing for /raven-prd routing
-created: <YYYY-MM-DD>
-updated: <YYYY-MM-DD>                      # bumped at every phase-end write
-checkpoint:
-  current_phase: <integer>                 # 1..6 during a session, 7 during cross-check, 8 when finalized
-  phases_completed: [<integer>, ...]       # e.g. [1, 2, 3]
-  gray_areas_resolved:                     # list of decisions surfaced and resolved
-    - topic: <string>                      # e.g. "auth strategy"
-      decision: <string>                   # e.g. "passwordless email; no social"
-  frs_drafted: <integer>                   # count of FR-NNN entries currently in shape-notes.md
-  quality_check_status: <enum>             # pending | warned | accepted
----
-```
-
-`current_phase` semantics:
-
-- `1..6` — discovery phases (Vision, Persona & Access, MVP, FRs, Business logic & Data, Stack openness).
-- `7` — closing cross-check in progress.
-- `8` — finalized; ready for `/raven-prd`.
-
-`quality_check_status` semantics:
-
-- `pending` — cross-check not yet run.
-- `warned` — cross-check ran, gaps surfaced, user accepted override. The body lists gaps under `## Quality cross-check` so `/raven-prd` can mirror them into `## Open Questions`.
-- `accepted` — cross-check ran, no gaps.
-
-On re-entry, `/raven-shape` reads `current_phase` and `phases_completed` and resumes at the next unfinished phase. The skill MUST NOT replay completed phases on resume — only summarize them.
+The canonical input format is [raven-shape notes](../../raven-shape/references/shape-notes.md). Read it when interpreting a checkpoint; do not maintain a second schema here. The default path is `context/foundation/shape-notes.md`. Preserve existing history and accept explicitly supplied legacy/raw notes without automatic migration.
 
 # How `/raven-shape` and `/raven-prd` use this doc
 
-- `/raven-shape` auto-detects context type (greenfield vs brownfield) and writes `context_type` into shape-notes.md frontmatter. It produces `shape-notes.md` whose body anticipates the PRD sections (10 for greenfield, 11 for brownfield); it captures decisions in the order PRD will need them. For brownfield, the body includes `## Current System` and `## Constraints & Preserved Behavior` sections. It writes the `checkpoint:` block per the format above and validates `quality_check_status` is set before signaling done. Forward-looking notes for downstream chain steps (tech-stack-selection / stack-assessment, longer-term technical roadmap) may live in `shape-notes.md` body under explicitly-named blocks — but they are NOT part of the PRD schema and do not flow into PRD frontmatter or sections.
-- `/raven-prd` reads `shape-notes.md` (or a user-supplied notes file), determines `context_type` from frontmatter (or auto-detects from cwd if absent), maps captured content into the correct section list (10 greenfield / 11 brownfield) in order, and routes any captured gaps verbatim into `## Open Questions`. Frontmatter fields it cannot fill from input become `# TODO: <field-name> — see Open Questions` placeholders, and a matching numbered entry lands in `## Open Questions`. Content that sits outside the PRD schema (forward-looking notes for downstream chain steps) is summarized into the hand-off message — it is NOT copied into PRD.
+- Shape captures decisions and gaps in the user's language. Its topics and headings need not match PRD sections. `checkpoint.status` describes the discovery session, not proof of requirements completeness.
+- PRD reads those notes, uses a resolved greenfield/brownfield context, preserves FR IDs and sources, and maps their meaning to the 10/11 sections defined above. Necessary missing decisions go into Open Questions; justified non-applicability remains explicit. Technical context outside this schema is retained in source notes and identified in the handoff to raven-workflow.
 
 # Drift detection
 

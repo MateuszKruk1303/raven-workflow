@@ -5,6 +5,8 @@ description: Utwórz lub zaktualizuj PR dla change Raven z opisem rzeczywistych 
 
 # Raven PR
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Na zlecenie użytkownika opublikuj PR. To krok publikacji, nie dodatkowy etap review ani weryfikacji gotowości. Decyzja o momencie utworzenia PR należy do użytkownika; nie wymagaj formalnego zakończenia wcześniejszych etapów, raportu testera, akceptacji review ani zielonego CI.
 
 Przeczytaj [wspólny kontrakt GitHub](../raven-auto-plan/references/github-contract.md) w zakresie tożsamości change, zapisu i powiązań. Wywołanie obejmuje zwykły push gałęzi zmiany oraz utworzenie/aktualizację PR. Nie oznacza merge, deploya ani zmiany statusów Project.

@@ -11,7 +11,9 @@ description: >
 ---
 # PRD: Generowanie context/foundation/prd.md z shape-notes
 
-Ta umiejętność jest drugim ogniwem w łańcuchu bootstrapowania. Dla greenfield: `/raven-shape → /raven-prd → tech-stack-selector → bootstrapper`. Dla brownfield: `/raven-shape → /raven-prd → stack-assess → health-check`. Jej jedyne zadanie: wziąć plik ukształtowanych notatek i wygenerować `context/foundation/prd.md`, który jest zgodny z zablokowanym schematem PRD, kierując każdą lukę do `## Open Questions` zamiast wymyślać treść.
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
+Ta umiejętność jest drugim ogniwem w łańcuchu bootstrapowania. Kolejność dalszych etapów określa raven-workflow. Jej jedyne zadanie: wziąć plik ukształtowanych notatek i wygenerować `context/foundation/prd.md`, który jest zgodny z zablokowanym schematem PRD, kierując każdą lukę do `## Open Questions` zamiast wymyślać treść.
 
 Umiejętność automatycznie kieruje do poprawnego szablonu na podstawie `context_type` w danych wejściowych:
 - **greenfield** → 10-sekcyjny szablon PRD (produkt budowany od podstaw)
@@ -30,9 +32,7 @@ Zablokowany schemat, z którym zgodna jest ta umiejętność, znajduje się w `r
 ## Relacja z innymi umiejętnościami
 
 - `/raven-shape` — tworzy `shape-notes.md`, kanoniczne dane wejściowe. Zawsze preferowany etap poprzedzający tę umiejętność.
-- `tech-stack-selector` — dalszy konsument `prd.md` dla **greenfield**. Odczytuje frontmatter na poziomie produktu jako priory i prowadzi własny dodatkowy wywiad dotyczący składu zespołu, preferencji językowych, wdrożenia oraz kształtu CI/CD.
-- `stack-assess` — dalszy konsument `prd.md` dla **brownfield**. Ocenia istniejący stack względem bramek jakości przyjaznych agentom.
-- `/frame`, `/plan` — niezwiązane; PRD jest artefaktem fundamentowym, a nie planem dla pojedynczej zmiany.
+- Dalszy routing: [raven-workflow](../raven-workflow/SKILL.md), w tym GitHub, roadmapa i architektura. Zachowaj istniejący stack w brownfield.
 
 ## Początkowa odpowiedź
 
@@ -79,7 +79,7 @@ Określ, czy wygenerować PRD greenfield, czy brownfield:
 1. **Jeśli dane wejściowe mają `context_type:` w frontmatter** — użyj tej wartości bezpośrednio. Potwierdzenie nie jest potrzebne.
 2. **Jeśli w frontmatter nie ma `context_type:`** (surowe notatki, wklejone dane wejściowe) — automatycznie wykryj na podstawie cwd:
 
-   Użyj tego samego wykrywania wielosygnałowego co `/raven-shape` (Krok 0.7): sprawdź historię git (Tier 1), lockfiles (Tier 2), pliki manifestów (Tier 3) oraz dodatkowe sygnały (katalogi źródłowe, konfiguracje frameworków). Każde trafienie Tier 1 lub Tier 2 → zaproponuj brownfield. Tylko Tier 3 → zaproponuj brownfield z flagą niejednoznaczności. Brak sygnałów → zaproponuj greenfield.
+   Oceń intencję i rzeczywisty stan produktu na podstawie README, kodu i historii. Sam starter, lockfile lub manifest nie oznacza brownfield. Przy niejednoznaczności zapytaj o nowy produkt albo zmianę istniejącego.
 
    Zapytaj użytkownika:
 
@@ -92,60 +92,13 @@ Zapisz rozstrzygnięty `context_type` do użycia w Krokach 2 i 3. Przejdź do Kr
 
 ### Krok 2: Oceń dane wejściowe
 
-Oceń dane wejściowe według heurystyki 0–4 ukształtowane-vs-ubogie. Każdy sygnał daje 1 punkt:
+Oceń znaczenie treści, nie zgodność nagłówków lub formatowanie Markdown. Akceptuj polskie i angielskie sekcje, wymagania FR w tabelach lub listach oraz obserwowalne scenariusze bez pogrubionego Given/When/Then. Zachowaj istniejące ID i źródła wymagań.
 
-**Sygnały greenfield:**
-
-1. **Obecny blok frontmatter `checkpoint:`** — najsilniejszy sygnał, że dane pochodzą z `/raven-shape`. Poszukaj dosłownego klucza `checkpoint:` wewnątrz ogrodzenia YAML frontmatter na początku pliku.
-2. **Co najmniej jedno wymaganie w formacie FR-NNN** — użyj grep dla `^- FR-\d{3}: ` (wypunktowany wiersz, trzycyfrowy indeks dopełniony zerami, dwukropek-spacja).
-3. **Co najmniej jeden blok Given/When/Then** — użyj grep dla `\*\*Given\*\*` ORAZ `\*\*When\*\*` ORAZ `\*\*Then\*\*` w dowolnym miejscu treści.
-4. **Jawne uchwycenie logiki biznesowej** — istnieje sekcja `## Business Logic` ORAZ jej pierwszy niepusty wiersz jest pojedynczym zdaniem oznajmującym (heurystyka: ≤ 200 znaków, kończy się `.`, nie jest równy `# TODO: domain rule — see Open Questions` i nie jest pusty/placeholderem).
-
-**Sygnały brownfield** (zastępują sygnał 1, gdy `context_type: brownfield`):
-
-1. **Obecny blok frontmatter `checkpoint:` ORAZ `context_type: brownfield`** — najsilniejszy sygnał, że dane pochodzą z `/raven-shape` w trybie brownfield. Sprawdź także sekcję `## Current System` w treści.
-2–4. Tak samo jak dla greenfield.
-
-Oblicz sumę. Jawnie udokumentuj heurystykę w rozmowie, aby przyszły opiekun mógł ją dostroić:
-
-```
-Input assessment (heuristic, 4 signals, 1 point each):
-  [✓|✗] Frontmatter checkpoint block       — <found|missing>
-  [✓|✗] FR-NNN format requirements         — <found N FRs|missing>
-  [✓|✗] Given/When/Then user stories       — <found|missing>
-  [✓|✗] Explicit one-sentence business rule — <found|missing>
-
-  Score: <N>/4
-```
-
-**Wynik ≥ 2**: dane wejściowe są wystarczająco ukształtowane; przejdź cicho do Kroku 3.
-
-**Wynik < 2**: uruchom ostrzeżenie o ubogich danych wejściowych. Nazwij jawnie każdy brakujący sygnał (NIE wypisuj ogólnego „twoje notatki są ubogie” — nazwij, czego brakuje i dlaczego to ważne):
-
-```
-This input scored <N>/4 on the shape heuristic. Missing signals:
-
-  - <signal name>: <one-line consequence for the generated PRD>
-  - ...
-
-A PRD generated from thin input will have many `# TODO` placeholders and a long
-`## Open Questions` section. That's a valid intermediate state, but if you have
-time to run /raven-shape first, the resulting PRD will be substantially stronger.
-```
-
-Następnie zapytaj użytkownika:
-
-**Ubogie dane wejściowe** Jak chcesz kontynuować?
-
-- **Najpierw uruchom /raven-shape (Zalecane)**: Zatrzymaj się tutaj. Użyj `/raven-shape`, aby uzupełnić brakujące sygnały, a następnie ponownie wywołaj `/raven-prd`.
-- **Mimo to kontynuuj**: Wygeneruj PRD na podstawie tego, co jest. Brakujące elementy trafią dosłownie do `## Open Questions`.
-- **Anuluj**: Zakończ bez zmian.
-
-Po wybraniu „Najpierw uruchom /raven-shape”: wypisz komunikat przekierowania i ZATRZYMAJ SIĘ. Po wybraniu „Mimo to kontynuuj”: przejdź do Kroku 3 z zapisanym `score < 2`, aby późniejsze kroki wiedziały, że należy oczekiwać TODOs. Po wybraniu „Anuluj”: ZATRZYMAJ SIĘ.
+Sprawdź problem/odbiorcę, zakres, wymagania i kryteria, reguły biznesowe (albo uzasadnione nie dotyczy), ograniczenia oraz w brownfield obecny system i zachowania do zachowania. Checkpoint pomaga wznowić pracę, lecz nie dowodzi kompletności. Każdą rzeczywistą lukę wraz z konsekwencją przenieś do Open Questions. Gdy użytkownik zlecił szkic z niepełnych notatek, wykonaj go bez ponownego pytania o tę samą zgodę. Pytaj tylko o decyzje konieczne do ustalenia zakresu; nie wymyślaj treści.
 
 ### Krok 3: Wygeneruj PRD
 
-Przeczytaj referencję schematu W CAŁOŚCI jeszcze raz (`references/prd-schema.md`), aby potwierdzić, że lista pól i nazwy sekcji nie uległy zmianie.
+Użyj przeczytanego schematu `references/prd-schema.md`; ponów odczyt tylko gdy zmienił się plik lub nie masz jego treści.
 
 Najpierw zbuduj zawartość PRD **w pamięci** (jeszcze nie na dysku):
 
@@ -161,7 +114,7 @@ Wypełnij każde wymagane pole frontmatter zgodnie ze schematem:
 - `product_type` — pobierz z danych wejściowych, jeśli dostępne; w przeciwnym razie `# TODO: product_type — see Open Questions` (i dodaj wpis Open Question).
 - `target_scale`, `timeline_budget` — ta sama zasada. Jeśli dane wejściowe zawierają pole, skopiuj je dosłownie; jeśli nie, wygeneruj `# TODO: <field> — see Open Questions` i dodaj pasujące Open Question. Dla brownfield `timeline_budget` używa `delivery_weeks` zamiast `mvp_weeks`.
 
-**NIE wypełniaj** `team_profile`, `tech_preferences` ani `deployment_constraint` we frontmatter PRD, nawet gdy notatki wejściowe je zawierają. Pola te są zbierane przez dalszy etap wyboru tech-stack (greenfield) lub oceny stacku (brownfield), a nie przez PRD. Jeśli dane wejściowe je zawierają, podsumuj je w komunikacie przekazania Kroku 5 pod „forward to tech-stack/stack-assess”, aby użytkownik wiedział, że treść jest kierowana dalej, a nie po cichu odrzucana — ale NIE umieszczaj ich we frontmatter PRD.
+**NIE wypełniaj** `team_profile`, `tech_preferences` ani `deployment_constraint` we frontmatter PRD, nawet gdy notatki wejściowe je zawierają. Pola te są zbierane przez dalszy etap wyboru tech-stack (greenfield) lub oceny stacku (brownfield), a nie przez PRD. Jeśli dane wejściowe je zawierają, podsumuj je w komunikacie przekazania Kroku 5 pod „kontekst do architektury i planowania Raven”, aby użytkownik wiedział, że treść jest kierowana dalej, a nie po cichu odrzucana — ale NIE umieszczaj ich we frontmatter PRD.
 
 Nazwy kluczy pól są zgodnie ze schematem nośne. Wartości pól nie są.
 
@@ -221,7 +174,7 @@ Jeśli shape-notes.md zawierał blok `## Quality cross-check` (z Kroku 7 `/raven
 - `## Constraints & Compatibility` jest mapowane z sekcji `## Constraints & Preserved Behavior` w shape-notes.
 - Konwencja ujęcia różnicowego: sekcje opisują to, co się zmienia, a nie cały system. „The auth model adds Google OAuth alongside existing email login” — a nie „The system supports email login and Google OAuth.”
 
-**Twarda zasada — nigdy nie wymyślaj**: jeśli dane wejściowe nie zawierają jednolinijkowej reguły biznesowej, sekcja `## Business Logic` / `## Business Logic Changes` MUSI zawierać `# TODO: domain rule — see Open Questions`, a Open Questions MUSZĄ zawierać „What is the one-sentence business rule? — TBD by user. Block: yes (PRD is hollow until resolved).” Nie wpisuj zastępczej reguły. Nie „ekstrapoluj” reguły z nazw encji pojawiających się w FRs lub User Stories. Cały sens tej umiejętności polega na ujawnianiu luk, a nie ich maskowaniu.
+**Twarda zasada — nigdy nie wymyślaj**: odtwórz regułę z treści wejściowej niezależnie od liczby zdań i formatowania. Jeśli źródło jawnie uzasadnia brak reguły lub brak zmiany domenowej, zapisz to zgodnie ze schematem. Rzeczywisty brak potrzebnej decyzji oznacz `# TODO: domain rule — see Open Questions` z konkretnym pytaniem; nie ekstrapoluj reguł z nazw encji.
 
 Ta sama zasada dotyczy: kryteriów sukcesu, historyjek użytkownika, priorytetów FR, celów NFR, kontroli dostępu, non-goals. Jeśli czegoś nie ma w danych wejściowych, trafia to do Open Questions.
 
@@ -324,50 +277,7 @@ Po zapisaniu podsumuj, co zostało utworzone:
 ═══════════════════════════════════════════════════════════
 ```
 
-Następnie skopiuj polecenie kolejnego kroku do schowka i ogłoś:
-
-**Greenfield:**
-
-```bash
-echo -n "/tech-stack-selector" | pbcopy 2>/dev/null || echo -n "/tech-stack-selector" | clip.exe 2>/dev/null || echo -n "/tech-stack-selector" | xclip -selection clipboard 2>/dev/null || true
-```
-
-```powershell
-# PowerShell (Windows)
-Set-Clipboard "/tech-stack-selector"
-```
-
-```
-► Next:   /tech-stack-selector  (✓ copied to clipboard)
-
-          It picks up team composition, language preferences,
-          technology avoid-list, deployment target, and CI/CD
-          pipeline shape. None of those are in this PRD by design —
-          the PRD describes the product, the next step describes
-          how to build it.
-```
-
-**Brownfield:**
-
-```bash
-echo -n "/stack-assess" | pbcopy 2>/dev/null || echo -n "/stack-assess" | clip.exe 2>/dev/null || echo -n "/stack-assess" | xclip -selection clipboard 2>/dev/null || true
-```
-
-```powershell
-# PowerShell (Windows)
-Set-Clipboard "/stack-assess"
-```
-
-```
-► Next:   /stack-assess  (✓ copied to clipboard)
-
-          It evaluates your existing stack against agent-friendly
-          quality gates and produces a compensation plan. After that,
-          /health-check audits dependency health, test suite,
-          and CI/CD coverage. None of those are in this PRD by
-          design — the PRD describes WHAT changes, the next steps
-          assess WHETHER your existing system is ready.
-```
+Wskaż następny etap zgodnie z raven-workflow i rzeczywistym stanem projektu: dla nowego produktu przygotowanie GitHuba/roadmapy i architektury, dla brownfield przygotowanie właściwego change. Nie uruchamiaj kolejnego etapu ani nie nadpisuj schowka. Przy pliku wersjonowanym przekaż jego dokładną ścieżkę; nie zakładaj, że konsumenci wybiorą go zamiast prd.md.
 
 Jeśli notatki wejściowe zawierały przyszłościowe kwestie (preferencje tech-stack, notatki implementacyjne, wskazówki wdrożeniowe), wymień je krótko, aby użytkownik wiedział, że są kierowane do następnego kroku, a nie odrzucane:
 
@@ -382,7 +292,7 @@ ZATRZYMAJ SIĘ. Nie łącz automatycznie z inną umiejętnością.
 
 ## Krytyczne zabezpieczenia
 
-1. **Generator, nie autor.** Ta umiejętność zapisuje całe pliki z danych wejściowych już zatwierdzonych przez użytkownika. Nie wymyśla logiki biznesowej, kryteriów sukcesu, historyjek użytkownika ani priorytetów FR. Brakująca treść trafia dosłownie do `## Open Questions`. Sekcja `## Business Logic` PRD jest obszarem najbardziej rygorystycznie kontrolowanym: jeśli w danych wejściowych nie ma jednolinijkowej reguły, sekcja zawiera `# TODO: domain rule — see Open Questions`. Bez wyjątków.
+1. **Generator, nie autor.** Ta umiejętność zapisuje całe pliki z danych wejściowych już zatwierdzonych przez użytkownika. Nie wymyśla logiki biznesowej, kryteriów sukcesu, historyjek użytkownika ani priorytetów FR. Brakująca treść trafia dosłownie do `## Open Questions`. Sekcja `## Business Logic` PRD jest obszarem najbardziej rygorystycznie kontrolowanym: odtwórz znaczenie reguł ze źródła albo udokumentowany brak ich zastosowania; rzeczywistą lukę oznacz TODO i Open Questions.
 
 2. **Schemat jest kontraktem.** `references/prd-schema.md` definiuje klucze frontmatter, nazwy sekcji i kolejność sekcji. Czytaj go ponownie przy każdym wywołaniu. Ponownie waliduj PRD w pamięci względem niego w Kroku 3c przed zapisem. Dryf między tą umiejętnością a schematem jest trybem awarii, któremu ta umiejętność ma zapobiegać.
 
@@ -396,7 +306,7 @@ ZATRZYMAJ SIĘ. Nie łącz automatycznie z inną umiejętnością.
    - **Element interfejsu w NFRs** — `spinner`, `progress bar`, `streaming response`, `modal`, `toast`. NFRs określają jakość obserwowalną dla użytkownika (np. „continuous feedback during long operations”); element interfejsu jest kwestią dalszego etapu.
    - **Transport / protokół** — `WebSocket`, `gRPC`, `GraphQL`, `REST endpoint`, `webhook`, `SSE`. PRD opisuje przepływ informacji tak, jak doświadcza go użytkownik, a nie format transmisji.
 
-   Frontmatter PRD dotyczy wyłącznie poziomu produktu (`product_type`, `target_scale`, `timeline_budget` + metadane); rodzina języków, frameworki, wdrożenie, profil zespołu i wszelkie listy technologii do uniknięcia należą do dalszego kroku (tech-stack-selector dla greenfield, stack-assess dla brownfield), a NIE do PRD. Jeśli dane wejściowe zawierają szczegóły implementacyjne nieobjęte powyższym wyjątkiem inspiracji lub wymaganej integracji, pozostaw je w blokach `## Forward: ...` shape-notes do wykorzystania przez dalszy etap — NIE przenoś go do frontmatter ani sekcji PRD. Wyjątek: brownfield `## Current System Overview` może wymieniać istniejący stack i dostawców, ponieważ opisuje stan obecny, a nie wybór stacku. Kontrola treści Kroku 3c uwzględnia znaczenie nazwy i źródło decyzji, zamiast blokować zapis wyłącznie na podstawie słowa.
+   Frontmatter PRD dotyczy wyłącznie poziomu produktu (`product_type`, `target_scale`, `timeline_budget` + metadane); rodzina języków, frameworki, wdrożenie, profil zespołu i wszelkie listy technologii do uniknięcia należą do dalszego kroku (zgodnie z raven-workflow), a NIE do PRD. Jeśli dane wejściowe zawierają szczegóły implementacyjne nieobjęte powyższym wyjątkiem inspiracji lub wymaganej integracji, pozostaw je w blokach `## Forward: ...` shape-notes do wykorzystania przez dalszy etap — NIE przenoś go do frontmatter ani sekcji PRD. Wyjątek: brownfield `## Current System Overview` może wymieniać istniejący stack i dostawców, ponieważ opisuje stan obecny, a nie wybór stacku. Kontrola treści Kroku 3c uwzględnia znaczenie nazwy i źródło decyzji, zamiast blokować zapis wyłącznie na podstawie słowa.
 
 4. **Kolizje sprzyjają historii.** Monit o kolizji zaleca zapis wersjonowany (`prd-vN.md`) zamiast nadpisania. Utracone wcześniejsze wersje są nieodwracalnym trybem awarii; zduplikowany plik w `context/foundation/` nie jest.
 
@@ -404,11 +314,11 @@ ZATRZYMAJ SIĘ. Nie łącz automatycznie z inną umiejętnością.
 
 6. **Wyłącznie uniwersalny język.** Bez brandingu autorów, kursów, społeczności i programów certyfikacyjnych w danych wyjściowych ani artefaktach zapisywanych na dysk. Ta umiejętność jest ogólnym generatorem PRD.
 
-7. **Nigdy nie łącz automatycznie.** Przekazanie jest ogłoszeniem, a nie wywołaniem. Użytkownik wybiera, kiedy (i czy) uruchomić następny krok (tech-stack-selector dla greenfield, stack-assess dla brownfield). Automatyczne łączenie pominęłoby przegląd wygenerowanego PRD przez człowieka.
+7. **Nigdy nie łącz automatycznie.** Przekazanie jest ogłoszeniem, a nie wywołaniem. Użytkownik wybiera, kiedy (i czy) uruchomić następny krok (zgodnie z raven-workflow). Automatyczne łączenie pominęłoby przegląd wygenerowanego PRD przez człowieka.
 
 ## Uwagi
 
 - To jest umiejętność **generatora dokumentów**. Wynikiem jest `context/foundation/prd.md` (lub `prd-vN.md`), kropka.
 - Referencja schematu (`references/prd-schema.md`) jest jedynym źródłem prawdy. Każda nazwa pola, nazwa sekcji lub klucz frontmatter wspomniany w tym tekście MUSI istnieć w dokumencie schematu — jeśli nie istnieje, najpierw popraw dokument schematu.
-- Heurystyka ubogich danych wejściowych (Krok 2) jest celowo konserwatywna. Fałszywie pozytywne wyniki (ostrzeżenie dla ukształtowanych danych wejściowych) można naprawić przez nadpisanie „Proceed anyway”; fałszywie negatywne wyniki (ciche generowanie z ubogich danych wejściowych) tworzą puste PRD, które wprowadzają użytkownika w błąd. Dostrajać heurystykę w stronę częstszych, a nie rzadszych ostrzeżeń.
-- Wzorzec `# TODO: <field-name> — see Open Questions` jest nośny. Narzędzia dalszych etapów (umiejętności przeglądu, tech-stack-selector / stack-assess) mogą użyć grep dla `^# TODO: `, aby policzyć nierozstrzygnięte luki i zdecydować, czy PRD jest gotowy do przeglądu.
+- Oceniaj kompletność treści semantycznie; zgłaszaj konkretne luki, nie brak wybranego formatowania.
+- Wzorzec `# TODO: <field-name> — see Open Questions` jest nośny. Narzędzia dalszych etapów (umiejętności przeglądu, architektury i planowania Raven) mogą użyć grep dla `^# TODO: `, aby policzyć nierozstrzygnięte luki i zdecydować, czy PRD jest gotowy do przeglądu.

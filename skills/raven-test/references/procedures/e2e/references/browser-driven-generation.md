@@ -1,6 +1,8 @@
 # Browser-Driven Generation — Plan and Generate the Test Yourself
 
-You explore the running app with `playwright-cli` (`open`, `snapshot`,
+Select the tool using [tool-wiring.md](../../e2e-setup/references/tool-wiring.md), which delegates the choice to raven-browser. The default is Playwright CLI; MCP requires an explicit user request or approval to use the browser. For exceptional CLI limitations, follow the escalation rule in raven-browser via tool-wiring.md.
+
+In CLI mode, you explore the running app with `playwright-cli` (`open`, `snapshot`,
 `click <ref>`, `fill`, `press`; snapshots are files on disk) and play **both
 roles**: you *plan* the flow from what the app actually renders, then you
 *generate* one spec from what the browser actually exposed. You don't delegate to
@@ -17,8 +19,7 @@ GENERATE  →  execute each step live in the browser, write one spec from the ru
 ## Driving the browser with `playwright-cli`
 
 `playwright-cli` is a shell command, so it works in any agent that can run one.
-`/raven-test` installs it and wires it into your agent; `playwright-cli --help`
-lists every command. It drives an app that is already running: start the build +
+Use the existing CLI or the non-global `npx -y @playwright/cli` invocation described in tool-wiring.md; `/raven-test` does not install a global CLI or additional agent skills. Read `--help` for the available commands. It drives an app that is already running: start the build +
 preview in the background on the base URL's port first (the app `webServer`
 entry's commands), and stop it before you run Playwright, so `webServer` owns the
 server during VERIFY. The core loop:
@@ -54,13 +55,9 @@ Use a named session per project (`-s=<repo-name>` on every command, e.g. `playwr
 - The tool surface stays out of your context, so a scenario costs far fewer tokens
   than driving the browser through a tool-per-action server.
 
-If your tool has no shell but has a Playwright MCP server, the same steps apply
-through its browser tools (navigate, snapshot, click, type, wait). If neither is
-available, fall back to the prompt-template path (`e2e-prompt-template.md`) and
-write the spec from your reading of the app.
+When the user explicitly selected the browser/MCP mode, apply the same steps through its browser tools (navigate, snapshot, click, type, wait). Missing CLI or shell access does not authorize that switch. For a confirmed CLI limitation preventing a reliable test, you may request user approval under raven-browser’s exceptional escalation rule; wait for approval before switching. Report unavailable exploration as BLOCKED/NOT VERIFIED.
 
-Either way you produce the same artifact: a spec authored from the
-**accessibility tree** the app actually rendered.
+You may still draft a spec from the prompt-template path (`e2e-prompt-template.md`) and the source code when the parent procedure permits it. Mark it as code-based, not browser-observed; it does not satisfy a required live exploration step. Execute it with the project runner before reporting a test result. Browser-driven generation produces a spec from the **accessibility tree** the app actually rendered.
 
 ## Why the accessibility tree changes everything
 

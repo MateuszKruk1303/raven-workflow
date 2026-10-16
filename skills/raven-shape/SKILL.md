@@ -5,13 +5,15 @@ description: "Dopracuj pomysł na nowy produkt lub znaczącą zmianę istniejąc
 
 # Raven Shape
 
-Przeprowadź użytkownika od pomysłu do notatek pozwalających napisać PRD. Wynik: `context/pilot/shape-notes.md`, zgodny z wejściem `$raven-pilot-prd`. To pełniejsze odkrywanie produktu niż krótki wywiad `$raven-pilot-shape`; oba skille pracują na tym samym dokumencie. Utrzymuj jeden kanoniczny dokument notatek.
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
+Przeprowadź użytkownika od pomysłu do notatek pozwalających napisać PRD. Wynik: `context/foundation/shape-notes.md`, zgodny z wejściem `$raven-prd`. Jawnie wskazane starsze notatki można wykorzystać jako źródło, bez automatycznego przenoszenia historii. Utrzymuj jeden kanoniczny dokument notatek.
 
 ## Start i wznowienie
 
 1. Przeczytaj lokalne instrukcje oraz podany opis lub pliki. Zachowaj pierwotny opis i jego źródło. Sprawdź istniejące notatki, PRD i README; wcześniejsze dokumenty spoza tego etapu traktuj jako źródła do odczytu, bez automatycznej migracji ani modyfikowania.
 2. Rozpoznaj greenfield albo brownfield z intencji i zawartości projektu. Sam manifest startera nie oznacza istniejącego produktu. Przy brownfield sprawdź tylko kod i dokumenty potrzebne do zrozumienia zmiany; rozróżnij zachowanie zaobserwowane od deklarowanego.
-3. Jeśli brakuje `context/pilot/`, utwórz potrzebny katalog. Pełny szkielet można przygotować przez `$raven-seed`, ale nie jest to bramka ani obowiązkowe osobne wywołanie.
+3. Jeśli brakuje `context/foundation/`, utwórz tylko potrzebny katalog.
 4. Przeczytaj całe istniejące `shape-notes.md` i [format notatek](references/shape-notes.md). Wznów od checkpointu; jeśli wcześniejsze notatki nie mają checkpointu, ustal postęp z ich treści. Zachowaj sekcje, źródła i decyzje, których nie definiuje nowy format. Nie rozpoczynaj wywiadu ponownie bez powodu.
 5. Krótko podsumuj znane ustalenia i przejdź do najważniejszej niewiadomej. Gdy nie podano pomysłu i nie ma go w źródłach, poproś o krótki opis odbiorcy, problemu i zamierzonej zmiany.
 
@@ -58,6 +60,6 @@ Zapisz poza zakresem, przyszłe pomysły, typ produktu, początkową skalę oraz
 
 Sprawdź kompletność problemu i odbiorcy, przepływu, dostępu, wymagań, reguł, sygnału sukcesu oraz wyłączeń; dla brownfield także zachowania do zachowania. Przy każdej rzeczywistej luce zapisz nazwę, konsekwencję i otwarte pytanie. `Nie dotyczy` jest prawidłowym wynikiem z uzasadnieniem.
 
-Gdy brakuje decyzji zmieniającej produkt, zapytaj konkretnie. Użytkownik może zakończyć z lukami: zapisz `warned`, nie fikcyjne uzgodnienie. Bez luk ustaw `complete`; przy trwającej rozmowie `in_progress`. W podsumowaniu podaj plik, najważniejsze niewiadome i następny krok `$raven-pilot-prd`. Samo shape nie uruchamia PRD, budowy, testów ani publikacji.
+Gdy brakuje decyzji zmieniającej produkt, zapytaj konkretnie. Użytkownik może zakończyć z lukami: zapisz `warned`, nie fikcyjne uzgodnienie. Bez luk ustaw `complete`; przy trwającej rozmowie `in_progress`. W podsumowaniu podaj plik, najważniejsze niewiadome i następny krok `$raven-prd`. Samo shape nie uruchamia PRD, budowy, testów ani publikacji.
 
 Nie edytuj istniejącego PRD, roadmapy, kodu ani archiwów. Jeśli nowe ustalenia zmieniają wcześniejsze PRD lub aktywne chunki, opisz rozbieżność w notatkach i wskaż konieczność aktualizacji w odpowiednim etapie Raven.

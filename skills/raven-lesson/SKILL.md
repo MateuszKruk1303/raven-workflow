@@ -4,6 +4,8 @@ description: Na wyraźne zlecenie użytkownika zapisz jedną powtarzalną reguł
 ---
 # /raven-lesson — Uchwyć powtarzalną regułę
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Dodaj pojedynczy wpis do `context/foundation/lessons.md`, aby przyszłe uruchomienia `/raven-research`, `/raven-plan i /raven-auto-plan` i `/raven-implement i /raven-auto-implement` (wraz z ich etapami review) ponownie odczytały go jako wcześniejszą wskazówkę. Wywołaj go, gdy zauważysz wzorzec wart utrwalenia, bez czekania na ustrukturyzowany przegląd.
 
 „Lekcja” jest powtarzalną regułą — a nie jednorazową poprawką błędu. Kryterium brzmi: „to zmieniłoby sposób ujęcia problemu lub poprawkę w przeszłej pracy i będzie nadal się pojawiać”. Jeśli to opis pojedynczego incydentu, jest to niewłaściwy skill.

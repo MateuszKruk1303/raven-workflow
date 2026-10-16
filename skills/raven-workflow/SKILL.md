@@ -5,6 +5,8 @@ description: Przewodnik i router aktualnego workflow Raven. Ustal etap projektu 
 
 # Raven Workflow
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 To kanoniczna mapa kolejności i odpowiedzialności skilli Raven. Stan pracy pochodzi z GitHuba, nie z pamięci rozmowy. Szczegółowe wykonanie należy do wybranego skilla: przed użyciem przeczytaj jego SKILL.md i wymagane referencje. Nie ładuj wszystkich skilli naraz. Jawne zlecenie konkretnego etapu ma pierwszeństwo przed proponowaniem pełnej sekwencji.
 
 ## Rozpoczęcie nowej sesji
@@ -25,6 +27,7 @@ Kolejność orientacyjna dla nowego produktu; nie odtwarzaj istniejącego setupu
 | [raven-prd](../raven-prd/SKILL.md) | Wymagania produktu |
 | [raven-github-setup](../raven-github-setup/SKILL.md) | Repo/Project, pola i lokalne powiązanie |
 | [raven-roadmap](../raven-roadmap/SKILL.md) | Changes, kolejność i zależności w GH |
+| [raven-architecture](../raven-architecture/SKILL.md) | Interaktywny obraz architektury w context/foundation/architecture.md na podstawie wymagań, kodu i dostępnej roadmapy; decyzje, opcje i uzasadnienia |
 | [raven-init-stack](../raven-init-stack/SKILL.md) | Szkielet wybranego stacku Raven |
 | [raven-medusa-ecommerce-init](../raven-medusa-ecommerce-init/SKILL.md) | Alternatywa setupu dla projektu Medusa, nie dodatkowy obowiązkowy krok |
 | [raven-agents-md](../raven-agents-md/SKILL.md) | Instrukcje repo na podstawie rzeczywistego projektu |
@@ -54,10 +57,17 @@ Przed refaktorem bez ochrony zachowania zaplanuj i wykonaj testy charakteryzacyj
 
 W wariancie Jira wymagania i biznesowy status pozostają w Jira, a wersjonowane plany/raporty/dowody w prywatnym repo artefaktów GH. Repo kodu może być inne. Wymaga to jawnego powiązania i konfiguracji finalizacji po merge; prywatność samego Project nie wystarcza.
 
+## Architektura przekrojowa i research przed planem
+
+`raven-architecture` prowadzi użytkownika przez decyzje dotyczące całego produktu i zapisuje architecture.md: odpowiedzialności, dane i pliki, integracje, środowiska oraz utrzymanie. W greenfield warto go wykonać po ustaleniu wymagań i dostępnej roadmapy; w brownfield można uzupełnić tylko potrzebny obszar. Nie jest obowiązkowym projektem przebudowy ani warunkiem każdego małego taska. Planowanie i research czytają istniejący dokument oraz respektują statusy decyzji.
+
+Przy niepewnej wykonalności lub nieznanym fragmencie kodu użytkownik może rozpocząć change przez `raven-research`, a dopiero potem wywołać `raven-plan` albo `raven-auto-plan`. Research zapewnia tożsamość nowej zleconej zmiany lub wykorzystuje istniejącą, ustawia Backlog → Preparing i publikuje dowody, opcje, ryzyka i pytania w issue. Nie tworzy planu/tasków implementacyjnych ani Ready. Plan przejmuje to samo issue i wersjonowane raporty, weryfikując jedynie zmienione lub sprzeczne ustalenia. Przy jasno opisanej zmianie można od razu planować; czytanie kodu w planowaniu nie wymaga osobnego researchu.
+
 ## Powtarzalny cykl change
 
 | Etap | Manual | Auto |
 | --- | --- | --- |
+| Research, gdy zlecony | [raven-research](../raven-research/SKILL.md) — rozpoczęcie lub badanie tego samego change | Ten sam osobno zlecany skill |
 | Plan | [raven-plan](../raven-plan/SKILL.md) | [raven-auto-plan](../raven-auto-plan/SKILL.md) |
 | Review planu | Osobno [raven-plan-review](../raven-plan-review/SKILL.md) | Wbudowane niezależne review |
 | Decyzja o planie | Użytkownik akceptuje lub zleca poprawki | Użytkownik akceptuje lub zleca poprawki |
@@ -79,14 +89,16 @@ raven-pr tylko publikuje PR z opisem zmian i istotnych kompromisów. Nie urucham
 
 ## Narzędzia używane według potrzeby
 
-- [raven-research](../raven-research/SKILL.md): osobno zlecane badanie, wynik w change GH; nie obowiązkowy krok każdego planowania.
+- [raven-create-skill](../raven-create-skill/SKILL.md): rozwijanie samej rodziny Raven — rozmowa, tworzenie/zmiana skilla, integracja i niezależne review. Działa w repo skilli; nie jest etapem dostarczania funkcji aplikacji.
+
+- [raven-manual-qa](../raven-manual-qa/SKILL.md): osobno zlecane eksploracyjne QA w przeglądarce na podstawie issue; wymagania, edge cases i realistyczne próby nadużycia. Wskazówki programisty są opcjonalne, dane tester wyszukuje także w plikach projektu. Publikuje plan scenariuszy z ticketa i implementacji, uzupełnia go o wyniki wykonania, a w osobnym komentarzu testera raportuje wyłącznie problemy z Expected/Actual i reprodukcją albo krótki sukces; niepełne QA oznacza jawne ograniczenie. Nie zastępuje odbioru użytkownika ani trwałych testów i nie naprawia kodu.
+
+- [raven-research](../raven-research/SKILL.md): osobno zlecane rozpoczęcie lub badanie change, wynik w GH wykorzystywany przez późniejszy plan; nie obowiązkowy krok każdego planowania.
 - [raven-lesson](../raven-lesson/SKILL.md): osobno zlecana lekcja w lokalnym lessons.md, możliwe źródło późniejszej aktualizacji AGENTS.md.
 - [raven-browser](../raven-browser/SKILL.md): dostęp do przeglądarki przy sprawdzaniu działającej aplikacji, nie zamiennik trwałych testów.
 - [raven-md](../raven-md/SKILL.md): alternatywne tworzenie/aktualizacja instrukcji AGENTS.md; nie uruchamiaj rutynowo razem z raven-agents-md.
 - Skille domenowe projektu obowiązują przy właściwej pracy, ale nie są kolejnymi etapami workflow.
 
-## Deprecated / historyczne
+## Historyczne artefakty
 
-Wszystkie raven-pilot-* są deprecated. Nie rekomenduj ich dla nowej pracy i nie mieszaj ich lokalnych chunków/statusów z aktualnym workflow GH. Zachowaj pliki oraz archiwa. Jawne zlecenie kontynuacji starego pilota może użyć jego instrukcji; migracja wymaga ustalenia mapowania na GH, nie automatycznego przeniesienia lub usunięcia historii.
-
-[raven-seed](../raven-seed/SKILL.md) nadal tworzy strukturę dawnego pilota, więc nie należy do aktualnego setupu. Nie uruchamiaj go dla nowego Raven flow. raven-observability-audit nie należy do uzgodnionego zestawu Raven.
+Skille dawnego Raven Pilot oraz raven-seed zostały wycofane. Istniejące dokumenty i archiwa projektów pozostają bez zmian. Na zlecenie kontynuacji starego pilota najpierw ustal mapowanie jego zakresu, decyzji i dowodów na aktualny workflow GH; nie przenoś ani nie usuwaj historii automatycznie.

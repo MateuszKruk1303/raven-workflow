@@ -5,6 +5,8 @@ description: Zainicjalizuj stack Raven przez Better T Stack w bieżącym folderz
 
 # Raven Init Stack
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Wywołanie: `$raven-init-stack <nazwa-aplikacji>`, np. `$raven-init-stack equi-sell`.
 
 Przyjmij nazwę jako nazwę aplikacji i prefiks pakietów workspace, nie jako ścieżkę. Jeśli użytkownik jej nie podał i nie wskazał jednoznacznie w bieżącym poleceniu, dołącz pytanie o nazwę do wywiadu poniżej. Użyj formatu kebab-case, np. `equi-sell`; nie traktuj argumentu jako kodu powłoki. Nie zmieniaj nazwy folderu użytkownika.

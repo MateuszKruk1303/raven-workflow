@@ -36,8 +36,7 @@ Po otrzymaniu ścieżki planu:
 
 - Przeczytaj plan w całości. Sekcja `## Progress` na dole jest nadrzędna dla stanu wykonania — pola wyboru (`- [x]`) występują TYLKO tam. Bloki faz zawierają zwykłe wypunktowania `- ` (bez pól wyboru).
 - Przeczytaj `context/foundation/lessons.md`, jeśli istnieje, i przyswój każdy wpis przed rozpoczęciem dowolnej fazy — są to zaakceptowane przez zespół powtarzające się zasady, które muszą kształtować każdą decyzję implementacyjną w tym uruchomieniu.
-- Przeczytaj wszystkie pliki wymienione w planie (odwołane badania, ramy, pliki źródłowe w tym samym folderze zmiany)
-- **Czytaj pliki w całości** — nigdy nie używaj parametrów limit/offset, potrzebujesz pełnego kontekstu
+- Przed fazą przeczytaj jej wymagania, istotne źródła i zależności. Kod czytaj w zakresie potrzebnym do zrozumienia zachowania; rozszerz odczyt przy niepewności. Nie ładuj na zapas plików wszystkich późniejszych faz.
 - Głęboko zastanów się, jak elementy pasują do siebie
 - **Wykonaj preflight bramek**: zbierz polecenia z kryteriów sukcesu Automated każdej fazy i sprawdź, czy każde można tu uruchomić — binarny plik wykonywalny lub skrypt pakietu istnieje (`package.json` scripts, `command -v`, `Makefile` targets). Kryterium, którego polecenia nie można uruchomić, jest rozbieżnością dla fazy, która go potrzebuje, a znacznie taniej jest powiedzieć o tym teraz niż odkryć to po napisaniu kodu. Zgłoś każde niemożliwe do uruchomienia polecenie przy wejściu (`PREFLIGHT: <command> not runnable — Phase <N> will need this`). Nigdy po cichu nie pomijaj niemożliwego do zweryfikowania kryterium.
 - **Zaktualizuj `change.md`**: przy wejściu ustaw `status: implementing` (tylko jeśli obecnie jest w `{planned, plan_reviewed}`) oraz `updated: <today>`.
@@ -188,7 +187,7 @@ Równolegle z sekwencją:
 - **Modyfikuj WYŁĄCZNIE sekcję `## Progress`.** Bloki faz (Overview, Changes Required, Success Criteria) są tylko do odczytu. Zmień `- [ ] N.M <title>` → `- [x] N.M <title>` w Progress w miarę ukończenia każdego kroku. NIE edytuj wypunktowań bloków faz, NIE dodawaj znaczników postępu HTML comment na dole planu i NIE zapisuj żadnego sidecar pliku stanu.
 - **Uruchom rytuał commitu na końcu fazy**: bramka (d) powyżej. Gdy każda bramka będzie zielona, przejdź przez ten sekwencjonowany rytuał, aby utworzyć jeden commit Conventional-Commits i zapisać końcowy krótki SHA z powrotem w każdym wierszu Progress zmienionym podczas fazy.
 
-  1. **Bramka ręcznego potwierdzenia.** Poinformuj człowieka, że automatyczna weryfikacja przeszła, i wypisz elementy ręcznej weryfikacji z planu. Zatrzymaj się tutaj. Nie przechodź dalej, dopóki człowiek nie potwierdzi powodzenia testów ręcznych. Użyj tego formatu:
+  1. **Bramka ręcznego potwierdzenia — tylko gdy plan zawiera wymagane teraz kontrole Manual.** Gdy nie ma takich kontroli albo odbiór został jawnie przewidziany na późniejszy etap, pomiń zatrzymanie i zachowaj oczekujące pola bez odhaczania. W przeciwnym razie poinformuj człowieka, że automatyczna weryfikacja przeszła, i wypisz elementy ręcznej weryfikacji z planu. Zatrzymaj się tutaj. Nie przechodź dalej, dopóki człowiek nie potwierdzi powodzenia testów ręcznych. Użyj tego formatu:
 
      ```
      Phase [N] Complete - Ready for Manual Verification
@@ -209,7 +208,7 @@ Równolegle z sekwencją:
      - [phase.index title]
      ```
 
-     Jeśli nie ma oczekujących ręcznych wierszy z wcześniejszych faz, całkowicie pomiń blok zestawienia. Bramka nadal zatrzymuje się na potwierdzenie człowieka; to informacja, nie twarda blokada. Fazy pośrednie (każda faza, która nie jest końcowa) zachowują oryginalny format bramki bez zestawienia.
+     Jeśli nie ma oczekujących ręcznych wierszy z wcześniejszych faz, całkowicie pomiń blok zestawienia. Zestawienie nie tworzy nowej bramki; zatrzymaj się tylko dla kontroli Manual wymaganych na obecnym etapie. Fazy pośrednie (każda faza, która nie jest końcowa) zachowują oryginalny format bramki bez zestawienia.
 
   2. **Oblicz zestaw stagingu.** Kroki 2–4 zostały już uruchomione raz jako krok 2 stosu bramek; uruchom je ponownie tutaj, aby objąć wszystko, czego dotknęła poprawka bramki. Gdy od tego czasu nic się nie zmieniło, są no-op. Weź zestaw zmodyfikowanych plików utrzymywany podczas fazy (zob. „Tracking files touched during a phase” powyżej). Wyklucz plan.md, change.md i inne robocze artefakty change; ich postęp publikowany jest w GH.
 

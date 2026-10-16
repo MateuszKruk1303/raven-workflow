@@ -5,6 +5,8 @@ description: Przenieś wskazane tickety, sprint lub epikę Jira do GitHub jako r
 
 # Raven Jira Roadmap
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Przeczytaj [kontrakt GitHub](../raven-auto-plan/references/github-contract.md) i [kontrakt raportów brownfield](../raven-repo-map/references/github-brownfield.md). Ten skill tworzy kolejkę pracy agenta dla jawnie wskazanego zakresu Jira. Nie synchronizuje dwukierunkowo backlogów.
 
 ## Źródła i zakres

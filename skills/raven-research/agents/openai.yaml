@@ -1,6 +1,6 @@
 interface:
   display_name: "Raven Research"
-  short_description: "Research na zlecenie, z wynikiem w change GitHuba"
-  default_prompt: "Użyj $raven-research dla wskazanego change w GitHubie, zbadaj moje pytanie i zapisz ustalenia w tym issue."
+  short_description: "Rozpocznij change badaniem i przekaż wynik do planu"
+  default_prompt: "Użyj $raven-research dla wskazanego zadania, zapewnij jego change w GitHubie i zapisz research, który wykorzysta późniejsze planowanie."
 policy:
   allow_implicit_invocation: false

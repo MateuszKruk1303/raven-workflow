@@ -12,6 +12,8 @@ description: >
 ---
 # Raven Agents MD
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Utwórz `AGENTS.md`, który służy jako dokument wdrożeniowy dla agentów AI piszących kod w tym repozytorium. Plik jest krótki, specyficzny dla repo i skonstruowany tak, aby najważniejsze zasady pojawiały się jako pierwsze.
 
 ## Rozwiązywanie danych wejściowych

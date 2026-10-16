@@ -1,6 +1,6 @@
 # Format shape-notes.md
 
-Plik docelowy: `context/pilot/shape-notes.md`. Przy nowym dokumencie użyj poniższego frontmatter. Daty mają format ISO; nieznane wartości pozostają `null`.
+Plik docelowy: `context/foundation/shape-notes.md`. Przy nowym dokumencie użyj poniższego frontmatter. Daty mają format ISO; nieznane wartości pozostają `null`.
 
 ```yaml
 ---

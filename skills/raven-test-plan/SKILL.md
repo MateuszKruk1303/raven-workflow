@@ -5,6 +5,8 @@ description: Twórz, wznawiaj i odświeżaj strategię testowania oraz etapowe w
 
 # Raven Test Plan
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 ## Procedury własne
 
 Przed wykonaniem przeczytaj lokalne procedury Raven: [test-plan](references/procedures/test-plan/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.

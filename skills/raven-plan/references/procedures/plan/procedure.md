@@ -12,11 +12,7 @@ Twoim zadaniem jest tworzenie szczegółowych planów wdrożenia poprzez interak
 
 Najpierw skieruj wywołanie: `/raven-plan <change-id> save` (również `$raven-plan <change-id> save`) albo prośba o zapisanie już uzgodnionego planu po zmianie trybu wznawia **utrwalanie**, a nie wywiad. Przeczytaj [references/plan-persistence.md](references/plan-persistence.md) i postępuj zgodnie z jego ścieżką zapisu przed sprawdzeniem warunków wstępnych pytań. Brak możliwości zadawania pytań nie jest blokadą, gdy nie pozostały nierozstrzygnięte decyzje.
 
-`Ask the user:` poniżej oznacza rzeczywistą, ustrukturyzowaną funkcję pytań bieżącego środowiska. Zachowaj znaczenie pytań oraz format rekomendacji/kompromisów podczas mapowania argumentów; rzeczywiście obsługiwany schemat określa liczbę opcji i limity pól. Używaj mniejszej liczby opcji albo dziel niezależne pytania, gdy limit hosta jest bardziej restrykcyjny. Jeśli host wymaga unikalnego `id` pytania albo nie udostępnia obsługi wielokrotnego wyboru, użyj osobnych pytań jednokrotnego wyboru, gdy wybory są niezależne. Mapuj wielokrotny wybór i niestandardowe wprowadzanie tekstu zgodnie ze schematem obsługiwanym przez hosta.
-
-Przed pierwszym pytaniem sprawdź funkcję faktycznie dostępną w bieżącej sesji. Natywne ustrukturyzowane pytania mogą wymagać interaktywnego trybu planowania lub współpracy. Wywołanie tej umiejętności nie zmienia trybu hosta, a nieinteraktywne wykonanie może nie być punktem wejścia do interaktywnych pytań. Host/kontroler musi rozpocząć interaktywną turę w trybie obsługującym pytania. Użyj sesji, której natywna funkcja pytań ma podłączonego klienta pytań; nienadzorowane uruchomienie wyłącznie tekstowe nie jest dowodem, że użytkownik może odpowiadać. Jeśli wymagana natywna funkcja jest niedostępna, nazwij brakującą funkcję i zatrzymaj się, zanim założysz odpowiedzi lub utworzysz plan. Zalecaj przełączenie do interaktywnego trybu planowania lub współpracy albo ponowne podłączenie interaktywnego klienta pytań i wznowienie sesji. Nie twierdź, że pytanie zostało przesłane, jeśli jedynie wyświetliłeś tekst. Jawne nieinteraktywne zadanie, które zatrzymuje się z powodu brakujących warunków wstępnych, może nadal zgłaszać te warunki bez rozpoczynania wywiadu.
-
-Używaj rozmiaru rundy obsługiwanego przez natywne narzędzie, z poszanowaniem bardziej restrykcyjnego natywnego limitu. Potwierdzony budżet pytań jest **łączny dla wszystkich rund**, a nie wymogiem upchnięcia wszystkich pytań w pierwszym wywołaniu. Pytaj z poziomu głównego agenta; podagenci badawczy nie prowadzą wywiadu z użytkownikiem.
+`Ask the user:` oznacza pytanie do użytkownika przez dostępne narzędzie pytań lub zwykłą rozmowę, gdy narzędzia brak. Dostosuj format do hosta. Brak natywnego formularza nie blokuje planowania. Pytania zadaje koordynator; subagenci przekazują mu luki. Nie zakładaj odpowiedzi. Czekaj tylko na decyzje potrzebne do dalszej zależnej pracy; w tym czasie można zbierać niezależne dowody.
 
 Sprawdzaj możliwość zapisu niezależnie od możliwości zadawania pytań. Gdy host zezwala na pytania, ale zabrania zapisów w repozytorium, przeczytaj [references/plan-persistence.md](references/plan-persistence.md). Wyjaśnij na początku, że ta sesja przygotuje kompletny plan i brief w rozmowie, a następnie nastąpi krok zapisu w trybie z możliwością zapisu w tej samej rozmowie. Umiejętność nie może zmienić trybu hosta. Zachowaj najnowsze decyzje i poprawki podczas tego przejścia; nie rozpoczynaj wywiadu od nowa.
 
@@ -73,7 +69,7 @@ Przed jakimkolwiek czytaniem zidentyfikuj, jakie rodzaje artefaktów wcześniejs
 | Zadanie + rama | 2–3 | 4–6 | 7–9 | Pomiń kategorie [D]iagnostyczne — rama ustaliła ujęcie problemu. Traktuj Przeformułowane (lub Potwierdzone) Stwierdzenie Problemu jako wiążące. |
 | Zadanie + rama + badania | 1–2 | 3–5 | 5–7 | Pomiń oba rodzaje. Zadawaj wyłącznie pytania dotyczące projektu [S]olution, które rzeczywiście wymagają wkładu użytkownika. |
 
-**Wyjątek dotyczący rozstrzygniętych danych wejściowych:** jeśli artefakty wcześniejszych etapów już rozstrzygają każdą istotną decyzję dotyczącą rozwiązania, zaproponuj **0 merytorycznych pytań**, krótko wskaż te dowody i uzyskaj zwykłe natywne potwierdzenie złożoności/budżetu. Zachowaj akceptację natywnej struktury. Jeśli uzgodniony budżet stanie się niepotrzebny po późniejszych odpowiedziach, potwierdź korektę zamiast sztucznie wypełniać pytania. Powyższe zakresy wskazują nierozstrzygniętą pracę; nie wymagają wymyślonych decyzji.
+**Rozstrzygnięte dane wejściowe:** gdy wszystkie istotne decyzje są ustalone, przejdź do przygotowania planu bez pytań o budżet wywiadu. Zakresy liczby pytań są orientacyjne, nie stanowią minimum. Zachowaj merytoryczne uzgodnienie struktury i końcową akceptację planu.
 
 **Zasada**: każdy przekazany artefakt jest źródłem już podjętych decyzji. Czytanie ich jest równoznaczne ze słuchaniem użytkownika. Nie pytaj użytkownika o to, co już zapisał.
 
@@ -102,11 +98,11 @@ Przed jakimkolwiek czytaniem zidentyfikuj, jakie rodzaje artefaktów wcześniejs
    - **NIGDY** nie czytaj plików częściowo — jeśli plik jest wspomniany, przeczytaj go w całości
 
 2. **Uruchom równoległe badania przed wywiadem**:
-   Przed zadaniem użytkownikowi jakichkolwiek pytań deleguj nierozstrzygnięte luki dowodowe do podagentów pracujących równolegle — domyślnie 2–3 w pojedynczej wiadomości, każdy nad innym wymiarem wyszukiwania (np. „znajdź wszystkie pliki związane z X”, „znajdź podobne implementacje Y”, „znajdź wcześniejsze decyzje o Z w `context/changes/**/` i `context/archive/**/`”), prosząc każdego o kotwice `file:line`. Przeczytaj [references/task-orchestration.md](references/task-orchestration.md) przed pierwszym delegowaniem, aby poznać kontrakt delegowania, awaryjne rozwiązanie dla możliwości i wymagania dotyczące dowodów. Rozstrzygnij pojedynczy zlokalizowany fakt za pomocą lokalnego odczytu o zawężonym zakresie zamiast delegowania oraz zachowaj pytania produktowe i decyzje międzykomponentowe dla głównego agenta. Deleguj podagentów przy użyciu natywnego odpowiednika hosta do lokalizowania kodu lub wykonywania analizy. Poczekaj na zakończenie wszystkich delegowanych podagentów przed zintegrowaniem ich wyników.
+   Przed zadaniem użytkownikowi jakichkolwiek pytań deleguj nierozstrzygnięte luki dowodowe do podagentów pracujących równolegle — tylko gdy istnieją niezależne luki uzasadniające delegowanie; zwykle 1–2, każdy nad innym wymiarem wyszukiwania (np. „znajdź wszystkie pliki związane z X”, „znajdź podobne implementacje Y”, „znajdź wcześniejsze decyzje o Z w `context/changes/**/` i `context/archive/**/`”), prosząc każdego o kotwice `file:line`. Przeczytaj [references/task-orchestration.md](references/task-orchestration.md) przed pierwszym delegowaniem, aby poznać kontrakt delegowania, awaryjne rozwiązanie dla możliwości i wymagania dotyczące dowodów. Rozstrzygnij pojedynczy zlokalizowany fakt za pomocą lokalnego odczytu o zawężonym zakresie zamiast delegowania oraz zachowaj pytania produktowe i decyzje międzykomponentowe dla głównego agenta. Deleguj podagentów przy użyciu natywnego odpowiednika hosta do lokalizowania kodu lub wykonywania analizy. Poczekaj na zakończenie wszystkich delegowanych podagentów przed zintegrowaniem ich wyników.
 
-3. **Przeczytaj wszystkie pliki wskazane przez zadania badawcze**:
+3. **Zweryfikuj źródła istotne dla decyzji planu**:
    - Po zakończeniu zadań badawczych przeczytaj WSZYSTKIE pliki, które wskazały jako istotne
-   - Wczytaj je W CAŁOŚCI do głównego kontekstu
+   - Czytaj wskazane fragmenty wraz z kontekstem i zależnościami; rozszerz odczyt, gdy dowód jest niepełny
    - Zapewnia to pełne zrozumienie przed kontynuowaniem
 
 4. **Przeanalizuj i zweryfikuj zrozumienie**:
@@ -129,46 +125,11 @@ Przed jakimkolwiek czytaniem zidentyfikuj, jakie rodzaje artefaktów wcześniejs
    - [Zidentyfikowana potencjalna złożoność lub przypadek brzegowy]
    ```
 
-   Następnie oceń złożoność zadania i przedstaw ją użytkownikowi do potwierdzenia:
-
-   ```
-   **Ocena złożoności: [HIGH / MEDIUM / LOW]**
-
-   [2-3 zdania wyjaśniające DLACZEGO ten poziom złożoności, odnosząc się do konkretnych czynników:
-   liczby dotkniętych systemów, punktów integracji, potrzeb zarządzania stanem,
-   zmian modelu danych, nieznanych niewiadomych, powierzchni testowania itd.]
-
-   Chciałbym zadać **[N] pytań** w kilku rundach, aby doprecyzować ważne
-   decyzje dotyczące [wymień kluczowe obszary decyzji: architektura, przypadki brzegowe, model danych, UX, testowanie itd.].
-
-   Czy to wydaje się właściwe, czy zmieniłbyś poziom złożoności?
-   ```
-
-   Zapytaj użytkownika:
-   - question: "Czy ta ocena złożoności odpowiada Twoim oczekiwaniom?"
-     header: "Complexity"
-     options:
-     - label: "⭐ Recommended: [N] pytań (Recommended)"
-       description: "Użyj proponowanego budżetu pytań. · Strength: Koncentruje się na zidentyfikowanych decyzjach. · Tradeoff: Nowo odkryte luki mogą wymagać korekty."
-     - label: "Wyższa — zadaj więcej pytań"
-       description: "Rozszerz wywiad o brakujące zagadnienia. · Strength: Obejmuje dodatkowe ryzyka. · Tradeoff: Wymaga więcej czasu użytkownika."
-     - label: "Niższa — potrzeba mniej pytań"
-       description: "Ogranicz wywiad do pozostałych decyzji. · Strength: Unika redundantnych pytań. · Tradeoff: Wymaga zidentyfikowania, które kwestie są już rozstrzygnięte."
-       multiSelect: false
-
-   **Skala złożoności:**
-
-   | Poziom | Pytania | Kiedy używać |
-   | ---------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | **LOW** | 4-6 | Proste zadanie z jasnymi wymaganiami. Niewiele ruchomych części, podąża za ustalonymi wzorcami lub konwencjami, ograniczone niewiadome. Przykłady programistyczne: zmiana w jednym pliku, korekta konfiguracji. Przykłady nieprogramistyczne: konspekt dotyczący jednego tematu, prosta korekta procesu. |
-   | **MEDIUM** | 7-10 | Wiele współdziałających komponentów lub kwestii. Wymaga decyzji projektowych, ma przypadki brzegowe warte omówienia, pewną niejednoznaczność podejścia. Przykłady programistyczne: funkcja wieloplikowa, nowy endpoint API. Przykłady nieprogramistyczne: wieloczęściowy plan treści, przeprojektowanie przepływu pracy, moduł kursu. |
-   | **HIGH** | 11-15 | Przekrojowe kwestie, istotne niewiadome, wielu interesariuszy lub ograniczeń. Wymaga myślenia architektonicznego, niesie ryzyko kosztownej przeróbki przy błędzie. Przykłady programistyczne: przeprojektowanie systemu, migracja danych. Przykłady nieprogramistyczne: strategia uruchomienia wielokanałowego, przebudowa programu nauczania, zmiana procesu organizacyjnego. |
-
-   Po potwierdzeniu (lub dostosowaniu) przez użytkownika przejdź do pytań.
+   Oceń złożoność i nazwij nierozstrzygnięte decyzje. Zadawaj tylko pytania wpływające na zakres, architekturę, ryzyka lub kryteria sukcesu. Nie proś o zatwierdzenie liczby pytań; brak luk oznacza przejście do planu. Dla dużej zmiany grupuj pytania w krótkie rundy.
 
 6. **Zadawaj dogłębne pytania sondujące**:
 
-   Pytaj o pozostałe decyzje w ramach potwierdzonego łącznego budżetu, używając natywnego rozmiaru rundy powyżej. Budżet obejmuje merytoryczne doprecyzowania; nie jest limitem do wypełnienia ani pozwoleniem na ponowne otwieranie ustalonych interfejsów.
+   Pytaj o pozostałe decyzje w ramach potrzebnego zakresu pytań, używając natywnego rozmiaru rundy powyżej. Budżet obejmuje merytoryczne doprecyzowania; nie jest limitem do wypełnienia ani pozwoleniem na ponowne otwieranie ustalonych interfejsów.
 
    **Zasady strukturyzowania pytań:**
    - Każde pytanie powinno mieć 2–4 konkretne opcje w ramach rzeczywistego natywnego schematu; użyj 2–3, gdy taki jest limit hosta
@@ -287,11 +248,11 @@ Przed jakimkolwiek czytaniem zidentyfikuj, jakie rodzaje artefaktów wcześniejs
    - O pytania z oczywistymi odpowiedziami przy już dostarczonym kontekście
    - O preferencje, które nie wpływają na strukturę planu ani sukces
 
-   Użyj Kroku 1.0, aby zaproponować budżet odpowiedni do złożoności i dowodów z wcześniejszych etapów. Uwzględnij każdą istotną nierozstrzygniętą decyzję w ramach potwierdzonego przez użytkownika budżetu; jeśli trzeba, poproś o rozszerzenie przed zadaniem kolejnego merytorycznego pytania. Nie sztucznie wydłużaj wywiadu ani nie otwieraj ponownie ustalonych wyborów, aby osiągnąć sugerowany zakres. Każde pytanie powinno rozstrzygać rzeczywistą lukę.
+   Użyj Kroku 1.0 do identyfikacji nierozstrzygniętych decyzji. Każdą istotną lukę zbadaj lub przedstaw użytkownikowi. Nie sztucznie wydłużaj wywiadu ani nie otwieraj ponownie ustalonych wyborów, aby osiągnąć sugerowany zakres. Każde pytanie powinno rozstrzygać rzeczywistą lukę.
 
    Prowadź wewnętrzny rejestr nierozstrzygniętych decyzji użytkownika i najnowszej jawnej odpowiedzi dla każdej z nich. Częściowa odpowiedź lub „nie wiem” pozostawia decyzję otwartą, chyba że użytkownik jawnie deleguje wybór. Mechanizm już obecny w kodzie nie rozstrzyga nierozstrzygniętego wyboru produktowego dotyczącego sposobu jego użycia. Korekty zastępują wcześniejszą decyzję przy zachowaniu pozostałych odpowiedzi.
 
-   Przed przedstawieniem podejścia sprawdź, czy każda nierozstrzygnięta decyzja ma odpowiedź lub jawną delegację. Uzgodniony budżet pytań obejmuje rundy doprecyzowań; nie wypełniaj go nowymi tematami, gdy wcześniejsze odpowiedzi nadal wymagają wyjaśnienia. Jeśli budżet wyczerpie się przy otwartej decyzji, określ, co pozostaje, i zapytaj, czy rozszerzyć wywiad, zamiast po cichu wybierać lub twierdzić, że wywiad został ukończony.
+   Przed przedstawieniem podejścia sprawdź, czy każda nierozstrzygnięta decyzja ma odpowiedź lub jawną delegację. Nie otwieraj nowych tematów bez związku z zakresem. Nierozstrzygnięte decyzje nazwij jawnie; nie wybieraj ich po cichu ani nie deklaruj ukończenia wywiadu.
 
    Przenoś dokładne predykaty decyzji do podsumowań, przykładów i rezultatów. Zachowuj granice, wyjątki, jednostki i kierunek przy skracaniu odpowiedzi; węższa lub szersza reguła jest nową decyzją. Sprawdź proponowane sformułowanie na przypadku granicznym. Po korekcie zaktualizuj zależne przykłady i brief, a także rejestr decyzji, utrzymując niezwiązane wybory jako rozstrzygnięte.
 
@@ -488,7 +449,7 @@ Odczytaj change i powiązanie Project. Publikuj kontrakty faz, snapshot i postę
    - Pracuj wspólnie
 
 3. **Bądź dokładny**:
-   - Przeczytaj WSZYSTKIE pliki kontekstowe W CAŁOŚCI przed planowaniem
+   - Przeczytaj wymagania i kontrakty w całości oraz kod i źródła potrzebne do decyzji planu
    - Badaj nierozstrzygnięte wzorce lokalnie lub przez zawężone niezależne zadania, używając referencji orkiestracji
    - Uwzględniaj konkretne odwołania (`file:line` dla kodu, ścieżki dokumentów dla treści)
    - Pisz mierzalne kryteria sukcesu z jasnym rozróżnieniem automatyczne kontra ręczne
@@ -504,12 +465,12 @@ Odczytaj change i powiązanie Project. Publikuj kontrakty faz, snapshot i postę
    - Dokładnie oznaczaj pracę ukończoną, zablokowaną i anulowaną; unikaj prowadzenia ewidencji dla pojedynczego wyszukania
 
 6. **OBOWIĄZKOWE: Dogłębne pytania skalowane złożonością**:
-   - **PRZED** zapisaniem jakiegokolwiek planu MUSISZ ocenić złożoność (HIGH/MEDIUM/LOW) i uzyskać potwierdzenie użytkownika
-   - Użyj skalowania wcześniejszych etapów z Kroku 1.0, jego wyjątku dotyczącego rozstrzygniętych danych wejściowych oraz potwierdzonego przez użytkownika łącznego budżetu pytań; zakresy dla wyłącznie zadania nie zastępują zaakceptowanych decyzji z wcześniejszych etapów
+   - Oceń złożoność i rozstrzygnij rzeczywiste luki; samo nazwanie złożoności nie wymaga zgody użytkownika
+   - Użyj skalowania wcześniejszych etapów z Kroku 1.0, jego wyjątku dotyczącego rozstrzygniętych danych wejściowych oraz rzeczywistych nierozstrzygniętych decyzji; zakresy dla wyłącznie zadania nie zastępują zaakceptowanych decyzji z wcześniejszych etapów
    - Każde pytanie musi umieszczać jeden wybór `⭐ Recommended: [short choice] (Recommended)` jako pierwszy; każda opcja wymaga dokładnego formatu opisu Strength/Tradeoff i nagłówka o długości maksymalnie 12 znaków
    - Uwzględniaj zakres, przypadki brzegowe, architekturę, model danych, testowanie i wydajność stosownie do złożoności
-   - Pytaj w rundach obsługiwanych natywnie w ramach potwierdzonego łącznego budżetu; rozszerzaj go jawnie wyłącznie dla nierozstrzygniętych decyzji
-   - Zachowuj potwierdzony wywiad i akceptację natywnej struktury. Dostosuj budżet z użytkownikiem, gdy zmienia się zakres; nigdy nie powtarzaj ustalonych pytań jedynie po to, aby wypełnić bazowy zakres
+   - Pytaj w rundach obsługiwanych natywnie w ramach potrzebnego zakresu pytań; rozszerzaj go jawnie wyłącznie dla nierozstrzygniętych decyzji
+   - Zachowuj ustalenia wywiadu i akceptację natywnej struktury. Nazwij nowe decyzje, gdy zmienia się zakres; nigdy nie powtarzaj ustalonych pytań jedynie po to, aby wypełnić bazowy zakres
    - Czekaj na odpowiedzi użytkownika przed przejściem do szczegółowego planowania
 
 7. **Brak otwartych pytań w końcowym planie**:
@@ -547,7 +508,7 @@ Kryteria sukcesu każdej fazy używają zwykłych punktorów `- ` pod nagłówka
 
 [Referencja orkiestracji](references/task-orchestration.md) zarządza wyborem zadań, delegowaniem, awaryjnym mechanizmem możliwości modelu, przeglądem dowodów i zatrzymywaniem. Nie zastępuje natywnych pytań, akceptacji struktury ani ścieżki zapisu zależnej od trybu. Nie wywołuj rekomendatora modelu implementacyjnego jedynie po to, aby zakończyć badania lub zapisać uzgodniony plan.
 
-- **Uruchamiaj wielu podagentów równolegle** w pojedynczej wiadomości — 2–3 dla fazy badawczej — zamiast jednego po drugim.
+- **Deleguj według luk dowodowych**: niezależne potrzebne zadania można wykonać równolegle; nie ma wymaganej liczby scoutów.
 - **Utrzymuj każde zadanie w skupieniu** na konkretnym obszarze, z szczegółowymi instrukcjami (katalogi, co wyodrębnić, oczekiwany format).
 - **Wymagaj konkretnych odwołań `file:line`** w odpowiedziach.
 - **Czekaj na zakończenie wszystkich delegowanych podagentów** przed syntezą ustaleń.

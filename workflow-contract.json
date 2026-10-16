@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "skills": [
+    "raven-agents-md",
+    "raven-architecture",
+    "raven-auto-implement",
+    "raven-auto-plan",
+    "raven-auto-test",
+    "raven-browser",
+    "raven-create-skill",
+    "raven-domain-distillation",
+    "raven-frame",
+    "raven-github-setup",
+    "raven-hooks",
+    "raven-implement",
+    "raven-implement-review",
+    "raven-init-stack",
+    "raven-jira-roadmap",
+    "raven-lesson",
+    "raven-manual-qa",
+    "raven-md",
+    "raven-medusa-ecommerce-init",
+    "raven-plan",
+    "raven-plan-review",
+    "raven-pr",
+    "raven-prd",
+    "raven-repo-map",
+    "raven-research",
+    "raven-roadmap",
+    "raven-rule-review",
+    "raven-shape",
+    "raven-test",
+    "raven-test-plan",
+    "raven-test-review",
+    "raven-workflow"
+  ],
+  "roles": {
+    "planner": {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    },
+    "reviewer": {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    },
+    "tester": {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    },
+    "implementer": {
+      "model": "gpt-6.1-sol",
+      "effort": "low"
+    }
+  },
+  "initial_artifacts": [
+    "requirements",
+    "plan_accepted",
+    "user_acceptance",
+    "publication_requested"
+  ],
+  "stages": [
+    {
+      "id": "plan",
+      "skills": [
+        "raven-plan",
+        "raven-auto-plan"
+      ],
+      "role": "planner",
+      "requires": [
+        "requirements"
+      ],
+      "produces": [
+        "plan_snapshot"
+      ]
+    },
+    {
+      "id": "plan_review",
+      "skills": [
+        "raven-plan-review",
+        "raven-auto-plan"
+      ],
+      "role": "reviewer",
+      "requires": [
+        "plan_snapshot"
+      ],
+      "produces": [
+        "plan_review"
+      ],
+      "fresh_context": true
+    },
+    {
+      "id": "implement",
+      "skills": [
+        "raven-implement",
+        "raven-auto-implement"
+      ],
+      "role": "implementer",
+      "requires": [
+        "plan_snapshot",
+        "plan_review",
+        "plan_accepted"
+      ],
+      "produces": [
+        "implementation"
+      ]
+    },
+    {
+      "id": "functional_test",
+      "skills": [
+        "raven-auto-implement"
+      ],
+      "role": "tester",
+      "requires": [
+        "implementation"
+      ],
+      "produces": [
+        "functional_evidence"
+      ],
+      "fresh_context": true,
+      "modes": [
+        "auto"
+      ]
+    },
+    {
+      "id": "code_review",
+      "skills": [
+        "raven-implement-review",
+        "raven-auto-implement"
+      ],
+      "role": "reviewer",
+      "requires": [
+        "implementation"
+      ],
+      "produces": [
+        "code_review"
+      ],
+      "fresh_context": true,
+      "requires_by_mode": {
+        "auto": [
+          "functional_evidence"
+        ]
+      }
+    },
+    {
+      "id": "tests",
+      "skills": [
+        "raven-test",
+        "raven-auto-test"
+      ],
+      "role": "implementer",
+      "requires": [
+        "implementation",
+        "code_review",
+        "user_acceptance"
+      ],
+      "produces": [
+        "test_evidence"
+      ]
+    },
+    {
+      "id": "test_review",
+      "skills": [
+        "raven-test-review",
+        "raven-auto-test"
+      ],
+      "role": "reviewer",
+      "requires": [
+        "test_evidence"
+      ],
+      "produces": [
+        "tests_reviewed"
+      ],
+      "fresh_context": true
+    },
+    {
+      "id": "pr",
+      "skills": [
+        "raven-pr"
+      ],
+      "role": "implementer",
+      "requires": [
+        "tests_reviewed",
+        "publication_requested"
+      ],
+      "produces": [
+        "pull_request"
+      ]
+    }
+  ]
+}

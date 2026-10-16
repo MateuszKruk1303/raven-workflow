@@ -5,9 +5,11 @@ description: Niezależnie oceń testy change Raven na podstawie tych samych wers
 
 # Raven Test Review
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 ## Procedury własne
 
-Przed wykonaniem przeczytaj lokalne procedury Raven: [e2e](../raven-test/references/procedures/e2e/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
+Procedury do odczytu przez wykonawcę właściwej roli (E2E tylko gdy wybrano tę warstwę): [e2e](../raven-test/references/procedures/e2e/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż ścieżki procedur jego roli oraz kontrakt GH; koordynator nie musi ładować instrukcji wykonawczych innych ról. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
 
 
 Przeczytaj [kontrakt GH](../raven-auto-plan/references/github-contract.md) i [kontrakt źródeł i review testów](../raven-test/references/test-review.md). Ten skill jawnie wymaga delegowania oceny świeżemu agentowi bez historii autora testów i implementatora produktu. Manual oznacza osobne wywołanie i decyzję użytkownika, nie ocenę własnego kodu przez tego samego agenta.

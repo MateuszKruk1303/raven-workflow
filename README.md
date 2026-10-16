@@ -1,420 +1,213 @@
-# Raven Workflow
+# Raven Workflow — cookbook
 
-**Od pomysłu do sprawdzonej zmiany — z agentem, świadomymi decyzjami i historią w GitHubie.**
+Raven prowadzi zmianę od wymagań do planu, implementacji, niezależnej weryfikacji i PR. Stan pracy, decyzje i dowody przechowuje w GitHubie. Skille są instrukcjami dla agenta; narzędzia w tym repo sprawdzają ich integralność i instalują spójny zestaw.
 
-Raven to zestaw skilli do pracy nad oprogramowaniem: odkrywania wymagań, planowania, implementacji, niezależnego review, testowania i publikowania PR-ów. Możesz używać go samodzielnie lub w zespole, w nowym produkcie albo istniejącym repozytorium.
+[Start](#start) · [Greenfield](#greenfield-nowy-produkt) · [Brownfield](#brownfield-istniejaca-aplikacja) · [Cykl zmiany](#cykl-zmiany) · [Przepisy](#przepisy-na-sytuacje-szczegolne) · [Katalog](#katalog-skilli) · [Doctor i synchronizacja](#doctor-i-synchronizacja)
 
-**29 aktywnych skilli · tryby manual i auto · prywatny GitHub · wersjonowane plany i dowody**
+## Start
 
-[Instalacja](#instalacja) · [Pierwsza sesja](#pierwsza-sesja) · [Przebieg pracy](#przebieg-pracy) · [Katalog skilli](#katalog-skilli) · [Utrzymanie](#utrzymanie) · [Interaktywna mapa HTML](docs/raven-workflow.html)
+Potrzebujesz agenta obsługującego `SKILL.md`, dostępu do repo i GitHub Project przez connector albo `gh`, a do pracy z kodem — środowiska aplikacji. Delegowanie wymaga hosta obsługującego świeży kontekst i jawny wybór modelu. Planowanie, review i niezależny tester używają **Astra/high**, implementacja i autor testów **Sol/low**. Szczegóły oraz eskalacja: [polityka ról](skills/raven-workflow/references/agent-policy.md).
 
-> Repozytorium zawiera instrukcje i narzędzia pomocnicze dla agenta. Instalacja skilli sama nie tworzy projektu, nie uruchamia usług i nie wdraża aplikacji. Kanoniczną mapą procesu jest [raven-workflow](skills/raven-workflow/SKILL.md).
+Zainstaluj Python 3.10+ i zależność doctora, następnie uruchom podgląd instalacji **z katalogu tego repo**:
 
-## Przebieg pracy
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python tools/raven.py doctor
+.venv/bin/python tools/raven.py sync --to "$HOME/.codex/skills"
+# Po przejrzeniu listy zmian:
+.venv/bin/python tools/raven.py sync --to "$HOME/.codex/skills" --apply
+```
 
-Trzy punkty wejścia prowadzą do wspólnego cyklu zmiany:
+Instalowany jest cały zestaw Raven, ponieważ skille współdzielą referencje. Sync nie dotyka innych rodzin skilli. Nadpisuje pliki aktywnych skilli zgodnie z repo, usuwa ich nieaktualne pliki oraz wycofane `raven-pilot-*` i `raven-seed`; przed zapisem tworzy kopię dotkniętych katalogów i wypisuje jej ścieżkę. Nie aktualizuje globalnego `AGENTS.md`. Sync odrzuca symlinki wewnątrz skilli oraz kolizje plik ↔ katalog przed zapisem; wymagają jawnego uporządkowania.
+
+W instrukcjach agenta dodaj zasadę: **przy pracy w Raven najpierw przeczytaj zainstalowany `raven-workflow/SKILL.md`, następnie tylko skille potrzebne do zadania**. W nowej sesji wskaż repo i issue; nie polegaj na pamięci poprzedniej rozmowy.
+
+Przykład pierwszego zlecenia:
+
+> Użyj raven-workflow. Odczytaj stan issue OWNER/REPO#123 i wskaż następny krok, bez rozpoczynania implementacji.
+
+Poniższe przykłady to prompty do agenta, nie polecenia terminala. Nazwę skilla możesz również wywołać przez `$raven-…`, jeśli host obsługuje taki zapis.
+
+<a id="greenfield-nowy-produkt"></a>
+## Greenfield: nowy produkt
+
+| Krok | Co zlecić | Warunek przejścia |
+| --- | --- | --- |
+| 1. Ustal produkt | `raven-shape`: odbiorca, problem, przepływ, zakres i kryteria sukcesu | Decyzje i jawne luki w shape-notes |
+| 2. Zapisz wymagania | `raven-prd` na podstawie notatek | PRD odzwierciedla źródła; istotne niewiadome rozstrzygnięte przed zależnym planowaniem |
+| 3. Przygotuj kolejkę | `raven-github-setup`, następnie `raven-roadmap` | Repo/Project powiązane, changes uporządkowane według zależności |
+| 4. Ustal architekturę | `raven-architecture` | Decyzje przekrojowe mają status i uzasadnienie |
+| 5. Uruchom projekt | `raven-init-stack` **albo** `raven-medusa-ecommerce-init` | Działające środowisko odpowiednie dla wybranego produktu |
+| 6. Przygotuj pracę agentów | `raven-agents-md` **albo** `raven-md`; następnie `raven-test-plan` | Instrukcje wynikają z repo, strategia testów z ryzyk |
+| 7. Dostarcz pierwszy change | Wspólny cykl poniżej; `raven-hooks`, gdy istnieją komendy i runnery | Działająca zmiana, dowody i faktyczne checki CI |
+
+Nie uruchamiaj ponownie gotowego setupu. Roadmapa ustala kolejność, ale nie zatwierdza planu implementacji. Nie trzeba tworzyć wszystkich testów produktu przed pierwszym change.
+
+> Użyj raven-shape. Buduję aplikację do […]. Pomóż ustalić najmniejszy kompletny przepływ, wymagania i granice zakresu. Zapisz notatki do późniejszego PRD.
+
+<a id="brownfield-istniejaca-aplikacja"></a>
+## Brownfield: istniejąca aplikacja
+
+Zachowaj stack, historię i działające konwencje. Zacznij od konkretnego zadania; PRD całej aplikacji i ponowny bootstrap nie są warunkami drobnej zmiany.
+
+| Sytuacja | Wejście |
+| --- | --- |
+| Znany obszar, jasne wymagania | Od razu `raven-plan` lub `raven-auto-plan` |
+| Nieznane repo, szeroki zakres | `raven-repo-map`, potem analiza wybranego obszaru |
+| Zgłoszenie miesza objaw i domniemaną przyczynę | `raven-frame` |
+| Nie wiadomo, jak działa konkretna funkcja | `raven-research` na tym samym change |
+| Dokumenty i kod inaczej nazywają domenę | `raven-domain-distillation` |
+| Brakuje ochrony przed refaktorem | Testy charakteryzacyjne w trybie `before-change` przed zmianą kodu |
+| Brakuje instrukcji, strategii lub CI | Uzupełnij właściwy brak; nie odtwarzaj całego setupu |
+
+> Użyj raven-research dla issue OWNER/REPO#123. Ustal, jak działa naliczanie rabatów, gdzie są granice transakcji i jakie zachowanie trzeba zachować. Zapisz dowody do późniejszego planu; nie implementuj.
+
+## Cykl zmiany
+
+**Change** to odbieralny rezultat, np. eksport zamówień, zapisany jako issue (`C-03`). **Task** to faza jego planu, zwykle sub-issue (`C-03/T-02`). Manual i auto można mieszać między etapami. Auto automatyzuje pracę wewnątrz zleconego etapu; nie oznacza zgody na następny etap, zmianę wymagań ani merge.
 
 ```mermaid
 flowchart TD
-    A[Nowy produkt] --> B[Pomysł i PRD]
-    B --> C[Prywatny GitHub i roadmapa]
-    C --> D[Stack, instrukcje i strategia testów]
-    E[Istniejąca aplikacja] --> F[Rozpoznanie repo i konkretnego problemu]
-    G[Tickety Jira] --> H[Wymagania w Jira, artefakty w prywatnym GitHubie]
-    D --> I[Wybór zmiany]
-    F --> I
-    H --> I
-    I --> J[Plan i review planu]
-    J --> K[Akceptacja użytkownika]
-    K --> L[Implementacja i review kodu]
-    L --> M[Osobisty odbiór]
-    M --> N[Trwałe testy i review testów]
-    N --> O[PR i checki CI]
-    O --> P[Merge użytkownika i finalizacja]
-    classDef decision fill:#fff1cf,stroke:#b8860b,color:#382b10;
-    class K,M,P decision;
+    G[Greenfield: shape → PRD → setup i roadmapa] --> P
+    B[Brownfield: task i potrzebne rozpoznanie] --> P
+    J[Jira: raven-jira-roadmap] --> P
+    P[raven-plan + raven-plan-review<br/>lub raven-auto-plan] --> A{Akceptacja planu}
+    A --> I[raven-implement + raven-implement-review<br/>lub raven-auto-implement]
+    I --> U{Osobisty odbiór użytkownika}
+    U --> T[raven-test + raven-test-review<br/>lub raven-auto-test]
+    T --> R[raven-pr na zlecenie]
+    R --> C[Checki CI → merge użytkownika → Done]
+    U -. poprawki .-> I
+    Q[raven-manual-qa: dodatkowe eksploracyjne QA] -. dowody do odbioru .-> U
 ```
 
-**Change** to jedna zmiana dostarczająca konkretny rezultat, np. eksport zamówień. Ma własne issue, wymagania, plan, fazy wykonania i raporty. **Task** to faza tego change, zapisana jako sub-issue. Przykładowe identyfikatory: `C-03` i `C-03/T-02`.
-
-Roadmapa ustala kolejność changes. Plan opisuje realizację jednego change. Samo istnienie ticketa w roadmapie nie oznacza zatwierdzenia implementacji.
-
-## Instalacja
-
-### Wymagania
-
-| Potrzeba | Co przygotować |
-| --- | --- |
-| Instalacja przez CLI | Git, Node.js z `npx`, dostęp do tego prywatnego repo |
-| Korzystanie ze skilli | Agent obsługujący `SKILL.md`, np. Codex |
-| Praca z GitHubem | Uwierzytelniony connector lub `gh`, dostęp do repo i Project osobno |
-| Tryby auto i niezależne review | Host umożliwiający uruchamianie podagentów ze świeżym kontekstem |
-| Implementacja i testy | Środowisko, zależności i polecenia właściwe dla projektu |
-| Wariant Jira | Dostęp odczytowy do wskazanych wymagań Jira |
-
-Procedury workflow są dołączone do tego repo. Nie wymagają instalacji innej rodziny skilli. Integracje domenowe i narzędzia zależą od wybranego zadania; np. `raven-browser` jest dostosowany do Brave na macOS i MCP `brave`.
-
-### 1. Uzyskaj dostęp
-
-Właściciel repo przyznaje dostęp Twojemu kontu GitHub. Możesz korzystać z istniejącego uwierzytelnienia Git/SSH lub GitHub CLI. Jeśli używasz `gh`, sprawdź sesję:
-
-```bash
-gh auth status
-```
-
-Jeżeli nie jesteś zalogowany, wykonaj `gh auth login`. Nie umieszczaj tokenów w README, promptach ani plikach projektu.
-
-### 2. Zobacz dostępne skille
-
-```bash
-DISABLE_TELEMETRY=1 npx skills add MateuszKruk1303/raven-workflow --list
-```
-
-### 3. Zainstaluj aktywny zestaw
-
-Instalacja interaktywna globalnie dla Codexa:
-
-```bash
-DISABLE_TELEMETRY=1 npx skills add MateuszKruk1303/raven-workflow -g -a codex
-```
-
-Wybierz **wszystkie aktywne skille Raven**, bez `raven-pilot-*` i `raven-seed`. Skille mają wspólne referencje między katalogami: sam router `raven-workflow` nie zawiera całego procesu. Zachowaj oryginalne nazwy i układ katalogów.
-
-<details>
-<summary><strong>Gotowa komenda wybierająca dokładnie 29 aktywnych skilli</strong></summary>
-
-```bash
-DISABLE_TELEMETRY=1 npx skills add MateuszKruk1303/raven-workflow -g -a codex --skill \
-  raven-workflow raven-shape raven-prd raven-github-setup raven-roadmap \
-  raven-init-stack raven-medusa-ecommerce-init raven-agents-md raven-test-plan \
-  raven-hooks raven-repo-map raven-frame raven-research raven-domain-distillation \
-  raven-rule-review raven-jira-roadmap raven-plan raven-auto-plan raven-plan-review \
-  raven-implement raven-auto-implement raven-implement-review raven-test \
-  raven-auto-test raven-test-review raven-pr raven-lesson raven-browser raven-md
-```
-
-</details>
-
-Bez `-g` instalacja dotyczy bieżącego projektu — uruchom wtedy komendę w repo aplikacji. Nie używaj `--all`, jeśli chcesz pominąć historyczne skille i instalować tylko dla wybranego agenta.
-
-Sprawdź instalację:
-
-```bash
-DISABLE_TELEMETRY=1 npx skills ls -g -a codex
-```
-
-CLI obsługuje prywatne repo oraz instalację z lokalnego katalogu. Flagi, uwierzytelnienie i aktualizacje opisuje [dokumentacja skills CLI](https://github.com/vercel-labs/skills). Zmienna `DISABLE_TELEMETRY=1` wyłącza telemetrykę instalatora zgodnie z [dokumentacją CLI](https://www.skills.sh/docs/cli). Te komendy nie wymagają publikacji repo w publicznym katalogu.
-
-### Istniejąca ręczna instalacja
-
-Jeżeli masz już kopie Raven w `~/.codex/skills` lub innym katalogu wykrywanym przez hosta, porównaj je z repo i zachowaj lokalne poprawki przed zmianą sposobu instalacji. Pozostaw jedną aktywną instalację każdego skilla; podwójne nazwy utrudniają ustalenie, którą wersję agent czyta. Nie nadpisuj całego katalogu skilli — mogą znajdować się tam inne zestawy.
-
-## Pierwsza sesja
-
-Otwórz **repo aplikacji, nad którą pracujesz**. Repo `raven-workflow` służy do utrzymywania samych skilli.
-
-Poniższe przykłady są wiadomościami do agenta, nie komendami terminala. W Codex możesz wskazać skill przez `$nazwa`; w innym hoście użyj jego mechanizmu wyboru skilla.
-
-```text
-$raven-workflow
-Sprawdź stan tego projektu i wskaż następny krok. Na razie tylko odczyt.
-```
-
-Router odczytuje instrukcje projektu i dostępny stan GitHuba. Prośba o status nie uruchamia implementacji ani całego procesu.
-
-Gdy znasz etap i change, podaj je bezpośrednio. W przykładach `C-03` zastąp rzeczywistym Raven ID lub pełnym URL issue.
-
-```text
-$raven-auto-plan C-03
-Przygotuj plan wraz z niezależnym review. Czekaj na moją akceptację.
-```
-
-Opcjonalnie dodaj do instrukcji swojego agenta zasadę:
-
-```text
-Przy pracy w workflow Raven najpierw odczytaj raven-workflow/SKILL.md
-z lokalizacji wskazanej przez katalog skilli hosta. Następnie czytaj tylko
-skille potrzebne do zadania. Stan change odtwarzaj z instrukcji projektu
-i GitHuba, nie z pamięci poprzedniej rozmowy. Pytanie o status jest odczytem.
-```
-
-## Trzy sposoby rozpoczęcia
-
-### Nowy produkt
-
-1. **Dopracuj pomysł** przez `raven-shape`; uzgodnij problem, odbiorców i granice produktu.
-2. **Zapisz wymagania** przez `raven-prd`.
-3. **Przygotuj GitHub** przez `raven-github-setup`: prywatne repo, prywatny Project i lokalne powiązanie.
-4. **Ułóż roadmapę** przez `raven-roadmap`: changes, kolejność i zależności.
-5. **Uruchom projekt** przez `raven-init-stack` albo `raven-medusa-ecommerce-init`, stosownie do produktu.
-6. **Przygotuj instrukcje i jakość**: `raven-agents-md`, `raven-test-plan`, a gdy istnieją odpowiednie komendy — `raven-hooks`.
-7. **Wybierz pierwszy change** i przejdź do planowania.
-
-To kolejność orientacyjna. Nie powtarzaj istniejącego setupu. `raven-init-stack` wybiera stack dla nowego projektu; istniejąca aplikacja zachowuje swój stack.
-
-### Istniejąca aplikacja
-
-Zacznij od konkretnego zadania. Uzupełnij brakujące powiązanie z GitHubem, a następnie dobierz analizę do niewiadomych:
-
-| Nie wiesz… | Użyj |
-| --- | --- |
-| Jak poruszać się po repo i gdzie są ryzyka | `raven-repo-map` |
-| Czy zgłoszona przyczyna problemu jest prawdziwa | `raven-frame` |
-| Jak działa konkretna funkcja | `raven-research` |
-| Czy dokumentacja i kod używają tych samych pojęć | `raven-domain-distillation` |
-| Czy instrukcje dla agenta pomagają w pracy | `raven-rule-review` |
-
-Dla małego zadania w znanym obszarze przejdź od razu do planowania. Analiza kodu w trakcie planowania nie wymaga automatycznie osobnego researchu.
-
-**Przed ryzykownym refaktorem** można wykonać testy charakteryzacyjne przez `raven-test` lub `raven-auto-test` w trybie `before-change`. Przy bugfixie test reprodukujący błąd może prawidłowo dawać RED. Szczegóły: [testy przed zmianą](skills/raven-test/references/before-change.md).
-
-### Jira i praca zespołowa
-
-`raven-jira-roadmap` przenosi wskazany zakres pracy do workflow Raven. Wymagania i biznesowy status pozostają w Jira; plany, raporty i dowody trafiają do prywatnego GitHuba. Repo artefaktów może być inne niż repo kodu.
-
-Nie importuj całego backlogu bez ustalenia zakresu. Przy oddzielnych repo używaj pełnych URL-i; finalizacja po merge wymaga jawnego powiązania. Prywatny Project nie zapewnia prywatności issues znajdujących się w publicznym repo.
-
-## Manual czy auto?
-
-Wybierasz tryb **dla etapu**, nie na zawsze dla projektu. Możesz przygotować plan w auto, wdrożyć go manualnie i ponownie wybrać auto dla testów.
-
-| Etap | Manual | Auto | Decyzja użytkownika |
+| Etap | Manual | Auto | Kto podejmuje następną decyzję |
 | --- | --- | --- | --- |
-| Planowanie | `raven-plan` | `raven-auto-plan` | Zakres i akceptacja planu |
-| Review planu | `raven-plan-review` osobno | Wbudowane niezależne review | Poprawki lub akceptacja wersji |
-| Implementacja | `raven-implement` | `raven-auto-implement` | Zmiany kontraktu i odbiór |
-| Review kodu | `raven-implement-review` osobno | Świeży reviewer po testerze | Rozstrzygnięcie uwag technicznych |
-| Trwałe testy | `raven-test` | `raven-auto-test` | Zakres, błędy produktu, wyjątki |
-| Review testów | `raven-test-review` osobno | Wbudowane review i poprawki wad testów | W manualu wybór poprawek |
-| Publikacja | `raven-pr` | `raven-pr` | Osobne zlecenie publikacji |
+| Plan i jego review | `raven-plan` → osobno `raven-plan-review` | `raven-auto-plan` tworzy plan i deleguje niezależne review | Użytkownik zatwierdza konkretną wersję |
+| Implementacja i review | `raven-implement` → osobno `raven-implement-review` | `raven-auto-implement`: autor → tester wymagań → poprawki → po PASS świeży reviewer kodu | Użytkownik rozstrzyga uwagi i odbiera funkcję |
+| Trwałe testy i review | `raven-test` → osobno `raven-test-review` | `raven-auto-test`: autor testów → reviewer → ograniczona pętla poprawek testów | Nierozstrzygnięte wymagania i błędy produktu wracają do decyzji |
+| Publikacja | `raven-pr` | Tak samo, osobne zlecenie | Użytkownik decyduje o merge po CI |
 
-**Manual** zachowuje osobne wywołania, decyzje między fazami i interaktywny triage. Może korzystać z podagentów. **Auto** organizuje pracę autorów i niezależnych oceniających wewnątrz zleconego etapu. Nie oznacza automatycznej akceptacji planu, przejścia przez wszystkie kolejne etapy ani merge.
-
-```mermaid
-flowchart TD
-    A[Zatwierdzony plan] --> B[Implementator]
-    B --> C[Niezależny tester wymagań]
-    C --> D{Wymagania spełnione?}
-    D -->|Nie: potwierdzony błąd| B
-    D -->|Tak| E[Świeży reviewer techniczny]
-    E --> F[Raport i decyzja użytkownika]
-    F --> G[Osobisty odbiór aplikacji]
-    G --> H[Osobno zlecone trwałe testy]
-    classDef human fill:#fff1cf,stroke:#b8860b,color:#382b10;
-    class F,G human;
-```
-
-Pętla napraw ma limity. Brak narzędzi lub dowodów nie jest sukcesem. Tester bieżącej implementacji nie zastępuje trwałej suite testowej. Auto-test naprawia potwierdzone wady testów; wykryty błąd produktu wraca do implementacji, bez osłabiania asercji.
-
-### Przykładowy change w trybie auto
-
-Każdy blok to osobna wiadomość, wysyłana po zakończeniu poprzedniego etapu i rozstrzygnięciu jego uwag:
+Przykładowe **osobne** zlecenia dla tego samego issue:
 
 ```text
-$raven-auto-plan C-03
+Użyj raven-auto-plan dla OWNER/REPO#123.
+[Po review i mojej akceptacji] Użyj raven-auto-implement dla tego issue.
+[Po moim odbiorze] Użyj raven-auto-test dla tego issue.
+[Po zakończeniu testów i review] Użyj raven-pr dla tego issue.
 ```
 
-```text
-Akceptuję plan C-03 w wersji wskazanej w raporcie.
-$raven-auto-implement C-03
-```
+Każdy werdykt dotyczy określonych wymagań i wersji kodu. Zmiana kontraktu wymaga nowego review i akceptacji; zmiana kodu wymaga odświeżenia dotkniętych dowodów. Niewykonana kontrola to BLOCKED/NOT VERIFIED. Akceptacja ryzyka nie zmienia FAIL w PASS. `raven-pr` publikuje PR, ale nie audytuje wcześniejszych etapów. Wymuszanie checków przy merge zależy od ustawień GitHuba, nie od samego istnienia skilli.
 
-```text
-Sprawdziłem aplikację i akceptuję rezultat po rozstrzygnięciu uwag review.
-$raven-auto-test C-03
-```
+<a id="przepisy-na-sytuacje-szczegolne"></a>
+## Przepisy na sytuacje szczególne
 
-```text
-$raven-pr C-03
-Opublikuj PR z opisem rzeczywistych zmian i wyników weryfikacji.
-```
-
-Następnie sprawdzasz CI i wykonujesz merge zgodnie z regułami projektu. `raven-pr` publikuje zmianę; nie uruchamia testów, nie audytuje poprzednich etapów i nie wykonuje merge. Obowiązkowa kolejność procesu nadal obejmuje testy i ich review przed PR.
-
-## Gdzie znajduje się stan pracy?
-
-```mermaid
-flowchart LR
-    U[Użytkownik] --> A[Agent koordynujący]
-    A --> R[Repo aplikacji: kod i dokumentacja produktu]
-    A --> G[Prywatny GitHub: issues, plany i raporty]
-    A --> S[Podagenci: analiza, wykonanie i review]
-    S -->|Wyniki i dowody| A
-    G -->|Snapshot i checkpoint| N[Wznowienie w nowej sesji]
-    R -->|Branch i SHA| N
-```
-
-| Materiał | Kanoniczne miejsce |
+| Cel | Zlecenie i granica |
 | --- | --- |
-| Instrukcje skilli, procedury i helpery | To repo, katalog `skills/` |
-| Kod, testy, migracje i konfiguracja aplikacji | Repo aplikacji |
-| PRD, shape-notes, decyzje stacku, lessons, AGENTS.md | Repo aplikacji |
-| Powiązanie z repo/Project i ich identyfikatory | `context/foundation/github.json` w repo aplikacji |
-| Wymagania change, plan, fazy i zależności | Issues i sub-issues GitHuba |
-| Wersje planów, research, review, decyzje i checkpointy | Oznaczone komentarze w GitHubie |
-| Strategia testów i rozwijany cookbook | Issue strategii w GitHubie |
-| Techniczny sposób uruchamiania testów | Repo aplikacji, np. `test-stack.md` |
-| Lokalne kopie planów do pracy agenta | Tymczasowy `artifact_dir` poza śledzonym repo |
+| Naprawić błąd | `raven-frame`, jeśli przyczyna jest niepotwierdzona; potem plan. Test reprodukujący może mieć oczekiwany RED przed naprawą. Nie osłabiaj asercji dla zielonego wyniku. |
+| Refaktor bez testów | `raven-test` lub `raven-auto-test` w trybie **before-change**, dla uzgodnionego zakresu. Zabezpiecz zachowanie, potem implementuj i ponów potrzebne kontrole. |
+| Wyklikać funkcję | `raven-manual-qa` z issue i URL, jeśli znany. Tester sam szuka danych, publikuje scenariusze i raport problemów. Nie naprawia kodu. |
+| Sprawdzić UI podczas implementacji | `raven-browser`. Domyślnie Playwright CLI w osobnej sesji. Osobista przeglądarka wymaga polecenia lub zgody; przy udokumentowanym ograniczeniu CLI agent może o nią poprosić. |
+| Dodać trwałe testy | `raven-test`/`raven-auto-test`. Unit, integration lub E2E dobiera się do ryzyka; eksploracja przez CLI nie zastępuje suite uruchamianej przez runner. |
+| Pracować z Jirą | `raven-jira-roadmap` dla wskazanych ticketów/sprintu/epiki. Jira pozostaje źródłem wymagań; wersjonowane artefakty pracy trafiają do prywatnego GH. Bez zapisów do Jiry. |
+| Wznowić po przerwie | `raven-workflow` + repo/issue. Odczytaj checkpoint, wersje i decyzje; nie wykonuj ponownie ukończonych faz. Po timeout publikacji najpierw sprawdź istniejący marker. |
+| Zgłosić poprawkę po odbiorze | Podaj to samo issue, Expected/Actual i reprodukcję. Poprawka w ramach wymagań wraca do implementacji; nowe wymaganie wymaga aktualizacji planu. |
+| Kontynuować dawny pilot | Ustal mapowanie historycznych artefaktów na aktualny change. Usunięte skille pilota nie wracają do procesu; archiwów nie migruj automatycznie. |
 
-Koordynator publikuje wyniki; podagenci zwracają mu artefakty. Akceptacja planu dotyczy konkretnej wersji i fingerprintu. Review kodu dotyczy konkretnego SHA. Zmiana kontraktu albo kodu może wymagać nowej weryfikacji — poprzedni PASS nie przenosi się automatycznie.
+## Gdzie szukać stanu
 
-Szczegółowe formaty: [kontrakt GitHub](skills/raven-auto-plan/references/github-contract.md), [adapter manualny](skills/raven-plan/references/manual-github.md), [kontrakt review testów](skills/raven-test/references/test-review.md).
-
-### Statusy i gotowość
-
-| Status | Znaczenie |
+| Miejsce | Co jest kanoniczne |
 | --- | --- |
-| Backlog | Zidentyfikowana praca, jeszcze nieprzygotowana |
-| Preparing | Doprecyzowanie, analiza lub planowanie |
-| Ready | Aktualny plan po review i akceptacji, spełnione zależności |
-| In progress | Trwa realizacja |
-| Review | Oczekiwanie na przegląd lub odbiór |
-| Blocked | Konkretna przeszkoda i wskazana potrzebna decyzja lub akcja |
-| Done | Wymagany zakres, odbiór i merge potwierdzone |
+| `context/foundation/` projektu | Shape, PRD, architektura, instrukcje fundamentowe; `github.json` wiąże projekt z GH |
+| GitHub issue i sub-issues | Wymagania change, plan, fazy, Progress, snapshoty, raporty i decyzje |
+| GitHub Project | Kolejność, zależności i status; status sam nie dowodzi ukończenia |
+| Git i środowisko aplikacji | Rzeczywisty kod, SHA, konfiguracja oraz wyniki uruchomień |
+| Lokalny `artifact_dir` | Robocza reprezentacja artefaktów GH; nie drugi kanoniczny plan |
 
-`Raven Order` określa kolejność, a zależności określają, co można rozpocząć. Samo zamknięcie issue albo merge nie dowodzi wszystkich kryteriów odbioru. Automatyczna synchronizacja Done wymaga konfiguracji projektu; instalacja skilli jej nie tworzy.
-
-### Wznowienie po przerwie
-
-```text
-$raven-workflow
-Wznów orientację w C-03. Odczytaj najnowszy plan, raporty, decyzje
-oraz checkpoint. Wskaż ostatni ukończony etap i konkretny następny krok.
-Nie rozpoczynaj jeszcze wykonania.
-```
-
-Podaj URL issue, jeśli Raven ID nie jest jednoznaczny. Agent weryfikuje GitHub i lokalny Git zamiast odtwarzać decyzje z pamięci rozmowy. Przy częściowym błędzie publikacji najpierw kończy zapis — nie powtarza wykonanej pracy ani nie tworzy duplikatu.
+Pełna strategia testowania i rollout również są w GH. Schematy i reguły zapisu: [kontrakt GitHub](skills/raven-auto-plan/references/github-contract.md). Zasady routingu: [raven-workflow](skills/raven-workflow/SKILL.md). README jest cookbookiem użytkownika; szczegóły wykonawcze utrzymujemy w tych źródłach.
 
 ## Katalog skilli
 
-Każda nazwa prowadzi do pełnej instrukcji. Czytaj główną mapę, a potem skille potrzebne do konkretnego zadania.
+Każdy skill ma poniżej jedno miejsce w katalogu. Link prowadzi do pełnych instrukcji, warunków wejścia i formatu wyniku.
 
-### Przygotowanie i nawigacja
+### Produkt i przygotowanie
 
-| Skill | Kiedy używać |
+| Skill | Kiedy użyć / wynik |
 | --- | --- |
-| [raven-workflow](skills/raven-workflow/SKILL.md) | Ustalenie etapu, gotowości i następnego kroku |
-| [raven-shape](skills/raven-shape/SKILL.md) | Dopracowanie pomysłu i zakresu |
-| [raven-prd](skills/raven-prd/SKILL.md) | Przekształcenie ustaleń w wymagania produktu |
-| [raven-github-setup](skills/raven-github-setup/SKILL.md) | Prywatne repo/Project, pola, etykiety i powiązanie |
-| [raven-roadmap](skills/raven-roadmap/SKILL.md) | Changes i zależności na podstawie PRD |
-| [raven-init-stack](skills/raven-init-stack/SKILL.md) | Nowy projekt na wybranym stacku Raven |
-| [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Alternatywny setup Medusa i Next.js |
-| [raven-agents-md](skills/raven-agents-md/SKILL.md) | Instrukcje dla agentów oparte na rzeczywistym repo |
-| [raven-test-plan](skills/raven-test-plan/SKILL.md) | Strategia jakości i etapowe wdrożenie testów |
-| [raven-hooks](skills/raven-hooks/SKILL.md) | GitHub Actions dla istniejących komend jakości |
+| [raven-workflow](skills/raven-workflow/SKILL.md) | Odtwarza etap i wskazuje właściwy następny krok; sam nie uruchamia całego cyklu. |
+| [raven-shape](skills/raven-shape/SKILL.md) | Rozmowa o problemie i zakresie → shape-notes z decyzjami i lukami. |
+| [raven-prd](skills/raven-prd/SKILL.md) | Notatki → PRD greenfield lub brownfield; zachowuje źródła i ujawnia braki. |
+| [raven-github-setup](skills/raven-github-setup/SKILL.md) | Prywatne repo/Project, pola i powiązanie lokalnego projektu. |
+| [raven-roadmap](skills/raven-roadmap/SKILL.md) | PRD → uporządkowane changes i zależności w GH, bez spekulacyjnych tasków. |
+| [raven-architecture](skills/raven-architecture/SKILL.md) | Opcje i przekrojowe decyzje architektoniczne → architecture.md. |
+| [raven-init-stack](skills/raven-init-stack/SKILL.md) | Setup projektu przez Better T Stack i lokalnego PostgreSQL. |
+| [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Alternatywny setup: Medusa + Next.js, baza, migracje, seed, admin i storefront. |
+| [raven-agents-md](skills/raven-agents-md/SKILL.md) | Generuje onboarding AGENTS.md z rzeczywistej struktury i komend repo. |
+| [raven-md](skills/raven-md/SKILL.md) | Tworzy lub aktualizuje wskazany AGENTS.md; alternatywa, nie drugi obowiązkowy krok. |
 
-### Rozpoznanie istniejącego projektu
+### Rozpoznanie i utrzymanie
 
-| Skill | Kiedy używać |
+| Skill | Kiedy użyć / wynik |
 | --- | --- |
-| [raven-repo-map](skills/raven-repo-map/SKILL.md) | Szeroka mapa nieznanego repo |
-| [raven-frame](skills/raven-frame/SKILL.md) | Weryfikacja obserwacji, przyczyny i proponowanego rozwiązania |
-| [raven-research](skills/raven-research/SKILL.md) | Szczegółowe badanie konkretnej funkcji |
-| [raven-domain-distillation](skills/raven-domain-distillation/SKILL.md) | Porównanie języka dokumentów z modelem kodu |
-| [raven-rule-review](skills/raven-rule-review/SKILL.md) | Ocena jakości instrukcji AI |
-| [raven-jira-roadmap](skills/raven-jira-roadmap/SKILL.md) | Wskazane tickety Jira jako kolejka pracy Raven |
+| [raven-repo-map](skills/raven-repo-map/SKILL.md) | Szeroka orientacja w nieznanym repo → mapa obszarów, zależności i ryzyk. |
+| [raven-frame](skills/raven-frame/SKILL.md) | Oddziela obserwację od domniemanej przyczyny i proponowanego rozwiązania. |
+| [raven-research](skills/raven-research/SKILL.md) | Bada konkretny obszar; publikuje dowody i opcje do planu tego samego change. |
+| [raven-domain-distillation](skills/raven-domain-distillation/SKILL.md) | Niezależnie porównuje język dokumentacji i model kodu; zapisuje słownik i rozbieżności. |
+| [raven-rule-review](skills/raven-rule-review/SKILL.md) | Ocenia jakość instrukcji AI i proponuje konkretne poprawki. |
+| [raven-jira-roadmap](skills/raven-jira-roadmap/SKILL.md) | Mapuje wskazane wymagania Jira na prywatną kolejkę zmian w GH. |
+| [raven-create-skill](skills/raven-create-skill/SKILL.md) | Dopracowuje pomysł w rozmowie, tworzy lub rozszerza skill, aktualizuje zależności i prowadzi niezależne review; Astra/high. |
+| [raven-lesson](skills/raven-lesson/SKILL.md) | Na zlecenie utrwala powtarzalną lekcję w lessons.md. |
 
 ### Dostarczanie zmiany
 
-| Skill | Rezultat |
+| Skill | Kiedy użyć / wynik |
 | --- | --- |
-| [raven-plan](skills/raven-plan/SKILL.md) | Interaktywnie opracowany plan |
-| [raven-auto-plan](skills/raven-auto-plan/SKILL.md) | Plan i niezależne review, przed decyzją użytkownika |
-| [raven-plan-review](skills/raven-plan-review/SKILL.md) | Osobne review planu i triage |
-| [raven-implement](skills/raven-implement/SKILL.md) | Implementacja zatwierdzonych faz z interaktywnymi bramkami |
-| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Implementacja, tester wymagań, poprawki i świeże review kodu |
-| [raven-implement-review](skills/raven-implement-review/SKILL.md) | Techniczne review implementacji względem planu |
-| [raven-test](skills/raven-test/SKILL.md) | Trwałe testy i dowody ich wykonania |
-| [raven-auto-test](skills/raven-auto-test/SKILL.md) | Testy, niezależne review i ograniczona pętla poprawek |
-| [raven-test-review](skills/raven-test-review/SKILL.md) | Niezależna ocena testów na tych samych źródłach |
-| [raven-pr](skills/raven-pr/SKILL.md) | Push gałęzi i utworzenie lub aktualizacja PR |
+| [raven-plan](skills/raven-plan/SKILL.md) | Interaktywne przygotowanie planu i faz w GH, bez automatycznego review. |
+| [raven-auto-plan](skills/raven-auto-plan/SKILL.md) | Planista i niezależny reviewer; kończy na decyzji użytkownika o planie. |
+| [raven-plan-review](skills/raven-plan-review/SKILL.md) | Osobna ocena wykonalności i zgodności planu, raport i triage. |
+| [raven-implement](skills/raven-implement/SKILL.md) | Realizuje zatwierdzony plan fazami, z kontrolami i ręcznymi decyzjami. |
+| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Koordynuje implementatora, testera wymagań i finalnego reviewera kodu. |
+| [raven-implement-review](skills/raven-implement-review/SKILL.md) | Ocenia dostarczony diff względem planu, ryzyk i wzorców; publikuje uwagi. |
+| [raven-pr](skills/raven-pr/SKILL.md) | Tworzy/aktualizuje PR z opisem rzeczywistej zmiany i istotnych kompromisów. |
 
-### Narzędzia pomocnicze
+### Jakość i testowanie
 
-| Skill | Kiedy używać |
+| Skill | Kiedy użyć / wynik |
 | --- | --- |
-| [raven-lesson](skills/raven-lesson/SKILL.md) | Zapis zaakceptowanej, powtarzalnej lekcji projektu |
-| [raven-browser](skills/raven-browser/SKILL.md) | Weryfikacja aplikacji w Brave na macOS |
-| [raven-md](skills/raven-md/SKILL.md) | Alternatywne tworzenie i aktualizacja AGENTS.md |
+| [raven-test-plan](skills/raven-test-plan/SKILL.md) | Strategia testów, ryzyka, cookbook i etapowy rollout w GH; nie pisze testów. |
+| [raven-test](skills/raven-test/SKILL.md) | Implementuje trwałe testy i dowody ochrony regresji; review zlecane osobno. |
+| [raven-auto-test](skills/raven-auto-test/SKILL.md) | Autor testów, niezależny reviewer i ograniczone poprawki wad testów. |
+| [raven-test-review](skills/raven-test-review/SKILL.md) | Ocenia skuteczność asercji, źródła oczekiwań, izolację i adekwatność warstwy. |
+| [raven-manual-qa](skills/raven-manual-qa/SKILL.md) | Dodatkowe eksploracyjne QA z planem scenariuszy i raportem reprodukowalnych problemów. |
+| [raven-browser](skills/raven-browser/SKILL.md) | Dostęp do działającej aplikacji: CLI domyślnie, osobista przeglądarka za zgodą. |
+| [raven-hooks](skills/raven-hooks/SKILL.md) | Konfiguruje GitHub Actions dla istniejących komend; rozróżnia joby od wymaganych checków. |
 
-### Historyczny Raven Pilot
+## Rozwijanie Raven
 
-Repo zachowuje 10 skilli `raven-pilot-*` oraz `raven-seed` dla jawnie zleconej kontynuacji dawnych pilotów. Nie są częścią nowego workflow. Nie instaluj ich rutynowo i nie migruj automatycznie dawnych chunków do issues. Opis historii znajduje się w [mapie workflow](skills/raven-workflow/SKILL.md#deprecated--historyczne).
+> Użyj raven-create-skill w repo Raven. Potrzebuję skilla do […]. Dopracuj ze mną zakres, sprawdź istniejące możliwości, wdroż integrację i zweryfikuj wynik. Zainstaluj go również globalnie w Codexie.
 
-## Diagramy i interaktywna mapa
+Metaskill korzysta z ogólnego `skill-creator` dostępnego w hoście. Autor instrukcji i niezależny reviewer pracują na Astrze/high. Dodatkowe narzędzie nie staje się automatycznie obowiązkową bramką procesu; taka zmiana wymaga uzgodnienia. Instalacja jest wykonywana, gdy została zlecona, po review i sprawdzeniu różnic.
 
-Diagramy w tym README używają **Mermaid**, renderowanego bezpośrednio przez GitHub. Nie wymagają publicznego hostingu ani zewnętrznych usług do generowania obrazów. [Obsługa diagramów w GitHubie](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
+## Doctor i synchronizacja
 
-[Mapa HTML](docs/raven-workflow.html) zawiera przełączanie scenariuszy i widok do druku. GitHub pokazuje plik HTML jako kod, a README nie uruchamia jego JavaScriptu. Aby korzystać z mapy, sklonuj repo i otwórz plik w przeglądarce. Na macOS, z katalogu tego repo:
+**Repo jest źródłem wersji dystrybucyjnej.** Edytuj skille tutaj, sprawdź je, a następnie synchronizuj do instalacji. Nie utrzymuj dwóch niezależnie edytowanych kopii. Rozbieżność rozstrzygnij przez diff; sync nie jest automatycznym merge.
 
 ```bash
-open docs/raven-workflow.html
+# Statyczna integralność repo; kod wyjścia 0 = PASS, 1 = wykryte problemy, 2 = błąd narzędzia
+.venv/bin/python tools/raven.py doctor
+# Raport dla automatyzacji
+.venv/bin/python tools/raven.py doctor --json
+# Dodatkowo wykryj brakujące, zmienione i stare pliki lokalnej instalacji
+.venv/bin/python tools/raven.py doctor --installed "$HOME/.codex/skills"
+# Testy narzędzia, w tym celowo uszkodzone kopie skilli
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
-Na innych systemach otwórz plik przez menedżer plików. Mapa działa offline. Nie potrzebuje GitHub Pages ani publicznego serwera. Jej oznaczenia opisują proces i dostępność skilli, nie dowodzą gotowości aplikacji ani wykonania pełnego workflow end-to-end.
+Doctor sprawdza YAML, zgodność nazw, lokalne odsyłacze plikowe poza przykładami kodu, odwołania do wspólnej polityki, kompletność katalogu README oraz [deklaratywny kontrakt](workflow-contract.json): role, niezależność kontekstu, kolejność i dostępność artefaktów przekazywanych między etapami. Każdy błąd ma kod i lokalizację. Tryb `--installed` porównuje również treść plików; nie zapisuje zmian ani nie łączy się z GitHubem.
 
-## Utrzymanie
+Kontrakt opisuje **standardowy cykl po implementacji**, nie wykonuje go. `initial_artifacts` deklaruje dane i decyzje dostarczane z zewnątrz; nie oznacza, że użytkownik już ich udzielił. Tryb before-change i samodzielne QA są opisane w odpowiednich skillach. Weryfikacja kontraktu nie dowodzi, że agent zastosuje instrukcje ani że repo aplikacji rzeczywiście ma wymagane bramki. Doctor nie sprawdza zewnętrznych URL, kotwic Markdown, dostępności modeli, jakości aplikacji ani wszystkich sprzeczności znaczeniowych w prozie.
 
-### Struktura repo
+Workflow [Raven integrity](.github/workflows/integrity.yml) wykonuje doctora i testy przy push oraz PR. Sam plik CI nie ustawia required checks w GitHubie; pierwszy zdalny run potwierdzi działanie na runnerze.
 
-```text
-raven-workflow/
-├── README.md                       # przewodnik użytkownika i zespołu
-├── docs/
-│   └── raven-workflow.html          # interaktywna mapa offline
-└── skills/
-    └── raven-*/
-        ├── SKILL.md                # zakres i główne instrukcje
-        ├── agents/openai.yaml      # opcjonalne metadane interfejsu
-        ├── references/             # kontrakty, szablony i procedury
-        ├── scripts/                # opcjonalne helpery
-        └── assets/                 # opcjonalne materiały do użycia
-```
-
-Podkatalogi są opcjonalne. `references/procedures/` zawiera lokalne procedury wykonawcze; nie są osobnymi skillami do instalacji.
-
-### Aktualizacja instalacji
-
-Dla skilli zarządzanych przez CLI:
-
-```bash
-DISABLE_TELEMETRY=1 npx skills update -g
-```
-
-Komenda obejmuje wszystkie globalne skille zarządzane przez instalator, także spoza Raven. Możesz ograniczyć ją nazwami, np. `npx skills update -g raven-plan raven-auto-plan`. Przy zmianach wspólnych kontraktów aktualizuj spójny zestaw Raven. [Opcje aktualizacji](https://github.com/vercel-labs/skills#skills-update).
-
-### Praca nad samym workflow
-
-1. Edytuj skill i potrzebne referencje w tym repo.
-2. Sprawdź odnośniki, zależności między skillami i zgodność trybów manual/auto.
-3. Zmieniając proces, zaktualizuj router, README i odpowiedni fragment mapy HTML.
-4. Zrób review diffu, commit i push do prywatnego repo.
-5. Zaktualizuj instalacje użytkowników. Commit do repo nie aktualizuje automatycznie ich lokalnych kopii.
-
-Nie synchronizuj na ślepo w obu kierunkach. Jeżeli poprawka powstała w zainstalowanej kopii, porównaj ją z repo i przenieś świadomie. `git pull` aktualizuje klon repo, a `skills update` instalację zarządzaną przez CLI. To dwa różne miejsca.
-
-### Prywatność zespołu
-
-Repo skilli pozostaje prywatne. Dostęp do niego nie nadaje dostępu do projektów obsługiwanych przez Raven. Repo artefaktów i GitHub Project każdego projektu mają osobno sprawdzaną prywatność. Nie publikuj mapy przez publiczny hosting ani nie wysyłaj prywatnych diagramów do internetowych edytorów.
-
-Wersjonuj instrukcje i szablony. Dane logowania, sesje przeglądarki, lokalne sekrety i pliki cache pozostają poza repo. Użytkownik nadal odpowiada za wybór projektu i zaakceptowanie zmian zakresu.
-
-## Najczęstsze pytania
-
-| Sytuacja | Co zrobić |
-| --- | --- |
-| Instalator nie widzi repo | Sprawdź uprawnienia konta i uwierzytelnienie Git/SSH/gh |
-| Agent nie widzi skilla | Sprawdź zakres instalacji, wybranego agenta i jego listę skilli; odśwież sesję |
-| Skill jest widoczny podwójnie | Sprawdź ręczne kopie, instalację globalną i projektową; zachowaj lokalne poprawki przed usunięciem duplikatu |
-| Brakuje referencji z innego skilla | Zainstaluj cały aktywny zestaw i zachowaj nazwy katalogów |
-| Brakuje dostępu do GitHub Project | Zweryfikuj dostęp do Project osobno od repo; nie twórz zastępczego Project w ciemno |
-| Nie ma lokalnego plan.md | To normalne: sprawdź issue, taski i snapshot w GitHubie |
-| Nie ma obsługi podagentów | Nie deklaruj niezależnego review; wybierz wykonalny zakres i wskaż brakującą możliwość |
-| Czy każda zmiana potrzebuje E2E? | Nie. Warstwa testów wynika z ryzyka; istniejące pokrycie może wystarczyć |
-| Czy auto zrobi merge? | Nie. Publikacja PR i merge są odrębnymi działaniami |
-| Czy można zacząć od jednego etapu? | Tak. Jawne zlecenie etapu ma pierwszeństwo przed proponowaniem całego cyklu |
-
----
-
-Dokumentacja opisuje kontrakt workflow. Gdy szczegół wymaga doprecyzowania, odczytaj [router Raven](skills/raven-workflow/SKILL.md), właściwy `SKILL.md` i wskazane przez niego referencje.
+Po zmianie skilla uruchom doctora i testy; przy zmianie zachowania odtwórz dotknięte scenariusze z niezależnym reviewerem. Nowy skill dodaj do kontraktu oraz katalogu README. Przy zmianie wspólnego procesu uaktualnij kontrakt, router i powiązane instrukcje, sprawdzając zgodność ich znaczenia. Pełne testy agentowe na aplikacji i pomiar błędów przepuszczonych do produkcji pozostają osobną warstwą jakości.

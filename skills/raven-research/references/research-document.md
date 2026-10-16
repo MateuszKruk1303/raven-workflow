@@ -65,6 +65,14 @@ last_updated_by: [Researcher name]
 - [Change issue/comment URL] - Historical decision about X
 - [Research comment URL] - Past exploration of Y
 
+## Options and Recommendation
+
+[Feasible alternatives, evidence, tradeoffs, recommendation and decisions still owned by the user. Do not present a recommendation as approval.]
+
+## Planning Handoff
+
+[Same change URL; source requirements revision/hash; inspected code SHA and dirty state; architecture constraints; what the planner can reuse, what needs revalidation, risks and unresolved choices. No implementation phases or task creation.]
+
 ## Related Research
 
 [Links to research comments in related change issues]

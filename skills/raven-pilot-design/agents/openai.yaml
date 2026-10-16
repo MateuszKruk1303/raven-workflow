@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Pilot Design"
-  short_description: "Pełny redesign UI i UX po funkcjonalnym MVP"
-  default_prompt: "Użyj $raven-pilot-design, aby poprowadzić pełny redesign działającego pilota: od kierunku wizualnego przez kluczowe widoki do spójnych ścieżek użytkownika."

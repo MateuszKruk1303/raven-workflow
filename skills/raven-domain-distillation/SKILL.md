@@ -5,6 +5,8 @@ description: Porównaj język dokumentów z modelem istniejącego kodu przez nie
 
 # Raven Domain Distillation
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Analiza modernizacji istniejącego systemu: destylacja języka i rozjazdów model–kod, inspirowana DDD. Nie jest pełnym procesem DDD ani automatycznym projektowaniem agregatów, mikroserwisów lub migracji.
 
 Przeczytaj [kontrakt raportów brownfield](../raven-repo-map/references/github-brownfield.md). Ustal obszar produktu, repo kodu, dokumenty źródłowe i docelowe issue: change dla lokalnego badania albo dedykowane issue domeny dla analizy projektu. Zapisz HEAD, wersje dokumentów i zakres. Mapę repo wykorzystaj do wyboru plików, nie jako dowód znaczenia biznesowego.

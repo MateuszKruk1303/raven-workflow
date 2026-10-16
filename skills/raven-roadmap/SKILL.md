@@ -5,7 +5,9 @@ description: Twórz roadmapę greenfield z ustalonego PRD i publikuj changes, ko
 
 # Raven Roadmap
 
-Domyślnie działaj jako skill greenfield: zamień ustalone wymagania produktu w kolejkę changes dostarczających odbieralne rezultaty i od razu opublikuj ją w GitHubie. Nie dodawaj osobnej bramki akceptacji dekompozycji wiernie wynikającej z PRD. GitHub Issues i Project są źródłem prawdy o kolejce, statusach i zależnościach; dokumenty produktu i plany pozostają w `context/`. Nie twórz lokalnego `roadmap.md` ani innej trwałej kopii kolejki.
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
+Domyślnie działaj jako skill greenfield: zamień ustalone wymagania produktu w kolejkę changes dostarczających odbieralne rezultaty i od razu opublikuj ją w GitHubie. Nie dodawaj osobnej bramki akceptacji dekompozycji wiernie wynikającej z PRD. GitHub Issues i Project są źródłem prawdy o kolejce, statusach i zależnościach; dokumenty produktu pozostają w `context/foundation/`, a plany changes i taski w GitHubie zgodnie z kontraktem GH. Nie twórz lokalnego `roadmap.md` ani innej trwałej kopii kolejki.
 
 ## Granice i uprawnienia
 
@@ -70,7 +72,7 @@ Przy aktualizacji pokaż diff: dodane, zmienione, proponowane wycofanie oraz wp�
 
 Nowy change zwykle ma **Backlog**. **Preparing** oznacza trwające przygotowanie; **Ready** wymaga dopracowanego planu/tasków i spełnionych zależności. Sam opis roadmapowy ani brak zależności nie wystarcza do Ready. **Blocked** wymaga konkretnej przeszkody i wskazania potrzebnej decyzji/akcji; zwykłe czekanie w kolejce nie musi zmieniać Backlog na Blocked.
 
-Szczegółowe taski powstają później podczas przygotowania change, po researchu i planowaniu. Nie publikuj spekulacyjnych sub-issues dla całego PRD. Zachowaj istniejące taski i wskaż potrzebę ich aktualizacji, jeśli zmienia się zakres. Nie przedstawiaj dotkniętego change jako gotowego do implementacji, dopóki taski i zależności nie są spójne; proponowaną zmianę statusu uwzględnij w diffie.
+Szczegółowe taski powstają później podczas przygotowania change, po planowaniu i ewentualnym potrzebnym researchu. Nie publikuj spekulacyjnych sub-issues dla całego PRD. Zachowaj istniejące taski i wskaż potrzebę ich aktualizacji, jeśli zmienia się zakres. Nie przedstawiaj dotkniętego change jako gotowego do implementacji, dopóki taski i zależności nie są spójne; proponowaną zmianę statusu uwzględnij w diffie.
 
 Jeśli treść wynika z ustalonego zakresu, przejdź bez zatrzymania do publikacji. Prezentacja w czacie jest informacją, nie obowiązkowym pytaniem o zgodę. Pytaj tylko o decyzje zmieniające produkt lub nierozstrzygnięty zakres. Użyj dostępnego narzędzia pytań albo zwykłego czatu.
 

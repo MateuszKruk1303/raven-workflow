@@ -5,6 +5,8 @@ description: Skonfiguruj GitHub Actions uruchamiające lint, typecheck i właśc
 
 # Raven Hooks
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Seeduj lub uzupełnij checki GitHub Actions dla faktycznego stacku projektu. Nazwa oznacza tutaj CI po PR, nie lokalne hooki agenta. Nie implementuj testów produktu ani nie publikuj PR przy okazji setupu.
 
 Przeczytaj [kontrakt GH](../raven-auto-plan/references/github-contract.md), instrukcje repo, manifesty/lockfile, konfigurację workspace, istniejące workflows, test-stack, strategię raven-test-plan i skrypty uruchamiania. Przyjmij wskazany change konfiguracyjny albo utwórz go zgodnie z kontraktem Raven, jeśli zlecenie nie ma jeszcze tożsamości. Nie zakładaj Node/Playwright ani pojedynczego pakietu.
@@ -28,3 +30,9 @@ Przed zapisaniem YAML zweryfikuj bieżącą składnię i wersje actions w oficja
 Zapisz konfigurację w repo i raport w change `<!-- raven:ci-setup -->`: joby, triggery, komendy, środowisko, pliki, walidacja, wymagane secrets/variables (same nazwy), ograniczenia fork PR. Ujawnij brakujące ustawienia bez wymyślania wartości. Nie zmieniaj branch protection/rulesets ani automatyzacji Done bez osobnego zlecenia; samo dodanie workflow nie oznacza, że check blokuje merge.
 
 Handoff: co będzie uruchamiane po PR, co sprawdzono lokalnie i czego pierwszy run dopiero dowiedzie. Ponowne wywołanie aktualizuje konfigurację bez duplikatów. Nie zmieniaj kodu produktu dla zielonego CI i nie uruchamiaj raven-pr automatycznie.
+
+## Wymuszanie bramek
+
+Ten etap jest właścicielem rozpoznania luki między istniejącym workflow Actions a faktycznie wymaganymi checkami. Odczytaj, o ile masz dostęp, rulesets/branch protection docelowej gałęzi; w raporcie rozróżnij: skonfigurowany job, potwierdzony run i check blokujący merge. Brak dostępu oznacza UNKNOWN, nie brak reguł.
+
+Gdy użytkownik osobno zleci wymuszanie bramek, przygotuj konkretną zmianę istniejących reguł z rzeczywistymi nazwami checków, zachowując pozostałe zabezpieczenia. Zastosuj ją w zakresie zlecenia i odczytaj stan po zapisie. Nie twórz obowiązkowego checka, który nie emituje wyniku dla właściwych PR. Automatyzacja Done pozostaje osobnym zakresem; jej brak wymaga ręcznej finalizacji po potwierdzonym merge. Sam setup CI nie daje zgody na zmianę tych ustawień.

@@ -5,6 +5,8 @@ description: "Utwórz lub uaktualnij AGENTS.md na podstawie rzeczywistych plikó
 
 # Raven MD
 
+Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+
 Twórz zwięzły przewodnik dla agenta pracującego w projekcie. Wynikiem jest jeden plik `AGENTS.md`, z konkretnymi zasadami, działającymi odnośnikami i poleceniami opartymi na źródłach. Zachowaj język istniejącego dokumentu, a dla nowego użyj języka użytkownika. Tytuł nowego dokumentu: `# Repository Guidelines`.
 
 ## Cel i zakres
@@ -33,7 +35,7 @@ Dla podkatalogu skup się na sąsiednich plikach, lokalnych konfiguracjach i jed
 
 Jeśli projekt rzeczywiście używa Raven, przeczytaj istotne istniejące dokumenty w `context/pilot/`, w szczególności `workflow.md`, PRD i roadmapę. Zapisz tylko reguły potrzebne przyszłemu agentowi i linki do kanonicznych źródeł; nie kopiuj całych instrukcji skilli ani bieżącego statusu chunka.
 
-Nie twórz zależności od osobistych ścieżek `~/.codex/skills`. Nie narzucaj modeli agentów, procesu pilota, zakazów edycji testów ani struktury archiwów projektowi, który ich nie przyjął. Nie inicjalizuj `context/`: to osobne zadanie `$raven-seed`.
+Nie twórz zależności od osobistych ścieżek `~/.codex/skills`. Nie narzucaj modeli agentów, procesu pilota, zakazów edycji testów ani struktury archiwów projektowi, który ich nie przyjął. Nie inicjalizuj `context/` przy okazji edycji instrukcji; potrzebne katalogi tworzy właściwy etap Raven.
 
 ## Utwórz albo zaktualizuj
 
