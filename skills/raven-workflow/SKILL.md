@@ -40,7 +40,14 @@ W istniejącym projekcie zachowaj stack i dokumentację, uzupełniaj konkretne b
 
 ## Wejście brownfield
 
-Ten skill jest informacyjnym przewodnikiem/routerem, nie obowiązkowym etapem ani orkiestratorem. Poniższe narzędzia wybieraj według brakującej wiedzy; nie uruchamiaj wszystkich dla każdego taska.
+Przy pierwszym wprowadzeniu Raven do istniejącego projektu pokaż jawnie kolejność przygotowania:
+
+1. [raven-github-setup](../raven-github-setup/SKILL.md): zweryfikuj repo i przygotuj lub uzupełnij prywatny GitHub Project (board), pola/etykiety i powiązanie github.json. Wykorzystaj istniejące zasoby; nie zakładaj, że samo repo oznacza skonfigurowany board. Brak dostępu nie oznacza braku zasobu.
+2. [raven-repo-map](../raven-repo-map/SKILL.md): zbuduj lub odśwież mapę funkcji/modułów, zależności, historii zmian i ryzyk; opublikuj wersjonowany wynik w powiązanym GH. Zakres mapy dopasuj do projektu lub wskazanego podsystemu.
+3. Uzupełnij rzeczywiste braki instrukcji (raven-agents-md lub raven-md), strategii (raven-test-plan) i CI (raven-hooks). Nie przebudowuj zastanych narzędzi bez potrzeby.
+4. Wybierz change i potrzebne analizy z tabeli poniżej, a następnie przejdź do planowania.
+
+To ścieżka onboardingu, nie rytuał dla każdego ticketa. Przy istniejącym powiązaniu i aktualnej mapie wykorzystaj je ponownie; odśwież tylko nieaktualne elementy. Jawnie zlecony mały task w znanym obszarze nie wymaga pełnego skanu repo. Router nadal jedynie wskazuje kolejność: samo pytanie o proces nie upoważnia do tworzenia boarda ani publikowania mapy. Poniższe analizy wybieraj według konkretnych niewiadomych.
 
 | Potrzeba | Skill | Wynik |
 | --- | --- | --- |
@@ -51,7 +58,7 @@ Ten skill jest informacyjnym przewodnikiem/routerem, nie obowiązkowym etapem an
 | Przeładowane lub niejasne instrukcje | [raven-rule-review](../raven-rule-review/SKILL.md) | Ocena instrukcji i konkretne propozycje |
 | Wybrane zadania z Jira | [raven-jira-roadmap](../raven-jira-roadmap/SKILL.md) | Roadmapa agenta w GH, bez zapisów do Jira |
 
-Typowa praca: orientacja w repo w potrzebnym zakresie → ewentualne frame/research/domena → wspólny cykl plan/review/implementacja/odbiór/testy/PR. Dla jasno opisanego małego taska można od razu planować. Nie odtwarzaj greenfield shape/PRD/stacku dla samego wejścia do istniejącej aplikacji. raven-agents-md oraz raven-test-plan/raven-hooks uzupełniają rzeczywiste braki, nie wymagają przebudowy setupu.
+Po przygotowaniu projektu: wybór change → ewentualne frame/research/domena → wspólny cykl plan/review/implementacja/odbiór/testy/PR. Dla jasno opisanego małego taska można od razu planować. Nie odtwarzaj greenfield shape/PRD/stacku dla samego wejścia do istniejącej aplikacji. raven-agents-md oraz raven-test-plan/raven-hooks uzupełniają rzeczywiste braki, nie wymagają przebudowy setupu.
 
 Przed refaktorem bez ochrony zachowania zaplanuj i wykonaj testy charakteryzacyjne przez raven-test lub raven-auto-test w trybie before-change. To dodatkowa bramka przed zmianą kodu, nie zastępstwo końcowej weryfikacji po zmianie. Przy bugfixie test przed zmianą może prawidłowo wykazać oczekiwany RED. Szczegóły w [kontrakcie testów przed zmianą](../raven-test/references/before-change.md).
 

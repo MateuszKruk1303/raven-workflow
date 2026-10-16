@@ -49,7 +49,20 @@ Nie uruchamiaj ponownie gotowego setupu. Roadmapa ustala kolejność, ale nie za
 <a id="brownfield-istniejaca-aplikacja"></a>
 ## Brownfield: istniejąca aplikacja
 
-Zachowaj stack, historię i działające konwencje. Zacznij od konkretnego zadania; PRD całej aplikacji i ponowny bootstrap nie są warunkami drobnej zmiany.
+Przy pierwszym wprowadzeniu Raven do istniejącej aplikacji przygotuj warsztat pracy, a dopiero potem konkretną zmianę. Zachowaj zastany stack, kod i historię.
+
+| Kolejność | Skill | Konkretny wynik |
+| --- | --- | --- |
+| 1. Powiąż GitHub i board | `raven-github-setup` | Weryfikacja istniejącego repo, utworzenie lub uzupełnienie prywatnego GitHub Project (boarda), pól i etykiet; zapis `context/foundation/github.json`. Bez kopiowania repo i importowania backlogu przy okazji. |
+| 2. Zmapuj projekt | `raven-repo-map` | Mapa funkcji i modułów, zależności, historii zmian, stref ryzyka oraz plików wejściowych. Wersjonowany raport i dowody w GH. |
+| 3. Uzupełnij podstawy pracy | `raven-agents-md` lub `raven-md`, `raven-test-plan`, `raven-hooks` — według braków | Rzeczywiste komendy i konwencje w AGENTS.md, strategia ochrony zachowania i CI oparte na istniejących runnerach. |
+| 4. Wybierz i zbadaj change | Istniejące issue albo nowy opis zmiany; `raven-frame` / `raven-research`, gdy potrzebne | Zweryfikowany problem, wymagania i dowody z konkretnego obszaru, gotowe do planowania. |
+
+`raven-repo-map` daje obraz całego projektu lub wskazanego podsystemu. `raven-research` wyjaśnia działanie konkretnej funkcji i jej zależności na potrzeby zadania. `raven-frame` sprawdza, czy wskazana przyczyna problemu jest prawdziwa. To różne wyniki, które wcześniej diagram chował pod niejasnym „rozpoznaniem”.
+
+Przy kolejnych zadaniach wykorzystuj istniejący board i aktualną mapę; odśwież tylko zmienione obszary. Nie powtarzaj setupu i pełnego skanowania dla każdego ticketa. PRD całej aplikacji i ponowny bootstrap nie są warunkami drobnej zmiany.
+
+Dobór analizy **po przygotowaniu projektu**:
 
 | Sytuacja | Wejście |
 | --- | --- |
@@ -70,8 +83,15 @@ Zachowaj stack, historię i działające konwencje. Zacznij od konkretnego zadan
 ```mermaid
 flowchart TD
     G[Greenfield: shape → PRD → setup i roadmapa] --> P
-    B[Brownfield: task i potrzebne rozpoznanie] --> P
-    J[Jira: raven-jira-roadmap] --> P
+    B[Brownfield: istniejąca aplikacja] --> BG[raven-github-setup<br/>Repo + GitHub Project + github.json]
+    BG --> BM[raven-repo-map<br/>Moduły, zależności, historia i ryzyka]
+    BM --> BF[Uzupełnij braki:<br/>AGENTS.md, raven-test-plan, raven-hooks]
+    BF --> BT[Wybierz change / issue]
+    BT --> BA{Czy są nierozstrzygnięte pytania?}
+    BA -->|Tak| BR[raven-frame: problem<br/>raven-research: działanie funkcji]
+    BR --> P
+    BA -->|Nie| P
+    J[Jira: raven-jira-roadmap<br/>Po powiązaniu GitHub i Project] --> BT
     P[raven-plan + raven-plan-review<br/>lub raven-auto-plan] --> A{Akceptacja planu}
     A --> I[raven-implement + raven-implement-review<br/>lub raven-auto-implement]
     I --> U{Osobisty odbiór użytkownika}
