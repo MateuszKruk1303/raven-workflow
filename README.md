@@ -1,6 +1,6 @@
 # Raven Workflow — cookbook
 
-Raven prowadzi zmianę od wymagań do planu, implementacji, niezależnej weryfikacji i PR. Stan pracy, decyzje i dowody przechowuje w GitHubie. Skille są instrukcjami dla agenta; narzędzia w tym repo sprawdzają ich integralność i instalują spójny zestaw.
+Raven prowadzi zmianę od wymagań do planu, implementacji, niezależnej weryfikacji, PR, merge i Done na boardzie GH. Stan pracy, decyzje i dowody przechowuje w GitHubie. Skille są instrukcjami dla agenta; narzędzia w tym repo sprawdzają ich integralność i instalują spójny zestaw.
 
 [Start](#start) · [Greenfield](#greenfield-nowy-produkt) · [Brownfield](#brownfield-istniejaca-aplikacja) · [Cykl zmiany](#cykl-zmiany) · [Przepisy](#przepisy-na-sytuacje-szczegolne) · [Katalog](#katalog-skilli) · [Doctor i synchronizacja](#doctor-i-synchronizacja)
 
@@ -80,7 +80,9 @@ flowchart TD
     PUB -->|Tak| PR[raven-pr]
     PR --> CI{Wymagane checki CI}
     CI -->|FAIL: zlecona poprawka| IMODE
-    CI -->|PASS| MERGE[Merge użytkownika → finalizacja Done]
+    CI -->|PASS| MREQUEST{Zlecasz merge change?}
+    MREQUEST -->|Tak| MERGE[raven-merge]
+    MERGE --> DONE[Potwierdzony merge i Done na właściwym boardzie]
 ```
 
 Jeśli wybrano inny, już przygotowany stack, przejdź do instrukcji repo bez uruchamiania obu bootstrapperów. `raven-hooks` konfiguruje dostępne checki; po dodaniu runnerów lub suite uzupełnij go przed PR. Nie uruchamiaj ponownie gotowego setupu. Roadmapa ustala kolejność, ale nie zatwierdza planu implementacji. Nie trzeba tworzyć wszystkich testów produktu przed pierwszym change.
@@ -162,7 +164,9 @@ flowchart TD
     PUB -->|Tak| PR[raven-pr]
     PR --> CI{Wymagane checki CI}
     CI -->|FAIL: zlecona poprawka| IMODE
-    CI -->|PASS| MERGE[Merge użytkownika → finalizacja Done]
+    CI -->|PASS| MREQUEST{Zlecasz merge change?}
+    MREQUEST -->|Tak| MERGE[raven-merge]
+    MERGE --> DONE[Potwierdzony merge i Done na właściwym boardzie]
 ```
 
 `raven-repo-map` daje obraz całego projektu lub wskazanego podsystemu. `raven-research` wyjaśnia działanie konkretnej funkcji i jej zależności na potrzeby zadania. `raven-frame` sprawdza, czy wskazana przyczyna problemu jest prawdziwa. Mapa jest wersjonowanym raportem w GH; board, pola i etykiety oraz github.json przygotowuje raven-github-setup.
@@ -185,7 +189,7 @@ Dobór analizy **po przygotowaniu projektu**:
 
 ## Cykl zmiany
 
-Oba diagramy przedstawiają pełną drogę do merge. Każde przejście oznacza kolejne zlecenie lub decyzję, nie samoczynne uruchomienie następnego skilla. Zatrzymanie, odmowa akceptacji lub BLOCKED pozostawia pracę na danym etapie. Kroki zakończone w aktualnej wersji wykorzystuj ponownie.
+Oba diagramy przedstawiają pełną drogę do merge i potwierdzonego Done na boardzie. Każde przejście oznacza kolejne zlecenie lub decyzję, nie samoczynne uruchomienie następnego skilla. Zatrzymanie, odmowa akceptacji lub BLOCKED pozostawia pracę na danym etapie. Kroki zakończone w aktualnej wersji wykorzystuj ponownie.
 
 **Change** to odbieralny rezultat, np. eksport zamówień, zapisany jako issue (`C-03`). **Task** to faza jego planu, zwykle sub-issue (`C-03/T-02`). Manual i auto można mieszać między etapami. Auto automatyzuje pracę wewnątrz zleconego etapu; nie oznacza zgody na następny etap, zmianę wymagań ani merge.
 
@@ -196,7 +200,8 @@ Oba diagramy przedstawiają pełną drogę do merge. Każde przejście oznacza k
 | Plan i jego review | `raven-plan` → osobno `raven-plan-review` | `raven-auto-plan` tworzy plan i deleguje niezależne review | Użytkownik zatwierdza konkretną wersję |
 | Implementacja i review | `raven-implement` → osobno `raven-implement-review` | `raven-auto-implement`: autor → tester wymagań → poprawki → po PASS świeży reviewer kodu | Użytkownik rozstrzyga uwagi i odbiera funkcję |
 | Trwałe testy i review | `raven-test` → osobno `raven-test-review` | `raven-auto-test`: autor testów → reviewer → ograniczona pętla poprawek testów | Nierozstrzygnięte wymagania i błędy produktu wracają do decyzji |
-| Publikacja | `raven-pr` | Tak samo, osobne zlecenie | Użytkownik decyduje o merge po CI |
+| Publikacja | `raven-pr` | Tak samo, osobne zlecenie | Użytkownik zleca merge po CI |
+| Merge i finalizacja boarda | `raven-merge` | Tak samo, osobne zlecenie | Wywołanie upoważnia do merge i zapisu Done dla change |
 
 Przykładowe **osobne** zlecenia dla tego samego issue:
 
@@ -205,9 +210,10 @@ Użyj raven-auto-plan dla OWNER/REPO#123.
 [Po review i mojej akceptacji] Użyj raven-auto-implement dla tego issue.
 [Po moim odbiorze] Użyj raven-auto-test dla tego issue.
 [Po zakończeniu testów i review] Użyj raven-pr dla tego issue.
+[Po CI] Użyj raven-merge dla C-03.
 ```
 
-Każdy werdykt dotyczy określonych wymagań i wersji kodu. Zmiana kontraktu wymaga nowego review i akceptacji; zmiana kodu wymaga odświeżenia dotkniętych dowodów. Niewykonana kontrola to BLOCKED/NOT VERIFIED. Akceptacja ryzyka nie zmienia FAIL w PASS. Wywołanie `raven-pr` jest decyzją publikacji: logiczne commity istniejących zmian ticketa → zwykły push → nowy lub aktualizowany PR z bieżącym opisem i historią poprawek. Skill nie audytuje wcześniejszych etapów i nie omija hooków Git. Wymuszanie checków przy merge zależy od ustawień GitHuba, nie od samego istnienia skilli.
+Każdy werdykt dotyczy określonych wymagań i wersji kodu. Zmiana kontraktu wymaga nowego review i akceptacji; zmiana kodu wymaga odświeżenia dotkniętych dowodów. Niewykonana kontrola to BLOCKED/NOT VERIFIED. Akceptacja ryzyka nie zmienia FAIL w PASS. Wywołanie `raven-pr` jest decyzją publikacji: logiczne commity istniejących zmian ticketa → zwykły push → nowy lub aktualizowany PR z bieżącym opisem i historią poprawek. Skill nie audytuje wcześniejszych etapów i nie omija hooków Git. Wymuszanie checków przy merge zależy od ustawień GitHuba, nie od samego istnienia skilli. `raven-merge` sprawdza właściwy PR, pełny zakres change, bramki i dostęp do boarda przed merge, a następnie jawnie zapisuje i odczytuje Done. Kolejka merge nie oznacza ukończenia. Jeśli PR jest już merged, skill wznawia tylko finalizację boarda; brak automatyzacji GH nie pomija tego kroku.
 
 <a id="przepisy-na-sytuacje-szczegolne"></a>
 ## Przepisy na sytuacje szczególne
@@ -279,6 +285,7 @@ Każdy skill ma poniżej jedno miejsce w katalogu. Link prowadzi do pełnych ins
 | [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Koordynuje implementatora, testera wymagań i finalnego reviewera kodu. |
 | [raven-implement-review](skills/raven-implement-review/SKILL.md) | Ocenia dostarczony diff względem planu, ryzyk i wzorców; publikuje uwagi. |
 | [raven-pr](skills/raven-pr/SKILL.md) | Dzieli zmiany ticketa na logiczne commity, wykonuje commit/push i tworzy lub aktualizuje PR z bieżącym opisem oraz historią poprawek. |
+| [raven-merge](skills/raven-merge/SKILL.md) | Merguje właściwy PR wskazanego change i potwierdza Done na powiązanym boardzie; wznawia także sam zapis statusu po merge. |
 
 ### Jakość i testowanie
 

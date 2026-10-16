@@ -118,7 +118,7 @@ def list_target_names(text):
 
 
 def validate_process(contract, skills):
-    """Validate declared handoffs, role separation and acceptance gates, not prose."""
+    """Validate static handoffs and gates, not live PRs, CI or Project mutations."""
     if contract['schema_version'] != 1:
         raise ValueError('Unsupported schema_version')
     roles = contract['roles']
@@ -143,12 +143,14 @@ def validate_process(contract, skills):
         'tests': ('implementer', {'implementation', 'code_review', 'user_acceptance'}, {'test_evidence'}),
         'test_review': ('reviewer', {'test_evidence'}, {'tests_reviewed'}),
         'pr': ('implementer', {'tests_reviewed', 'publication_requested'}, {'pull_request'}),
+        'merge': ('implementer', {'pull_request', 'merge_requested'}, {'merged_pr'}),
+        'board_finalize': ('implementer', {'merged_pr'}, {'board_done'}),
     }
     by_id = {s['id']: s for s in stages}
     if set(by_id) != set(required):
         raise ValueError('Standard cycle requires exactly the defined stages')
     external = set(contract['initial_artifacts'])
-    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested'}:
+    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested', 'merge_requested'}:
         raise ValueError('External artifacts must not bypass stage producers')
     for stage in stages:
         role, needs, output = required[stage['id']]
@@ -162,6 +164,8 @@ def validate_process(contract, skills):
             raise ValueError(f"Wrong artifact producer: {stage['id']}")
         if not stage['skills'] or not set(stage['skills']) <= skills:
             raise ValueError(f"Unknown/empty skills in {stage['id']}")
+        if stage['id'] in ('merge', 'board_finalize') and stage['skills'] != ['raven-merge']:
+            raise ValueError(f"{stage['id']} must be owned by raven-merge")
         if role in ('reviewer', 'tester') and stage.get('fresh_context') is not True:
             raise ValueError(f"Independent context required for {stage['id']}")
         modes = stage.get('modes', ['manual', 'auto'])

@@ -20,6 +20,7 @@
     "raven-manual-qa",
     "raven-md",
     "raven-medusa-ecommerce-init",
+    "raven-merge",
     "raven-plan",
     "raven-plan-review",
     "raven-pr",
@@ -56,7 +57,8 @@
     "requirements",
     "plan_accepted",
     "user_acceptance",
-    "publication_requested"
+    "publication_requested",
+    "merge_requested"
   ],
   "stages": [
     {
@@ -184,6 +186,33 @@
       ],
       "produces": [
         "pull_request"
+      ]
+    },
+    {
+      "id": "merge",
+      "skills": [
+        "raven-merge"
+      ],
+      "role": "implementer",
+      "requires": [
+        "pull_request",
+        "merge_requested"
+      ],
+      "produces": [
+        "merged_pr"
+      ]
+    },
+    {
+      "id": "board_finalize",
+      "skills": [
+        "raven-merge"
+      ],
+      "role": "implementer",
+      "requires": [
+        "merged_pr"
+      ],
+      "produces": [
+        "board_done"
       ]
     }
   ]

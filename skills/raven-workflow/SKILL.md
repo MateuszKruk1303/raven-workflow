@@ -62,7 +62,7 @@ Po przygotowaniu projektu: wybór change → ewentualne frame/research/domena �
 
 Przed refaktorem bez ochrony zachowania zaplanuj i wykonaj testy charakteryzacyjne przez raven-test lub raven-auto-test w trybie before-change. To dodatkowa bramka przed zmianą kodu, nie zastępstwo końcowej weryfikacji po zmianie. Przy bugfixie test przed zmianą może prawidłowo wykazać oczekiwany RED. Szczegóły w [kontrakcie testów przed zmianą](../raven-test/references/before-change.md).
 
-W wariancie Jira wymagania i biznesowy status pozostają w Jira, a wersjonowane plany/raporty/dowody w prywatnym repo artefaktów GH. Repo kodu może być inne. Wymaga to jawnego powiązania i konfiguracji finalizacji po merge; prywatność samego Project nie wystarcza.
+W wariancie Jira wymagania i biznesowy status pozostają w Jira, a wersjonowane plany/raporty/dowody w prywatnym repo artefaktów GH. Repo kodu może być inne. Wymaga to jawnego powiązania i dostępu do właściwego Project; raven-merge zapisuje Done po merge również bez automatyzacji; prywatność samego Project nie wystarcza.
 
 ## Architektura przekrojowa i research przed planem
 
@@ -84,7 +84,7 @@ Przy niepewnej wykonalności lub nieznanym fragmencie kodu użytkownik może roz
 | Trwałe testy | [raven-test](../raven-test/SKILL.md) | [raven-auto-test](../raven-auto-test/SKILL.md) |
 | Review testów | Osobno [raven-test-review](../raven-test-review/SKILL.md) | Wbudowane niezależne review i poprawki wad testów |
 | Publikacja | [raven-pr](../raven-pr/SKILL.md) na zlecenie | Ten sam skill na zlecenie |
-| Finalizacja | Checki CI po PR → merge użytkownika → Done | Tak samo |
+| Merge i finalizacja boarda | Po CI osobno zlecony [raven-merge](../raven-merge/SKILL.md): merge → jawny zapis i odczyt Done | Ten sam skill na zlecenie |
 
 Można mieszać tryby między etapami na tym samym change. Plan, taski, raporty i decyzje mają wspólne formaty. Auto nie oznacza automatycznej zgody na kolejne etapy, zmianę wymagań lub merge.
 
@@ -92,7 +92,7 @@ W auto-implement autor i niezależny tester naprawiają potwierdzone niespełnie
 
 Po odbiorze obowiązuje etap trwałych testów i ich review: manualna para lub auto-test. Dobór warstw wynika z wymagań i ryzyka; nie wymagaj unit/integration/E2E dla każdej zmiany. Reviewer testów dostaje te same wersje surowych źródeł co autor, bez jego transkryptu; stosuje [wspólny kontrakt niezależności i pragmatycznej oceny](../raven-test/references/test-review.md). Błąd produktu wykryty testami wraca do użytkownika i implementacji, nie jest ukrywany zmianą asercji.
 
-Wywołanie raven-pr jest decyzją publikacji: skill grupuje niezacommitowane zmiany ticketa w logiczne commity, wykonuje commit i zwykły push oraz tworzy lub aktualizuje PR z aktualnym opisem i zachowaną historią poprawek. Zachowuje istniejące commity i obce zmiany. Nie uruchamia osobnych testów, nie audytuje kompletności wcześniejszych etapów ani CI; nie omija jednak hooków commit/push. Obowiązkowa kolejność jest zasadą workflow, nie dodatkową kontrolą w skillu PR. GitHub Actions i reguły merge muszą istnieć w konfiguracji repo; nie zakładaj ich działania z samej obecności skilli. Done dopiero po merge, a automatyczne przestawienie zależy od konfiguracji GH.
+Wywołanie raven-pr jest decyzją publikacji: skill grupuje niezacommitowane zmiany ticketa w logiczne commity, wykonuje commit i zwykły push oraz tworzy lub aktualizuje PR z aktualnym opisem i zachowaną historią poprawek. Zachowuje istniejące commity i obce zmiany. Nie uruchamia osobnych testów, nie audytuje kompletności wcześniejszych etapów ani CI; nie omija jednak hooków commit/push. Obowiązkowa kolejność jest zasadą workflow, nie dodatkową kontrolą w skillu PR. GitHub Actions i reguły merge muszą istnieć w konfiguracji repo; nie zakładaj ich działania z samej obecności skilli. Wywołanie raven-merge dla C-ID upoważnia do merge właściwego PR i ustawienia Done na powiązanym boardzie. Skill sprawdza pełny zakres change, wymagane checki/reviews oraz dostęp i identyfikatory Project przed merge, a po nim jawnie zapisuje i odczytuje Done. Pending/kolejka nie oznacza merge. Wznowienie po już wykonanym merge dokańcza tylko status; nie wymaga automatyzacji GH. Same pytania o gotowość pozostają odczytowe.
 
 ## Narzędzia używane według potrzeby
 

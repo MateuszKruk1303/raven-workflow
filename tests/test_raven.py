@@ -124,6 +124,70 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'must require'):
             self.check()
 
+    def test_standard_cycle_includes_ordered_merge_and_board_finalization(self):
+        self.check()
+        self.assertEqual(self.contract['stages'][-2]['produces'], ['merged_pr'])
+        self.assertEqual(self.contract['stages'][-1]['produces'], ['board_done'])
+
+    def test_finalization_stage_cannot_disappear(self):
+        for stage_id in ('merge', 'board_finalize'):
+            with self.subTest(stage=stage_id):
+                mutated = copy.deepcopy(self.contract)
+                mutated['stages'] = [s for s in mutated['stages'] if s['id'] != stage_id]
+                with self.assertRaisesRegex(ValueError, 'exactly'):
+                    raven.validate_process(mutated, set(mutated['skills']))
+
+    def test_board_cannot_precede_merge(self):
+        stages = self.contract['stages']
+        stages[-2], stages[-1] = stages[-1], stages[-2]
+        with self.assertRaisesRegex(ValueError, 'Unmet handoff'):
+            self.check()
+
+    def test_board_cannot_treat_publication_as_merge(self):
+        self.contract['stages'][-1]['requires'] = ['pull_request']
+        with self.assertRaisesRegex(ValueError, 'must require.*merged_pr'):
+            self.check()
+
+    def test_publication_cannot_grant_merge_authorization(self):
+        self.contract['stages'][-3]['produces'].append('merge_requested')
+        with self.assertRaisesRegex(ValueError, 'external acceptance'):
+            self.check()
+
+    def test_merge_requires_its_own_authorization(self):
+        self.contract['stages'][-2]['requires'] = ['pull_request', 'publication_requested']
+        with self.assertRaisesRegex(ValueError, 'must require.*merge_requested'):
+            self.check()
+
+    def test_merge_evidence_cannot_be_initial_or_pending(self):
+        self.contract['initial_artifacts'].append('merged_pr')
+        with self.assertRaisesRegex(ValueError, 'External artifacts'):
+            self.check()
+        self.contract['initial_artifacts'].remove('merged_pr')
+        self.contract['stages'][-2]['produces'] = ['merge_queued']
+        with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
+            self.check()
+
+    def test_merge_cannot_also_claim_board_done(self):
+        self.contract['stages'][-2]['produces'].append('board_done')
+        with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
+            self.check()
+
+    def test_both_finalization_steps_belong_to_merge_skill(self):
+        for index in (-2, -1):
+            with self.subTest(stage=self.contract['stages'][index]['id']):
+                mutated = copy.deepcopy(self.contract)
+                mutated['stages'][index]['skills'] = ['raven-pr']
+                with self.assertRaisesRegex(ValueError, 'owned by raven-merge'):
+                    raven.validate_process(mutated, set(mutated['skills']))
+
+    def test_finalization_is_required_in_manual_and_auto(self):
+        for index in (-2, -1):
+            with self.subTest(stage=self.contract['stages'][index]['id']):
+                mutated = copy.deepcopy(self.contract)
+                mutated['stages'][index]['modes'] = ['auto']
+                with self.assertRaisesRegex(ValueError, 'Wrong modes'):
+                    raven.validate_process(mutated, set(mutated['skills']))
+
 
 class SyncTests(unittest.TestCase):
     def setUp(self):

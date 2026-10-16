@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raven Merge"
+  short_description: "Merge PR change i potwierdzone Done na boardzie GH"
+  default_prompt: "Użyj $raven-merge dla C-03: zmerguj właściwy PR i ustaw Done na powiązanym GitHub Project."
