@@ -92,7 +92,7 @@ W auto-implement autor i niezależny tester naprawiają potwierdzone niespełnie
 
 Po odbiorze obowiązuje etap trwałych testów i ich review: manualna para lub auto-test. Dobór warstw wynika z wymagań i ryzyka; nie wymagaj unit/integration/E2E dla każdej zmiany. Reviewer testów dostaje te same wersje surowych źródeł co autor, bez jego transkryptu; stosuje [wspólny kontrakt niezależności i pragmatycznej oceny](../raven-test/references/test-review.md). Błąd produktu wykryty testami wraca do użytkownika i implementacji, nie jest ukrywany zmianą asercji.
 
-raven-pr tylko publikuje PR z opisem zmian i istotnych kompromisów. Nie uruchamia testów, nie audytuje kompletności wcześniejszych etapów ani CI. Obowiązkowa kolejność jest zasadą workflow, nie dodatkową kontrolą w skillu PR. GitHub Actions i reguły merge muszą istnieć w konfiguracji repo; nie zakładaj ich działania z samej obecności skilli. Done dopiero po merge, a automatyczne przestawienie zależy od konfiguracji GH.
+Wywołanie raven-pr jest decyzją publikacji: skill grupuje niezacommitowane zmiany ticketa w logiczne commity, wykonuje commit i zwykły push oraz tworzy lub aktualizuje PR z aktualnym opisem i zachowaną historią poprawek. Zachowuje istniejące commity i obce zmiany. Nie uruchamia osobnych testów, nie audytuje kompletności wcześniejszych etapów ani CI; nie omija jednak hooków commit/push. Obowiązkowa kolejność jest zasadą workflow, nie dodatkową kontrolą w skillu PR. GitHub Actions i reguły merge muszą istnieć w konfiguracji repo; nie zakładaj ich działania z samej obecności skilli. Done dopiero po merge, a automatyczne przestawienie zależy od konfiguracji GH.
 
 ## Narzędzia używane według potrzeby
 

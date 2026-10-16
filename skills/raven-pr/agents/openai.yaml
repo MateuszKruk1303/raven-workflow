@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven PR"
-  short_description: "Publikacja PR z opisem zmian i kompromisów"
-  default_prompt: "Użyj $raven-pr, aby utworzyć lub zaktualizować PR z opisem zmian, linkiem do issue i istotnymi kompromisami niewyjaśnionymi w jego artefaktach."
+  short_description: "Logiczne commity, push i PR z historią poprawek"
+  default_prompt: "Użyj $raven-pr, aby podzielić zmiany tego ticketa na logiczne commity, wykonać commit i push oraz utworzyć lub zaktualizować PR z aktualnym opisem i zachowaną historią poprawek."

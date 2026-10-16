@@ -207,7 +207,7 @@ Użyj raven-auto-plan dla OWNER/REPO#123.
 [Po zakończeniu testów i review] Użyj raven-pr dla tego issue.
 ```
 
-Każdy werdykt dotyczy określonych wymagań i wersji kodu. Zmiana kontraktu wymaga nowego review i akceptacji; zmiana kodu wymaga odświeżenia dotkniętych dowodów. Niewykonana kontrola to BLOCKED/NOT VERIFIED. Akceptacja ryzyka nie zmienia FAIL w PASS. `raven-pr` publikuje PR, ale nie audytuje wcześniejszych etapów. Wymuszanie checków przy merge zależy od ustawień GitHuba, nie od samego istnienia skilli.
+Każdy werdykt dotyczy określonych wymagań i wersji kodu. Zmiana kontraktu wymaga nowego review i akceptacji; zmiana kodu wymaga odświeżenia dotkniętych dowodów. Niewykonana kontrola to BLOCKED/NOT VERIFIED. Akceptacja ryzyka nie zmienia FAIL w PASS. Wywołanie `raven-pr` jest decyzją publikacji: logiczne commity istniejących zmian ticketa → zwykły push → nowy lub aktualizowany PR z bieżącym opisem i historią poprawek. Skill nie audytuje wcześniejszych etapów i nie omija hooków Git. Wymuszanie checków przy merge zależy od ustawień GitHuba, nie od samego istnienia skilli.
 
 <a id="przepisy-na-sytuacje-szczegolne"></a>
 ## Przepisy na sytuacje szczególne
@@ -278,7 +278,7 @@ Każdy skill ma poniżej jedno miejsce w katalogu. Link prowadzi do pełnych ins
 | [raven-implement](skills/raven-implement/SKILL.md) | Realizuje zatwierdzony plan fazami, z kontrolami i ręcznymi decyzjami. |
 | [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Koordynuje implementatora, testera wymagań i finalnego reviewera kodu. |
 | [raven-implement-review](skills/raven-implement-review/SKILL.md) | Ocenia dostarczony diff względem planu, ryzyk i wzorców; publikuje uwagi. |
-| [raven-pr](skills/raven-pr/SKILL.md) | Tworzy/aktualizuje PR z opisem rzeczywistej zmiany i istotnych kompromisów. |
+| [raven-pr](skills/raven-pr/SKILL.md) | Dzieli zmiany ticketa na logiczne commity, wykonuje commit/push i tworzy lub aktualizuje PR z bieżącym opisem oraz historią poprawek. |
 
 ### Jakość i testowanie
 

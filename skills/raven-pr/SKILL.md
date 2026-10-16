@@ -1,42 +1,54 @@
 ---
 name: raven-pr
-description: Utwórz lub zaktualizuj PR dla change Raven z opisem rzeczywistych zmian, linkiem do issue i istotnymi kompromisami lub decyzjami niewyjaśnionymi w artefaktach issue. Nie wykonuje audytu gotowości, testów ani merge.
+description: "Opublikuj change Raven: podziel jego niezacommitowane zmiany na logiczne commity, wykonaj zwykły push i utwórz lub zaktualizuj PR z aktualnym opisem oraz historią poprawek. Wywołanie jest decyzją publikacji; bez audytu gotowości, implementacji ani merge."
 ---
 
 # Raven PR
 
 Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
 
-Na zlecenie użytkownika opublikuj PR. To krok publikacji, nie dodatkowy etap review ani weryfikacji gotowości. Decyzja o momencie utworzenia PR należy do użytkownika; nie wymagaj formalnego zakończenia wcześniejszych etapów, raportu testera, akceptacji review ani zielonego CI.
+Zlecenie publikacji przez raven-pr jest ostateczną decyzją użytkownika: obejmuje przygotowanie logicznych commitów z istniejących zmian ticketa, commit, zwykły push oraz utworzenie lub aktualizację PR. Wykonaj te kroki bez ponownego pytania o zgodę. Samo pytanie o skill lub status nie jest zleceniem publikacji. Nie implementuj nowych poprawek, nie wykonuj merge, deploya ani zmian statusów Project.
 
-Przeczytaj [wspólny kontrakt GitHub](../raven-auto-plan/references/github-contract.md) w zakresie tożsamości change, zapisu i powiązań. Wywołanie obejmuje zwykły push gałęzi zmiany oraz utworzenie/aktualizację PR. Nie oznacza merge, deploya ani zmiany statusów Project.
+To krok publikacji. Nie wymagaj raportu testera, akceptacji review, zielonego CI ani ponownego potwierdzenia wcześniejszych etapów. Nie uruchamiaj samodzielnie testów, CI ani audytu gotowości. Zachowaj działające hooki commit/push i wymagane przez repo mechanizmy Git; nie omijaj ich ani nie uruchamiaj całego etapu implementacji w celu utworzenia commitu. Błąd hooka jest konkretną przeszkodą publikacji, nie zgodą na zmianę kodu lub wyłączenie kontroli.
 
-## Przygotuj opis na podstawie zmiany
+Przeczytaj [wspólny kontrakt GitHub](../raven-auto-plan/references/github-contract.md) w zakresie tożsamości, zapisu i powiązań. Etapy testów i review pozostają częścią workflow; wywołanie PR nie uruchamia ich ani nie audytuje ich ukończenia.
 
-Ustal właściwe repo, branch, docelową gałąź i change issue. Przeczytaj diff oraz istotne artefakty i decyzje w issue, aby opisać rzeczywisty rezultat i zidentyfikować kontekst, którego reviewer nie znajdzie w istniejącej dokumentacji. Nie odtwarzaj audytu całego workflow. Przy niejednoznacznym zakresie ustal tylko brakujące informacje.
+## Ustal zakres i docelowy PR
 
-Tytuł i opis dopasuj do szablonu repo. Prowadź opis od problemu i wynikowego zachowania. Zawrzyj:
+Odczytaj instrukcje repo, github.json, change issue, istotne decyzje oraz rzeczywisty stan Git: branch, HEAD, base, remotes, śledzoną gałąź, commity do publikacji, staged, unstaged i untracked. Diff kodu i treść issue służą ustaleniu zakresu oraz opisu, nie ponownemu review. Pytaj tylko o rzeczywistą niejednoznaczność, której nie rozstrzygają źródła.
 
-- krótki opis zmian i ich celu, z konkretnym przykładem przed/po, jeśli pomaga;
-- link do change issue i ewentualnie do artefaktu potrzebnego reviewerowi;
-- istotne kompromisy, odstępstwa, ograniczenia i uzasadnienia decyzji, których nie wyjaśniają artefakty issue.
+Przed commitami i pushem wyszukaj PR dla tego ticketa po powiązaniach oraz markerze `<!-- raven:pr change=C-03 -->` z rzeczywistym ID; sprawdź też head/base, repo źródłowe gałęzi i stany open/closed/merged. Raven ID nie jest globalnie unikalny: potwierdź pełny URL issue i repo artefaktów. Sama zbieżność nazwy brancha lub tytułu nie wystarcza.
 
-Nie kopiuj całego planu, raportów ani historii rozmowy. Nie wymyślaj kompromisów lub uzasadnień; brakującą istotną intencję ustal z użytkownikiem. Pomijaj puste sekcje. Wyniki weryfikacji przytocz krótko, jeśli są dostępne i pomagają ocenić zmianę lub wymaga ich szablon; nie uruchamiaj testów, nie odpytuj CI ani nie sprawdzaj kompletności checklist w ramach tego skilla. Nie deklaruj niepotwierdzonego PASS lub gotowości do merge.
+- Jeden właściwy otwarty PR: aktualizuj go. Lokalna gałąź i docelowy remote muszą odpowiadać jego head repo/branch, a base uzgodnionemu celowi. Przy rozbieżności zatrzymaj publikację i wskaż właściwy PR; nie twórz alternatywnego PR ani nie pushuj innej gałęzi pod jego opis.
+- Brak PR: utwórz go dla jednoznacznie ustalonego head/base. Nie publikuj bezpośrednio na base/default branch; jeśli zmiany są tam lokalnie, wydziel gałąź zmiany bez utraty pracy. Detached HEAD lub nierozstrzygnięta tożsamość wymagają ustalenia docelowej gałęzi przed zapisami.
+- Wiele pasujących PR albo wyłącznie closed/merged: zgłoś stan i ustal dalszy cel. Nie otwieraj ponownie ani nie duplikuj zamkniętego PR bez osobnego zlecenia.
 
-## Opublikuj
+Przed zmianą zdalnej gałęzi zachowaj odczytany PR body, jego wersję/updatedAt i head SHA. Dla aktualizacji oraz każdego wznowienia przeczytaj [historię publikacji i ponowienia](references/publication-history.md). Nie utożsamiaj obecnego zdalnego HEAD z ostatnią wersją opisaną w PR.
 
-Przed publikacją sprawdź diff, remote i zakres commitów, aby nie wysłać niezamierzonych zmian. Nie dodawaj automatycznie niezacommitowanego kodu, nie zmieniaj cudzych plików ani stagingu. Jeśli brak commitu uniemożliwia opublikowanie żądanego zakresu, nazwij konkretny brak. Nie wykonuj force-push.
+## Przygotuj logiczne commity
 
-Wyszukaj istniejący PR dla właściwego head/base i change, także po niepewnym wyniku wcześniejszego zapisu. Aktualizuj istniejący otwarty PR, zachowując ręczne dopiski. Zamkniętego lub zmergowanego PR nie otwieraj ponownie ani nie duplikuj bez zlecenia. Użyj markera `<!-- raven:pr change=C-03 -->` z rzeczywistym ID do powiązania i idempotencji.
+Zachowaj istniejące commity implementacji. Grupuj tylko niezacommitowane zmiany należące do ticketa według spójnego celu, np. zachowanie z jego testami albo niezależna aktualizacja dokumentacji. Jeden mały spójny diff może być jednym commitem; nie narzucaj liczby commitów ani podziału na pliki. Opisy commitów dopasuj do konwencji repo i rzeczywistego zakresu.
 
-Pushuj gałąź i utwórz PR bez dodatkowego pytania o zgodę na już zleconą publikację. Domyślnie zwykły PR; draft na życzenie użytkownika. Przy aktualizacji zachowaj dotychczasowy stan draft, chyba że użytkownik zlecił jego zmianę. Nie ustawiaj draft wyłącznie dlatego, że checki są nieznane lub oczekujące.
+Rozdziel staged, unstaged oraz untracked należące do ticketa od cudzych zmian. Nie używaj zbiorczego `git add .`/`git add -A` ani commitu całego zastanego indeksu. Przy mieszanych plikach wybierz konkretne hunki; samo filtrowanie ścieżek nie wystarcza. Gdy zmian nie da się bezpiecznie rozdzielić albo przypisać do ticketa, pozostaw je i ustal zakres przed zależnym commitem/pushem.
 
-Powiąż issue przez `Closes #...`, jeśli PR dostarcza jego pełny zakres; dla pracy częściowej użyj `Refs #...`. Uwzględnij rzeczywiście objęte taski, bez obietnicy zamknięcia nieukończonego zakresu. Nie zamykaj issues bezpośrednio, nie ustawiaj Done, nie konfiguruj ani nie audytuj automatyzacji Project. Merge pozostaje osobnym działaniem użytkownika.
+Zachowaj obce pliki i ich stan staged/unstaged. Użyj selektywnego stagingu, a przy zajętym indeksie izolowanego indeksu lub równoważnej metody, która nie wciągnie obcych zmian do commitu. Zachowaj stan początkowy do porównania; po commitach uzgodnij indeks z nowym HEAD wyłącznie dla opublikowanych hunków, pozostawiając cudzy staged diff i working tree. Nie stosuj globalnego resetu ani stashowania cudzej pracy. Jeśli nie potrafisz zachować tego stanu, zatrzymaj się przed commitem.
 
-Treść przekaż argumentem strukturalnym lub przez --body-file, bez interpolowania jej do shella. Odczytaj utworzony/zaktualizowany PR, aby potwierdzić publikację i powiązania. Zakończ linkiem do PR i krótką informacją, co opublikowano; nie przejmuj monitorowania CI ani napraw kodu.
+Przed każdym commitem sprawdź dokładny staged diff, po nim jego SHA i rzeczywistą zawartość oraz pozostały diff. Hook może zmienić pliki lub odrzucić commit: odczytaj wynik i nie traktuj samych komunikatów jako dowodu utworzenia commitu. Nie dodawaj automatycznie nowych zmian hooka o nieustalonym zakresie. Nie wykonuj amend, reset, rebase ani squash istniejących commitów dla uporządkowania historii. Brak niezacommitowanych zmian jest prawidłowy — przejdź do publikacji istniejących commitów bez pustego commitu.
 
-W Raven workflow raven-test jest obowiązkowym osobnym etapem przed PR. Ten skill nie uruchamia go ani nie audytuje jego raportu; zachowuje rolę publikacji. Checki Actions startują po PR zgodnie z konfiguracją repo.
+## Przygotuj aktualny opis
 
-Etap trwałych testów ma dwa warianty: raven-test → osobno raven-test-review (manual) albo raven-auto-test (pisanie, uruchomienie, niezależne review i poprawki wad testów w jednym cyklu). Oba używają tego samego change i źródeł; wybór należy do użytkownika. Samo ukończenie manualnego raven-test nie oznacza ukończenia review testów.
+Tytuł i opis dopasuj do szablonu repo oraz całego aktualnego diffu PR względem base. Prowadź opis od problemu i wynikowego zachowania. Zawrzyj krótko cel, rzeczywiste zmiany, link do change i istotne kompromisy, odstępstwa lub ograniczenia niewyjaśnione w artefaktach issue. Podaj przykład przed/po, gdy pomaga. Nie kopiuj planu ani historii rozmowy i nie wymyślaj uzasadnień.
 
-Przy oddzielnym code_repository PR i push wykonuj w repo kodu. Issues repo artefaktów linkuj pełnym URL jako Refs; nie używaj niekwalifikowanego #numer ani nie obiecuj automatycznego zamknięcia przez merge. Closes dla innego repo stosuj tylko przy jawnie ustalonym powiązaniu i potwierdzonym zakresie; konfiguracja synchronizacji Project pozostaje poza tym skillem. Nie dodawaj linków do prywatnych artefaktów do szerszego/publicznego PR bez ustalonej zgody na takie powiązanie.
+Aktualizacja PR po poprawkach ma dwa rezultaty w jego body: opis całego aktualnego rozwiązania oraz zachowaną, uzupełnioną historię opublikowanych poprawek. Sam komentarz, lista commitów lub dopisanie najnowszej poprawki do nieaktualnego opisu nie wystarcza. Używaj bloków i granic SHA z [referencji historii](references/publication-history.md), zachowując ręczne dopiski. Przy pierwszym PR zapisz punkt początkowy historii; nie przedstawiaj pierwszej publikacji jako poprawki wcześniejszej wersji.
+
+Przytocz dostępne wyniki weryfikacji, jeśli pomagają lub wymaga ich szablon, z ich rzeczywistym zakresem/SHA i ograniczeniami. Nowy commit nie dziedziczy automatycznie PASS starszego drzewa. Nie deklaruj niepotwierdzonej gotowości do merge ani nie uruchamiaj dodatkowych kontroli dla wypełnienia opisu.
+
+## Push i zapis PR
+
+Sprawdź dokładny zakres wysyłanych commitów, remote i docelowy ref. Obce commity w zakresie push także wymagają rozstrzygnięcia; izolacja stagingu nie usuwa ich z historii. Wykonaj zwykły push do ustalonego head brancha, nigdy force-push. Odrzucony push lub rozbieżną historię zgłoś bez automatycznego pull/rebase/merge i bez przepisywania historii. Jeśli właściwy SHA już jest zdalnie, nie powtarzaj pushu.
+
+Po potwierdzeniu zdalnego SHA ponownie odczytaj PR i jego body/updatedAt, także po niepewnym wyniku wcześniejszego tworzenia. Zachowaj cudze edycje i wcześniejszą historię, aktualizując własne bloki. Przy kolizji treści ustal rozstrzygnięcie zamiast nadpisywać. Przekaż body strukturalnie lub przez `--body-file`, bez interpolowania tekstu do shella. W nowym PR domyślnie użyj zwykłego PR, draft na życzenie; w istniejącym zachowaj stan draft, chyba że użytkownik zlecił jego zmianę.
+
+Powiąż pełny zakres issue przez `Closes #...`, częściowy przez `Refs #...`; uwzględnij tylko rzeczywiście objęte taski. Przy oddzielnym `code_repository` commit/push/PR dotyczą repo kodu, a issue repo artefaktów linkuj pełnym URL jako Refs. Closes dla innego repo wymaga jawnie ustalonego powiązania i potwierdzonego zakresu. Nie ujawniaj linków prywatnych artefaktów w szerszym/publicznym PR bez ustalonej zgody. Nie zamykaj issues bezpośrednio, nie ustawiaj Done i nie konfiguruj finalizacji Project.
+
+Odczytaj zapisany PR: URL, head/base i SHA, tytuł, aktualny opis, historię oraz powiązania. Dopiero potwierdzony odczyt oznacza zakończenie publikacji. Przy częściowym sukcesie podaj utworzone SHA, stan push/PR i dokładny brakujący krok, zachowując payload do wznowienia według referencji. Nie odwracaj wykonanych commitów/pushu ani nie zaczynaj implementacji od nowa. Zakończ linkiem do PR, krótkim zakresem publikacji oraz informacją o pozostawionych obcych zmianach, jeśli występują. Nie przejmuj monitorowania CI ani napraw kodu.
