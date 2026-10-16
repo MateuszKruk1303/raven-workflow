@@ -42,22 +42,25 @@ flowchart TD
     ARCH --> STACK{Wybrany stack}
     STACK -->|Better T Stack| INIT[raven-init-stack]
     STACK -->|Medusa + Next.js| MEDUSA[raven-medusa-ecommerce-init]
-    INIT --> INSTR[raven-agents-md lub raven-md]
+    INIT --> INSTR{Zakres instrukcji repo}
     MEDUSA --> INSTR
-    INSTR --> STRATEGY[raven-test-plan]
+    INSTR -->|Onboarding projektu| AGENTS[raven-agents-md]
+    INSTR -->|Wskazany AGENTS.md| MD[raven-md]
+    AGENTS --> STRATEGY[raven-test-plan]
+    MD --> STRATEGY
     STRATEGY --> HOOKS[raven-hooks<br/>Checki dla dostępnych runnerów i komend]
     HOOKS --> PICK[Wybierz gotowy do planowania change z roadmapy]
     PICK --> MODE
     MODE{Tryb planowania} -->|Manual| PLAN[raven-plan]
     PLAN --> PREVIEW[raven-plan-review]
-    MODE -->|Auto| APLAN[raven-auto-plan<br/>Planista + niezależny reviewer]
+    MODE -->|Auto| APLAN[raven-auto-plan]
     PREVIEW --> ACCEPT{Akceptujesz plan?}
     APLAN --> ACCEPT
     ACCEPT -->|Poprawki| MODE
     ACCEPT -->|Tak| IMODE{Tryb implementacji}
     IMODE -->|Manual| IMPL[raven-implement]
     IMPL --> IREV[raven-implement-review]
-    IMODE -->|Auto| AIMPL[raven-auto-implement<br/>Implementator → tester wymagań → reviewer kodu]
+    IMODE -->|Auto| AIMPL[raven-auto-implement]
     IREV --> USER{Odbiór użytkownika}
     AIMPL --> USER
     USER -->|Błąd w uzgodnionym zakresie| IMODE
@@ -69,7 +72,7 @@ flowchart TD
     TEST --> TREV[raven-test-review]
     TREV --> TF{Wady testów do poprawy?}
     TF -->|Tak, zlecam poprawkę| TEST
-    TMODE -->|Auto| ATEST[raven-auto-test<br/>Autor testów + reviewer + poprawki]
+    TMODE -->|Auto| ATEST[raven-auto-test]
     TF -->|Nie, review zakończone| PUB{Zlecasz publikację PR?}
     ATEST -->|Testy i review zakończone| PUB
     TEST -. Błąd produktu: decyzja o naprawie .-> IMODE
@@ -98,7 +101,10 @@ flowchart TD
     MAPCHECK -->|Nie| MAP[raven-repo-map]
     MAPCHECK -->|Tak| BASE{Braki w podstawach pracy?}
     MAP --> BASE
-    BASE -->|Instrukcje| MD[raven-agents-md lub raven-md]
+    BASE -->|Instrukcje| INSTR{Zakres instrukcji repo}
+    INSTR -->|Onboarding projektu| AGENTS[raven-agents-md]
+    INSTR -->|Wskazany AGENTS.md| MD[raven-md]
+    AGENTS --> BASE
     BASE -->|Strategia testów| TP[raven-test-plan]
     BASE -->|CI| HOOKS[raven-hooks]
     MD --> BASE
@@ -120,19 +126,23 @@ flowchart TD
     ARCHCHECK -->|Tak| ARCH[raven-architecture]
     ARCHCHECK -->|Nie| PROTECT{Potrzebne testy przed zmianą?}
     ARCH --> PROTECT
-    PROTECT -->|Tak: uzgodniony zakres| BEFORE[raven-test → raven-test-review<br/>lub raven-auto-test<br/>Tryb before-change]
+    PROTECT -->|Tak: uzgodniony zakres| BMODE{Tryb testów before-change}
     PROTECT -->|Nie| MODE
-    BEFORE -->|Ochrona zweryfikowana; RED dopuszczalny przy reprodukcji| MODE
+    BMODE -->|Manual| BTEST[raven-test<br/>before-change]
+    BTEST --> BREVIEW[raven-test-review<br/>before-change]
+    BMODE -->|Auto| BATEST[raven-auto-test<br/>before-change]
+    BREVIEW -->|Ochrona zweryfikowana| MODE
+    BATEST -->|Ochrona zweryfikowana| MODE
     MODE{Tryb planowania} -->|Manual| PLAN[raven-plan]
     PLAN --> PREVIEW[raven-plan-review]
-    MODE -->|Auto| APLAN[raven-auto-plan<br/>Planista + niezależny reviewer]
+    MODE -->|Auto| APLAN[raven-auto-plan]
     PREVIEW --> ACCEPT{Akceptujesz plan?}
     APLAN --> ACCEPT
     ACCEPT -->|Poprawki| MODE
     ACCEPT -->|Tak| IMODE{Tryb implementacji}
     IMODE -->|Manual| IMPL[raven-implement]
     IMPL --> IREV[raven-implement-review]
-    IMODE -->|Auto| AIMPL[raven-auto-implement<br/>Implementator → tester wymagań → reviewer kodu]
+    IMODE -->|Auto| AIMPL[raven-auto-implement]
     IREV --> USER{Odbiór użytkownika}
     AIMPL --> USER
     USER -->|Błąd w uzgodnionym zakresie| IMODE
@@ -144,7 +154,7 @@ flowchart TD
     TEST --> TREV[raven-test-review]
     TREV --> TF{Wady testów do poprawy?}
     TF -->|Tak, zlecam poprawkę| TEST
-    TMODE -->|Auto| ATEST[raven-auto-test<br/>Autor testów + reviewer + poprawki]
+    TMODE -->|Auto| ATEST[raven-auto-test]
     TF -->|Nie, review zakończone| PUB{Zlecasz publikację PR?}
     ATEST -->|Testy i review zakończone| PUB
     TEST -. Błąd produktu: decyzja o naprawie .-> IMODE
