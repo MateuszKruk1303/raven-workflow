@@ -32,17 +32,55 @@ Poniższe przykłady to prompty do agenta, nie polecenia terminala. Nazwę skill
 <a id="greenfield-nowy-produkt"></a>
 ## Greenfield: nowy produkt
 
-| Krok | Co zlecić | Warunek przejścia |
-| --- | --- | --- |
-| 1. Ustal produkt | `raven-shape`: odbiorca, problem, przepływ, zakres i kryteria sukcesu | Decyzje i jawne luki w shape-notes |
-| 2. Zapisz wymagania | `raven-prd` na podstawie notatek | PRD odzwierciedla źródła; istotne niewiadome rozstrzygnięte przed zależnym planowaniem |
-| 3. Przygotuj kolejkę | `raven-github-setup`, następnie `raven-roadmap` | Repo/Project powiązane, changes uporządkowane według zależności |
-| 4. Ustal architekturę | `raven-architecture` | Decyzje przekrojowe mają status i uzasadnienie |
-| 5. Uruchom projekt | `raven-init-stack` **albo** `raven-medusa-ecommerce-init` | Działające środowisko odpowiednie dla wybranego produktu |
-| 6. Przygotuj pracę agentów | `raven-agents-md` **albo** `raven-md`; następnie `raven-test-plan` | Instrukcje wynikają z repo, strategia testów z ryzyk |
-| 7. Dostarcz pierwszy change | Wspólny cykl poniżej; `raven-hooks`, gdy istnieją komendy i runnery | Działająca zmiana, dowody i faktyczne checki CI |
+```mermaid
+flowchart TD
+    START[Nowy produkt] --> SHAPE[raven-shape]
+    SHAPE --> PRD[raven-prd]
+    PRD --> GH[raven-github-setup<br/>Repo + Project + github.json]
+    GH --> ROAD[raven-roadmap<br/>Changes i zależności]
+    ROAD --> ARCH[raven-architecture]
+    ARCH --> STACK{Wybrany stack}
+    STACK -->|Better T Stack| INIT[raven-init-stack]
+    STACK -->|Medusa + Next.js| MEDUSA[raven-medusa-ecommerce-init]
+    INIT --> INSTR[raven-agents-md lub raven-md]
+    MEDUSA --> INSTR
+    INSTR --> STRATEGY[raven-test-plan]
+    STRATEGY --> HOOKS[raven-hooks<br/>Checki dla dostępnych runnerów i komend]
+    HOOKS --> PICK[Wybierz gotowy do planowania change z roadmapy]
+    PICK --> MODE
+    MODE{Tryb planowania} -->|Manual| PLAN[raven-plan]
+    PLAN --> PREVIEW[raven-plan-review]
+    MODE -->|Auto| APLAN[raven-auto-plan<br/>Planista + niezależny reviewer]
+    PREVIEW --> ACCEPT{Akceptujesz plan?}
+    APLAN --> ACCEPT
+    ACCEPT -->|Poprawki| MODE
+    ACCEPT -->|Tak| IMODE{Tryb implementacji}
+    IMODE -->|Manual| IMPL[raven-implement]
+    IMPL --> IREV[raven-implement-review]
+    IMODE -->|Auto| AIMPL[raven-auto-implement<br/>Implementator → tester wymagań → reviewer kodu]
+    IREV --> USER{Odbiór użytkownika}
+    AIMPL --> USER
+    USER -->|Błąd w uzgodnionym zakresie| IMODE
+    USER -->|Nowe wymagania| MODE
+    USER -->|Zlecam dodatkowe QA| QA[raven-manual-qa]
+    QA --> USER
+    USER -->|Akceptuję| TMODE{Tryb trwałych testów}
+    TMODE -->|Manual| TEST[raven-test]
+    TEST --> TREV[raven-test-review]
+    TREV --> TF{Wady testów do poprawy?}
+    TF -->|Tak, zlecam poprawkę| TEST
+    TMODE -->|Auto| ATEST[raven-auto-test<br/>Autor testów + reviewer + poprawki]
+    TF -->|Nie, review zakończone| PUB{Zlecasz publikację PR?}
+    ATEST -->|Testy i review zakończone| PUB
+    TEST -. Błąd produktu: decyzja o naprawie .-> IMODE
+    ATEST -. Błąd produktu: decyzja o naprawie .-> IMODE
+    PUB -->|Tak| PR[raven-pr]
+    PR --> CI{Wymagane checki CI}
+    CI -->|FAIL: zlecona poprawka| IMODE
+    CI -->|PASS| MERGE[Merge użytkownika → finalizacja Done]
+```
 
-Nie uruchamiaj ponownie gotowego setupu. Roadmapa ustala kolejność, ale nie zatwierdza planu implementacji. Nie trzeba tworzyć wszystkich testów produktu przed pierwszym change.
+Jeśli wybrano inny, już przygotowany stack, przejdź do instrukcji repo bez uruchamiania obu bootstrapperów. `raven-hooks` konfiguruje dostępne checki; po dodaniu runnerów lub suite uzupełnij go przed PR. Nie uruchamiaj ponownie gotowego setupu. Roadmapa ustala kolejność, ale nie zatwierdza planu implementacji. Nie trzeba tworzyć wszystkich testów produktu przed pierwszym change.
 
 > Użyj raven-shape. Buduję aplikację do […]. Pomóż ustalić najmniejszy kompletny przepływ, wymagania i granice zakresu. Zapisz notatki do późniejszego PRD.
 
@@ -51,14 +89,73 @@ Nie uruchamiaj ponownie gotowego setupu. Roadmapa ustala kolejność, ale nie za
 
 Przy pierwszym wprowadzeniu Raven do istniejącej aplikacji przygotuj warsztat pracy, a dopiero potem konkretną zmianę. Zachowaj zastany stack, kod i historię.
 
-| Kolejność | Skill | Konkretny wynik |
-| --- | --- | --- |
-| 1. Powiąż GitHub i board | `raven-github-setup` | Weryfikacja istniejącego repo, utworzenie lub uzupełnienie prywatnego GitHub Project (boarda), pól i etykiet; zapis `context/foundation/github.json`. Bez kopiowania repo i importowania backlogu przy okazji. |
-| 2. Zmapuj projekt | `raven-repo-map` | Mapa funkcji i modułów, zależności, historii zmian, stref ryzyka oraz plików wejściowych. Wersjonowany raport i dowody w GH. |
-| 3. Uzupełnij podstawy pracy | `raven-agents-md` lub `raven-md`, `raven-test-plan`, `raven-hooks` — według braków | Rzeczywiste komendy i konwencje w AGENTS.md, strategia ochrony zachowania i CI oparte na istniejących runnerach. |
-| 4. Wybierz i zbadaj change | Istniejące issue albo nowy opis zmiany; `raven-frame` / `raven-research`, gdy potrzebne | Zweryfikowany problem, wymagania i dowody z konkretnego obszaru, gotowe do planowania. |
+```mermaid
+flowchart TD
+    START[Istniejąca aplikacja] --> BIND{Repo i Project powiązane z Raven?}
+    BIND -->|Nie lub konfiguracja niepełna| GH[raven-github-setup]
+    BIND -->|Tak| MAPCHECK{Aktualna mapa badanego obszaru?}
+    GH --> MAPCHECK
+    MAPCHECK -->|Nie| MAP[raven-repo-map]
+    MAPCHECK -->|Tak| BASE{Braki w podstawach pracy?}
+    MAP --> BASE
+    BASE -->|Instrukcje| MD[raven-agents-md lub raven-md]
+    BASE -->|Strategia testów| TP[raven-test-plan]
+    BASE -->|CI| HOOKS[raven-hooks]
+    MD --> BASE
+    TP --> BASE
+    HOOKS --> BASE
+    BASE -->|Brak| SOURCE{Źródło zadania}
+    SOURCE -->|Jira| JIRA[raven-jira-roadmap]
+    SOURCE -->|Issue GH lub opis nowej zmiany| FRAMECHECK{Niepotwierdzona przyczyna problemu?}
+    JIRA --> FRAMECHECK
+    FRAMECHECK -->|Tak| FRAME[raven-frame]
+    FRAMECHECK -->|Nie| DOMAINCHECK{Niejasne granice lub język domeny?}
+    FRAME --> DOMAINCHECK
+    DOMAINCHECK -->|Tak| DOMAIN[raven-domain-distillation]
+    DOMAINCHECK -->|Nie| RESEARCHCHECK{Nieznane działanie funkcji?}
+    DOMAIN --> RESEARCHCHECK
+    RESEARCHCHECK -->|Tak| RESEARCH[raven-research]
+    RESEARCHCHECK -->|Nie| ARCHCHECK{Potrzebne decyzje przekrojowe?}
+    RESEARCH --> ARCHCHECK
+    ARCHCHECK -->|Tak| ARCH[raven-architecture]
+    ARCHCHECK -->|Nie| PROTECT{Potrzebne testy przed zmianą?}
+    ARCH --> PROTECT
+    PROTECT -->|Tak: uzgodniony zakres| BEFORE[raven-test → raven-test-review<br/>lub raven-auto-test<br/>Tryb before-change]
+    PROTECT -->|Nie| MODE
+    BEFORE -->|Ochrona zweryfikowana; RED dopuszczalny przy reprodukcji| MODE
+    MODE{Tryb planowania} -->|Manual| PLAN[raven-plan]
+    PLAN --> PREVIEW[raven-plan-review]
+    MODE -->|Auto| APLAN[raven-auto-plan<br/>Planista + niezależny reviewer]
+    PREVIEW --> ACCEPT{Akceptujesz plan?}
+    APLAN --> ACCEPT
+    ACCEPT -->|Poprawki| MODE
+    ACCEPT -->|Tak| IMODE{Tryb implementacji}
+    IMODE -->|Manual| IMPL[raven-implement]
+    IMPL --> IREV[raven-implement-review]
+    IMODE -->|Auto| AIMPL[raven-auto-implement<br/>Implementator → tester wymagań → reviewer kodu]
+    IREV --> USER{Odbiór użytkownika}
+    AIMPL --> USER
+    USER -->|Błąd w uzgodnionym zakresie| IMODE
+    USER -->|Nowe wymagania| MODE
+    USER -->|Zlecam dodatkowe QA| QA[raven-manual-qa]
+    QA --> USER
+    USER -->|Akceptuję| TMODE{Tryb trwałych testów}
+    TMODE -->|Manual| TEST[raven-test]
+    TEST --> TREV[raven-test-review]
+    TREV --> TF{Wady testów do poprawy?}
+    TF -->|Tak, zlecam poprawkę| TEST
+    TMODE -->|Auto| ATEST[raven-auto-test<br/>Autor testów + reviewer + poprawki]
+    TF -->|Nie, review zakończone| PUB{Zlecasz publikację PR?}
+    ATEST -->|Testy i review zakończone| PUB
+    TEST -. Błąd produktu: decyzja o naprawie .-> IMODE
+    ATEST -. Błąd produktu: decyzja o naprawie .-> IMODE
+    PUB -->|Tak| PR[raven-pr]
+    PR --> CI{Wymagane checki CI}
+    CI -->|FAIL: zlecona poprawka| IMODE
+    CI -->|PASS| MERGE[Merge użytkownika → finalizacja Done]
+```
 
-`raven-repo-map` daje obraz całego projektu lub wskazanego podsystemu. `raven-research` wyjaśnia działanie konkretnej funkcji i jej zależności na potrzeby zadania. `raven-frame` sprawdza, czy wskazana przyczyna problemu jest prawdziwa. To różne wyniki, które wcześniej diagram chował pod niejasnym „rozpoznaniem”.
+`raven-repo-map` daje obraz całego projektu lub wskazanego podsystemu. `raven-research` wyjaśnia działanie konkretnej funkcji i jej zależności na potrzeby zadania. `raven-frame` sprawdza, czy wskazana przyczyna problemu jest prawdziwa. Mapa jest wersjonowanym raportem w GH; board, pola i etykiety oraz github.json przygotowuje raven-github-setup.
 
 Przy kolejnych zadaniach wykorzystuj istniejący board i aktualną mapę; odśwież tylko zmienione obszary. Nie powtarzaj setupu i pełnego skanowania dla każdego ticketa. PRD całej aplikacji i ponowny bootstrap nie są warunkami drobnej zmiany.
 
@@ -78,29 +175,11 @@ Dobór analizy **po przygotowaniu projektu**:
 
 ## Cykl zmiany
 
+Oba diagramy przedstawiają pełną drogę do merge. Każde przejście oznacza kolejne zlecenie lub decyzję, nie samoczynne uruchomienie następnego skilla. Zatrzymanie, odmowa akceptacji lub BLOCKED pozostawia pracę na danym etapie. Kroki zakończone w aktualnej wersji wykorzystuj ponownie.
+
 **Change** to odbieralny rezultat, np. eksport zamówień, zapisany jako issue (`C-03`). **Task** to faza jego planu, zwykle sub-issue (`C-03/T-02`). Manual i auto można mieszać między etapami. Auto automatyzuje pracę wewnątrz zleconego etapu; nie oznacza zgody na następny etap, zmianę wymagań ani merge.
 
-```mermaid
-flowchart TD
-    G[Greenfield: shape → PRD → setup i roadmapa] --> P
-    B[Brownfield: istniejąca aplikacja] --> BG[raven-github-setup<br/>Repo + GitHub Project + github.json]
-    BG --> BM[raven-repo-map<br/>Moduły, zależności, historia i ryzyka]
-    BM --> BF[Uzupełnij braki:<br/>AGENTS.md, raven-test-plan, raven-hooks]
-    BF --> BT[Wybierz change / issue]
-    BT --> BA{Czy są nierozstrzygnięte pytania?}
-    BA -->|Tak| BR[raven-frame: problem<br/>raven-research: działanie funkcji]
-    BR --> P
-    BA -->|Nie| P
-    J[Jira: raven-jira-roadmap<br/>Po powiązaniu GitHub i Project] --> BT
-    P[raven-plan + raven-plan-review<br/>lub raven-auto-plan] --> A{Akceptacja planu}
-    A --> I[raven-implement + raven-implement-review<br/>lub raven-auto-implement]
-    I --> U{Osobisty odbiór użytkownika}
-    U --> T[raven-test + raven-test-review<br/>lub raven-auto-test]
-    T --> R[raven-pr na zlecenie]
-    R --> C[Checki CI → merge użytkownika → Done]
-    U -. poprawki .-> I
-    Q[raven-manual-qa: dodatkowe eksploracyjne QA] -. dowody do odbioru .-> U
-```
+
 
 | Etap | Manual | Auto | Kto podejmuje następną decyzję |
 | --- | --- | --- | --- |
