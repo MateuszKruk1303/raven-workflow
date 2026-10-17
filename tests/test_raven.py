@@ -81,6 +81,63 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Independent context'):
             self.check()
 
+    def test_auto_implementation_requires_independent_functional_qa(self):
+        self.contract.pop('auto_implementation_qa')
+        with self.assertRaisesRegex(ValueError, 'Auto implementation QA'):
+            self.check()
+
+    def test_auto_qa_contract_cannot_weaken_or_expand_its_scope(self):
+        original = copy.deepcopy(self.contract['auto_implementation_qa'])
+        mutations = [
+            ('fresh_context', False),
+            ('fresh_context', 1),
+            ('role', 'implementer'),
+            ('role', 'reviewer'),
+            ('produces', []),
+            ('produces', ['test_evidence']),
+            ('produces', ['qa_evidence', 'user_acceptance']),
+            ('required_before_completion', False),
+            ('required_before_completion', 1),
+            ('retry_limit_per_defect', 3),
+            ('retry_limit_per_defect', 0),
+            ('retry_limit_per_defect', 2.0),
+            ('skill', 'raven-implement'),
+            ('skill', 'raven-auto-test'),
+            ('skills', ['raven-auto-implement', 'raven-implement']),
+        ]
+        mutations.extend(('requires', [item for item in original['requires'] if item != artifact])
+                         for artifact in original['requires'])
+        for key, value in mutations:
+            with self.subTest(key=key, value=value):
+                self.contract['auto_implementation_qa'] = copy.deepcopy(original)
+                self.contract['auto_implementation_qa'][key] = value
+                with self.assertRaisesRegex(ValueError, 'Auto implementation QA'):
+                    self.check()
+
+    def test_auto_qa_does_not_add_manual_or_other_skill_gates(self):
+        self.check()
+        qa = self.contract['auto_implementation_qa']
+        self.assertEqual(qa['skill'], 'raven-auto-implement')
+        self.assertEqual(set(qa['requires']), {'implementation', 'test_evidence', 'code_review'})
+        for stage in self.contract['stages']:
+            with self.subTest(stage=stage['id']):
+                self.assertEqual(set(stage.get('modes', ['manual', 'auto'])), {'manual', 'auto'})
+                self.assertNotIn('qa_evidence', stage['requires'])
+                self.assertNotIn('qa_evidence', stage['produces'])
+                self.assertFalse(stage.get('requires_by_mode'))
+
+    def test_doctor_reports_missing_auto_qa_as_workflow_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'repo'
+            shutil.copytree(ROOT / 'skills', root / 'skills')
+            shutil.copy2(ROOT / 'README.md', root / 'README.md')
+            self.contract.pop('auto_implementation_qa')
+            (root / 'workflow-contract.json').write_text(json.dumps(self.contract))
+            errors = raven.doctor(root)
+            self.assertTrue(any(error['code'] == 'workflow.contract'
+                                and 'Auto implementation QA' in error['detail']
+                                for error in errors))
+
     def test_review_before_plan_is_rejected(self):
         stages = self.contract['stages']
         stages[0], stages[1] = stages[1], stages[0]

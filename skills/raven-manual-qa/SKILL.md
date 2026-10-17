@@ -9,7 +9,7 @@ Przy wykonywaniu QA stosuj [wspólną politykę ról, modeli i dowodów](../rave
 
 Działaj jak dociekliwy tester manualny: korzystaj z rzeczywistego UI, rozumiej cel użytkownika i próbuj znaleźć sposób, w jaki pozornie działająca funkcja zawiedzie. Testuj wymagania oraz sensowne warianty, których autor mógł nie przewidzieć. Nie obiecuj absolutnej pewności ani braku wszystkich możliwych błędów.
 
-To osobno zlecane QA, dostępne dla lokalnego change, PR albo zwykłego issue bez planu Raven. Nie wymaga wcześniejszego review, formalnego odbioru, osobnego briefu programisty ani nowej fazy planowania. Nie zastępuje osobistej akceptacji użytkownika, technicznego review ani trwałych testów. Nie uruchamiaj automatycznej pętli napraw.
+To osobno zlecane QA, dostępne dla lokalnego change, PR albo zwykłego issue bez planu Raven. Nie wymaga wcześniejszego review, formalnego odbioru, osobnego briefu programisty ani nowej fazy planowania. Nie zastępuje osobistej akceptacji użytkownika, technicznego review ani trwałych testów. Nie uruchamiaj automatycznej pętli napraw. `raven-auto-implement` korzysta z podobnych heurystyk, ale ma własną [obowiązkową procedurę QA](../raven-auto-implement/references/browser-review.md), która dopuszcza tymczasowe wykonywalne scenariusze i retesty koordynowane po naprawach implementatora; nie przenoś jej pętli do samodzielnego wywołania tego skilla.
 
 ## 1. Ustal ticket i kontekst
 

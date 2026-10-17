@@ -152,6 +152,22 @@ def validate_process(contract, skills):
         raise ValueError('Planning and independent assessment require Astra/high')
     if roles['implementer'] != {'model': 'gpt-6.1-sol', 'effort': 'low'}:
         raise ValueError('Default implementer must use Sol/low')
+    qa = contract.get('auto_implementation_qa')
+    expected_qa = {
+        'skill': 'raven-auto-implement',
+        'role': 'tester',
+        'fresh_context': True,
+        'requires': ['implementation', 'test_evidence', 'code_review'],
+        'produces': ['qa_evidence'],
+        'required_before_completion': True,
+        'retry_limit_per_defect': 2,
+    }
+    if (qa != expected_qa or not isinstance(qa, dict)
+            or qa.get('fresh_context') is not True
+            or qa.get('required_before_completion') is not True
+            or type(qa.get('retry_limit_per_defect')) is not int):
+        raise ValueError('Auto implementation QA must require independent tester evidence '
+                         'only for raven-auto-implement, with at most two retries per defect')
     stages = contract['stages']
     ids = [stage['id'] for stage in stages]
     if len(set(ids)) != len(ids):

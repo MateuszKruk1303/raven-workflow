@@ -190,6 +190,15 @@
     "issue_done_after_merge": true,
     "project_optional": true
   },
+  "auto_implementation_qa": {
+    "skill": "raven-auto-implement",
+    "role": "tester",
+    "fresh_context": true,
+    "requires": ["implementation", "test_evidence", "code_review"],
+    "produces": ["qa_evidence"],
+    "required_before_completion": true,
+    "retry_limit_per_defect": 2
+  },
   "optional_workflows": {
     "additional_validation": {
       "skills": [

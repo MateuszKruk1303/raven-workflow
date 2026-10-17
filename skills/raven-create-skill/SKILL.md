@@ -11,7 +11,7 @@ Stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/reference
 
 ## 1. Ustal repo i zakres
 
-Przeczytaj raven-workflow, a następnie ogólny `skill-creator` z lokalizacji podanej przez katalog skilli hosta. Stosuj jego zasady tworzenia instrukcji i progressive disclosure; nie kopiuj jego treści do Raven. Jeśli zależność jest niedostępna, nazwij brak i kontynuuj rozpoznanie, ale nie deklaruj zakończonej walidacji procesu tworzenia.
+Przeczytaj bezpośrednio potrzebne wspólne referencje Raven oraz ogólny `skill-creator` z lokalizacji podanej przez katalog skilli hosta. Stosuj jego zasady tworzenia instrukcji i progressive disclosure; nie kopiuj jego treści do Raven. Jeśli zależność jest niedostępna, nazwij brak i kontynuuj rozpoznanie, ale nie deklaruj zakończonej walidacji procesu tworzenia.
 
 Znajdź wskazane repo źródłowe Raven: zawiera `skills/raven-workflow/SKILL.md`, `workflow-contract.json` i `tools/raven.py`. Sprawdź instrukcje repo, Git status oraz zakres istniejących zmian. Zainstalowana kopia skilla nie jest dowodem lokalizacji repo. Jeśli repo nie jest wskazane i cwd go nie identyfikuje, poproś o ścieżkę; nie szukaj po całym dysku ani nie twórz nowego repo. Nie edytuj wyłącznie instalacji globalnej. Zachowaj cudze zmiany, w szczególności w routerze i README.
 
@@ -37,7 +37,7 @@ Użyj `rg` do wyszukania wywołań, odsyłaczy i nazw artefaktów. Czytaj tylko 
 
 - Utwórz lub zmień `skills/raven-<nazwa>/SKILL.md`: precyzyjny trigger, granice, wykonanie i handoff. Włącz odsyłacz do wspólnej polityki ról. Referencje i skrypty dodawaj tylko gdy skracają instrukcje lub zapewniają niezawodną, powtarzaną operację.
 - Metadane UI twórz według `skill-creator/references/openai_yaml.md`, odszukanego względem skilla hosta. Nie wpisuj tam fikcyjnych ustawień modeli.
-- Dodaj skill do listy `skills` w `workflow-contract.json`, routingu raven-workflow i jednego właściwego wiersza katalogu README. Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
+- Dodaj skill do listy `skills` w `workflow-contract.json`, mapy etapów w ręcznym tutorialu raven-workflow i jednego właściwego wiersza katalogu README. Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
 - Zmień powiązane skille wyłącznie tam, gdzie rzeczywiście zmieniają się wejścia, wyjścia, odpowiedzialności lub wywołania. Zachowaj kompatybilność i istniejące identyfikatory; nie migruj historycznych artefaktów projektów przy okazji.
 - Opcjonalny helper nie staje się wpisem w `stages` standardowego cyklu. Przy uzgodnionej zmianie cyklu uaktualnij razem kontrakt, jego niezmienniki w doctorze, router, konsumentów i testy. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
 

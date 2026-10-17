@@ -28,7 +28,7 @@ Dostosuj rozmiar do jednego rezultatu. Nie dodawaj faz tylko dla wypełnienia sz
 - P2: [tylko jeśli potrzebny do tego samego rezultatu]
 
 ## Ryzyka i bramki
-[Ochrona zachowania, migracja/rollback, konkretne ryzyka i testy. Manual gates tylko gdy rzeczywiście potrzebne. Dodatkowy tester/audyt tylko z uzasadnieniem.]
+[Ochrona zachowania, migracja/rollback, konkretne ryzyka i testy. Manual gates tylko gdy rzeczywiście potrzebne. Auto-implement obejmuje wykonawcze QA; dalszy dodatkowy tester/audyt tylko z uzasadnieniem.]
 <!-- raven:contract:end -->
 
 ## Akceptacja kontraktu

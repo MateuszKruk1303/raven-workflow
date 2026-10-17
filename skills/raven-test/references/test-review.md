@@ -6,4 +6,4 @@ Expected pochodzi z wymagań lub świadomie chronionego zachowania before-change
 
 Dowód istniejącego uruchomienia można wykorzystać przy zgodnym drzewie, konfiguracji, zależnościach i środowisku. Reviewer wykonuje kontrole rozstrzygające jego obawy; nie powtarza całej suite bez przyczyny. Niewykonanie to NOT VERIFIED/BLOCKED. EXPECTED_RED before-change nie jest zielonym wynikiem gotowego produktu.
 
-Normalne review implementacji obejmuje ten wymiar razem z wymaganiami i kodem. Oddzielne test-review służy osobnym zleceniom/ryzyku; nie tworzy obowiązkowego drugiego review każdego change.
+Normalne review implementacji obejmuje ten wymiar razem z wymaganiami i kodem. Oddzielne test-review służy osobnym zleceniom/ryzyku; nie tworzy obowiązkowego drugiego review każdego change. Obowiązkowy tester w auto-implement wykonuje scenariusze funkcjonalne według procedury QA; nie jest dodatkowym test-review i nie zmienia ocenianej trwałej suite.

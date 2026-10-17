@@ -1,20 +1,20 @@
 ---
 name: raven-workflow
-description: "Router Raven. Odtwórz stan z lokalnego change, brancha lub PR i wskaż właściwy etap manual/auto; nie uruchamia całego cyklu na samo pytanie o status."
+description: "Ręcznie wywoływany tutorial i wprowadzenie do Raven. Objaśnij etapy, stan wskazanej pracy i możliwy następny skill; nie jest automatycznym routerem ani obowiązkowym krokiem."
 ---
 
 # Raven Workflow
 
 Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-To kanoniczna mapa etapów. Najpierw ustal intencję i zakres; czytaj tylko skill potrzebny do zleconej pracy. Stan taska i roadmapy pochodzi z GitHub Issues, szczegóły wykonania z planu i bieżących dowodów, nie z pamięci rozmowy.
+Wywołuj wyłącznie na wyraźne ręczne polecenie użytkownika jako tutorial, wprowadzenie i podpowiedzi. Samo użycie innego raven-*, pytanie o gotowość lub wznowienie nie uruchamia tego skilla. Instrukcje potrzebnego etapu i wspólne referencje czytaj bezpośrednio; nie uruchamiaj etapów podczas tutorialu. Stan taska i roadmapy pochodzi z GitHub Issues, szczegóły wykonania z planu i bieżących dowodów, nie z pamięci rozmowy.
 
 ## Start i wznowienie
 
 1. Przeczytaj instrukcje repo. Rozwiąż jawny issue/change ID, ścieżkę `plan.md`, branch albo PR; nie wybieraj najnowszego z kilku kandydatów.
 2. Odczytaj plan/checkpoint, aktualny branch/HEAD i dirty state. Konfiguracja `.raven/config.json` jest opcjonalna. `context/foundation/github.json` może wskazywać historyczne źródło; nie migruj go automatycznie.
 3. Odczytaj dokładny powiązany issue (stan i assignee), bez skanowania boarda. Sprawdź fingerprint i akceptację, następny krok oraz aktualność wskazanych dowodów. Dla PR pobierz tylko jego bieżące dane, wymagane checki i konkretne nierozwiązane wątki. Pełna historia komentarzy/task issues nie jest wymagana.
-4. Podaj stan, jedną istotną lukę i następny skill. Status jest read-only. Gdy użytkownik zlecił planowanie lub implementację, najpierw potwierdź podjęcie issue (In progress i assignee) według wspólnego kontraktu; brak GH nie jest potwierdzonym startem. Wykonaj zlecony krok w już ustalonym trybie; nie pytaj ponownie o wcześniejsze decyzje. Przy nieustalonym trybie wybierz manual dla pojedynczego etapu, a auto tylko przy zleceniu cyklu.
+4. Objaśnij stan, istotną lukę i pasujący następny skill. Tutorial i status są read-only; nie podejmuj issue i nie uruchamiaj z nich kolejnych etapów. Jeśli użytkownik osobno zleca wykonanie, stosuj bezpośrednio instrukcje wybranego skilla i zachowane decyzje.
 
 Ograniczone deterministyczne operacje opisuje [runtime](references/runtime.md); helper nie interpretuje wymagań ani nie zatwierdza planów.
 
@@ -32,12 +32,13 @@ Ograniczone deterministyczne operacje opisuje [runtime](references/runtime.md); 
 | Akceptacja | Użytkownik akceptuje konkretny fingerprint | Ta sama decyzja |
 | Implementacja + testy | [raven-implement](../raven-implement/SKILL.md) | [raven-auto-implement](../raven-auto-implement/SKILL.md) |
 | Niezależne review wymagań + kodu + testów | [raven-implement-review](../raven-implement-review/SKILL.md) | Wbudowane jedno świeże review i naprawy w zakresie |
+| Wykonawcze QA | Dodatkowe na zlecenie lub według ryzyka | Obowiązkowy osobny świeży tester; scenariusze → poprawki → retest do PASS albo blokady |
 | Odbiór i aktualne CI | Użytkownik odbiera wynik; CI dla PR | To samo |
 | Merge | Jawnie zlecony [raven-merge](../raven-merge/SKILL.md) | Ta sama zgoda |
 
 [raven-pr](../raven-pr/SKILL.md) publikuje i aktualizuje PR **w trakcie** cyklu, wcześnie jako draft, gdy istnieje autoryzowana polityka. Praca lokalna może trwać bez PR przy potwierdzonym issue GH. Issue pozostaje In progress przez review i PR; Done następuje po udanym raven-merge. Odbiór nie wymusza osobnego etapu pisania testów: testy są częścią implementacji.
 
-[raven-test](../raven-test/SKILL.md), [raven-auto-test](../raven-auto-test/SKILL.md) i [raven-test-review](../raven-test-review/SKILL.md) służą osobnym zleceniom ochrony testowej, before-change, lukom lub ryzyku. [raven-manual-qa](../raven-manual-qa/SKILL.md) to dodatkowe QA, [raven-browser](../raven-browser/SKILL.md) — narzędzie przeglądarkowe. Nie są obowiązkowymi dodatkowymi etapami każdego change.
+[raven-test](../raven-test/SKILL.md), [raven-auto-test](../raven-auto-test/SKILL.md) i [raven-test-review](../raven-test-review/SKILL.md) służą osobnym zleceniom ochrony testowej, before-change, lukom lub ryzyku. [raven-manual-qa](../raven-manual-qa/SKILL.md) to dodatkowe QA, [raven-browser](../raven-browser/SKILL.md) — narzędzie przeglądarkowe. Nie są obowiązkowymi dodatkowymi etapami każdego change. Auto-implement ma własną obowiązkową procedurę wykonawczego QA, z tymczasowymi scenariuszami do ponawiania; samodzielne manual-qa nadal nie naprawia produktu.
 
 ## Pozostałe narzędzia i historia
 

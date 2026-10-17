@@ -13,6 +13,8 @@ Zlecenie „zmerguj C-03” upoważnia do merge jednoznacznego PR; nie pytaj pon
 
 Rozwiąż plan, issue i PR z jednoznacznego repo/branch/URL. Potwierdź powiązanie PR–issue oraz że merge dostarczy cały zakres taska; brak powiązania blokuje finalizację. Sprawdź aktualny kontrakt/fingerprint i jego akceptację, pełny zakres dostarczenia, review kodu+wymagań+testów, odbiór użytkownika i obowiązujące manual gates. Dowody muszą dotyczyć aktualnego drzewa/head oraz istotnej konfiguracji/środowiska. Przy częściowym PR lub kilku kandydatach ustal finalny zakres; nie merguj seryjnie przez domysł.
 
+Jeżeli checkpoint wskazuje `execution_mode: auto` lub `qa_required: true`, sprawdź również aktualny PASS niezależnego wykonawczego QA i raport testera. Zachowaj tę bramkę po ręcznych poprawkach i zmianie sesji; sam brak pola przy dowodach wykonania w auto nie jest zwolnieniem z QA. Nie dodawaj jej historycznym change ani realizacji wyłącznie manualnej.
+
 Odczytaj aktualny head, base, draft, mergeability, wymagane reviews/checki, rulesets/branch protection i merge queue. Sprawdź także kontrole planu niewymuszane przez serwer. Brak dostępu lub UNKNOWN nie oznacza braku wymagań. FAIL, konflikt, brak odbioru lub kontrola NOT VERIFIED blokują merge; pending pozostaje oczekiwaniem. Nie zmieniaj zabezpieczeń, nie zatwierdzaj własnego PR w imieniu reviewera i nie używaj bypassu.
 
 ## Merge dokładnej wersji

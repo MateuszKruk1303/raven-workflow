@@ -2,15 +2,13 @@
 
 [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Realizacja taska — manual](#realizacja-taska--manual) · [Skróty auto](#skróty-auto)
 
+`raven-workflow` to opcjonalny tutorial uruchamiany wyłącznie ręcznie. Pozostałe skille wywołuj bezpośrednio.
+
 Diagramy czytaj od góry. `JEŚLI` oznacza krok warunkowy, `LUB` — wybór jednego skilla. Zaczęty task wznawiaj od zapisanego etapu.
 
 ## Greenfield
 
 ```text
-raven-workflow
-Ustal punkt startowy i brakujące przygotowanie
-│
-▼
 raven-shape
 Uzgodnij problem, odbiorców i zakres produktu
 │  zapis: context/foundation/shape-notes.md
@@ -56,7 +54,6 @@ Przejdź do diagramu „Realizacja taska — manual”
 ## Brownfield
 
 ```text
-raven-workflow
 Odczytaj wskazany issue, repo, branch i checkpoint
 │
 ├─ Task już rozpoczęty?
@@ -101,7 +98,7 @@ WYBIERZ ISSUE
 Przejdź do diagramu „Realizacja taska — manual”
 ```
 
-Dla znanego taska w przygotowanym repo przejdź bezpośrednio od `raven-workflow` do realizacji. Rozpoznanie będące częścią zleconego planowania odbywa się już po oznaczeniu issue jako In progress.
+Dla znanego taska w przygotowanym repo przejdź bezpośrednio do skilla realizacji. Rozpoznanie będące częścią zleconego planowania odbywa się już po oznaczeniu issue jako In progress.
 
 ## Realizacja taska — manual
 
@@ -186,9 +183,19 @@ raven-auto-plan
    Akceptacja użytkownika
 
 raven-auto-implement
-└─ raven-implement → raven-implement-review → poprawki
+└─ raven-implement + trwałe testy
    ↓
-   Odbiór użytkownika + CI → raven-merge
+   Jedno niezależne review wymagań, kodu i testów
+   ↓
+   Osobny świeży tester: obowiązkowe wykonawcze QA
+   │  UI: powtarzalne scenariusze Playwright
+   │  Bez UI: adekwatne kontrole API/CLI/artefaktów
+   ├─ Defekt → implementator → kontrole/review → retest
+   │  Te same scenariusze; do PASS albo blokady/limitu napraw
+   ↓
+   Wynik z dowodami do odbioru; issue nadal In progress
+   ↓
+   Odbiór użytkownika + CI → raven-merge → issue Done
 ```
 
 ## Osobne zadanie testowe
@@ -239,7 +246,7 @@ Sync obejmuje zarejestrowaną rodzinę Raven, nie inne skille. Tworzy backup dot
 
 W globalnych instrukcjach wskaż: raven-workflow wywołuj wyłącznie ręcznie jako tutorial i pomoc. Pozostałe skille wywołuj bezpośrednio, bez obowiązkowego routera. Rozwijając skille, użyj raven-create-skill i dostępnego hostowi skill-creator; nie instaluj ani nie publikuj zmian bez objęcia tego zleceniem.
 
-Doctor sprawdza frontmatter, nazwy, lokalne odsyłacze, katalog, politykę ról i [kontrakt](workflow-contract.json), a `--installed` również zgodność instalacji. `doctor --json` daje raport maszynowy. Kontrakt deklaruje zależności, nie wykonuje workflow: `initial_artifacts` to wymagane zewnętrzne dowody/decyzje, nie fikcyjne zgody. PR jest operacją boczną i nie blokuje lokalnej implementacji. Opcjonalne dodatkowe QA/testy są poza standardowym cyklem; tracking issues jest wymagany, Project pozostaje widokiem.
+Doctor sprawdza frontmatter, nazwy, lokalne odsyłacze, katalog, politykę ról i [kontrakt](workflow-contract.json), a `--installed` również zgodność instalacji. `doctor --json` daje raport maszynowy. Kontrakt deklaruje zależności, nie wykonuje workflow: `initial_artifacts` to wymagane zewnętrzne dowody/decyzje, nie fikcyjne zgody. PR jest operacją boczną i nie blokuje lokalnej implementacji. Obowiązkowe wykonawcze QA jest osobnym kontraktem auto-implement; manual nie dostaje tej bramki. Pozostałe dodatkowe QA/testy są opcjonalne. Tracking issues jest wymagany, Project pozostaje widokiem.
 
 Statyczny PASS nie dowodzi zachowania agenta ani prawdziwych uprawnień, CI i gotowości aplikacji. Zmiany instrukcji wymagają właściwych testów i niezależnych prób na rzeczywistych wejściach. Workflow [Raven integrity](.github/workflows/integrity.yml) uruchamia kontrole repo; sam YAML nie ustanawia required checks w GitHubie.
 
@@ -247,7 +254,7 @@ Statyczny PASS nie dowodzi zachowania agenta ani prawdziwych uprawnień, CI i go
 
 ## Katalog wszystkich skilli — działanie i testy
 
-**`raven-implement` pisze i uruchamia testy razem z kodem.** `raven-plan` i `raven-test-plan` tylko je planują. `raven-implement-review` ocenia istniejącą implementację i testy; `raven-auto-implement` łączy realizację, niezależne review i poprawki.
+**`raven-implement` pisze i uruchamia testy razem z kodem.** `raven-plan` i `raven-test-plan` tylko je planują. `raven-implement-review` ocenia istniejącą implementację i testy; `raven-auto-implement` łączy realizację, niezależne review, obowiązkowe wykonawcze QA osobnego testera oraz poprawki i retesty.
 
 „Pisze testy” oznacza trwałe testy w repo. Sprawdzenie aplikacji w przeglądarce, analiza raportu lub odczyt CI to osobne czynności. Zakres nowych testów zależy od ryzyka zmiany i istniejącego pokrycia — nie każdy task wymaga każdej warstwy testów.
 
@@ -257,10 +264,10 @@ W kolumnie wyniku pliki przypisane do taska znajdują się domyślnie w `context
 | --- | --- | --- | --- |
 | [raven-agents-md](skills/raven-agents-md/SKILL.md) | Tworzy lub aktualizuje przewodnik dla agentów na podstawie struktury repo, komend, konfiguracji i historii. Zachowuje poprawne istniejące instrukcje. | Nie pisze testów aplikacji; dokumentuje wykryte komendy i zasady testowania. | `AGENTS.md` w repo lub wskazanym katalogu; nie inicjalizuje aplikacji. |
 | [raven-architecture](skills/raven-architecture/SKILL.md) | Prowadzi przez przekrojowe decyzje, porównuje opcje z PRD i istniejącym kodem, utrwala uzgodnienia. | Nie implementuje testów; uwzględnia wymagania jakościowe i testowalność. | `context/foundation/architecture.md`; nie implementuje wybranej architektury. |
-| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Realizuje zaakceptowany plan, następnie uruchamia jedno świeże review wymagań, kodu i testów. Zleca poprawki oraz ponowną ocenę dotkniętego zakresu. | **Tak: pisze i uruchamia potrzebne trwałe testy wraz z kodem.** Dobiera warstwy do ryzyka; dodatkowy tester tylko z uzasadnieniem. | Kod, testy, checkpoint i dowody w `plan.md`, `review.md`. Oddaje wynik do odbioru; nie merguje automatycznie. |
+| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Realizuje zaakceptowany plan, jedno świeże review i obowiązkowe QA osobnego świeżego testera. Koordynuje naprawy i retesty do PASS albo blokady. | **Tak: trwałe testy wraz z kodem.** Tester wykonuje scenariusze; UI sprawdza powtarzalnymi scenariuszami Playwright, bez niepotrzebnego duplikowania dobrej ochrony. | Kod, testy, `plan.md`, `review.md`, `qa-plan.md`, `qa-report.md`. Oddaje wynik do odbioru; issue In progress do osobno zleconego merge. |
 | [raven-auto-plan](skills/raven-auto-plan/SKILL.md) | Przygotowuje plan przez planistę, zleca niezależne review i poprawki w ograniczonej pętli. Podejmuje issue jako In progress. | Planuje testy i sprawdza kompletność weryfikacji; nie implementuje testów produktu. | `plan.md` i `plan-review.md`; kończy na przekazaniu planu do akceptacji człowieka. |
 | [raven-auto-test](skills/raven-auto-test/SKILL.md) | Koordynuje osobne zlecenie testów: autor testów → niezależny reviewer → poprawki i ponowne kontrole. | **Tak: pisze, uruchamia i niezależnie ocenia testy**, również ochronę przed refaktorem. Nie jest obowiązkowym etapem po implementacji. | Testy, dowody, checkpoint i ocena testów w repo; bez automatycznego merge/deploy. |
-| [raven-browser](skills/raven-browser/SKILL.md) | Sprawdza działającą funkcję webową: formularze, nawigację, wynik akcji, wygląd i błędy. Domyślnie używa osobnej sesji Playwright CLI; osobiste Brave/MCP wymaga wyboru użytkownika. | Wykonuje scenariusze w przeglądarce; **nie zastępuje trwałych testów E2E** uruchamianych runnerem projektu. | Wynik scenariusza, screenshoty/logi i ograniczenia. Może służyć ponownej weryfikacji naprawionej regresji. |
+| [raven-browser](skills/raven-browser/SKILL.md) | Sprawdza działającą funkcję webową: formularze, nawigację, wynik akcji, wygląd i błędy. Domyślnie używa osobnej sesji Playwright CLI; osobiste Brave/MCP wymaga wyboru użytkownika. | Wykonuje scenariusze w przeglądarce, także tymczasowy kod Playwright do retestów auto QA; **nie zastępuje trwałych testów E2E** projektu. | Wynik scenariusza, screenshoty/logi i ograniczenia. Może służyć ponownej weryfikacji naprawionej regresji. |
 | [raven-create-skill](skills/raven-create-skill/SKILL.md) | Projektuje i zmienia skill Raven wraz z rzeczywistymi zależnościami, routingiem i dokumentacją; wymaga niezależnego review. | Waliduje skille, uruchamia doctor i odpowiednie testy repo; zmianę zachowania sprawdza przez izolowany forward-test. Nie testuje funkcji aplikacji przy okazji. | Pakiet instrukcji i potrzebnych helperów w repo skilli. Instalacja globalna oraz publikacja tylko w zakresie zlecenia. |
 | [raven-domain-distillation](skills/raven-domain-distillation/SKILL.md) | Porównuje język dokumentów z modelem kodu przez niezależne analizy; wskazuje pojęcia, rozbieżności i niewiadome. | Nie pisze testów ani nie refaktoryzuje produktu; analizuje dostępne dowody. | `domain.md` i `glossary.md` w change lub foundation; dalsze zmiany wymagają planu. |
 | [raven-frame](skills/raven-frame/SKILL.md) | Weryfikuje, czy opisany objaw, domniemana przyczyna i proponowane rozwiązanie rzeczywiście do siebie pasują. | Nie tworzy suite; zbiera dowody potrzebne do oceny hipotez. | `context/changes/<id>/frame.md`; nie zmienia kodu ani zatwierdzonych wymagań. |
@@ -271,7 +278,7 @@ W kolumnie wyniku pliki przypisane do taska znajdują się domyślnie w `context
 | [raven-init-stack](skills/raven-init-stack/SKILL.md) | Po uzgodnieniu wyborów generuje Better T Stack, instaluje zależności, przygotowuje lokalny PostgreSQL i konfigurację środowiska. | Sprawdza wygenerowany setup, typy i połączenie z bazą; **nie dodaje E2E** ani testów funkcji produktu. | Szkielet aplikacji, Compose/env i `context/foundation/tech-stack.md`; bez deploya i funkcji biznesowych. |
 | [raven-jira-roadmap](skills/raven-jira-roadmap/SKILL.md) | Czyta wskazane tickety/sprint/epikę Jira, ustala samodzielne wyniki i wiąże je z taskami wykonawczymi GH. | Nie pisze ani nie uruchamia testów; zachowuje kryteria i wymagane gwarancje przy podziale pracy. | Issues GH z linkami do wymagań Jira, zależnościami i kolejnością. Nie zapisuje do Jira ani nie kopiuje całych ticketów. |
 | [raven-lesson](skills/raven-lesson/SKILL.md) | Utrwala uzgodnioną, powtarzalną regułę lub wzorzec wynikający z doświadczenia projektu. | Nie implementuje testów; opisuje regułę i dowody jej zastosowania. | `context/foundation/lessons.md`; nie przerabia produktu przy okazji. |
-| [raven-manual-qa](skills/raven-manual-qa/SKILL.md) | Planuje i wykonuje dodatkowe eksploracyjne QA działającej funkcji, szuka defektów i dokumentuje reprodukcję. | **Sprawdza aplikację, ale nie generuje trwałej suite i nie naprawia produktu.** To osobne QA, nie obowiązkowy etap każdego taska. | `qa-plan.md` i `qa-report.md` przy change; potwierdzone defekty i ograniczenia badania. |
+| [raven-manual-qa](skills/raven-manual-qa/SKILL.md) | Planuje i wykonuje dodatkowe eksploracyjne QA działającej funkcji, szuka defektów i dokumentuje reprodukcję. | **Sprawdza aplikację, ale nie generuje trwałej suite i nie naprawia produktu.** To osobne QA, nie obowiązkowy etap każdego taska. Auto-implement ma własną obowiązkową procedurę QA z retestami. | `qa-plan.md` i `qa-report.md` przy change; potwierdzone defekty i ograniczenia badania. |
 | [raven-md](skills/raven-md/SKILL.md) | Tworzy lub celowo aktualizuje wskazany AGENTS.md na podstawie faktycznych plików, komend i konwencji; dopasowuje zakres do katalogu. | Nie pisze testów i nie uruchamia całej suite tylko dla dokumentacji; odróżnia znalezioną komendę od sprawdzonej. | Wskazany `AGENTS.md`; nie inicjalizuje stacku ani folderów kontekstu. |
 | [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Uruchamia lub uzupełnia lokalny starter Medusa + Next.js: bazę, Redis, env, migracje, seed, admin i storefront. | Sprawdza start, bazę, właściwe build/typecheck i przepływ produkt → koszyk → checkout → zamówienie. Nie dodaje pełnego frameworka testów dla samego setupu. | Działające lokalne monorepo i instrukcja uruchomienia; bez rzeczywistych płatności, deploya i funkcji konkretnego sklepu. |
 | [raven-merge](skills/raven-merge/SKILL.md) | Sprawdza akceptację, odbiór, review, CI i aktualny SHA; wykonuje zlecony merge, potwierdza wynik i dopiero wtedy zamyka issue. | Nie pisze testów. Weryfikuje aktualne dowody i wymagane checki; FAIL/UNKNOWN nie stają się PASS. | Zmergowany PR i issue Done. Przy awarii zamknięcia issue wznawia samą finalizację, bez ponownego merge; bez deploya. |

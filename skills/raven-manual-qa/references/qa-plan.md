@@ -2,6 +2,8 @@
 
 Jeden lokalny plan aktualizowany w trakcie wykonania. Retest zapisuje nową rundę w tym pliku; Git zachowuje wcześniejszą historię. Użyj rzeczywistych wartości zamiast placeholderów.
 
+W wykonawczym QA auto-implement użyj tego samego formatu wyników, z rzeczywistą rolą testera auto i kanałem kontroli (UI/API/CLI/artefakt). Kryteriów spoza UI nie wyłączaj automatycznie: dopisz właściwy wykonywalny scenariusz, komendę i ścieżkę. Marker i nagłówek mogą identyfikować `auto-qa`; nie przepisuj historycznych rund manual QA.
+
 ```markdown
 <!-- raven:manual-qa-plan change=ID round=N -->
 ## Raven Manual QA — plan i przebieg
