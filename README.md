@@ -4,7 +4,7 @@ Raven przechowuje plan, wymagania, checklistę i checkpoint w `context/changes/<
 
 ## Start i wznowienie
 
-Wskaż repo i change ID, branch, lokalny plan albo PR. Agent zaczyna od [routera](skills/raven-workflow/SKILL.md), instrukcji projektu i krótkiego checkpointu. Nie potrzebuje historii rozmowy ani całego archiwum komentarzy GH. Nowy change powstaje w osobnym worktree; wznowienie odzyskuje istniejące powiązanie.
+Wskaż repo i change ID, branch, lokalny plan albo PR. Agent zaczyna od [routera](skills/raven-workflow/SKILL.md), instrukcji projektu i krótkiego checkpointu. Nie potrzebuje historii rozmowy ani całego archiwum komentarzy GH. Nowy change domyślnie używa osobnego brancha w aktualnym checkout. Worktree służy pracy równoległej, potrzebie izolacji lub wyraźnemu życzeniu użytkownika; wznowienie zachowuje istniejący branch i katalog.
 
 > Użyj raven-workflow. Sprawdź lokalny change C-03 i wskaż następny krok, bez rozpoczynania implementacji.
 
@@ -34,7 +34,7 @@ Zakres lub wznowienie → opcjonalna mapa nieznanego obszaru → rzeczywiste bra
 | Mapa, gdy potrzebna | Kod, testy, dokumentacja i wybrana historia Git | Lokalna mapa potrzebnego obszaru, bez pełnego skanu przy każdym zadaniu. |
 | Uzupełnienie warsztatu | Istniejące komendy, runnery i CI | Sprawdzone uruchamianie oraz weryfikacja; zachowany stack i konwencje. |
 | Frame/research, gdy potrzebne | Objaw, wymagania i dowody z kodu | Potwierdzony problem i ustalenia przy zmianie, bez obowiązkowego issue. |
-| Plan | Wymagania, ustalenia i aktualny kod | `context/changes/<id>/plan.md` w worktree zmiany; dalej wspólny cykl. |
+| Plan | Wymagania, ustalenia i aktualny kod | `context/changes/<id>/plan.md` na branchu zmiany; dalej wspólny cykl. |
 
 Istniejący projekt nie wymaga odtworzenia PRD całego produktu. Roadmapę twórz lub reorganizuj wtedy, gdy obejmuje to zlecenie.
 

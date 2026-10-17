@@ -6,7 +6,7 @@
 | --- | --- |
 | `fingerprint ID` | SHA-256 treści jedynego bloku contract z LF |
 | `status ID` / `resume ID` | Read-only stan lokalny; bez sieci i bez odtwarzania historii GH |
-| `start ID --session S --worktree PATH [--base HEAD]` | Jawny izolowany worktree i branch `raven/ID`; może zacząć przed powstaniem planu |
+| `start ID --session S --worktree PATH [--base HEAD]` | Opcjonalne utworzenie izolowanego worktree i brancha `raven/ID`; może zacząć przed powstaniem planu |
 | `checkpoint ID --session S --stage STAGE --next NEXT [--evidence TEXT] [--acceptance-ref REF] [--repair-attempts N]` | Zapis kanonicznego checkpointu JSON w planie poza kontraktem |
 | `publish-pr ID --session S --title TITLE --body-file PATH --dry-run` | Podgląd ograniczonej publikacji draftu |
 | `publish-pr ID --session S --title TITLE --body-file PATH --apply` | Draft PR dla **już wypchniętego** aktualnego HEAD i autoryzowanej konfiguracji |
@@ -14,9 +14,11 @@
 
 Przykład: `python3 <raven-workflow>/scripts/raven_runtime.py --repo /path/project status C-03`. Ścieżka skilla pochodzi z rzeczywistej instalacji, nie zgaduj katalogu. Jeśli helper jest niedostępny, nazwij brak; zwykłe operacje Git/plików są możliwe według tego samego kontraktu, bez udawania wyniku helpera.
 
-`start` wymaga jawnej ścieżki worktree poza repo źródłowym. Jeśli plan już istnieje, jego pełne bajty muszą odpowiadać wybranemu commitowi bazowemu; helper nie commituje niezatwierdzonych plików. Nie przełącza ukradkiem głównej sesji. Brak planu jest raportowany jako `plan_missing: true`, `fingerprint: null` — nie jako gotowość pracy.
+`start` służy wybranemu wariantowi z izolacją; zwykła praca na branchu w aktualnym checkout nie wymaga tej komendy. `start` wymaga jawnej ścieżki worktree poza repo źródłowym. Jeśli plan już istnieje, jego pełne bajty muszą odpowiadać wybranemu commitowi bazowemu; helper nie commituje niezatwierdzonych plików. Nie przełącza ukradkiem głównej sesji. Brak planu jest raportowany jako `plan_missing: true`, `fingerprint: null` — nie jako gotowość pracy.
 
 Checkpoint ma dokładnie jeden blok `<!-- raven:checkpoint:start -->` … `<!-- raven:checkpoint:end -->` poza kontraktem; zawiera JSON. Helper zapisuje stage/next/evidence, session, fingerprint, branch/head, base/PR jeśli znane, code_tree, checkpoint_sequence i opcjonalne repair_attempts/acceptance. Przy ręcznym zapisie zachowaj ten sam blok, nie twórz równoległego checkpointu w prozie. `checkpoint_sequence` liczy zapisy, nie próby napraw. `--repair-attempts` zapisuje rzeczywistą podaną liczbę; nie zeruj jej przy wznowieniu.
+
+Bez `start` ustal bazowy commit przed zmianami i wpisz jego pełny SHA jako `base` do checkpointu w planie przed pierwszym wywołaniem `checkpoint`. Helper zachowuje tę wartość; sam nie wyznacza bazy bez zapisu w planie lub journalu. Przy wznowieniu nie zastępuj bazy bieżącym HEAD.
 
 `--acceptance-ref` utrwala wyłącznie istniejący dowód decyzji, z fingerprintem i `verified: false`. Helper nie potwierdza zgody użytkownika; koordynator sprawdza ją w źródle. Bez nowego ref zachowuje dotychczasowy zapis. `contract_current`, `code_head_current` i `code_tree_current` są oddzielnymi porównaniami; zgodność kontraktu nie dowodzi aktualności testów. `dirty` obejmuje pliki nieśledzone. Checklista Progress pozostaje poza kontraktem; zapis checkpointu jej nie odhacza.
 

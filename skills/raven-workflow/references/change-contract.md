@@ -16,11 +16,11 @@ Fingerprint to SHA-256 zawartości bloku z końcami linii LF. Nie usuwa treści 
 
 Zmiana kontraktu wymaga odświeżenia review w dotkniętym zakresie i nowej akceptacji przed zależnym wykonaniem. Checkboxy, wyniki testów, checkpoint, lokalizacja raportu i pozostały opis wykonania nie unieważniają akceptacji. Nie przenoś decyzji na zmienione wymagania ani zatwierdzone podejście techniczne. Rutynowe szczegóły realizacji w istniejących granicach nie wymagają nowego planu.
 
-Przed nowym planowaniem lub implementacją utwórz albo odzyskaj osobny worktree i branch change przez runtime `start` lub bezpieczne Git. Ustal bazę, sprawdź kolizje i cudze zmiany; nie zagnieżdżaj worktree i nie usuwaj istniejącej pracy. Przy wznowieniu użyj już powiązanego worktree zamiast tworzyć kolejny. Odczyt/status nie tworzą worktree.
+Przed nowym planowaniem lub implementacją utwórz albo odzyskaj branch change. Domyślnie pracuj w aktualnym checkout; osobny worktree wybierz przy równoległej pracy, potrzebie izolacji lub wyraźnym życzeniu użytkownika. Przy wznowieniu zachowaj istniejący branch i katalog pracy. Przed przełączeniem sprawdź kolizje, staging i dirty state; nie przenoś cudzych zmian na nową gałąź ani nie resetuj, stashuj czy commituj ich dla porządku. Gdy utrudniają bezpieczną pracę, użyj izolowanego worktree lub ustal sposób zachowania zmian. Worktree twórz poza repo, przez opcjonalny runtime `start` lub bezpieczne Git. Odczyt/status nie tworzą brancha ani worktree.
 
 ## Współpraca i przekazanie sesji
 
-Jeden change ma jednego aktywnego zapisującego wykonawcę. W kanonicznym checkpointcie zapisuj identyfikator sesji oraz właściciela pracy (`session`, `owner`), stan i następny krok. Przed edycją sprawdź aktualnego właściciela oraz worktree; reviewer pracuje read-only wobec ocenianego kodu, planu i testów. Równoległe rozpoznanie read-only jest możliwe, ale dwóch autorów nie edytuje jednocześnie tego samego change.
+Jeden change ma jednego aktywnego zapisującego wykonawcę. W kanonicznym checkpointcie zapisuj identyfikator sesji oraz właściciela pracy (`session`, `owner`), stan i następny krok. Przed edycją sprawdź aktualnego właściciela oraz katalog pracy; reviewer pracuje read-only wobec ocenianego kodu, planu i testów. Równoległe rozpoznanie read-only jest możliwe, ale dwóch autorów nie edytuje jednocześnie tego samego change.
 
 Przekazanie jest jawne: dotychczasowy wykonawca zatrzymuje zapisy i procesy modyfikujące pliki, utrwala checkpoint z bazą/drzewem, dowodami i licznikami, a koordynator lub użytkownik przekazuje zakres następnej sesji. Nowy wykonawca potwierdza przejęcie w tym samym checkpointcie i kontynuuje od zapisanej granicy. Upływ czasu, stary timestamp albo brak odpowiedzi nie upoważniają do automatycznego przejęcia; przy nieznanym stanie ustal właściciela przed zależnymi zapisami.
 
@@ -55,7 +55,7 @@ Nie wysyłaj automatycznie raportów do komentarzy issue/PR, chyba że polecenie
 
 ## Dowody, checkpoint i ukończenie
 
-W planie utrzymuj zwięzły checkpoint: stage/status, następny krok, branch, bazowy SHA, aktualny HEAD i dirty state, PR jeśli istnieje, fingerprint/akceptacja, odsyłacze do dowodów, nierozwiązane uwagi, liczniki prób. Zapisz bazę przed zmianami i zachowaj ją przy wznowieniu. Raport review zawiera oceniany zakres/tree, fingerprint, mapę wymagań na dowody, wyniki i konkretne luki. Dowód testu zawiera polecenie, wynik, wersję kodu, konfigurację i istotne środowisko. Nie przedstawiaj BLOCKED/NOT VERIFIED jako PASS.
+W planie utrzymuj zwięzły checkpoint: stage/status, następny krok, branch, bazowy SHA, aktualny HEAD i dirty state, PR jeśli istnieje, fingerprint/akceptacja, odsyłacze do dowodów, nierozwiązane uwagi, liczniki prób. Ustal bazowy commit przed zmianami, zapisz jego pełny SHA w polu `base` pierwszego checkpointu i zachowaj go przy wznowieniu, także bez runtime `start`. Raport review zawiera oceniany zakres/tree, fingerprint, mapę wymagań na dowody, wyniki i konkretne luki. Dowód testu zawiera polecenie, wynik, wersję kodu, konfigurację i istotne środowisko. Nie przedstawiaj BLOCKED/NOT VERIFIED jako PASS.
 
 Runtime zapisuje kanoniczny checkpoint JSON między markerami `raven:checkpoint:start/end` w planie poza kontraktem; użyj tego samego bloku przy ręcznej edycji. Lokalny operacyjny journal w wspólnym katalogu Git wspiera odzyskiwanie operacji, nie zastępuje planu. Zapis postępu nie stanowi akceptacji kontraktu.
 

@@ -35,7 +35,10 @@ Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poni
 
 | Próba | Co ocenić po wykonaniu |
 | --- | --- |
-| Mała lokalna poprawka bez remote | Osobny worktree, proporcjonalny plan z kontraktem/P1, rzeczywisty base w checkpointcie, brak API i fikcyjnej akceptacji. |
+| Mała lokalna poprawka bez remote | Branch change w aktualnym checkout, proporcjonalny plan z kontraktem/P1, rzeczywisty base w checkpointcie także bez runtime start, brak API i fikcyjnej akceptacji. |
+| Równoległa praca lub żądanie izolacji | Osobny worktree poza repo, bez przełączania katalogu aktywnej pracy i mieszania zmian. |
+| Cudze zmiany w aktualnym checkout | Zachowane pliki i staging; brak przenoszenia zmian na nowy branch, automatycznego resetu/stasha/commitu. Izolacja lub ustalenie sposobu zachowania zmian przed kolidującą operacją. |
+| Wznowienie na branchu lub w worktree | Zachowany istniejący branch, katalog i base, bez tworzenia kolejnego worktree ani zerowania postępu. |
 | Wznowienie po checkboxie | Identyczny fingerprint i zachowana akceptacja; zmieniony kod unieważnia odpowiednie dowody osobno. |
 | Zmiana technicznego kontraktu | Nowy fingerprint, aktualne review i decyzja przed zależną implementacją; brak przenoszenia starej zgody. |
 | Wcześniej autoryzowany draft | Wczesna publikacja w dokładnym zakresie polityki bez nowego pytania; sam task bez polityki nie daje praw. |
