@@ -14,6 +14,32 @@ Wskaż repo i change ID, branch, lokalny plan albo PR. Agent zaczyna od [routera
 
 Shape → PRD → architektura → stack → instrukcje repo, strategia testów i CI → roadmapa → cykl change. Wybierz jeden bootstrapper (Better T Stack, Medusa lub gotowy stack). Nie odtwarzaj istniejącego setupu. Roadmapa żyje w GitHub Issues; nie tworzymy lokalnej roadmapy ani drugiego backlogu. Przed pierwszym taskiem uzupełnij brakujące repo/tracking przez raven-github-setup.
 
+Diagram pokazuje kolejność wywołań od pomysłu do pierwszego dostarczonego taska, z wariantem **auto** dla planowania i implementacji. Węzły „lub” oznaczają wybór jednego skilla; gotowego setupu nie powtarzaj. Decyzje użytkownika są oznaczone osobno.
+
+```mermaid
+flowchart TB
+  G0["raven-workflow<br/>Ustal punkt startowy i brakujące przygotowanie"]
+  G1["raven-shape<br/>Dopracuj problem, odbiorców i zakres produktu"]
+  G2["raven-prd<br/>Zapisz wymagania i kryteria odbioru produktu"]
+  G3["raven-architecture<br/>Ustal przekrojowe decyzje architektoniczne"]
+  G4["raven-init-stack lub raven-medusa-ecommerce-init<br/>Uruchom wybrany szkielet i środowisko projektu"]
+  G5["raven-agents-md lub raven-md<br/>Przygotuj instrukcje pracy agentów w repo"]
+  G6["raven-test-plan<br/>Ustal ryzyka, strategię testów i sposób weryfikacji"]
+  G7["raven-github-setup<br/>Przygotuj repo GH, tracking issues i politykę publikacji"]
+  G8["raven-hooks<br/>Skonfiguruj CI dla właściwych kontroli projektu"]
+  G9["raven-roadmap<br/>Utwórz taski w GH i ustal zależności oraz kolejność"]
+  G10["raven-auto-plan dla wybranego issue<br/>Ustaw In progress i wykonawcę; przygotuj plan z review"]
+  G11["Użytkownik<br/>Zaakceptuj konkretną wersję planu"]
+  G12["raven-pr — wcześnie, jeśli autoryzowany<br/>Opublikuj draft z planem i powiązaniem issue"]
+  G13["raven-auto-implement<br/>Zaimplementuj, dodaj testy, wykonaj review i poprawki"]
+  G14["raven-pr<br/>Zaktualizuj PR lub opublikuj go teraz; uruchom CI"]
+  G15["Użytkownik + CI<br/>Odbierz wynik, potwierdź kontrole i zleć merge"]
+  G16["raven-merge<br/>Zmerguj sprawdzony PR, potem zamknij issue jako Done"]
+  G0 --> G1 --> G2 --> G3 --> G4 --> G5 --> G6 --> G7 --> G8 --> G9 --> G10 --> G11 --> G12 --> G13 --> G14 --> G15 --> G16
+```
+
+Draft można opublikować już podczas planowania, jeśli obejmuje go wcześniejsza zgoda; nie trzeba czekać na akceptację planu. Bez zgody na wczesną publikację pomiń pierwszy `raven-pr`. Dla kolejnego taska wróć do `raven-auto-plan`, wykorzystując gotowe przygotowanie projektu.
+
 | Krok | Dane wejściowe | Wynik i miejsce zapisu |
 | --- | --- | --- |
 | Shape | Pomysł, rozmowa i materiały użytkownika | Uzgodniony problem i zakres w `context/foundation/shape-notes.md`. |
@@ -27,6 +53,35 @@ Shape → PRD → architektura → stack → instrukcje repo, strategia testów 
 ## Brownfield
 
 Zakres lub wznowienie → opcjonalna mapa nieznanego obszaru → rzeczywiste braki instrukcji/test strategy/CI → opcjonalny frame/research/domena → plan. Mała zmiana w znanym miejscu nie potrzebuje mapowania całego repo ani Project. Jira może pozostać źródłem wymagań. Issue GH śledzi wykonanie, linkując ticket i jego wersję, bez kopiowania treści.
+
+Diagram pokazuje wejście do istniejącego projektu i realizację jednego taska w wariancie **auto**. Kroki oznaczone „jeśli” wykonuj tylko przy wskazanej potrzebie. Przy wznowieniu `raven-workflow` kieruje od razu do brakującego etapu, bez ponownego przechodzenia całego diagramu.
+
+```mermaid
+flowchart TB
+  B0["raven-workflow<br/>Odczytaj wskazany task, repo i checkpoint; ustal etap"]
+  B1["raven-repo-map — jeśli obszar jest nieznany<br/>Rozpoznaj kod, zależności i istniejące testy"]
+  B2["raven-agents-md lub raven-md — jeśli brakuje instrukcji<br/>Uzupełnij AGENTS.md na podstawie repo"]
+  B3["raven-test-plan — jeśli brakuje strategii<br/>Ustal ryzyka i potrzebną ochronę testową"]
+  B4["raven-github-setup — jeśli brakuje konfiguracji GH<br/>Uzupełnij repo, tracking issues i politykę publikacji"]
+  B5["raven-hooks — jeśli brakuje właściwego CI<br/>Dodaj kontrole zgodne z istniejącym stackiem"]
+  B6["raven-frame — jeśli problem lub przyczyna są niejasne<br/>Zweryfikuj objaw, założenia i oczekiwany rezultat"]
+  B7["raven-research — jeśli brakuje wiedzy o kodzie<br/>Zbierz dowody potrzebne do zaplanowania zmiany"]
+  B8["raven-domain-distillation — jeśli model domeny jest niejasny<br/>Porównaj język wymagań z istniejącym kodem"]
+  B9["raven-architecture — jeśli potrzebna jest decyzja przekrojowa<br/>Ustal podejście i ograniczenia zmiany"]
+  B10["raven-roadmap — jeśli zlecono uporządkowanie kolejki<br/>Ustal taski GH i zależności; dla źródeł Jira użyj raven-jira-roadmap"]
+  B11["raven-auto-plan dla wybranego issue<br/>Ustaw In progress i wykonawcę; przygotuj plan z review"]
+  B12["Użytkownik<br/>Zaakceptuj konkretną wersję planu"]
+  B13["raven-pr — wcześnie, jeśli autoryzowany<br/>Opublikuj draft z planem i powiązaniem issue"]
+  B14["raven-auto-implement<br/>Zmień kod wraz z testami; wykonaj review i poprawki"]
+  B15["raven-pr<br/>Zaktualizuj PR lub opublikuj go teraz; uruchom CI"]
+  B16["Użytkownik + CI<br/>Odbierz wynik, potwierdź kontrole i zleć merge"]
+  B17["raven-merge<br/>Zmerguj sprawdzony PR, potem zamknij issue jako Done"]
+  B0 --> B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7 --> B8 --> B9 --> B10 --> B11 --> B12 --> B13 --> B14 --> B15 --> B16 --> B17
+```
+
+Dla małego taska w znanym, przygotowanym repo przejdź od `raven-workflow` prosto do `raven-auto-plan`. Rozpoznanie prowadzone już w ramach zleconego planowania odbywa się po ustawieniu issue In progress. Wczesny draft podlega tej samej zasadzie co w greenfield: może powstać podczas planowania albo zostać pominięty do późniejszej publikacji.
+
+W obu diagramach wariant **manual** zastępuje `raven-auto-plan` parą `raven-plan` → `raven-plan-review`, a `raven-auto-implement` parą `raven-implement` → `raven-implement-review`. Akceptacja planu i odbiór użytkownika pozostają w tych samych miejscach. `raven-test`, `raven-auto-test` i `raven-manual-qa` są dodatkowymi narzędziami na osobne zlecenie lub konkretne ryzyko, nie kolejnymi obowiązkowymi etapami.
 
 | Krok | Dane wejściowe | Wynik |
 | --- | --- | --- |
