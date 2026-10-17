@@ -5,7 +5,7 @@ This is the canonical structure for the test plan produced by `/raven-test-plan`
 - **Strategy** (sections §1–§5) is written up-front by the orchestrator in its Phase 4, before any handoff. It is mostly frozen after that — changes require `--refresh`.
 - **Cookbook** (§6) starts as placeholders and **fills in incrementally** as rollout phases ship. Each plan's final sub-phase (per the `/raven-plan` constraint baked in by the orchestrator) updates the cookbook with patterns the rollout phase just delivered.
 
-The agent reads **§3 (Phased rollout)** alongside canonical checkpoints and evidence to determine state. Keep status meanings consistent; there is no runtime stage parser. `--status` performs no writes.
+The agent reads **§3 (Phased rollout)** for protection strategy, exact linked GitHub issues for task state/ownership/dependencies, and canonical plan checkpoints for execution progress and evidence. Do not mirror task state in this document. `--status` performs no writes or board-wide scans.
 
 Length budget: **strategy sections 300–600 words; cookbook section grows with the rollout**. The file may exceed 900 words once §6 is populated by shipped phases — that is expected.
 
@@ -27,7 +27,7 @@ Section order is fixed (§1 → §8). Content under each heading adapts to proje
 > Last updated: <YYYY-MM-DD>
 ```
 
-The two-line tagline and the refresh pointer are fixed. The "Last updated" date is mandatory and updates on every Status transition in §3.
+The two-line tagline and the refresh pointer are fixed. The "Last updated" date is mandatory and changes only when this document is actually updated during write-authorized work; task state transitions in GitHub do not update it.
 
 ---
 
@@ -148,35 +148,24 @@ enough for this rollout and must be reframed or dropped.
 
 ## §3 — Phased rollout
 
-**This section summarizes rollout state.** Read status from canonical checkpoints and evidence. Update Status and Change-folder only during write-authorized work; --status is read-only. Material scope changes require a decision and a scoped refresh.
+**This section explains how protection will address the risks.** It is not a task queue or a second roadmap. Keep task scope, dependencies, assignees and state in GitHub Issues; execution steps and evidence belong to the corresponding plan/checkpoint. Link exact existing issues when useful without copying their status. Material strategy changes require a decision and a scoped refresh.
 
 ```markdown
 ## 3. Phased Rollout
 
-Each row is a discrete rollout phase that will open its own change folder
-via `/raven-plan`. Status moves left-to-right through the values below; the
-orchestrator derives Status from canonical checkpoints and actual evidence, not file existence alone. --status never writes.
+Protect the highest-impact risks first at the cheapest effective layer.
+For each justified protection approach, explain the risks it addresses,
+the observable evidence needed, and technical prerequisites that affect
+verification. Link the existing issue for a concrete change when available.
 
-| # | Phase name                | Goal (one line)                                  | Risks covered | Test types              | Status        | Change folder                                       |
-|---|---------------------------|--------------------------------------------------|----------------|-------------------------|---------------|-----------------------------------------------------|
-| 1 | Critical-path coverage    | Defend Risk #1+#2 at the cheapest layer          | #1, #2         | unit + integration      | not started   | —                                                   |
-| 2 | Integration around hot-spots | Catch regressions in churn-heavy modules       | #3, #4         | integration             | not started   | —                                                   |
-| 3 | AI-native layer           | Post-edit hook on validation + vision review on top screens | cross-cutting | post-edit-hook, vision review | not started | —                                       |
-| 4 | Quality-gates wiring      | Lock the floor in CI                              | cross-cutting  | gates                   | not started   | —                                                   |
+- Risk #1 and #2: cover validation at unit/integration level before relying
+  on a broader flow check; success means malformed inputs are rejected
+  without partial writes. Tracking: <exact existing issue URL, if established>.
+- Risk #3: exercise the external service boundary after the fixture contract
+  is known; success means timeout and retry behavior preserve the invariant.
 ```
 
-**Status vocabulary** (descriptive; no runtime stage parser):
-
-| Value          | Meaning                                                                          |
-|----------------|----------------------------------------------------------------------------------|
-| `not started`  | No change folder for this rollout phase yet.                                     |
-| `change opened` | Local change folder exists; no change.md or issue is required.            |
-| `researched`   | Research has sufficient current evidence for its stated questions.                                       |
-| `planned`      | Contract is complete; record review and acceptance separately before execution.                                   |
-| `implementing` | Execution checkpoint shows work started against the accepted/reviewed contract.                  |
-| `complete`     | Required protection and cookbook have current evidence; distinguish delivery/merge separately.                                                 |
-
-Choose only phases justified by independent outcomes and risks; do not impose a minimum. AI-native and gates phases are not mandatory — include them only when the brief justified them under cost × signal.
+Use only approaches justified by the risks; do not impose a minimum or turn test layers into separate tasks automatically. AI-native checks and gates are optional unless justified by cost × signal. When work on a concrete change is commissioned, its issue and confirmed claim are required by the shared Git-first contract before dependent planning/implementation. Creating strategy alone does not create a backlog, per-step issues or an issue containing a copy of this document. No local Status, assignee or Change-folder tracking table.
 
 ---
 
@@ -200,8 +189,8 @@ of assuming access.
 | accessibility        | <axe-core>                 | <x.y>   | <one-line note>                      |
 | (optional) AI-native | <Playwright MCP — checked: YYYY-MM-DD> | n/a | <when NOT to use>           |
 
-If a row reads "none yet — see Phase <N>", that gap is addressed by the
-named rollout phase.
+If a row reads "none yet", name the protection approach in §3 that addresses
+the gap and link the concrete tracking issue when established.
 
 Immediately after the table, include a compact grounding note:
 
@@ -225,21 +214,22 @@ those belong in per-phase `/raven-research`.
 ## 5. Quality Gates
 
 The full set of gates that must pass before a change reaches production.
-"Required for §3 Phase <N>" means the gate is enforced once that rollout
-phase lands; before that, the gate is `planned`.
+For each conditional gate, name the delivered protection or configuration
+that activates it and link its existing tracking issue. This is an enforcement
+condition, not a copy of the task status.
 
 | Gate                          | Where             | Required?                   | Catches                                       |
 |-------------------------------|-------------------|------------------------------|-----------------------------------------------|
 | lint + typecheck              | local + CI        | required                     | syntactic / type drift                        |
-| unit + integration            | local + CI        | required after §3 Phase 1    | logic regressions                             |
-| e2e on critical flows         | CI on PR          | required after §3 Phase 1    | broken critical user paths                    |
-| post-edit hook                | local (agent loop) | recommended after §3 Phase 3 | regressions at edit time                     |
+| unit + integration            | local + CI        | required once critical-flow checks are wired    | logic regressions                             |
+| e2e on critical flows         | CI on PR          | required once critical-flow checks are wired    | broken critical user paths                    |
+| post-edit hook                | local (agent loop) | recommended once the hook is installed | regressions at edit time                     |
 | visual diff (deterministic)   | CI on PR          | optional                     | rendering regressions                         |
 | multimodal visual review      | CI on PR          | optional                     | visual issues classic diff misses             |
 | pre-prod smoke                | between merge + prod | optional                  | environment-specific failures                 |
 ```
 
-Every row corresponds to a gate that either **is** wired or **will be wired by a named rollout phase**. Do not list gates with no rollout phase pointing at them — that is aspirational.
+Every row corresponds to a gate that is wired with verifiable configuration, or to a protection approach justified in §3. For a concrete delivery task, link its GitHub issue; keep its state there. Do not list unsupported aspirational gates.
 
 ---
 
@@ -252,7 +242,7 @@ Every row corresponds to a gate that either **is** wired or **will be wired by a
 
 How to add new tests in this project. Each sub-section is filled in once
 the relevant rollout phase ships; before that, the sub-section reads
-"TBD — see §3 Phase <N>."
+"TBD — see the relevant protection approach in §3 and its linked issue."
 
 ### 6.1 Adding a unit test
 
@@ -271,7 +261,7 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.3 Adding an e2e test
 
-- TBD — see §3 Phase 2.
+- TBD — see the relevant flow-protection approach in §3.
 
 ### 6.4 Adding a test for a new API endpoint
 
@@ -284,7 +274,7 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.5 Adding a test for a new content-build rule
 
-- TBD — see §3 Phase 1.
+- TBD — see the relevant validation-protection approach in §3.
 
 ### 6.6 Per-rollout-phase notes
 
@@ -343,7 +333,7 @@ The freshness ledger is the difference between a guide that ages gracefully and 
 - **No motivational phrasing** ("write better tests", "be a Raven engineer").
 - **No emojis.**
 - **No section ordering different from §1 → §8.**
-- Keep status meanings consistent; file existence alone is not evidence of readiness or delivery.
+- **No local task backlog or status table.** Task state belongs to GitHub Issues; file existence alone is not evidence of readiness or delivery.
 
 If any of the above appears in a draft, revise before writing.
 
@@ -353,6 +343,6 @@ If any of the above appears in a draft, revise before writing.
 
 Initial authoring fills the agreed strategy, risks, rollout, stack and response guidance; cookbook entries cite delivered patterns or clearly state the missing implementation. §8 records actual source/tool checks, never invented dates. Do not require a fixed interview question number.
 
-During write-authorized rollout updates, change only verified status, change paths and delivered cookbook guidance. `--status` reads without editing any field or timestamp. Acceptance and review of a plan are separate from the existence of its file. A checked list alone does not prove delivery.
+During write-authorized rollout updates, record verified protection evidence, links to the relevant issue/plan, and delivered cookbook guidance; do not copy task state, assignees or queue dependencies from GitHub. `--status` reads without editing any field or timestamp. Acceptance and review of a plan are separate from the existence of its file. A checked list alone does not prove delivery.
 
 `--refresh` prepares a scoped change to strategy and preserves decisions/history in Git. New or changed requirements and material risk decisions need user resolution before dependent execution. Routine evidence and cookbook updates do not need a new product interview.

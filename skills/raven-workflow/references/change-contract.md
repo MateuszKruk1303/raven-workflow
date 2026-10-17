@@ -2,11 +2,21 @@
 
 ## Źródła prawdy i mały kontekst
 
-Plan i stan change są w `context/changes/<id>/plan.md`. Wersje dokumentów, kodu i testów przechowuje historia Git. Raporty powstają obok planu; dokumenty przekrojowe w `context/foundation/`. Pliki są zwykłą częścią repo, podlegają review i celowemu stagingowi. Nie twórz issue dla każdej fazy, snapshotów planu w komentarzach ani drugiej edytowalnej kopii stanu. GitHub PR służy współpracy, review i CI. Issues i Project są opcjonalnym trackerem.
+GitHub Issues jest obowiązkowym trackerem tasków, ich właścicieli, stanu projektu i roadmapy. Jeden issue odpowiada jednemu samodzielnie planowalnemu, weryfikowalnemu i mergeowalnemu change, jak zadanie Jira; fazy planu nie są issues. Project jest opcjonalnym widokiem tych samych issues, bez drugiego stanu do synchronizacji. Nie twórz lokalnej roadmapy ani drugiego backlogu.
 
-Przy wznowieniu: instrukcje repo → jednoznaczny change/branch/PR → aktualny plan i checkpoint → wskazane raporty → potrzebny diff. Czytaj pełny obowiązujący kontrakt, ale nie całą historię komentarzy ani wszystkich changes. Sięgaj do konkretnego commitu lub wątku tylko przy luce, sprzeczności albo potrzebie zweryfikowania decyzji. Brak dostępu do GH nie blokuje lokalnej analizy/implementacji; uniemożliwia potwierdzenie zdalnych review, CI i merge. Nie zgaduj statusu.
+`context/changes/<id>/plan.md` jest jednym dokumentem wykonawczym na branchu/PR: linki i wersje wymagań, kontrakt implementacji, plan testów, akceptacja, postęp oraz checkpoint. Git przechowuje wersje dokumentów, kodu i testów. Oddzielny raport dodawaj tylko jako potrzebny dowód, np. niezależne review; zwykły wynik testu lub postęp mieści się w planie. Nie twórz dodatkowego change.md, raportu implementacji ani kopii planu/raportów w GH. Dokumenty przekrojowe pozostają w `context/foundation/`; nie są trackerem tasków. PR linkuje issue i wersjonowany plan.
 
-Roadmapa ma jedno miejsce: `context/roadmap.md` albo jeden już używany tracker. Lokalny plan może wskazywać wymagania z Jira/GH; link jest źródłem wymagań, nie obowiązkiem ich duplikowania w issues. Historyczne artefakty Raven pozostają nienaruszone. Ich kontynuacja wymaga jawnego ustalenia mapowania do aktualnego change, bez automatycznej migracji.
+Przy wznowieniu: instrukcje repo → konkretny issue/change/branch/PR → plan i checkpoint → wskazane dowody → potrzebny diff. Nie skanuj boarda ani historii wszystkich issues. Jira może być źródłem wymagań; issue GH zawiera link i krótki zakres wykonania, nie kopię ticketu. Historyczne artefakty pozostają nienaruszone; kontynuacja wymaga jawnego mapowania do issue GH, bez automatycznej migracji historii.
+
+## Podjęcie taska i stan widoczny zespołowi
+
+Na początku **zleconego planowania lub implementacji**, przed badaniem szczegółów i edycją, rozwiąż dokładny issue i wykonawcę GH, odczytaj jego stan i ustaw In progress oraz assignee. Zlecenie tego etapu Raven obejmuje tę aktualizację jego issue; nie obejmuje push/PR/merge. Dla nowego jednoznacznego taska bez issue utwórz jeden issue z krótkim wynikiem, kryteriami i linkami do źródeł w ustalonym repo. Przy nieustalonym repo, wykonawcy lub kolizji z cudzym assignee wyjaśnij brak przed podjęciem; nie przejmuj pracy po samym timestampie. Nie twórz issue dla każdej fazy ani przy samym pytaniu o status.
+
+Domyślnie otwarty issue z etykietą `in-progress` oznacza In progress, dodatkowe `blocked` oznacza blokadę, a `closed` oznacza Done. Nazwy etykiet mogą pochodzić z konfiguracji projektu. Przy blokadzie zachowaj wykonawcę i In progress, dodaj blocked oraz krótki powód i potrzebną decyzję w zarządzanym fragmencie issue. Usuń blokadę dopiero po potwierdzeniu rozwiązania. Review, gotowy PR, PASS i odbiór użytkownika pozostawiają issue In progress. Done/closed następuje wyłącznie po potwierdzonym udanym raven-merge dostarczającym cały zakres issue.
+
+Odczyt/status jest read-only. Zapis wykonuj zdarzeniowo przy starcie/przejęciu, blokadzie/odblokowaniu i merge; zgodny stan oznacza no-op. Czytaj dokładny issue, zapisuj wyłącznie potrzebne pola z zachowaniem cudzych treści i sprawdzaj rezultat. Po timeout najpierw odczytaj stan; nie powtarzaj ślepo mutacji. Szczegóły [runtime](runtime.md) nie zastępują autoryzacji ani oceny wykonawcy.
+
+Brak GH lub nieudany zapis statusu nie oznacza podjęcia taska. Oznacz `tracking-unconfirmed` i nazwij brak; wolno kontynuować niezależne rozpoznanie read-only, ale nie zaczynaj ani nie wznawiaj zależnego planowania/implementacji jako aktywnego taska bez potwierdzonego claimu. Jeśli dostęp zniknie w trakcie już podjętej pracy, zachowaj checkpoint; nie deklaruj aktualizacji blokady lub ukończenia bez readback i rozstrzygnij brak przed dalszą zależną pracą. Nie zastępuj GH lokalną roadmapą.
 
 ## Plan, zgoda i postęp
 
@@ -38,25 +48,25 @@ Potwierdzone defekty w zakresie zleconego wykonania naprawiaj bez nowej zgody. D
 
 ## Publikacja i uprawnienia
 
-Konfiguracja `.raven/config.json` może utrwalać **wcześniej udzieloną** politykę publikacji. Domyślny brak konfiguracji oznacza pracę lokalną. Przykład struktury, nie gotowa zgoda:
+Konfiguracja `.raven/config.json` może utrwalać **wcześniej udzieloną** politykę publikacji. Brak polityki publikacji oznacza brak automatycznego push/PR; obowiązek trackingu issue pozostaje. Przykład struktury, nie gotowa zgoda:
 
 ```json
 {
   "schema_version": 1,
   "repository": {"owner": "OWNER", "name": "REPO", "base_branch": "main"},
   "publication": {"mode": "local", "authorized_by": null},
-  "tracker": {"type": "local", "ref": "context/roadmap.md"}
+  "tracker": {"type": "github-issues", "labels": {"in_progress": "in-progress", "blocked": "blocked"}}
 }
 ```
 
-`mode: draft-pr` wymaga rzeczywistego `authorized_by` i zakresu zgody obejmującego wskazane repo, branch, push i draft PR. Konfiguracja dokumentuje zgodę; samo wpisanie wartości jej nie tworzy. Zlecenie taska nie daje nowych praw zewnętrznych. Jeżeli wcześniejsza polityka obejmuje bieżący change, publikuj draft wcześnie, po utworzeniu planu/brancha, i aktualizuj go podczas pracy bez kolejnych pytań. Brak zgody blokuje wyłącznie publikację; przygotuj lokalnie gotowy wynik i pytaj dopiero o konkretną operację. `raven-pr` jest jawnie zleconą publikacją wskazanego zakresu.
+`mode: draft-pr` wymaga rzeczywistego `authorized_by` i zakresu zgody obejmującego wskazane repo, branch, push i draft PR. Konfiguracja dokumentuje zgodę; samo wpisanie wartości jej nie tworzy. Zlecenie taska obejmuje opisany wyżej tracking, ale nie nadaje praw publikacji kodu ani merge. Jeżeli wcześniejsza polityka obejmuje bieżący change, publikuj draft wcześnie, po utworzeniu planu/brancha, i aktualizuj go podczas pracy bez kolejnych pytań. Brak zgody na push/PR blokuje wyłącznie publikację kodu; przy potwierdzonym trackingu przygotuj lokalnie gotowy wynik i pytaj dopiero o konkretną operację. `raven-pr` jest jawnie zleconą publikacją wskazanego zakresu.
 
 Nie wysyłaj automatycznie raportów do komentarzy issue/PR, chyba że polecenie lub jawnie wywołany skill obejmuje tę publikację. PR może linkować wersjonowane pliki i krótko opisywać stan. Zewnętrzne uprawnienia, ograniczenia hosta i wymagania projektu nadal obowiązują. Nie używaj force push, nie mieszaj cudzych zmian, nie twórz boarda przy okazji.
 
 ## Dowody, checkpoint i ukończenie
 
-W planie utrzymuj zwięzły checkpoint: stage/status, następny krok, branch, bazowy SHA, aktualny HEAD i dirty state, PR jeśli istnieje, fingerprint/akceptacja, odsyłacze do dowodów, nierozwiązane uwagi, liczniki prób. Ustal bazowy commit przed zmianami, zapisz jego pełny SHA w polu `base` pierwszego checkpointu i zachowaj go przy wznowieniu, także bez runtime `start`. Raport review zawiera oceniany zakres/tree, fingerprint, mapę wymagań na dowody, wyniki i konkretne luki. Dowód testu zawiera polecenie, wynik, wersję kodu, konfigurację i istotne środowisko. Nie przedstawiaj BLOCKED/NOT VERIFIED jako PASS.
+W planie utrzymuj zwięzły checkpoint: etap wykonania, następny krok, URL/numer issue i potwierdzenie trackingu, branch, bazowy SHA, aktualny HEAD i dirty state, PR jeśli istnieje, fingerprint/akceptacja, odsyłacze do dowodów, nierozwiązane uwagi, liczniki prób. Ustal bazowy commit przed zmianami, zapisz jego pełny SHA w polu `base` pierwszego checkpointu i zachowaj go przy wznowieniu, także bez runtime `start`. Raport review zawiera oceniany zakres/tree, fingerprint, mapę wymagań na dowody, wyniki i konkretne luki. Dowód testu zawiera polecenie, wynik, wersję kodu, konfigurację i istotne środowisko. Nie przedstawiaj BLOCKED/NOT VERIFIED jako PASS.
 
 Runtime zapisuje kanoniczny checkpoint JSON między markerami `raven:checkpoint:start/end` w planie poza kontraktem; użyj tego samego bloku przy ręcznej edycji. Lokalny operacyjny journal w wspólnym katalogu Git wspiera odzyskiwanie operacji, nie zastępuje planu. Zapis postępu nie stanowi akceptacji kontraktu.
 
-Użytkownik odbiera wynik; jedna jednoznaczna wypowiedź „akceptuję, zmerguj” może potwierdzić odbiór i upoważnić merge. Nie wymaga to dodatkowej sesji QA. Merge wymaga aktualnych dowodów wymagań/testów/review, odbioru i zgody, wszystkich wymaganych CI oraz niezmienionego sprawdzonego head SHA. Draft PR ani akceptacja planu nie upoważniają do merge. Board jest opcjonalny; awaria jego aktualizacji nie cofa ani nie blokuje poprawnego merge. Zapis trackera wymaga odpowiedniej zgody. Deploy pozostaje osobną operacją.
+Użytkownik odbiera wynik; jedna jednoznaczna wypowiedź „akceptuję, zmerguj” może potwierdzić odbiór i upoważnić merge. Nie wymaga to dodatkowej sesji QA. Merge wymaga aktualnych dowodów wymagań/testów/review, odbioru i zgody, wszystkich wymaganych CI oraz niezmienionego sprawdzonego head SHA. Draft PR ani akceptacja planu nie upoważniają do merge. Po potwierdzonym merge zamknij powiązany issue i zweryfikuj Done. Awaria tego zapisu oznacza „PR merged; issue nadal wymaga finalizacji”; nie cofaj ani nie powtarzaj merge. Board jest opcjonalnym widokiem i nie jest bramką. Deploy pozostaje osobną operacją.

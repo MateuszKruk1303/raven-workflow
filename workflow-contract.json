@@ -59,7 +59,8 @@
     "publication_requested",
     "merge_requested",
     "ci_passed",
-    "user_acceptance"
+    "user_acceptance",
+    "issue_started"
   ],
   "stages": [
     {
@@ -70,7 +71,8 @@
       ],
       "role": "planner",
       "requires": [
-        "requirements"
+        "requirements",
+        "issue_started"
       ],
       "produces": [
         "plan_contract"
@@ -117,7 +119,8 @@
       "requires": [
         "plan_contract",
         "plan_review",
-        "plan_accepted"
+        "plan_accepted",
+        "issue_started"
       ],
       "produces": [
         "implementation",
@@ -162,7 +165,8 @@
         "user_acceptance"
       ],
       "produces": [
-        "merged_pr"
+        "merged_pr",
+        "issue_done"
       ]
     }
   ],
@@ -171,16 +175,20 @@
     "history": "git",
     "configuration": ".raven/config.json",
     "collaboration": "pull_request",
-    "tracker": "optional"
+    "tracker": "github_issues",
+    "roadmap": "github_issues"
   },
   "invariants": {
     "acceptance": "contract_fingerprint",
     "progress_invalidates_acceptance": false,
     "tests_with_implementation": true,
-    "mandatory_task_issues": false,
+    "mandatory_task_issues": true,
     "full_history_read_required": false,
     "deploy_separate": true,
-    "normal_implementation_independent_reviews": 1
+    "normal_implementation_independent_reviews": 1,
+    "issue_started_before_plan_or_implementation": true,
+    "issue_done_after_merge": true,
+    "project_optional": true
   },
   "optional_workflows": {
     "additional_validation": {
@@ -191,16 +199,6 @@
         "raven-test-review"
       ],
       "trigger": "risk_or_explicit_request"
-    },
-    "board_finalize": {
-      "skills": [
-        "raven-merge"
-      ],
-      "requires": [
-        "merged_pr",
-        "tracker_update_authorized"
-      ],
-      "independent_of_merge": true
     }
   }
 }

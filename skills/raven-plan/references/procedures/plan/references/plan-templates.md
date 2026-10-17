@@ -8,6 +8,7 @@ Dostosuj rozmiar do jednego rezultatu. Nie dodawaj faz tylko dla wypełnienia sz
 <!-- raven:contract:start -->
 ## Tożsamość i źródła
 - ID: C-03
+- Issue: [dokładny URL issue GH tego taska]
 - Cel: [obserwowalny wynik]
 - Źródła: [PRD/issue/Jira/ustalenie; wersja lub data istotnej decyzji]
 - Punkt startowy: [istniejące zachowanie, kod, ograniczenia]
@@ -42,12 +43,16 @@ Dostosuj rozmiar do jednego rezultatu. Nie dodawaj faz tylko dla wypełnienia sz
 <!-- raven:checkpoint:start -->
 {
   "stage": "planning",
+  "issue": "[dokładny URL issue GH]",
+  "owner": "[login wykonawcy GH]",
   "next": "plan review",
   "evidence": [],
   "repair_attempts": 0
 }
 <!-- raven:checkpoint:end -->
 ````
+
+W checkpointcie wpisz rzeczywisty URL issue i potwierdzony stan trackingu; nie kopiuj placeholderów. Zwięzłe wyniki testów dopisuj w tym planie poza kontraktem, bez obowiązkowego osobnego test-report.md. Oddzielne plan-review.md i review.md zachowują dowody dwóch niezależnych ocen; nie są kolejnymi planami ani trackerami.
 
 Nie kopiuj wymaganej treści kroków do drugiego edytowalnego kontraktu w Progress. Checklista wskazuje ich ID. Review i akceptacja odnoszą się do całego bloku kontraktu; zmianę technicznego podejścia lub test obligations traktuj jak zmianę kontraktu. Historia Git przechowuje poprzednie wersje bez snapshotów GH.
 

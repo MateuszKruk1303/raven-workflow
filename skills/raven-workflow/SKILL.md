@@ -7,22 +7,22 @@ description: "Router Raven. Odtwórz stan z lokalnego change, brancha lub PR i w
 
 Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-To kanoniczna mapa etapów. Najpierw ustal intencję i zakres; czytaj tylko skill potrzebny do zleconej pracy. Stan pochodzi z repo i bieżących dowodów, nie z pamięci rozmowy.
+To kanoniczna mapa etapów. Najpierw ustal intencję i zakres; czytaj tylko skill potrzebny do zleconej pracy. Stan taska i roadmapy pochodzi z GitHub Issues, szczegóły wykonania z planu i bieżących dowodów, nie z pamięci rozmowy.
 
 ## Start i wznowienie
 
-1. Przeczytaj instrukcje repo. Rozwiąż jawny change ID, ścieżkę `plan.md`, branch albo PR; nie wybieraj najnowszego z kilku kandydatów.
+1. Przeczytaj instrukcje repo. Rozwiąż jawny issue/change ID, ścieżkę `plan.md`, branch albo PR; nie wybieraj najnowszego z kilku kandydatów.
 2. Odczytaj plan/checkpoint, aktualny branch/HEAD i dirty state. Konfiguracja `.raven/config.json` jest opcjonalna. `context/foundation/github.json` może wskazywać historyczne źródło; nie migruj go automatycznie.
-3. Sprawdź fingerprint i akceptację, następny krok oraz aktualność wskazanych dowodów. Dla PR pobierz tylko jego bieżące dane, wymagane checki i konkretne nierozwiązane wątki. Pełna historia komentarzy/task issues nie jest wymagana.
-4. Podaj stan, jedną istotną lukę i następny skill. Status jest read-only. Gdy użytkownik zlecił krok, wykonaj go w już ustalonym trybie; nie pytaj ponownie o wcześniejsze decyzje. Przy nieustalonym trybie wybierz manual dla pojedynczego etapu, a auto tylko przy zleceniu cyklu.
+3. Odczytaj dokładny powiązany issue (stan i assignee), bez skanowania boarda. Sprawdź fingerprint i akceptację, następny krok oraz aktualność wskazanych dowodów. Dla PR pobierz tylko jego bieżące dane, wymagane checki i konkretne nierozwiązane wątki. Pełna historia komentarzy/task issues nie jest wymagana.
+4. Podaj stan, jedną istotną lukę i następny skill. Status jest read-only. Gdy użytkownik zlecił planowanie lub implementację, najpierw potwierdź podjęcie issue (In progress i assignee) według wspólnego kontraktu; brak GH nie jest potwierdzonym startem. Wykonaj zlecony krok w już ustalonym trybie; nie pytaj ponownie o wcześniejsze decyzje. Przy nieustalonym trybie wybierz manual dla pojedynczego etapu, a auto tylko przy zleceniu cyklu.
 
 Ograniczone deterministyczne operacje opisuje [runtime](references/runtime.md); helper nie interpretuje wymagań ani nie zatwierdza planów.
 
 ## Przygotowanie projektu
 
-**Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architektura](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) lub [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [instrukcje repo](../raven-agents-md/SKILL.md) / [wskazany AGENTS.md](../raven-md/SKILL.md), [strategia testów](../raven-test-plan/SKILL.md), [CI](../raven-hooks/SKILL.md) → [roadmapa](../raven-roadmap/SKILL.md) → change. Nie odtwarzaj gotowego setupu. [GitHub setup](../raven-github-setup/SKILL.md) uzupełnia tylko potrzebny i zlecony remote/politykę; Project nie jest warunkiem.
+**Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architektura](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) lub [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [instrukcje repo](../raven-agents-md/SKILL.md) / [wskazany AGENTS.md](../raven-md/SKILL.md), [strategia testów](../raven-test-plan/SKILL.md), [CI](../raven-hooks/SKILL.md) → [roadmapa](../raven-roadmap/SKILL.md) → change. Nie odtwarzaj gotowego setupu. [GitHub setup](../raven-github-setup/SKILL.md) uzupełnia potrzebny remote, tracking issues i politykę publikacji; Project nie jest warunkiem.
 
-**Brownfield:** zakres/wznowienie → opcjonalna [mapa](../raven-repo-map/SKILL.md) przy nieznanym obszarze → realne braki instrukcji/test strategy/CI → opcjonalne [frame](../raven-frame/SKILL.md), [research](../raven-research/SKILL.md), [domena](../raven-domain-distillation/SKILL.md) lub [architektura](../raven-architecture/SKILL.md) → plan. Mały znany task nie wymaga mapy ani setupu boarda. [Jira](../raven-jira-roadmap/SKILL.md) pozostaje źródłem wymagań bez lustrzanych issues GH.
+**Brownfield:** zakres/wznowienie → opcjonalna [mapa](../raven-repo-map/SKILL.md) przy nieznanym obszarze → realne braki instrukcji/test strategy/CI → opcjonalne [frame](../raven-frame/SKILL.md), [research](../raven-research/SKILL.md), [domena](../raven-domain-distillation/SKILL.md) lub [architektura](../raven-architecture/SKILL.md) → plan. Mały znany task nie wymaga mapy ani setupu boarda. [Jira](../raven-jira-roadmap/SKILL.md) pozostaje źródłem wymagań, a issue GH śledzi wykonanie przez link, bez kopiowania treści ticketu.
 
 ## Cykl change
 
@@ -35,7 +35,7 @@ Ograniczone deterministyczne operacje opisuje [runtime](references/runtime.md); 
 | Odbiór i aktualne CI | Użytkownik odbiera wynik; CI dla PR | To samo |
 | Merge | Jawnie zlecony [raven-merge](../raven-merge/SKILL.md) | Ta sama zgoda |
 
-[raven-pr](../raven-pr/SKILL.md) publikuje i aktualizuje PR **w trakcie** cyklu, wcześnie jako draft, gdy istnieje autoryzowana polityka. Praca lokalna może trwać bez PR. Odbiór nie wymusza osobnego etapu pisania testów: testy są częścią implementacji.
+[raven-pr](../raven-pr/SKILL.md) publikuje i aktualizuje PR **w trakcie** cyklu, wcześnie jako draft, gdy istnieje autoryzowana polityka. Praca lokalna może trwać bez PR przy potwierdzonym issue GH. Issue pozostaje In progress przez review i PR; Done następuje po udanym raven-merge. Odbiór nie wymusza osobnego etapu pisania testów: testy są częścią implementacji.
 
 [raven-test](../raven-test/SKILL.md), [raven-auto-test](../raven-auto-test/SKILL.md) i [raven-test-review](../raven-test-review/SKILL.md) służą osobnym zleceniom ochrony testowej, before-change, lukom lub ryzyku. [raven-manual-qa](../raven-manual-qa/SKILL.md) to dodatkowe QA, [raven-browser](../raven-browser/SKILL.md) — narzędzie przeglądarkowe. Nie są obowiązkowymi dodatkowymi etapami każdego change.
 

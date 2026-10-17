@@ -4,9 +4,9 @@ Kanoniczny dokument: `context/foundation/test-plan.md`, historia: Git. Stosuj [k
 
 ## 0. Zakres i wznowienie
 
-Potwierdź repo lub greenfield PRD. Odczytaj istniejącą strategię i potrzebne plany/checkpointy. `--status` jest read-only; pokazuje realne dowody i luki, nie naprawia stanu. `--refresh` tworzy zmianę strategii z dotychczasowym źródłem/wersją. Brak pliku nie oznacza braku ochrony: sprawdź istniejące testy/konfigurację; historyczne artefakty wykorzystaj tylko gdy dotyczą wskazanej pracy.
+Potwierdź repo lub greenfield PRD. Odczytaj istniejącą strategię, potrzebne plany/checkpointy i dokładne powiązane issues GH, gdy ustalasz stan tasków; nie skanuj całej kolejki. `--status` jest read-only; pokazuje realne dowody i luki, nie naprawia stanu. `--refresh` tworzy zmianę strategii z dotychczasowym źródłem/wersją. Brak pliku nie oznacza braku ochrony: sprawdź istniejące testy/konfigurację; historyczne artefakty wykorzystaj tylko gdy dotyczą wskazanej pracy.
 
-Dla rollout rozróżniaj: brak change, rozpoznanie, plan, akceptacja, wykonanie, zweryfikowana ochrona i dostarczenie. Istnienie planu nie dowodzi zgody, a komplet checkboxów nie dowodzi merge. Change.md, issue i Project nie są wymagane. Research jest opcjonalny, gdy brakuje wiedzy; nie wymagaj osobnego skilla, jeśli dowody już istnieją.
+Dla rollout rozróżniaj: brak change, rozpoznanie, plan, akceptacja, wykonanie, zweryfikowana ochrona i dostarczenie. Istnienie planu nie dowodzi zgody, a komplet checkboxów nie dowodzi merge. Każdy konkretny change rollout lub odświeżenia strategii wymaga issue GH; jego podjęcie podczas zleconego planowania/implementacji potwierdź zgodnie ze wspólnym kontraktem. Stan taska, właściciel i zależności należą do GH; postęp wykonania i dowody do planu/checkpointu. Osobny change.md ani Project nie są wymagane. Sam dokument strategii nie otrzymuje osobnego issue będącego jego kopią. Research jest opcjonalny, gdy brakuje wiedzy; nie wymagaj osobnego skilla, jeśli dowody już istnieją.
 
 ## 1. Discovery
 
@@ -30,13 +30,13 @@ Trzy zasady: **koszt × sygnał** (najtańsza skuteczna kontrola), **obawy użyt
 
 ## 4. Dokument strategii
 
-Zapisz §1–§8 według schematu: zasady i przyjęty zakres, rejestr ryzyk ze stabilnymi ID/źródłami, rollout z zależnościami i change paths, Risk Response Guidance, dowody/metoda kontroli, cookbook oraz negative space/ograniczenia. Zachowaj semantykę schematu, nie wymuszaj sztucznych wierszy dla nieistniejącej warstwy.
+Zapisz §1–§8 według schematu: zasady i przyjęty zakres, rejestr ryzyk ze stabilnymi ID/źródłami, rollout opisujący kolejność ochrony ryzyk i powiązania z istniejącymi issues GH, bez lokalnej kolejki tasków ani tabeli ich statusów, Risk Response Guidance, dowody/metoda kontroli, cookbook oraz negative space/ograniczenia. Zachowaj semantykę schematu, nie wymuszaj sztucznych wierszy dla nieistniejącej warstwy.
 
 Każde ryzyko opisuje obserwowalną awarię i skutek, dowód, źródło Expected, właściwą warstwę, granice do zbadania, przypadek brzegowy i antywzorzec do uniknięcia. Odwzorowanie implementacji, happy-path-only, nadmierne mocki i kruche porządki nie są dobrą ochroną. Nie nakładaj modelowego/visual review na deterministyczny sygnał bez niezależnego ryzyka.
 
 ## 5. Wybór rollout
 
-Zaproponuj pierwszy ograniczony change ochrony według wartości/zależności. Faza rollout jest odbieralnym rezultatem, nie automatycznie osobną warstwą testów. Testy produktu normalnie powstają z implementacją; rollout służy rzeczywistym lukom lub inwestycji przekrojowej. Dokumentuj dostarczone wzorce w cookbook §6 wraz z plikami/komendami, nie samą deklaracją.
+Zaproponuj pierwszy ograniczony change ochrony według wartości/zależności. Konkretny change rollout jest odbieralnym rezultatem, nie automatycznie osobną warstwą testów. Jego task, zależności i stan śledź w issue GH; strategia opisuje uzasadnienie i sposób ochrony ryzyk. Nie twórz issues dla kroków planu ani nie reorganizuj kolejki na podstawie samej rekomendacji. Testy produktu normalnie powstają z implementacją; rollout służy rzeczywistym lukom lub inwestycji przekrojowej. Dokumentuj dostarczone wzorce w cookbook §6 wraz z plikami/komendami, nie samą deklaracją.
 
 ## 6. Handoff i refresh
 

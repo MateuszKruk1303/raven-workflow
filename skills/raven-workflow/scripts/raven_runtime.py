@@ -172,7 +172,8 @@ class Runtime:
             previous = self.plan_checkpoint()
             identity = {}
             for field, local in (('base', j.get('worktree', {}).get('base')),
-                                 ('pr', j.get('publication', {}).get('url'))):
+                                 ('pr', j.get('publication', {}).get('url')),
+                                 ('issue', j.get('issue', {}).get('url'))):
                 canonical = previous.get(field)
                 if canonical is not None and local is not None and canonical != local:
                     raise ValueError('Local journal conflicts with canonical checkpoint ' + field + '; reconcile explicitly')
@@ -185,7 +186,7 @@ class Runtime:
                     'branch': git(self.repo, 'branch', '--show-current'),
                     'head': git(self.repo, 'rev-parse', 'HEAD'),
                     'base': identity['base'],
-                    'pr': identity['pr'],
+                    'pr': identity['pr'], 'issue': identity['issue'],
                     'code_tree': self.code_tree(),
                     'checkpoint_sequence': previous.get('checkpoint_sequence', 0) + 1}
             if 'acceptance' in previous:
@@ -251,6 +252,140 @@ class Runtime:
             if not re.fullmatch(r'[A-Za-z0-9_.-]+', r[k]) or r[k] in ('.', '..'):
                 raise ValueError('Invalid repository identity')
         return config, r
+
+    def issue(self, number, event='read', session=None, assignee=None, reason=None, pr=None, apply=False, api=None, reconcile=False):
+        """Reconcile one exact task issue. A pending ambiguous PATCH is never retried."""
+        config, r = self.repository()
+        if not isinstance(number, int) or number <= 0 or event not in ('read', 'start', 'block', 'merge'):
+            raise ValueError('Positive issue number and supported event required')
+        tracker = config.get('tracker', {})
+        labels = tracker.get('labels', {})
+        if tracker.get('type') != 'github-issues' or set(labels) != {'in_progress', 'blocked'} or any(not isinstance(x, str) or not x.strip() for x in labels.values()) or len(set(labels.values())) != 2:
+            raise ValueError('Configure github-issues tracker with distinct in_progress/blocked labels')
+        repository = r['owner'] + '/' + r['name']
+        url = 'https://github.com/' + repository + '/issues/' + str(number)
+        endpoint = '/repos/' + repository + '/issues/' + str(number)
+        if event != 'read':
+            identifier(session or '')
+            if event == 'start' and (not assignee or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9-]{0,38}', assignee)):
+                raise ValueError('Start requires an explicit GitHub assignee login')
+            if event == 'block' and (not reason or not reason.strip() or len(reason.encode()) > 2000 or '<!--' in reason):
+                raise ValueError('Block requires a bounded plain reason')
+            if event == 'merge' and (not isinstance(pr, int) or pr <= 0):
+                raise ValueError('Merge requires a positive linked PR number')
+        intent = {'number': number, 'url': url, 'event': event, 'assignee': assignee, 'reason': reason, 'pr': pr}
+        if event != 'read' and not apply:
+            return {'action': 'issue-' + event, 'intent': intent, 'network': False}
+        api = api or GitHub()
+
+        def read():
+            value = api.request('GET', endpoint)
+            if value.get('number') != number or value.get('html_url', '').lower() != url.lower() or 'pull_request' in value:
+                raise ValueError('Issue identity mismatch or issue is a pull request')
+            return value
+
+        def selected(value):
+            return {**{key: value.get(key) for key in ('number', 'html_url', 'title', 'body', 'state', 'state_reason')},
+                    'labels': [x['name'] if isinstance(x, dict) else x for x in value.get('labels', [])],
+                    'assignees': [x['login'] for x in value.get('assignees', [])]}
+
+        if event == 'read':
+            return selected(read())
+        with self.lock(session):
+            j = self.journal()
+            old = j.get('issue', {})
+            checkpoint = self.plan_checkpoint()
+            canonical = checkpoint.get('issue')
+            if event == 'merge':
+                expected_pr_url = 'https://github.com/' + repository + '/pull/' + str(pr)
+                publication = j.get('publication', {})
+                if (any(link and link.lower() != expected_pr_url.lower() for link in (checkpoint.get('pr'), publication.get('url')))
+                        or publication.get('number') is not None and publication['number'] != pr):
+                    raise ValueError('PR differs from canonical checkpoint/publication identity')
+            if (old.get('url') and old['url'] != url) or (canonical and canonical != url):
+                raise ValueError('Issue differs from journal/checkpoint identity')
+            value = read()
+            names = [x['name'] if isinstance(x, dict) else x for x in value.get('labels', [])]
+            owners = [x['login'] for x in value.get('assignees', [])]
+            if event == 'start' and any(x.lower() != assignee.lower() for x in owners):
+                raise ValueError('Issue has a conflicting assignee; never steal ownership')
+            if event != 'merge' and value.get('state') != 'open':
+                raise ValueError('Start/block requires an open issue')
+            expected_owner = assignee or old.get('owner')
+            if event in ('block', 'merge') and owners and (not expected_owner or any(x.lower() != expected_owner.lower() for x in owners)):
+                raise ValueError('Issue ownership must match the started task or explicit assignee')
+            payload = {}
+            pr_identity = None
+            desired_labels = list(names)
+            if event in ('start', 'block'):
+                desired_labels = [x for x in names if x != labels['blocked'] or event == 'block']
+                for name in ([labels['in_progress']] + ([labels['blocked']] if event == 'block' else [])):
+                    if name not in desired_labels:
+                        desired_labels.append(name)
+                if event == 'start' and not owners:
+                    payload['assignees'] = [assignee]
+            else:
+                remote = api.request('GET', '/repos/' + repository + '/pulls/' + str(pr))
+                body = remote.get('body') or ''
+                linked = '<!-- raven-issue:' + repository + '#' + str(number) + ' -->' in body
+                if (remote.get('number') != pr or remote.get('merged') is not True or remote.get('state') != 'closed'
+                        or remote.get('base', {}).get('ref') != r['base_branch']
+                        or any(remote.get(side, {}).get('repo', {}).get('full_name', '').lower() != repository.lower() for side in ('base', 'head'))
+                        or '<!-- raven-change:' + self.change + ' -->' not in body or not linked):
+                    raise ValueError('Done requires confirmed merged PR with repository/change/issue identity')
+                pr_identity = {side: {'repo': remote.get(side, {}).get('repo', {}).get('full_name'),
+                                      'ref': remote.get(side, {}).get('ref'), 'sha': remote.get(side, {}).get('sha')}
+                               for side in ('head', 'base')}
+                pr_identity['base'].pop('sha')  # Base tip can advance after merge.
+                desired_labels = [x for x in names if x not in labels.values()]
+                if value.get('state') != 'closed' or value.get('state_reason') != 'completed':
+                    payload.update(state='closed', state_reason='completed')
+            if set(desired_labels) != set(names):
+                payload['labels'] = desired_labels
+            if event in ('start', 'block', 'merge'):
+                start, end = '<!-- raven:block:start -->', '<!-- raven:block:end -->'
+                body = value.get('body') or ''
+                if body.count(start) != body.count(end) or body.count(start) > 1 or (start in body and body.index(end) < body.index(start)):
+                    raise ValueError('Invalid managed block reason markers')
+                if event == 'block':
+                    block = start + '\n' + reason.strip() + '\n' + end
+                    desired_body = (body[:body.index(start)] + block + body[body.index(end) + len(end):]) if start in body else body.rstrip() + '\n\n' + block
+                else:
+                    desired_body = (body[:body.index(start)] + body[body.index(end) + len(end):]).rstrip() if start in body else body
+                if len(desired_body.encode()) > 60000:
+                    raise ValueError('Issue body exceeds bounded payload')
+                if desired_body != body:
+                    payload['body'] = desired_body
+            if old.get('state') == 'pending':
+                if any(old.get(k) != v for k, v in intent.items()):
+                    raise ValueError('Pending issue intent differs; reconcile before next transition')
+                if old.get('pr_identity') != pr_identity:
+                    raise ValueError('Pending PR identity/head changed; reconcile explicitly')
+                if payload and (not reconcile or old.get('attempts', 1) >= 2):
+                    raise ValueError('Pending issue mutation unresolved; use --reconcile once after inspection; at most two writes')
+            if payload:
+                attempts = old.get('attempts', 0) + 1 if old.get('state') == 'pending' else 1
+                j['issue'] = {**intent, 'state': 'pending', 'session': session, 'owner': expected_owner, 'attempts': attempts, 'pr_identity': pr_identity}
+                self.save(j)
+                api.request('PATCH', endpoint, payload)
+                result = read()
+                expected_values = {**payload, 'labels': desired_labels, 'assignees': owners or ([assignee] if event == 'start' else [])}
+                if event == 'merge':
+                    expected_values.update(state='closed', state_reason='completed')
+                else:
+                    expected_values['state'] = 'open'
+                for key, expected in expected_values.items():
+                    actual = result.get(key)
+                    if key == 'labels':
+                        actual = [x['name'] if isinstance(x, dict) else x for x in actual or []]
+                    if key == 'assignees':
+                        actual = [x['login'] for x in actual or []]
+                    if (set(actual) != set(expected) if key in ('labels', 'assignees') else actual != expected):
+                        raise ValueError('Issue readback failed; reconcile pending mutation')
+                value = result
+            j['issue'] = {**intent, 'state': 'done' if event == 'merge' else 'blocked' if event == 'block' else 'started', 'session': session, 'owner': expected_owner, 'pr_identity': pr_identity}
+            self.save(j)
+            return {**j['issue'], 'changed': bool(payload), 'issue': selected(value)}
 
     def publish(self, session, title, body, apply=False, api=None):
         config, r = self.repository()
@@ -370,7 +505,7 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--repo', default='.')
     sub = p.add_subparsers(dest='command', required=True)
-    for name in ('status', 'resume', 'fingerprint', 'start', 'checkpoint', 'publish-pr', 'read-pr'):
+    for name in ('status', 'resume', 'fingerprint', 'start', 'checkpoint', 'publish-pr', 'read-pr', 'issue'):
         s = sub.add_parser(name)
         s.add_argument('change')
         if name in ('start', 'checkpoint', 'publish-pr'):
@@ -390,6 +525,17 @@ def main(argv=None):
             g = s.add_mutually_exclusive_group(required=True)
             g.add_argument('--dry-run', action='store_true')
             g.add_argument('--apply', action='store_true')
+        if name == 'issue':
+            s.add_argument('--number', type=int, required=True)
+            s.add_argument('--event', choices=('read', 'start', 'block', 'merge'), required=True)
+            s.add_argument('--session')
+            s.add_argument('--assignee')
+            s.add_argument('--reason')
+            s.add_argument('--pr', type=int)
+            s.add_argument('--reconcile', action='store_true')
+            g = s.add_mutually_exclusive_group()
+            g.add_argument('--dry-run', action='store_true')
+            g.add_argument('--apply', action='store_true')
         if name == 'read-pr':
             s.add_argument('--number', type=int, required=True)
     a = p.parse_args(argv)
@@ -403,6 +549,12 @@ def main(argv=None):
             result = runtime.start(a.session, a.worktree, a.base)
         elif a.command == 'checkpoint':
             result = runtime.checkpoint(a.session, a.stage, a.next, a.evidence, a.acceptance_ref, a.repair_attempts)
+        elif a.command == 'issue':
+            if a.event != 'read' and not (a.dry_run or a.apply):
+                raise ValueError('Issue mutation requires --dry-run or --apply')
+            if a.event == 'read' and (a.dry_run or a.apply):
+                raise ValueError('Issue read does not accept mutation flags')
+            result = runtime.issue(a.number, a.event, a.session, a.assignee, a.reason, a.pr, a.apply, reconcile=a.reconcile)
         elif a.command == 'publish-pr':
             result = runtime.publish(a.session, a.title, a.body_file.read_text(), a.apply)
         else:

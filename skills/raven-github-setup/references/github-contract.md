@@ -1,6 +1,6 @@
-# GitHub jako opcjonalna warstwa współpracy
+# GitHub jako tracker wykonania i warstwa współpracy
 
-Źródła stanu określa [kontrakt Git-first](../../raven-workflow/references/change-contract.md). Repo/remote i PR mogą wspierać współpracę, review i CI. Project/issues są opcjonalnym istniejącym trackerem; nie ma wymaganych pól Raven ani task issues.
+Źródła stanu określa [kontrakt Git-first](../../raven-workflow/references/change-contract.md). Repo/remote i PR mogą wspierać współpracę, review i CI. Issues są wymaganym trackerem tasków i roadmapy; Project jest opcjonalnym widokiem tych samych issues. Status opiera się na etykietach in-progress/blocked i zamknięciu po raven-merge, bez wymaganych pól Project.
 
 Weryfikuj owner/repo, tożsamość i zakres uprawnień, widoczność oraz zlecony cel przed mutacją. Przy tworzeniu zasobów poufnych potwierdź prywatność przed dodaniem treści; prywatny board nie chroni publicznych issues. Nie zmieniaj istniejącej widoczności bez polecenia. Brak odczytu nie dowodzi braku zasobu, a udany odczyt nie dowodzi prawa zapisu.
 

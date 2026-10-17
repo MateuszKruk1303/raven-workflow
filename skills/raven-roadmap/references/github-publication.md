@@ -1,7 +1,7 @@
-# Zapis roadmapy
+# Zapis roadmapy w GitHub Issues
 
-Domyślnie zapisuj `context/roadmap.md`. Jeśli użytkownik wskazał jeden istniejący tracker jako źródło kolejki, aktualizuj go w zakresie autoryzacji i nie twórz lokalnego konkurencyjnego backlogu. Issue i Project są opcjonalne. Nie twórz task issues dla faz wykonania.
+GitHub Issues jest jedynym trackerem roadmapy. Każdy issue opisuje osobno dostarczalny wynik, AC, linki do wymagań i zależnych issues; nie kopiuje planu implementacji. Nie twórz issues dla faz, lokalnej roadmapy ani drugiej kolejki. Project jest opcjonalnym widokiem.
 
-Przed zapisem sprawdź pokrycie wymagań, [granice change](../../raven-workflow/references/change-scope.md), unikalne ID, DAG, prawdziwe zależności oraz zachowanie istniejących decyzji/postępu. Zmiana produktu wymaga użytkownika; rutynową korektę podziału wynikającą z uzgodnionego zakresu wykonaj sam.
+Przed zapisem sprawdź pokrycie wymagań, [granice change](../../raven-workflow/references/change-scope.md), unikalne ID, DAG, prawdziwe zależności i zachowanie decyzji/postępu. Zmiana produktu wymaga użytkownika; rutynowy podział uzgodnionego zakresu wykonaj sam. Nie ustawiaj In progress podczas samego układania kolejki — dopiero zlecone planowanie lub implementacja podejmują konkretny task.
 
-Zapis lokalny odczytaj i przejrzyj diff; historię przechowuje Git. Zapis trackera wskazuje dokładny zasób, zachowuje ludzkie treści i wymaga readback. Po timeout sprawdź stan przed ponowieniem. Nie publikuj do innego miejsca jako fallback błędu dostępu. Po dwóch nieskutecznych próbach zachowaj gotowy payload i nazwij brak. Nie kopiuj całej treści planów do trackera.
+Dla wskazanych issues używaj ich numerów i dokładnego repo. Tworzenie roadmapy może wymagać jednego ograniczonego odczytu istniejącej kolejki w objętym zleceniem zakresie, z potrzebną paginacją; nie powtarzaj tego przy każdym change. Przed tworzeniem sprawdź istniejące powiązanie; nie duplikuj issue po timeout. Aktualizuj tylko różnice, zachowuj ludzkie treści, assignees i statusy. Zapis sprawdź readback; po dwóch nieskutecznych próbach zachowaj konkretny payload jako checkpoint operacji, nie konkurencyjną roadmapę, i nazwij brak. Nie publikuj w innym repo jako fallback błędu dostępu.

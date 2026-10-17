@@ -127,11 +127,11 @@ class ProcessTests(unittest.TestCase):
                     self.check()
                 self.stage('code_review')['requires'] = original
 
-    def test_standard_cycle_has_no_mandatory_tracker_or_late_test_stage(self):
+    def test_standard_cycle_requires_issue_tracking_without_late_test_stage(self):
         self.check()
         self.assertEqual({s['id'] for s in self.contract['stages']},
                          {'plan', 'plan_review', 'pr', 'implement', 'code_review', 'merge'})
-        self.assertEqual(self.stage('merge')['produces'], ['merged_pr'])
+        self.assertEqual(self.stage('merge')['produces'], ['merged_pr', 'issue_done'])
         self.assertNotIn('pull_request', self.stage('implement')['requires'])
         self.assertTrue(self.stage('pr')['side_operation'])
 
@@ -186,6 +186,13 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
             self.check()
 
+    def test_issue_start_is_required_before_planning_and_implementation(self):
+        for name in ('plan', 'implement'):
+            self.stage(name)['requires'].remove('issue_started')
+            with self.assertRaisesRegex(ValueError, 'must require'):
+                self.check()
+            self.stage(name)['requires'].append('issue_started')
+
     def test_merge_cannot_also_claim_board_done(self):
         self.stage('merge')['produces'].append('board_done')
         with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
@@ -201,8 +208,8 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Wrong modes'):
             self.check()
 
-    def test_git_first_invariants_cannot_restore_mandatory_tracker(self):
-        self.contract['invariants']['mandatory_task_issues'] = True
+    def test_git_first_invariants_cannot_remove_mandatory_tracker(self):
+        self.contract['invariants']['mandatory_task_issues'] = False
         with self.assertRaisesRegex(ValueError, 'invariants'):
             self.check()
 

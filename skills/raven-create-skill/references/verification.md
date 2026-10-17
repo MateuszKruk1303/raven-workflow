@@ -35,13 +35,17 @@ Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poni
 
 | Próba | Co ocenić po wykonaniu |
 | --- | --- |
-| Mała lokalna poprawka bez remote | Branch change w aktualnym checkout, proporcjonalny plan z kontraktem/P1, rzeczywisty base w checkpointcie także bez runtime start, brak API i fikcyjnej akceptacji. |
+| Zlecony plan bez dostępu do GH | Jawny tracking-unconfirmed; brak domniemanej rezerwacji taska, lokalnej roadmapy i zależnego startu; niezależne rozpoznanie read-only możliwe. |
+| Mały task ze wskazanym issue | Najpierw In progress i assignee, potem proporcjonalny plan na branchu z rzeczywistym base; brak duplikatu issue i no-op przy zgodnym stanie. |
+| Sam status issue | Odczyt wskazanego issue i lokalnego planu; bez mutacji, branch/worktree lub skanu boarda. |
+| Blokada i wznowienie | Widoczny blocked/powód na właściwym issue, odblokowanie dopiero po rozwiązaniu; zachowany owner i licznik prób. |
+| Merge udany, zamknięcie issue nieudane | PR merged zgłoszony jako fakt, brak fałszywego Done; recovery zamyka tylko właściwy issue bez remerge. |
 | Równoległa praca lub żądanie izolacji | Osobny worktree poza repo, bez przełączania katalogu aktywnej pracy i mieszania zmian. |
 | Cudze zmiany w aktualnym checkout | Zachowane pliki i staging; brak przenoszenia zmian na nowy branch, automatycznego resetu/stasha/commitu. Izolacja lub ustalenie sposobu zachowania zmian przed kolidującą operacją. |
 | Wznowienie na branchu lub w worktree | Zachowany istniejący branch, katalog i base, bez tworzenia kolejnego worktree ani zerowania postępu. |
 | Wznowienie po checkboxie | Identyczny fingerprint i zachowana akceptacja; zmieniony kod unieważnia odpowiednie dowody osobno. |
 | Zmiana technicznego kontraktu | Nowy fingerprint, aktualne review i decyzja przed zależną implementacją; brak przenoszenia starej zgody. |
-| Wcześniej autoryzowany draft | Wczesna publikacja w dokładnym zakresie polityki bez nowego pytania; sam task bez polityki nie daje praw. |
+| Wcześniej autoryzowany draft | Wczesna publikacja w dokładnym zakresie polityki bez nowego pytania; sam task bez polityki nie daje praw push/PR. |
 | Normalny change | Testy wraz z implementacją, jedno niezależne review wymagań/kodu/testów, dodatkowe role tylko dla ryzyka. |
-| Merge bez boarda | Aktualne CI/dowody/odbiór/zgoda i SHA guard; brak Project nie blokuje merge, deploy jest osobno. |
-| Jira lub historyczny Raven | Zachowane źródło wymagań i historia, bez lustrzanych issues i automatycznej migracji. |
+| Merge bez boarda | Aktualne CI/dowody/odbiór/zgoda i SHA guard; brak Project nie blokuje merge; issue zamykany dopiero po potwierdzonym merge, deploy jest osobno. |
+| Jira lub historyczny Raven | Zachowane źródło wymagań i historia, issue GH śledzi wykonanie linkiem do źródła Jira, bez kopiowania treści i automatycznej migracji. |

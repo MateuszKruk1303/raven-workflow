@@ -127,7 +127,10 @@ def validate_process(contract, skills):
         'progress_invalidates_acceptance': False,
         'tests_with_implementation': True,
         'normal_implementation_independent_reviews': 1,
-        'mandatory_task_issues': False,
+        'mandatory_task_issues': True,
+        'issue_started_before_plan_or_implementation': True,
+        'issue_done_after_merge': True,
+        'project_optional': True,
         'full_history_read_required': False,
         'deploy_separate': True,
     }
@@ -137,7 +140,7 @@ def validate_process(contract, skills):
     if sources != {
         'change': 'context/changes/<id>/plan.md', 'history': 'git',
         'configuration': '.raven/config.json', 'collaboration': 'pull_request',
-        'tracker': 'optional',
+        'tracker': 'github_issues', 'roadmap': 'github_issues',
     }:
         raise ValueError('Invalid Git-first sources of truth')
     roles = contract['roles']
@@ -154,18 +157,18 @@ def validate_process(contract, skills):
     if len(set(ids)) != len(ids):
         raise ValueError('Duplicate stage IDs')
     required = {
-        'plan': ('planner', {'requirements'}, {'plan_contract'}),
+        'plan': ('planner', {'requirements', 'issue_started'}, {'plan_contract'}),
         'plan_review': ('reviewer', {'plan_contract'}, {'plan_review'}),
         'pr': ('implementer', {'plan_contract', 'publication_requested'}, {'pull_request'}),
-        'implement': ('implementer', {'plan_contract', 'plan_review', 'plan_accepted'}, {'implementation', 'test_evidence'}),
+        'implement': ('implementer', {'plan_contract', 'plan_review', 'plan_accepted', 'issue_started'}, {'implementation', 'test_evidence'}),
         'code_review': ('reviewer', {'plan_contract', 'implementation', 'test_evidence'}, {'code_review'}),
-        'merge': ('implementer', {'pull_request', 'plan_accepted', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested'}, {'merged_pr'}),
+        'merge': ('implementer', {'pull_request', 'plan_accepted', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested'}, {'merged_pr', 'issue_done'}),
     }
     by_id = {s['id']: s for s in stages}
     if set(by_id) != set(required):
         raise ValueError('Standard cycle requires exactly the defined stages')
     external = set(contract['initial_artifacts'])
-    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested', 'merge_requested', 'ci_passed'}:
+    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested', 'merge_requested', 'ci_passed', 'issue_started'}:
         raise ValueError('External artifacts must not bypass stage producers')
     for stage in stages:
         role, needs, output = required[stage['id']]

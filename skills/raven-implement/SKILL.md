@@ -5,7 +5,7 @@ description: "Wykonaj lub wznów zatwierdzony lokalny plan change wraz z potrzeb
 
 # Raven Implement
 
-Przed zależną implementacją sprawdź również aktualne niezależne `plan-review.md` dla bieżącego fingerprintu i rozstrzygnięcie blokujących findings. Sama akceptacja planu nie zastępuje zachowanego etapu review; brak lub nieaktualne review kieruje do raven-plan-review/auto-plan. Nie wymagaj nowego review dla samych checkboxów lub checkpointu.
+Na początku zleconej implementacji potwierdź In progress i assignee konkretnego issue GH według wspólnego kontraktu; nie mutuj issue podczas samego statusu. Przed zależną implementacją sprawdź również aktualne niezależne `plan-review.md` dla bieżącego fingerprintu i rozstrzygnięcie blokujących findings. Sama akceptacja planu nie zastępuje zachowanego etapu review; brak lub nieaktualne review kieruje do raven-plan-review/auto-plan. Nie wymagaj nowego review dla samych checkboxów lub checkpointu.
 
 Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 

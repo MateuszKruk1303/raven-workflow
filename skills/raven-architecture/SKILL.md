@@ -21,7 +21,7 @@ Rozróżnij pierwsze opracowanie, wznowienie rozmowy i aktualizację określonej
 
 Przejrzyj inwentarz dokumentacji repo: instrukcje, README, pełne aktualne PRD/shape, dokumenty stacku/infrastruktury, ADR, bezpieczeństwa, testów, integracji oraz lessons. Czytaj wszystkie materiały istotne dla architektury; pokaż brakujące źródła i sprzeczności. Nie traktuj archiwum jako bieżącego wymagania. Nie odczytuj sekretów ani generowanych katalogów w celu uzupełnienia dokumentacji.
 
-Odczytaj istniejącą roadmapę w repo albo jeden wskazany tracker, wyłącznie potrzebne changes/zależności i lokalne plany/research/decyzje. Nie czytaj całej historii GH i nie twórz drugiej kolejki. Brak dostępu do źródła nazwij, kontynuując niezależne ustalenia. Nie uruchamiaj setupu przy okazji. Brak PRD w brownfield nie blokuje pracy, jeżeli cel i zakres wynikają z innych wiarygodnych materiałów; rzeczywiście brakujące wymagania uzgodnij.
+Odczytaj roadmapę w GitHub Issues, wyłącznie potrzebne changes/zależności i lokalne plany/research/decyzje. Nie czytaj całej historii GH i nie twórz drugiej kolejki. Brak dostępu do źródła nazwij, kontynuując niezależne ustalenia. Nie uruchamiaj setupu przy okazji. Brak PRD w brownfield nie blokuje pracy, jeżeli cel i zakres wynikają z innych wiarygodnych materiałów; rzeczywiście brakujące wymagania uzgodnij.
 
 Sprawdź w kodzie i konfiguracji obszary istotne dla decyzji. Ładuj dostępne skille domenowe, gdy analizujesz ich technologię. Rozróżniaj „istnieje i sprawdzono”, „deklarowane w dokumentacji”, „docelowe, uzgodnione” i „propozycja”. Napisanie w dokumencie „S3” nie dowodzi wdrożenia S3.
 
