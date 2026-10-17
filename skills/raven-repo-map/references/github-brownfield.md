@@ -1,19 +1,9 @@
-# Raporty brownfield w GitHubie
+# Raporty brownfield w Git
 
-Przeczytaj wspólny [kontrakt Raven](../../raven-auto-plan/references/github-contract.md). Obowiązują jego identyfikatory, odczyt pełnych komentarzy, odporność na powtórzenia, wersje, paginacja i odczyt zwrotny.
+Raport konkretnego change zapisz w `context/changes/<id>/`: `research.md`, `frame.md`, `domain.md`, `glossary.md`, `qa-plan.md`, `qa-report.md` lub `rule-review.md`, zależnie od zadania. Raport przekrojowy ma jedno miejsce w `context/foundation/`, np. `repo-map.md`, `domain.md`, `glossary.md` albo `rule-review.md`. Nie twórz issues artefaktów, snapshotów komentarzy ani drugiej kopii raportu.
 
-## Miejsce i zapis
+Raport zawiera cel/zakres, źródła i wersje, HEAD/branch/dirty state, czas badania, dowody path:line, metodę, niepewności i następny krok. Używaj rzeczywistych metadanych; nieznane oznacz. Odróżniaj fakty, interpretacje i decyzje. Aktualizuj plik z czytelnym diffem; historię przechowuje Git. PR może linkować raport w zakresie polityki publikacji.
 
-Dla analizy taska używaj istniejącego change. Dla mapy całego repo, słownika domeny lub przeglądu instrukcji użyj osobnego issue artefaktu w skonfigurowanym repo. Przed utworzeniem wyszukaj marker typu `<!-- raven:artifact kind=repo-map scope=SCOPE -->` (odpowiednio domain/rules) i sprawdź zakres. Dedykowane issue dokumentacji nie jest change implementacyjnym, nie potrzebuje fikcyjnego planu ani statusu Done. Nie twórz osobnego issue dla każdej rundy.
+Poufne materiały należą do zatwierdzonego repo artefaktów, które może być inne niż repo kodu. Jawnie zapisz mapowanie; nie kopiuj do osobistego remote. Prywatny Project nie zapewnia prywatności publicznego repo. Brak dostępu do źródła oznacza lukę, nie pozwolenie na zastępczą publikację.
 
-Wywołanie skilla z docelowym projektem upoważnia do publikacji jego raportu i indeksu w tym miejscu. Brak jednoznacznego celu GH wymaga ustalenia celu przed zapisem; można w tym czasie zbadać lokalny kod. Nie wybieraj przypadkowego prywatnego repo.
-
-Każda runda: marker HTML `raven:TYPE scope=SCOPE round=N`, czas, repo kodu, base/head SHA lub informacja o braku Git, dirty state, zakres, wersje/hash wejść, metoda, dowody, wnioski i ograniczenia. Zachowuj wcześniejsze rundy, aktualizuj tylko własny indeks bieżących linków. Wyniki surowe potrzebne do odtworzenia ustaleń publikuj jako ponumerowane komentarze evidence z manifestem/hashami; nie zapisuj wyłącznie nietrwałych lokalnych ścieżek. Przy limitach podziel payload i opublikuj manifest dopiero po weryfikacji części. Nie wrzucaj pełnego dumpu repo, sekretów ani niepotrzebnych danych osobowych.
-
-Tylko koordynator zapisuje zdalnie. Przed zapisem sprawdź cudze zmiany i marker, po zapisie odczytaj wynik. Kopie robocze poza śledzonym repo nie są źródłem prawdy. Przy błędzie zachowaj niezapisany payload i zgłoś częściową publikację. Permalinki tylko do rzeczywiście zdalnych commitów; lokalne dowody oznacz path:line + SHA/dirty state.
-
-## Dwa repozytoria
-
-Domyślnie repo kodu i artefaktów są tym samym repo. Gdy użytkownik wskazuje oddzielne miejsce artefaktów, zapisz jawne powiązanie w github.json: istniejące repo/Project wskazują artefakty, opcjonalne `code_repository` wskazuje owner/name kodu. Zweryfikuj obie tożsamości; nie przenoś istniejących issues przy zmianie konfiguracji. Repo_root/worktree, HEAD, testy i PR odnoszą się do code_repository. Numery issues są zawsze kwalifikowane pełnym repo/URL. Uprawnienia do Project i repo artefaktów sprawdzaj oddzielnie.
-
-Przy Jira wymagania pochodzą z jawnie wersjonowanego snapshotu źródła, a plan/review z GH. Nierozstrzygnięty rozjazd wersji nie może zostać ukryty lokalnym plikiem lub nową interpretacją agenta. Żaden raport analityczny nie zatwierdza planu, nie implementuje rozwiązania i nie ustawia Done.
+Przy wznowieniu czytaj bieżący raport/checkpoint i tylko wskazane źródła potrzebne do luki. Nie pobieraj całej historii issues. Historyczne artefakty GH pozostają na miejscu; migracja wymaga osobnego zlecenia.

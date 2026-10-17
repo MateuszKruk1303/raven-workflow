@@ -32,7 +32,7 @@ Zablokowany schemat, z którym zgodna jest ta umiejętność, znajduje się w `r
 ## Relacja z innymi umiejętnościami
 
 - `/raven-shape` — tworzy `shape-notes.md`, kanoniczne dane wejściowe. Zawsze preferowany etap poprzedzający tę umiejętność.
-- Dalszy routing: [raven-workflow](../raven-workflow/SKILL.md), w tym GitHub, roadmapa i architektura. Zachowaj istniejący stack w brownfield.
+- Dalszy routing: [raven-workflow](../raven-workflow/SKILL.md), w tym architektura, potrzebny setup i roadmapa. Zachowaj istniejący stack w brownfield.
 
 ## Początkowa odpowiedź
 
@@ -277,7 +277,7 @@ Po zapisaniu podsumuj, co zostało utworzone:
 ═══════════════════════════════════════════════════════════
 ```
 
-Wskaż następny etap zgodnie z raven-workflow i rzeczywistym stanem projektu: dla nowego produktu przygotowanie GitHuba/roadmapy i architektury, dla brownfield przygotowanie właściwego change. Nie uruchamiaj kolejnego etapu ani nie nadpisuj schowka. Przy pliku wersjonowanym przekaż jego dokładną ścieżkę; nie zakładaj, że konsumenci wybiorą go zamiast prd.md.
+Wskaż następny etap zgodnie z raven-workflow i rzeczywistym stanem projektu: dla nowego produktu architektura → stack → instrukcje repo, strategia testów i CI → roadmapa → cykl change; dla brownfield zakres/wznowienie i rzeczywiste braki setupu przed planem. Nie uruchamiaj kolejnego etapu ani nie nadpisuj schowka. Przy pliku wersjonowanym przekaż jego dokładną ścieżkę; nie zakładaj, że konsumenci wybiorą go zamiast prd.md.
 
 Jeśli notatki wejściowe zawierały przyszłościowe kwestie (preferencje tech-stack, notatki implementacyjne, wskazówki wdrożeniowe), wymień je krótko, aby użytkownik wiedział, że są kierowane do następnego kroku, a nie odrzucane:
 

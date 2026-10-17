@@ -1,6 +1,6 @@
 interface:
   display_name: "Raven Research"
-  short_description: "Rozpocznij change badaniem i przekaż wynik do planu"
-  default_prompt: "Użyj $raven-research dla wskazanego zadania, zapewnij jego change w GitHubie i zapisz research, który wykorzysta późniejsze planowanie."
+  short_description: "Lokalny research oparty na źródłach"
+  default_prompt: "Użyj $raven-research. Zbadaj wskazane pytanie i zapisz lokalny research.md z dowodami do późniejszego planowania."
 policy:
   allow_implicit_invocation: false

@@ -5,7 +5,7 @@ This is the canonical structure for the test plan produced by `/raven-test-plan`
 - **Strategy** (sections §1–§5) is written up-front by the orchestrator in its Phase 4, before any handoff. It is mostly frozen after that — changes require `--refresh`.
 - **Cookbook** (§6) starts as placeholders and **fills in incrementally** as rollout phases ship. Each plan's final sub-phase (per the `/raven-plan` constraint baked in by the orchestrator) updates the cookbook with patterns the rollout phase just delivered.
 
-The orchestrator parses **§3 (Phased rollout)** on every invocation to determine state. The Status vocabulary and column order in §3 are load-bearing — do not rename columns or invent new status values without updating the orchestrator's parser.
+The agent reads **§3 (Phased rollout)** alongside canonical checkpoints and evidence to determine state. Keep status meanings consistent; there is no runtime stage parser. `--status` performs no writes.
 
 Length budget: **strategy sections 300–600 words; cookbook section grows with the rollout**. The file may exceed 900 words once §6 is populated by shipped phases — that is expected.
 
@@ -148,14 +148,14 @@ enough for this rollout and must be reframed or dropped.
 
 ## §3 — Phased rollout
 
-**This section is the orchestrator's state.** The orchestrator reads and writes the Status and Change-folder cells on every invocation; the other cells are frozen after the initial write (unless `--refresh` opens a re-scope).
+**This section summarizes rollout state.** Read status from canonical checkpoints and evidence. Update Status and Change-folder only during write-authorized work; --status is read-only. Material scope changes require a decision and a scoped refresh.
 
 ```markdown
 ## 3. Phased Rollout
 
 Each row is a discrete rollout phase that will open its own change folder
 via `/raven-plan`. Status moves left-to-right through the values below; the
-orchestrator updates Status as artifacts appear on disk.
+orchestrator derives Status from canonical checkpoints and actual evidence, not file existence alone. --status never writes.
 
 | # | Phase name                | Goal (one line)                                  | Risks covered | Test types              | Status        | Change folder                                       |
 |---|---------------------------|--------------------------------------------------|----------------|-------------------------|---------------|-----------------------------------------------------|
@@ -165,18 +165,18 @@ orchestrator updates Status as artifacts appear on disk.
 | 4 | Quality-gates wiring      | Lock the floor in CI                              | cross-cutting  | gates                   | not started   | —                                                   |
 ```
 
-**Status vocabulary** (fixed — parser literals):
+**Status vocabulary** (descriptive; no runtime stage parser):
 
 | Value          | Meaning                                                                          |
 |----------------|----------------------------------------------------------------------------------|
 | `not started`  | No change folder for this rollout phase yet.                                     |
-| `change opened` | `context/changes/<id>/` exists with `change.md`; research not done.            |
-| `researched`   | `research.md` exists in the change folder.                                       |
-| `planned`      | `plan.md` exists with a `## Progress` section.                                   |
-| `implementing` | Progress section has at least one `[x]` and at least one `[ ]`.                  |
-| `complete`     | Progress section is fully `[x]`.                                                 |
+| `change opened` | Local change folder exists; no change.md or issue is required.            |
+| `researched`   | Research has sufficient current evidence for its stated questions.                                       |
+| `planned`      | Contract is complete; record review and acceptance separately before execution.                                   |
+| `implementing` | Execution checkpoint shows work started against the accepted/reviewed contract.                  |
+| `complete`     | Required protection and cookbook have current evidence; distinguish delivery/merge separately.                                                 |
 
-3–5 rollout phases is the sweet spot. Fewer makes the rollout too coarse; more makes prioritization useless. AI-native and gates phases are not mandatory — include them only when the brief justified them under cost × signal.
+Choose only phases justified by independent outcomes and risks; do not impose a minimum. AI-native and gates phases are not mandatory — include them only when the brief justified them under cost × signal.
 
 ---
 
@@ -343,7 +343,7 @@ The freshness ledger is the difference between a guide that ages gracefully and 
 - **No motivational phrasing** ("write better tests", "be a Raven engineer").
 - **No emojis.**
 - **No section ordering different from §1 → §8.**
-- **No new Status values in §3.** The orchestrator's parser depends on the fixed vocabulary.
+- Keep status meanings consistent; file existence alone is not evidence of readiness or delivery.
 
 If any of the above appears in a draft, revise before writing.
 
@@ -351,7 +351,8 @@ If any of the above appears in a draft, revise before writing.
 
 ## How `/raven-test-plan` maintains this file
 
-- **Phase 4 (initial write)**: orchestrator writes §1–§5 fully, §6 with placeholders ("TBD — see §3 Phase N"), §7 from interview Q5, §8 with today's date in all three lines.
-- **Per handoff transition** (Phase 6, Handoffs A–E): orchestrator updates only §3 Status and Change-folder cells, and bumps the "Last updated" header line.
-- **After each rollout phase completes** (via `/raven-implement`'s final sub-phase, baked into the plan by the orchestrator's planning prompt): the relevant §6 sub-section is filled in; §8 dates may bump if tools were verified.
-- **`--refresh`**: opens a new change folder; the strategy sections (§1–§5) may be rewritten through that change, but never edited in place outside of it.
+Initial authoring fills the agreed strategy, risks, rollout, stack and response guidance; cookbook entries cite delivered patterns or clearly state the missing implementation. §8 records actual source/tool checks, never invented dates. Do not require a fixed interview question number.
+
+During write-authorized rollout updates, change only verified status, change paths and delivered cookbook guidance. `--status` reads without editing any field or timestamp. Acceptance and review of a plan are separate from the existence of its file. A checked list alone does not prove delivery.
+
+`--refresh` prepares a scoped change to strategy and preserves decisions/history in Git. New or changed requirements and material risk decisions need user resolution before dependent execution. Routine evidence and cookbook updates do not need a new product interview.

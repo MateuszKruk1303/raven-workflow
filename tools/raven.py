@@ -118,9 +118,28 @@ def list_target_names(text):
 
 
 def validate_process(contract, skills):
-    """Validate static handoffs and gates, not live PRs, CI or Project mutations."""
-    if contract['schema_version'] != 1:
+    """Validate the Git-first artifact DAG; live evidence is checked at execution."""
+    if contract['schema_version'] != 2:
         raise ValueError('Unsupported schema_version')
+    invariants = contract['invariants']
+    expected_invariants = {
+        'acceptance': 'contract_fingerprint',
+        'progress_invalidates_acceptance': False,
+        'tests_with_implementation': True,
+        'normal_implementation_independent_reviews': 1,
+        'mandatory_task_issues': False,
+        'full_history_read_required': False,
+        'deploy_separate': True,
+    }
+    if invariants != expected_invariants:
+        raise ValueError('Invalid Git-first workflow invariants')
+    sources = contract['source_of_truth']
+    if sources != {
+        'change': 'context/changes/<id>/plan.md', 'history': 'git',
+        'configuration': '.raven/config.json', 'collaboration': 'pull_request',
+        'tracker': 'optional',
+    }:
+        raise ValueError('Invalid Git-first sources of truth')
     roles = contract['roles']
     for name in ('planner', 'reviewer', 'tester', 'implementer'):
         role = roles[name]
@@ -135,22 +154,18 @@ def validate_process(contract, skills):
     if len(set(ids)) != len(ids):
         raise ValueError('Duplicate stage IDs')
     required = {
-        'plan': ('planner', {'requirements'}, {'plan_snapshot'}),
-        'plan_review': ('reviewer', {'plan_snapshot'}, {'plan_review'}),
-        'implement': ('implementer', {'plan_snapshot', 'plan_review', 'plan_accepted'}, {'implementation'}),
-        'functional_test': ('tester', {'implementation'}, {'functional_evidence'}),
-        'code_review': ('reviewer', {'implementation'}, {'code_review'}),
-        'tests': ('implementer', {'implementation', 'code_review', 'user_acceptance'}, {'test_evidence'}),
-        'test_review': ('reviewer', {'test_evidence'}, {'tests_reviewed'}),
-        'pr': ('implementer', {'tests_reviewed', 'publication_requested'}, {'pull_request'}),
-        'merge': ('implementer', {'pull_request', 'merge_requested'}, {'merged_pr'}),
-        'board_finalize': ('implementer', {'merged_pr'}, {'board_done'}),
+        'plan': ('planner', {'requirements'}, {'plan_contract'}),
+        'plan_review': ('reviewer', {'plan_contract'}, {'plan_review'}),
+        'pr': ('implementer', {'plan_contract', 'publication_requested'}, {'pull_request'}),
+        'implement': ('implementer', {'plan_contract', 'plan_review', 'plan_accepted'}, {'implementation', 'test_evidence'}),
+        'code_review': ('reviewer', {'plan_contract', 'implementation', 'test_evidence'}, {'code_review'}),
+        'merge': ('implementer', {'pull_request', 'plan_accepted', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested'}, {'merged_pr'}),
     }
     by_id = {s['id']: s for s in stages}
     if set(by_id) != set(required):
         raise ValueError('Standard cycle requires exactly the defined stages')
     external = set(contract['initial_artifacts'])
-    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested', 'merge_requested'}:
+    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested', 'merge_requested', 'ci_passed'}:
         raise ValueError('External artifacts must not bypass stage producers')
     for stage in stages:
         role, needs, output = required[stage['id']]
@@ -164,16 +179,22 @@ def validate_process(contract, skills):
             raise ValueError(f"Wrong artifact producer: {stage['id']}")
         if not stage['skills'] or not set(stage['skills']) <= skills:
             raise ValueError(f"Unknown/empty skills in {stage['id']}")
-        if stage['id'] in ('merge', 'board_finalize') and stage['skills'] != ['raven-merge']:
+        if stage['id'] == 'merge' and stage['skills'] != ['raven-merge']:
             raise ValueError(f"{stage['id']} must be owned by raven-merge")
         if role in ('reviewer', 'tester') and stage.get('fresh_context') is not True:
             raise ValueError(f"Independent context required for {stage['id']}")
         modes = stage.get('modes', ['manual', 'auto'])
-        expected_modes = {'auto'} if stage['id'] == 'functional_test' else {'manual', 'auto'}
+        expected_modes = {'manual', 'auto'}
         if set(modes) != expected_modes:
             raise ValueError(f"Wrong modes for {stage['id']}")
-    if by_id['code_review'].get('requires_by_mode') != {'auto': ['functional_evidence']}:
-        raise ValueError('Auto code review requires functional evidence before review')
+    if any(stage.get('requires_by_mode') for stage in stages):
+        raise ValueError('Manual and auto must share the same artifact handoffs')
+    if 'pull_request' in by_id['implement']['requires']:
+        raise ValueError('Local implementation must not require publication')
+    if set(by_id['code_review'].get('covers', [])) != {'requirements', 'code', 'tests'}:
+        raise ValueError('Independent review must cover requirements, code and tests')
+    if by_id['pr'].get('side_operation') is not True:
+        raise ValueError('Publication must be a side operation, not a local implementation prerequisite')
     for mode in ('manual', 'auto'):
         produced = set(external)
         for stage in stages:

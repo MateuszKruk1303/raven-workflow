@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven GitHub Setup"
-  short_description: "Prywatne repo i Project dla workflow Raven"
-  default_prompt: "Użyj $raven-github-setup, aby przygotować prywatne repozytorium i prywatny Project dla bieżącego projektu."
+  short_description: "Repo i opcjonalna polityka publikacji"
+  default_prompt: "Użyj $raven-github-setup. Przygotuj potrzebny setup GitHub i ustaloną politykę publikacji; nie twórz Project bez zlecenia."

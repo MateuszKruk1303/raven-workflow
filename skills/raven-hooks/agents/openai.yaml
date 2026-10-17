@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Hooks"
-  short_description: "Raven Hooks: jakość i testy z GitHubem"
-  default_prompt: "Użyj $raven-hooks dla bieżącego projektu Raven i zapisz wynik zgodnie z kontraktem GitHub."
+  short_description: "GitHub Actions dla właściwych kontroli"
+  default_prompt: "Użyj $raven-hooks. Skonfiguruj wymagane kontrole GitHub Actions na podstawie rzeczywistych poleceń projektu."

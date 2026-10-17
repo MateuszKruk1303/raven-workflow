@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Auto Plan"
-  short_description: "Plan i niezależne review change w GitHubie"
-  default_prompt: "Użyj $raven-auto-plan, aby przygotować wskazany change w GitHubie i przedstawić plan wraz z niezależnym review do mojej decyzji."
+  short_description: "Lokalny plan i niezależne review"
+  default_prompt: "Użyj $raven-auto-plan. Przygotuj lokalny plan wskazanego change i niezależne review, po czym przedstaw kontrakt do mojej akceptacji."

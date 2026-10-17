@@ -41,7 +41,7 @@ Użyj `rg` do wyszukania wywołań, odsyłaczy i nazw artefaktów. Czytaj tylko 
 - Zmień powiązane skille wyłącznie tam, gdzie rzeczywiście zmieniają się wejścia, wyjścia, odpowiedzialności lub wywołania. Zachowaj kompatybilność i istniejące identyfikatory; nie migruj historycznych artefaktów projektów przy okazji.
 - Opcjonalny helper nie staje się wpisem w `stages` standardowego cyklu. Przy uzgodnionej zmianie cyklu uaktualnij razem kontrakt, jego niezmienniki w doctorze, router, konsumentów i testy. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
 
-Wspólne zasady przechowuj w jednym miejscu. Nowy skill odwołuje się do istniejącego kontraktu GH, browsera lub niezależności, jeżeli faktycznie ich potrzebuje; nie duplikuj całych procedur i nie ładuj niepowiązanych referencji.
+Wspólne zasady przechowuj w jednym miejscu. Nowy skill odwołuje się do wspólnego kontraktu Git-first, browsera lub niezależności, jeżeli faktycznie ich potrzebuje; nie duplikuj całych procedur i nie ładuj niepowiązanych referencji.
 
 ## 4. Zweryfikuj zachowanie i niezależnie oceń
 

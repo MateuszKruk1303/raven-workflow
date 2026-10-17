@@ -17,7 +17,7 @@ Przy delegowaniu ustaw jawnie `model` i `reasoning_effort` z tabeli oraz `fork_t
 
 Dla etapu manualnego wykonuj pracę bezpośrednio, jeśli bieżąca konfiguracja odpowiada roli. W przeciwnym razie deleguj tę rolę do właściwego modelu, a pytania i decyzje użytkownika prowadź jako koordynator. To upoważnienie do delegowania zleconego etapu, nie do uruchamiania kolejnych etapów. Agent już uruchomiony w danej roli nie deleguje ponownie całego własnego zadania. Brak wymaganego modelu lub możliwości konfiguracji zgłoś przed zależną pracą; przedstaw przekazanie do odpowiedniej sesji. Nie zastępuj Astry Solem bez decyzji użytkownika i nie zmieniaj globalnej konfiguracji hosta.
 
-Reviewer/tester jest świeży i nie dziedziczy transkryptu autora. Dostaje pełne wymagania, wersje źródeł, zakres/base/head, publiczne decyzje i dowody, a nie wyłącznie streszczenie autora. Koordynator publikuje artefakty zgodnie z kontraktem GH. Niezależność nie wymaga mnożenia kolejnych reviewerów: pojedynczy reviewer Astra może pokryć wszystkie wymiary małej zmiany. Dodatkowe role dobieraj do niezależnych ryzyk, np. auth, migracji lub współbieżności, a nie liczby plików.
+Reviewer/tester jest świeży i nie dziedziczy transkryptu autora. Dostaje pełne wymagania, wersje źródeł, zakres/base/head, publiczne decyzje i dowody, a nie wyłącznie streszczenie autora. Koordynator utrwala artefakty zgodnie z kontraktem pracy Git-first; publikacja zewnętrzna wymaga autoryzacji. Niezależność nie wymaga mnożenia kolejnych reviewerów: pojedynczy reviewer Astra może pokryć wszystkie wymiary małej zmiany. Dodatkowe role dobieraj do niezależnych ryzyk, np. auth, migracji lub współbieżności, a nie liczby plików.
 
 ## Eskalacja i dowody
 

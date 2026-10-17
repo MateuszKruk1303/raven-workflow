@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Test Review"
-  short_description: "Manualny etap testów Raven z GitHubem"
-  default_prompt: "Użyj $raven-test-review dla wskazanego change, zachowując wspólne źródła wymagań i manualne decyzje o kolejnych etapach."
+  short_description: "Niezależna ocena konkretnych testów"
+  default_prompt: "Użyj $raven-test-review. Oceń wskazane testy niezależnie, na podstawie źródłowych wymagań i ryzyk."

@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Auto Implement"
-  short_description: "Implementacja, tester, a po PASS review techniczne"
-  default_prompt: "Użyj $raven-auto-implement, aby zrealizować zatwierdzony plan z GitHuba, doprowadzić wymagania do PASS z niezależnym testerem, a dopiero potem uruchomić review techniczne i przekazać raport z instrukcją manualnych checków."
+  short_description: "Implementacja, testy i jedno niezależne review"
+  default_prompt: "Użyj $raven-auto-implement. Zrealizuj zatwierdzony lokalny change wraz z testami i jednym niezależnym review wymagań, kodu i testów; napraw defekty w zakresie."

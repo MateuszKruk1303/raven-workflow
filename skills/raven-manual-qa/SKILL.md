@@ -1,6 +1,6 @@
 ---
 name: raven-manual-qa
-description: Przeprowadź eksploracyjne QA działającej funkcji w przeglądarce na podstawie issue GitHub. Opublikuj plan scenariuszy z ticketa i implementacji. Sprawdź wymagania, przypadki brzegowe i nietypowe zachowania użytkownika; zgłoś wyłącznie potwierdzone problemy z Expected, Actual i reprodukcją. Użyj do dodatkowego sprawdzenia funkcji lub retestu, bez poprawiania kodu i tworzenia suite testów.
+description: Przeprowadź dodatkowe eksploracyjne QA funkcji z lokalnego change, PR lub issue. Zapisz plan i potwierdzone defekty z reprodukcją w repo; bez poprawiania produktu i generowania suite.
 ---
 
 # Raven Manual QA
@@ -9,11 +9,11 @@ Przy wykonywaniu QA stosuj [wspólną politykę ról, modeli i dowodów](../rave
 
 Działaj jak dociekliwy tester manualny: korzystaj z rzeczywistego UI, rozumiej cel użytkownika i próbuj znaleźć sposób, w jaki pozornie działająca funkcja zawiedzie. Testuj wymagania oraz sensowne warianty, których autor mógł nie przewidzieć. Nie obiecuj absolutnej pewności ani braku wszystkich możliwych błędów.
 
-To osobno zlecane QA, dostępne także dla zwykłego issue GitHub bez planu Raven. Nie wymaga wcześniejszego review, formalnego odbioru, osobnego briefu programisty ani nowej fazy planowania. Nie zastępuje osobistej akceptacji użytkownika, technicznego review ani trwałych testów. Nie uruchamiaj automatycznej pętli napraw.
+To osobno zlecane QA, dostępne dla lokalnego change, PR albo zwykłego issue bez planu Raven. Nie wymaga wcześniejszego review, formalnego odbioru, osobnego briefu programisty ani nowej fazy planowania. Nie zastępuje osobistej akceptacji użytkownika, technicznego review ani trwałych testów. Nie uruchamiaj automatycznej pętli napraw.
 
 ## 1. Ustal ticket i kontekst
 
-Przyjmij pełny URL issue, numer z jednoznacznym repo lub Raven ID. Przeczytaj AGENTS.md i istniejące powiązanie `context/foundation/github.json`, pełne issue, komentarze, kryteria odbioru oraz związane taski, PR i decyzje w zakresie testowanej funkcji. Przy niejednoznacznym tickecie ustal cel. Nie twórz issue ani konfiguracji Raven tylko po to, aby wykonać QA.
+Przyjmij lokalny change/plan, branch, pełny URL PR/issue albo numer z jednoznacznym repo. Przeczytaj instrukcje, kontrakt i wskazane kryteria/decyzje oraz istotny diff. Odczytuj konkretne potrzebne wątki, nie pełną historię komentarzy/task issues. Przy niejednoznacznym celu ustal go; nie twórz issue ani konfiguracji Raven tylko dla QA.
 
 Rozdziel wymagania od sugestii implementatora. Kryteria i zaakceptowane decyzje są podstawą Expected. Happy path programisty to punkt startowy, nie granica testowania. Sprzeczne źródła albo niejasna reguła biznesowa wymagają ustalenia; nie zgłaszaj własnej preferencji jako błędu.
 
@@ -37,19 +37,19 @@ Ustal URL, środowisko, rolę i stan początkowy danych oraz faktycznie obsługi
 
 Zwykłe operacje na danych testowych są częścią zlecenia. Zakupy, wysyłka wiadomości, publikacja i usuwanie rzeczywistych danych nie wynikają z samego dostępu do zalogowanej przeglądarki. Próby nadużycia wykonuj na własnych rekordach i kontach testowych, bez obciążania usługi, obchodzenia zabezpieczeń ani naruszania cudzych danych. Zatrzymaj konkretny scenariusz, jeśli nie można go wykonać w dozwolonym zakresie; kontynuuj niezależne testy.
 
-## 3. Utwórz i opublikuj plan QA
+## 3. Utwórz plan QA
 
 Przed testowaniem opracuj plan scenariuszy na podstawie ticketa, zaakceptowanych decyzji oraz implementacji: diffu PR, istotnych widoków, walidacji, stanów, integracji i istniejących testów. Odczytaj kod w zakresie funkcji; nie przeprowadzaj pełnego review repo. Implementacja wskazuje dodatkowe ryzyka i miejsca do sprawdzenia, lecz nie jest wyrocznią Expected. Nie kopiuj błędnego aktualnego zachowania do oczekiwań. Jeśli kod lub diff są niedostępne, oprzyj plan na wymaganiach i obserwacji aplikacji, jawnie zaznaczając brak wglądu; nie udawaj analizy implementacji.
 
-Opublikuj osobny komentarz **„Raven Manual QA — plan i przebieg”** z markerem `<!-- raven:manual-qa-plan issue=OWNER/REPO#NUMBER round=N -->`. To plan wykonania QA tego ticketa, nie globalna strategia raven-test-plan ani nowa wersja planu implementacji. Nie wymaga osobnego zatwierdzania przed rutynowymi testami objętymi zleceniem. Użyj [formatu planu QA](references/qa-plan.md).
+Zapisz `qa-plan.md` obok lokalnego planu change, albo we wskazanym miejscu raportów dla QA bez planu Raven. To plan wykonania QA, nie strategia globalna ani nowa wersja kontraktu. Nie wymaga osobnej akceptacji przed rutynowymi testami objętymi zleceniem. Użyj [formatu planu QA](references/qa-plan.md).
 
 Uwzględnij wszystkie kryteria browserowe, happy path i dobrane ryzyka eksploracyjne. Każdy scenariusz ma trwałe ID S1, S2, źródło, warunki/dane, konkretne kroki i Expected ustalone przed próbą. Kryteria spoza przeglądarki wskaż jako poza zakresem, bez pozornego PASS. Początkowo wyniki są NOT RUN.
 
-Uzupełniaj ten sam komentarz po logicznych grupach prób i przed końcowym raportem: status, krótki Actual, dowód, faktycznie sprawdzona wersja i ewentualne QA-ID. Nowe scenariusze odkryte podczas eksploracji dopisuj z kolejnymi ID. Nie usuwaj nieudanych ani niewykonanych prób, nie zmieniaj Expected po fakcie, żeby uzyskać PASS. Jeśli oczekiwanie wymaga korekty, zapisz przyczynę i źródło decyzji oraz ponów próbę. Ten komentarz pozwala użytkownikowi zobaczyć zarówno wykonane scenariusze, jak i luki; końcowy raport pozostaje osobnym komentarzem tylko z problemami.
+Uzupełniaj ten sam plik qa-plan.md po logicznych grupach prób i przed końcowym raportem: status, krótki Actual, dowód, faktycznie sprawdzona wersja i ewentualne QA-ID. Nowe scenariusze odkryte podczas eksploracji dopisuj z kolejnymi ID. Nie usuwaj nieudanych ani niewykonanych prób, nie zmieniaj Expected po fakcie, żeby uzyskać PASS. Jeśli oczekiwanie wymaga korekty, zapisz przyczynę i źródło decyzji oraz ponów próbę. Ten plan pozwala użytkownikowi zobaczyć wykonane scenariusze i luki; końcowy qa-report.md zawiera problemy lub krótki wynik sukcesu.
 
 ## 4. Testuj cel, potem szukaj niespodzianek
 
-Prowadź wyniki zgodnie z opublikowanym planem. Lokalna kopia robocza pomaga przy utracie połączenia, ale nie zastępuje aktualizacji komentarza.
+Prowadź wyniki w kanonicznym lokalnym qa-plan.md. Zapisuj postęp po grupie prób, tak aby wznowienie nie wymagało pamięci rozmowy.
 
 1. Przejdź pełną podstawową ścieżkę użytkownika. Sprawdź rezultat i utrwalenie po odświeżeniu lub ponownym otwarciu, nie tylko komunikat sukcesu.
 2. Sprawdź wszystkie kryteria ticketa możliwe do zweryfikowania w przeglądarce. Pozostałe nazwij jako poza zakresem browser QA; nie zaliczaj ich na podstawie kodu lub deklaracji autora.
@@ -88,8 +88,6 @@ Jeden problem = jeden wpis. Uporządkuj od największego wpływu. Wspólny konte
 
 ## 6. Publikacja i retest
 
-Domyślnie wywołanie tego skilla dla wskazanego issue obejmuje publikację planu QA, aktualizację jego przebiegu oraz osobny komentarz końcowy testera w tym issue. W czacie zwróć wynik i linki do obu komentarzy. Polecenie „tylko lokalnie”, „bez zapisu” lub ograniczenie dostępu ma pierwszeństwo. Nie twórz osobnych bug issues, PR ani wiadomości do innych osób. Nie zmieniaj statusu Project, wymagań ani checkboxów osobistego odbioru.
+Plan/przebieg zapisuj w qa-plan.md, a końcowy raport testera w qa-report.md obok niego. Historia Git zachowuje poprzednie wersje. Publikacja do komentarzy jest opcjonalna i wymaga objęcia jej zleceniem lub polityką; samo wskazanie issue nie nadaje nowych uprawnień. Raport jest autorstwa roli testera, nie podsumowaniem implementatora. Zachowaj ustalenia i rzeczywistą tożsamość autora. Nie twórz bug issues/PR ani nie zmieniaj trackera przy okazji.
 
-Komentarz końcowy zatytułuj **„Raven Manual QA — raport testera”**, oznacz rolę „Tester: raven-manual-qa” i dodaj link do planu tej rundy. Użyj markera `<!-- raven:manual-qa issue=OWNER/REPO#NUMBER round=N -->` z rzeczywistą tożsamością. Raport jest autorstwa roli testera, a nie podsumowaniem implementatora. GitHub wyświetli konto rzeczywiście użyte do publikacji; nie podszywaj się pod osobne konto człowieka lub bota i nie konfiguruj go przy okazji. Jeśli zapis wykonuje koordynator, zachowuje treść i autorstwo roli testera bez zmiany ustaleń. Przy sukcesie komentarz zawiera krótki komunikat, przy problemach tylko raport defektów, przy blokadzie także krótkie ograniczenie. Odczytaj wynik zapisu. Po timeout sprawdź marker i rundę każdego komentarza, zanim ponowisz publikację. Edytuj tylko własny komentarz planu bieżącej rundy; zachowuj dopiski użytkownika. Gdy publikacja planu jest niedostępna, kontynuuj wykonalne testy z lokalnym planem i zgłoś brak synchronizacji; nie deklaruj zapisania wyniku w issue. Błąd publikacji zgłoś oddzielnie od wyniku QA; gotowy raport oddaj w czacie.
-
-Retest wykonuj na zlecenie. Utwórz nową rundę planu z linkiem do poprzedniej, zachowaj ID powtarzanych scenariuszy i rozpocznij ich wyniki od NOT RUN. Nie przenoś PASS na nową wersję aplikacji. Odczytaj poprzedni raport i wskazaną poprawioną wersję, powtórz reprodukcje i pobliskie regresje. Zachowaj ID problemów, które pozostały; nowe otrzymują kolejne ID. Nowa runda jest osobnym komentarzem, nie nadpisuje historii. Raport końcowy nadal zawiera tylko aktualne problemy; jeśli wszystkie sprawdzone problemy ustąpiły i retest jest kompletny, oddaj krótki komunikat sukcesu. Nie naprawiaj kodu i nie uruchamiaj implementatora automatycznie.
+Retest wykonuj na zlecenie. Utwórz nową rundę planu z linkiem do poprzedniej, zachowaj ID powtarzanych scenariuszy i rozpocznij ich wyniki od NOT RUN. Nie przenoś PASS na nową wersję aplikacji. Odczytaj poprzedni raport i wskazaną poprawioną wersję, powtórz reprodukcje i pobliskie regresje. Zachowaj ID problemów, które pozostały; nowe otrzymują kolejne ID. Nowa runda aktualizuje raport z zachowaniem poprzedniej wersji w Git. Raport końcowy nadal zawiera tylko aktualne problemy; jeśli wszystkie sprawdzone problemy ustąpiły i retest jest kompletny, oddaj krótki komunikat sukcesu. Nie naprawiaj kodu i nie uruchamiaj implementatora automatycznie.

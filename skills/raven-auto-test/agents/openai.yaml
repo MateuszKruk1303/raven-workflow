@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Auto Test"
-  short_description: "Testy, uruchomienie i niezależne review"
-  default_prompt: "Użyj $raven-auto-test dla oddanej implementacji: napisz i uruchom testy, następnie wykonaj niezależne review z pętlą poprawek testów i zapisz raporty w GitHubie."
+  short_description: "Osobne testy z niezależnym review"
+  default_prompt: "Użyj $raven-auto-test. Wykonaj wskazane zlecenie testów z niezależnym review i ograniczoną pętlą napraw, zapisując raporty w repo."

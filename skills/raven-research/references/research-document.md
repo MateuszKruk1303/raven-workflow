@@ -1,6 +1,6 @@
 # Research document format
 
-Read when writing or checking a research comment in the change issue. Publish the document below inside that comment, preceded by its stable Raven marker and change URL. No canonical research.md is written to the repository. Populate metadata from observed values;
+Read when writing or checking local `context/changes/<id>/research.md`. Git preserves history; do not create duplicate issue reports. Populate metadata from observed values;
 if unavailable, mark it unknown rather than inventing it. Use `status: complete`
 only when the agreed scope is answered; use `status: partial` for material missing
 evidence and explain the gap. Keep sections concise; mark irrelevant history or
@@ -60,9 +60,9 @@ last_updated_by: [Researcher name]
 
 ## Historical Context (from prior changes)
 
-[Relevant insights from linked current and closed change issues, with issue/comment URLs]
+[Relevant insights from referenced current and historical changes, with file/commit or source links]
 
-- [Change issue/comment URL] - Historical decision about X
+- [Change file/commit/source link] - Historical decision about X
 - [Research comment URL] - Past exploration of Y
 
 ## Options and Recommendation
@@ -71,11 +71,11 @@ last_updated_by: [Researcher name]
 
 ## Planning Handoff
 
-[Same change URL; source requirements revision/hash; inspected code SHA and dirty state; architecture constraints; what the planner can reuse, what needs revalidation, risks and unresolved choices. No implementation phases or task creation.]
+[Same change path; source requirements revision/hash; inspected code SHA and dirty state; architecture constraints; what the planner can reuse, what needs revalidation, risks and unresolved choices. No implementation phases or task creation.]
 
 ## Related Research
 
-[Links to research comments in related change issues]
+[Links to research files in related changes]
 
 ## Open Questions
 
@@ -114,4 +114,4 @@ either file and again on the persisted bytes:
       checklist).
 
 
-The report is persisted in GitHub. Temporary research.md/facts.json inputs are permitted only for the consistency checker; neither becomes a project artifact. For content exceeding a comment limit use linked, numbered parts with a manifest and no omitted findings.
+The report is persisted in Git. Requested facts.json can live next to research.md; temporary checker inputs need not become artifacts. Never truncate required evidence to fit a comment.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Test"
-  short_description: "Manualny etap testów Raven z GitHubem"
-  default_prompt: "Użyj $raven-test dla wskazanego change, zachowując wspólne źródła wymagań i manualne decyzje o kolejnych etapach."
+  short_description: "Testy i ochrona before-change"
+  default_prompt: "Użyj $raven-test. Wykonaj wskazany zakres trwałych testów lub ochrony before-change, zapisując lokalne dowody."

@@ -1,23 +1,14 @@
 ---
 name: raven-rule-review
-description: Oceń AGENTS.md lub inny plik instrukcji AI w pięciu wymiarach. Raport z konkretnymi poprawkami w GitHubie; bez automatycznego przepisywania zasad.
+description: "Oceń AGENTS.md lub inny plik instrukcji AI w pięciu wymiarach. Zapisz raport lokalnie; bez automatycznego przepisywania zasad."
 ---
 
 # Raven Rule Review
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-## Procedury własne
+Przeczytaj [procedurę](references/procedures/rule-review/procedure.md) i [kontrakt raportów](../raven-repo-map/references/github-brownfield.md). Zachowaj pięć kontroli: długość, fragmenty kodu/config, precyzja, nadmiarowa wiedza i kolejność, z wyjątkami, scorecard, path:line i Top 3 actions.
 
-Przed wykonaniem przeczytaj lokalne procedury Raven: [rule-review](references/procedures/rule-review/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
+Oceniaj wskazany plik i niezbędny kontekst repo. Raport zapisz jako `rule-review.md` w change albo context/foundation, z hashem pliku, SHA/dirty state i konkretnymi poprawkami. Prywatnych globalnych instrukcji nie kopiuj do publikowanego repo bez zgody; przedstaw wtedy raport w rozmowie lub uzgodnionym miejscu.
 
-
-Przeczytaj pełny lokalny [rule-review](references/procedures/rule-review/procedure.md) oraz [kontrakt raportów brownfield](../raven-repo-map/references/github-brownfield.md).  Wykonaj jego pełne pięć kontroli: długość, fragmenty kodu/config, precyzja, nadmiarowa wiedza, kolejność. Zachowaj progi, wyjątki, scorecard, wskazania path:line i Top 3 actions. Każdy wskazany plik oceniaj osobno.
-
-Input to konkretny plik instrukcji i miejsce raportu GH. Gdy pliku brak lub ścieżka jest niejednoznaczna, ustal ją zamiast zgadywać. Przeczytaj cały plik i niezbędny kontekst repo. Oceniaj przydatność instrukcji dla agenta, nie preferencje architektoniczne autora.
-
-Wywołanie upoważnia do raportu `raven:rule-review` w wybranym change lub dedykowanym issue instrukcji, z SHA/dirty state i hashem ocenianego pliku. Nie kopiuj do GH prywatnych globalnych instrukcji ani treści spoza wskazanego projektu bez zlecenia ich publikacji; wtedy oddaj raport lokalnie w rozmowie i zaznacz brak publikacji.
-
-Domyślnie nie edytuj pliku. Dla źródłowej kontroli kolejności przedstaw konkretną propozycję; jeśli użytkownik nie zlecił już jej wykonania, wymagaj decyzji zgodnie z raven-rule-review. Sam review nie upoważnia do usuwania lub przepisywania zasad. Po zleceniu zmiany kolejności zachowaj ich treść, sprawdź diff i zapisz decyzję oraz wynik. Nie łącz tego automatycznie z raven-agents-md.
-
-Raport i link kończą etap. Nie otwieraj PR ani nie zmieniaj statusu pracy na Done.
+Domyślnie nie edytuj instrukcji. Jeśli użytkownik już zlecił poprawki, wykonaj je w zakresie i sprawdź diff; samo review nie upoważnia do przepisywania zasad. Nie otwieraj PR ani nie aktualizuj trackera poza autoryzacją.

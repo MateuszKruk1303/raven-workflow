@@ -1,39 +1,16 @@
 ---
 name: raven-plan
-description: Przygotuj lub popraw plan change w GitHubie interaktywnie i bez automatycznego plan-review. Manualny etap workflow Raven; dla połączonego planowania i review użyj raven-auto-plan.
+description: "Przygotuj lub popraw lokalny plan change w repo. Manualne planowanie; niezależne review osobno albo przez raven-auto-plan."
 ---
 
 # Raven Plan
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
+Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-## Procedury własne
+Przeczytaj [granice change](../raven-workflow/references/change-scope.md) oraz [procedurę planowania](references/procedures/plan/procedure.md). Planista pracuje na wymaganiach i realnym kodzie; nie implementuje produktu.
 
-Przed wykonaniem przeczytaj lokalne procedury Raven: [plan](references/procedures/plan/procedure.md). Ich referencje i helpery znajdują się obok. To kompletna implementacja etapu; nie odczytuj innej instalacji skilli. Przekazując zadanie agentowi, przekaż te pliki oraz kontrakt GH. Poniższe nazwy etapów oznaczają te procedury; nie wywołuj rekurencyjnie bieżącego skilla.
+Przyjmij opis, change ID, lokalny plan, branch, PR albo wskazane źródło wymagań. Zachowaj istniejące decyzje i postęp. Najpierw oceń jeden osobno planowalny, weryfikowalny i mergeowalny rezultat; zbyt szeroki zakres wraca do propozycji podziału przed szczegółowym researchem. Zlecenie planu jednego change nie upoważnia do reorganizacji całej kolejki.
 
+Zapisz plan według [szablonu](references/procedures/plan/references/plan-templates.md). Obejmij testy wraz z implementacją, nie odkładaj ich do obowiązkowego etapu po odbiorze. Rozstrzygnij wymagania, granice i istotne decyzje; pozostaw wykonawcy detale mieszczące się w kontrakcie.
 
-Wykonaj lokalną procedurę planowania z [manualnym adapterem GitHub](references/manual-github.md). Zachowaj analizę kodu, skalowanie i budżet pytań, wywiad, akceptację struktury, szablony, fazy, Intent + Contract, Progress oraz zapis/wznawianie planu. Nie zastępuj ich procedurą raven-auto-plan.
-
-## Wejście i tożsamość
-
-Przyjmij change z GH i przeczytaj wymagania, taski, komentarze, research, decyzje i lokalne lessons. Issue z roadmapy jest już tożsamością zmiany — nie wymagaj osobnego new ani lokalnego change.md. Przy jawnym zleceniu nowej zmiany zapewnij jej tożsamość w GH zgodnie z raven-roadmap, po sprawdzeniu duplikatów. Nie uruchamiaj całej roadmapy od nowa. Nie twórz kopii istniejącego ticketa.
-
-Odtwórz adapter Raven i wykonaj procedurę. Zwykłe czytanie kodu pozostaje analizą planistyczną; osobny raven-research wymaga decyzji użytkownika. Tryb save zapisuje już uzgodniony plan, nie restartuje wywiadu.
-
-## Publikacja i zakończenie
-
-Opublikuj pełną część przekrojową i brief w rodzicu, fazy jako kontrakty sub-issues z Progress i zależnościami. Zachowaj ID oraz rozpoczętą pracę. Po spójnym odczycie publikuj kompletny snapshot vN z fingerprintem. Zachowaj rozróżnienie bramek implementacji, manualnego odbioru i późniejszych testów/checków przed merge.
-
-Zakończ na planie: pokaż zwięzły zakres, decyzje, wersję, link i stan publikacji. Nie uruchamiaj raven-plan-review ani implementacji automatycznie. Plan pozostaje do osobnego review; nie ustawiaj Ready na podstawie samego zapisu. Zlecone poprawki planu publikują nową wersję bez automatycznego review. Historyczna akceptacja nie obejmuje nowej wersji.
-
-## Osobny obowiązkowy etap trwałych testów
-
-Po oddaniu implementacji i sprawdzeniu użytkownika, przed PR, workflow wymaga raven-test. Plan wydziela odpowiednie fazy unit/integration/E2E dla tego etapu. Implementacja wykonuje swoje bieżące bramki, lecz nie realizuje odroczonych faz trwałych testów i nie uruchamia raven-test automatycznie. W handoffie wskaż go jako wymagany następny etap przed publikacją PR.
-
-Etap trwałych testów ma dwa warianty: raven-test → osobno raven-test-review (manual) albo raven-auto-test (pisanie, uruchomienie, niezależne review i poprawki wad testów w jednym cyklu). Oba używają tego samego change i źródeł; wybór należy do użytkownika. Samo ukończenie manualnego raven-test nie oznacza ukończenia review testów.
-
-## Przejęcie researchu i architektury
-
-Jeśli przygotowanie rozpoczął `raven-research`, kontynuuj to samo change i jego Preparing. Tożsamość jest już zapewniona; nie twórz drugiego issue ani nie powtarzaj new. Przed wywiadem odczytaj raporty wskazane w indeksie oraz kolejne rundy i decyzje. Porównaj ich wejściowe wymagania, SHA/dowody i dirty state z bieżącym kodem. Ponownie badaj tylko zmienione lub sprzeczne ustalenia; rekomendacji nie traktuj jako decyzji użytkownika.
-
-W planie/briefie podaj research ID/URL, przejęte wnioski, rozstrzygnięcia i pozostałe do weryfikacji ryzyka. Przeczytaj `context/foundation/architecture.md`, jeśli istnieje, i respektuj uzgodnione zasady; propozycje i odroczenia nie są zatwierdzonymi kontraktami. Materiały researchu i architekturę przekaż także delegowanemu planiście/reviewerowi. Sam research nie zastępuje planu, review ani akceptacji użytkownika.
+Oddaj wynik, fingerprint, wymagające decyzji kwestie i handoff do raven-plan-review. Nie przedstawiaj własnej samokontroli jako niezależnego review. Nie twórz task issues ani snapshotów GH. Przy ograniczeniu zapisu zastosuj [utrwalenie](references/procedures/plan/references/plan-persistence.md).

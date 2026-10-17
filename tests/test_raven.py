@@ -108,85 +108,118 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Wrong role'):
             self.check()
 
-    def test_functional_stage_cannot_disappear(self):
-        self.contract['stages'] = [s for s in self.contract['stages'] if s['id'] != 'functional_test']
+    def stage(self, name):
+        return next(s for s in self.contract['stages'] if s['id'] == name)
+
+    def test_tests_are_produced_with_implementation(self):
+        self.check()
+        self.assertIn('test_evidence', self.stage('implement')['produces'])
+        self.stage('implement')['produces'].remove('test_evidence')
+        with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
+            self.check()
+
+    def test_review_requires_tests_and_requirements(self):
+        for artifact in ('test_evidence', 'plan_contract'):
+            with self.subTest(artifact=artifact):
+                original = self.stage('code_review')['requires'][:]
+                self.stage('code_review')['requires'].remove(artifact)
+                with self.assertRaisesRegex(ValueError, 'must require'):
+                    self.check()
+                self.stage('code_review')['requires'] = original
+
+    def test_standard_cycle_has_no_mandatory_tracker_or_late_test_stage(self):
+        self.check()
+        self.assertEqual({s['id'] for s in self.contract['stages']},
+                         {'plan', 'plan_review', 'pr', 'implement', 'code_review', 'merge'})
+        self.assertEqual(self.stage('merge')['produces'], ['merged_pr'])
+        self.assertNotIn('pull_request', self.stage('implement')['requires'])
+        self.assertTrue(self.stage('pr')['side_operation'])
+
+    def test_local_implementation_does_not_require_publication(self):
+        self.stage('implement')['requires'].append('pull_request')
+        with self.assertRaisesRegex(ValueError, 'Local implementation'):
+            self.check()
+
+    def test_publication_can_start_before_tests(self):
+        self.assertEqual(set(self.stage('pr')['requires']),
+                         {'plan_contract', 'publication_requested'})
+        self.assertLess(self.contract['stages'].index(self.stage('pr')),
+                        self.contract['stages'].index(self.stage('implement')))
+
+    def test_merge_stage_cannot_disappear(self):
+        self.contract['stages'].remove(self.stage('merge'))
         with self.assertRaisesRegex(ValueError, 'exactly'):
             self.check()
 
-    def test_auto_review_cannot_precede_functional_check(self):
+    def test_review_before_implementation_is_rejected(self):
         stages = self.contract['stages']
-        stages[3], stages[4] = stages[4], stages[3]
+        a, b = stages.index(self.stage('implement')), stages.index(self.stage('code_review'))
+        stages[a], stages[b] = stages[b], stages[a]
         with self.assertRaisesRegex(ValueError, 'Unmet handoff'):
             self.check()
 
-    def test_review_cannot_omit_its_input(self):
-        next(s for s in self.contract['stages'] if s['id'] == 'test_review')['requires'] = []
+    def test_merge_cannot_treat_publication_as_readiness(self):
+        self.stage('merge')['requires'] = ['pull_request', 'merge_requested']
         with self.assertRaisesRegex(ValueError, 'must require'):
             self.check()
 
-    def test_standard_cycle_includes_ordered_merge_and_board_finalization(self):
-        self.check()
-        self.assertEqual(self.contract['stages'][-2]['produces'], ['merged_pr'])
-        self.assertEqual(self.contract['stages'][-1]['produces'], ['board_done'])
-
-    def test_finalization_stage_cannot_disappear(self):
-        for stage_id in ('merge', 'board_finalize'):
-            with self.subTest(stage=stage_id):
-                mutated = copy.deepcopy(self.contract)
-                mutated['stages'] = [s for s in mutated['stages'] if s['id'] != stage_id]
-                with self.assertRaisesRegex(ValueError, 'exactly'):
-                    raven.validate_process(mutated, set(mutated['skills']))
-
-    def test_board_cannot_precede_merge(self):
-        stages = self.contract['stages']
-        stages[-2], stages[-1] = stages[-1], stages[-2]
-        with self.assertRaisesRegex(ValueError, 'Unmet handoff'):
-            self.check()
-
-    def test_board_cannot_treat_publication_as_merge(self):
-        self.contract['stages'][-1]['requires'] = ['pull_request']
-        with self.assertRaisesRegex(ValueError, 'must require.*merged_pr'):
-            self.check()
-
     def test_publication_cannot_grant_merge_authorization(self):
-        self.contract['stages'][-3]['produces'].append('merge_requested')
+        self.stage('pr')['produces'].append('merge_requested')
         with self.assertRaisesRegex(ValueError, 'external acceptance'):
             self.check()
 
-    def test_merge_requires_its_own_authorization(self):
-        self.contract['stages'][-2]['requires'] = ['pull_request', 'publication_requested']
-        with self.assertRaisesRegex(ValueError, 'must require.*merge_requested'):
-            self.check()
+    def test_merge_requires_its_own_authorization_and_current_evidence(self):
+        for artifact in ('merge_requested', 'ci_passed', 'user_acceptance', 'test_evidence', 'code_review', 'plan_accepted'):
+            with self.subTest(artifact=artifact):
+                original = self.stage('merge')['requires'][:]
+                self.stage('merge')['requires'].remove(artifact)
+                with self.assertRaisesRegex(ValueError, 'must require'):
+                    self.check()
+                self.stage('merge')['requires'] = original
 
     def test_merge_evidence_cannot_be_initial_or_pending(self):
         self.contract['initial_artifacts'].append('merged_pr')
         with self.assertRaisesRegex(ValueError, 'External artifacts'):
             self.check()
         self.contract['initial_artifacts'].remove('merged_pr')
-        self.contract['stages'][-2]['produces'] = ['merge_queued']
+        self.stage('merge')['produces'] = ['merge_queued']
         with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
             self.check()
 
     def test_merge_cannot_also_claim_board_done(self):
-        self.contract['stages'][-2]['produces'].append('board_done')
+        self.stage('merge')['produces'].append('board_done')
         with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
             self.check()
 
-    def test_both_finalization_steps_belong_to_merge_skill(self):
-        for index in (-2, -1):
-            with self.subTest(stage=self.contract['stages'][index]['id']):
-                mutated = copy.deepcopy(self.contract)
-                mutated['stages'][index]['skills'] = ['raven-pr']
-                with self.assertRaisesRegex(ValueError, 'owned by raven-merge'):
-                    raven.validate_process(mutated, set(mutated['skills']))
+    def test_merge_belongs_to_merge_skill(self):
+        self.stage('merge')['skills'] = ['raven-pr']
+        with self.assertRaisesRegex(ValueError, 'owned by raven-merge'):
+            self.check()
 
-    def test_finalization_is_required_in_manual_and_auto(self):
-        for index in (-2, -1):
-            with self.subTest(stage=self.contract['stages'][index]['id']):
-                mutated = copy.deepcopy(self.contract)
-                mutated['stages'][index]['modes'] = ['auto']
-                with self.assertRaisesRegex(ValueError, 'Wrong modes'):
-                    raven.validate_process(mutated, set(mutated['skills']))
+    def test_manual_auto_share_gates(self):
+        self.stage('merge')['modes'] = ['auto']
+        with self.assertRaisesRegex(ValueError, 'Wrong modes'):
+            self.check()
+
+    def test_git_first_invariants_cannot_restore_mandatory_tracker(self):
+        self.contract['invariants']['mandatory_task_issues'] = True
+        with self.assertRaisesRegex(ValueError, 'invariants'):
+            self.check()
+
+    def test_contract_does_not_allow_github_as_plan_database(self):
+        self.contract['source_of_truth']['change'] = 'github_issue'
+        with self.assertRaisesRegex(ValueError, 'sources of truth'):
+            self.check()
+
+    def test_review_covers_product_and_tests(self):
+        self.stage('code_review')['covers'] = ['code']
+        with self.assertRaisesRegex(ValueError, 'must cover'):
+            self.check()
+
+    def test_legacy_schema_is_rejected(self):
+        self.contract['schema_version'] = 1
+        with self.assertRaisesRegex(ValueError, 'Unsupported schema_version'):
+            self.check()
 
 
 class SyncTests(unittest.TestCase):

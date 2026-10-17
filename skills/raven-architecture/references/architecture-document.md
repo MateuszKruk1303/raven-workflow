@@ -10,7 +10,7 @@ Frontmatter:
 
 ## Cel i granice
 
-Krótki opis produktu, źródła wymagań, ograniczenia oraz co dokument rozstrzyga. Linki do PRD, shape, aktualnego Project i istotnych researchów/decyzji. Nie kopiuj całej roadmapy ani statusów tasków.
+Krótki opis produktu, źródła wymagań, ograniczenia oraz co dokument rozstrzyga. Linki do PRD, shape, aktualnej roadmapy lub wskazanego trackera i istotnych researchów/decyzji. Nie kopiuj całej roadmapy ani statusów tasków.
 
 ## Obecny i docelowy system
 

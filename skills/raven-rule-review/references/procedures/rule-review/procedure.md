@@ -2,7 +2,7 @@
 
 To część implementacji skilla Raven, nie osobna komenda. Czytaj ją wraz z nadrzędnym SKILL.md, który określa tryb manual/auto i uprawnienia. Wszystkie szablony, referencje i skrypty są dostarczone lokalnie w tym katalogu. Nie wyszukuj ani nie instaluj innych pakietów workflow.
 
-**Obowiązujące zasady wykonania:** [kontrakt GitHub](../../../../raven-auto-plan/references/github-contract.md). Ścieżki change/plan/research/review i strategii testów w tej procedurze oznaczają kopie robocze w artifact_dir poza repo, odtwarzane z GitHuba. Kod i testy pozostają w repo_root. Lokalne wykrywanie stanu zastąp odczytem issues, snapshotów i checkpointów. Pomijaj lokalną synchronizację roadmapy, archiwizację, staging kontekstu i commit epilogu dokumentacji; nie wykonuj ich także przez helpery. Status Done wymaga potwierdzonego merge i odczytu właściwego Project; osobno zlecony raven-merge jawnie finalizuje board zgodnie ze wspólnym kontraktem GitHub. Odwołania do publikacji PR nie upoważniają do audytu, zamykania issues ani automatycznego wywołania tego etapu. Zakończenie procedury oddaje wynik nadrzędnemu skillowi; jego reguły decydują o dalszym review i handoffie. Osobny research jest decyzją użytkownika. Tryb before-change i aktualne zasady review testów mają pierwszeństwo przed domyślną kolejnością testów.
+**Obowiązujące zasady wykonania:** [kontrakt pracy Git-first](../../../../raven-workflow/references/change-contract.md). Plan, raporty i checkpoint są wersjonowanymi plikami repo. Testy powstają wraz z implementacją; dodatkowe osobne etapy wynikają ze zlecenia lub ryzyka. Publikacja zewnętrzna wymaga odpowiedniej autoryzacji.
 
 # Przegląd zasad Raven
 

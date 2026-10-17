@@ -2,7 +2,7 @@
 
 To część implementacji skilla Raven, nie osobna komenda. Czytaj ją wraz z nadrzędnym SKILL.md, który określa tryb manual/auto i uprawnienia. Wszystkie szablony, referencje i skrypty są dostarczone lokalnie w tym katalogu. Nie wyszukuj ani nie instaluj innych pakietów workflow.
 
-**Obowiązujące zasady wykonania:** [kontrakt GitHub](../../../../raven-auto-plan/references/github-contract.md). Ścieżki change/plan/research/review i strategii testów w tej procedurze oznaczają kopie robocze w artifact_dir poza repo, odtwarzane z GitHuba. Kod i testy pozostają w repo_root. Lokalne wykrywanie stanu zastąp odczytem issues, snapshotów i checkpointów. Pomijaj lokalną synchronizację roadmapy, archiwizację, staging kontekstu i commit epilogu dokumentacji; nie wykonuj ich także przez helpery. Status Done wymaga potwierdzonego merge i odczytu właściwego Project; osobno zlecony raven-merge jawnie finalizuje board zgodnie ze wspólnym kontraktem GitHub. Odwołania do publikacji PR nie upoważniają do audytu, zamykania issues ani automatycznego wywołania tego etapu. Zakończenie procedury oddaje wynik nadrzędnemu skillowi; jego reguły decydują o dalszym review i handoffie. Osobny research jest decyzją użytkownika. Tryb before-change i aktualne zasady review testów mają pierwszeństwo przed domyślną kolejnością testów.
+**Obowiązujące zasady wykonania:** [kontrakt pracy Git-first](../../../../raven-workflow/references/change-contract.md). Plan, raporty i checkpoint są wersjonowanymi plikami repo. Testy powstają wraz z implementacją; dodatkowe osobne etapy wynikają ze zlecenia lub ryzyka. Publikacja zewnętrzna wymaga odpowiedniej autoryzacji.
 
 # Frame: Podważ założenia przed planowaniem
 
@@ -82,9 +82,9 @@ Jeśli użytkownik nie podał jasnych początkowych założeń („coś wydaje s
 
 ### Krok 1.5: Pytania doprecyzowujące przed delegowaniem
 
-Ten krok jest wykonywany zawsze. Przed zbudowaniem mapy wymiarów (Krok 2) lub delegowaniem równoległych podagentów (Krok 3), zatrzymaj się na jedną rundę pytań doprecyzowujących przy każdym wywołaniu. Celem jest usunięcie niejednoznaczności dotyczących *obserwacji i zakresu* — „która z tych pozycji jest głównym problemem?”, „czy to jedna obserwacja, czy kilka?”, „czy obserwowalny element jest pojedynczym objawem czy klasą objawów?” — aby mapa wymiarów została zbudowana wokół skupionej obserwacji, a nie wielowątkowej listy zadań.
+Ten krok dotyczy rzeczywiście nierozstrzygniętej obserwacji lub zakresu. Wykorzystaj wcześniejsze odpowiedzi i pomiń go, gdy dane są jednoznaczne. Celem jest usunięcie niejednoznaczności dotyczących *obserwacji i zakresu* — „która z tych pozycji jest głównym problemem?”, „czy to jedna obserwacja, czy kilka?”, „czy obserwowalny element jest pojedynczym objawem czy klasą objawów?” — aby mapa wymiarów została zbudowana wokół skupionej obserwacji, a nie wielowątkowej listy zadań.
 
-Zadaj użytkownikowi **2–3 pytania** w jednej rundzie. Każda opcja opisuje obserwację lub pozycję zakresu — co użytkownik faktycznie widzi albo który fragment pracy chce najpierw zbadać — nigdy przyczynę, podejście ani poprawkę. Zawsze uwzględniaj opcję „Nie jestem pewien / jeszcze ich nie rozdzieliłem”, zgodnie z zasadą traktowania pewności jako sygnału z Kroku 4.
+Zadaj tylko potrzebne pytania, zwykle 1–3 w jednej rundzie. Każda opcja opisuje obserwację lub pozycję zakresu — co użytkownik faktycznie widzi albo który fragment pracy chce najpierw zbadać — nigdy przyczynę, podejście ani poprawkę. Zawsze uwzględniaj opcję „Nie jestem pewien / jeszcze ich nie rozdzieliłem”, zgodnie z zasadą traktowania pewności jako sygnału z Kroku 4.
 
 Te pytania są związane zabezpieczeniem nr 4 poniżej („Pytania zawężające ≠ pytania o rozwiązanie”). Pytania przed delegowaniem opisują obserwacje lub pozycje zakresu, nigdy przyczyny ani poprawki. Jeśli zauważysz, że tworzysz opcję proponującą poprawkę lub podejście, wkroczyłeś na obszar /raven-plan — zatrzymaj się i przepisz ją jako obserwację.
 
@@ -169,10 +169,10 @@ Jeśli testowanie pod presją wzmacnia wiodącą hipotezę, ustal poziom pewnoś
 Przed zapisaniem ustal folder zmiany:
 
 - Jeśli wywołano jako `/raven-frame <change-id>` i istnieje `context/changes/<change-id>/`, zapisz w nim.
-- W przeciwnym razie utwórz kebab-case `<change-id>` na podstawie obserwacji i utwórz folder + `change.md` (odzwierciedlając semantykę `/raven-plan`) przed zapisaniem.
+- W przeciwnym razie utwórz kebab-case `<change-id>` na podstawie obserwacji i utwórz folder przed zapisaniem, bez obowiązku change.md lub issue.
 - Odmów, jeśli rozwiązana ścieżka zaczyna się od `context/archive/` — wypisz: „This change is archived. Open a new change with `/raven-plan` instead.” i ZATRZYMAJ się.
 
-Zaktualizuj `change.md`: ustaw `updated: <today>` i tylko wtedy, gdy obecny `status` to `new`, przejdź do `status: preparing`.
+Zachowaj istniejący plan i checkpoint; frame nie zmienia automatycznie kontraktu.
 
 Zapisz brief do `context/changes/<change-id>/frame.md` (jeden artefakt na zmianę).
 
