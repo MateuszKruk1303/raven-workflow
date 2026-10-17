@@ -1,158 +1,222 @@
-# Raven Workflow — cookbook
+# Raven Workflow
 
-Raven przechowuje plan, wymagania, checklistę i checkpoint w `context/changes/<id>/plan.md`. Kod, testy i dokumenty mają wspólną historię Git. GitHub Issues jest obowiązkowym trackerem tasków, właścicieli, stanu projektu i roadmapy. Jeden issue odpowiada jednemu change, a Project jest opcjonalnym widokiem. PR służy współpracy, review i CI. Testy powstają z implementacją, a jedno niezależne review ocenia wymagania, kod i testy.
+[Greenfield](#greenfield) · [Brownfield](#brownfield) · [Realizacja taska — manual](#realizacja-taska--manual) · [Skróty auto](#skróty-auto)
 
-## Start i wznowienie
-
-Wskaż repo i change ID, branch, lokalny plan albo PR. Agent zaczyna od [routera](skills/raven-workflow/SKILL.md), instrukcji projektu i krótkiego checkpointu. Nie potrzebuje historii rozmowy ani całego archiwum komentarzy GH. Nowy change domyślnie używa osobnego brancha w aktualnym checkout. Worktree służy pracy równoległej, potrzebie izolacji lub wyraźnemu życzeniu użytkownika; wznowienie zachowuje istniejący branch i katalog.
-
-> Użyj raven-workflow. Sprawdź lokalny change C-03 i wskaż następny krok, bez rozpoczynania implementacji.
-
-[Kontrakt pracy](skills/raven-workflow/references/change-contract.md) określa źródła prawdy, zgodę i dowody. Akceptacja dotyczy fingerprintu kontraktu (wymagania, podejście, kroki i testy). Zmiana checkboxa lub checkpointu nie unieważnia zgody; zmiana kontraktu wymaga ponownej decyzji. Planowanie/review pracują na Astra/high, implementacja i autor testów na Sol/low: [polityka ról](skills/raven-workflow/references/agent-policy.md).
+Diagramy czytaj od góry. `JEŚLI` oznacza krok warunkowy, `LUB` — wybór jednego skilla. Zaczęty task wznawiaj od zapisanego etapu.
 
 ## Greenfield
 
-Shape → PRD → architektura → stack → instrukcje repo, strategia testów i CI → roadmapa → cykl change. Wybierz jeden bootstrapper (Better T Stack, Medusa lub gotowy stack). Nie odtwarzaj istniejącego setupu. Roadmapa żyje w GitHub Issues; nie tworzymy lokalnej roadmapy ani drugiego backlogu. Przed pierwszym taskiem uzupełnij brakujące repo/tracking przez raven-github-setup.
-
-Diagram pokazuje kolejność wywołań od pomysłu do pierwszego dostarczonego taska, z wariantem **auto** dla planowania i implementacji. Węzły „lub” oznaczają wybór jednego skilla; gotowego setupu nie powtarzaj. Decyzje użytkownika są oznaczone osobno.
-
-```mermaid
-flowchart TB
-  G0["raven-workflow<br/>Ustal punkt startowy i brakujące przygotowanie"]
-  G1["raven-shape<br/>Dopracuj problem, odbiorców i zakres produktu"]
-  G2["raven-prd<br/>Zapisz wymagania i kryteria odbioru produktu"]
-  G3["raven-architecture<br/>Ustal przekrojowe decyzje architektoniczne"]
-  G4["raven-init-stack lub raven-medusa-ecommerce-init<br/>Uruchom wybrany szkielet i środowisko projektu"]
-  G5["raven-agents-md lub raven-md<br/>Przygotuj instrukcje pracy agentów w repo"]
-  G6["raven-test-plan<br/>Ustal ryzyka, strategię testów i sposób weryfikacji"]
-  G7["raven-github-setup<br/>Przygotuj repo GH, tracking issues i politykę publikacji"]
-  G8["raven-hooks<br/>Skonfiguruj CI dla właściwych kontroli projektu"]
-  G9["raven-roadmap<br/>Utwórz taski w GH i ustal zależności oraz kolejność"]
-  G10["raven-auto-plan dla wybranego issue<br/>Ustaw In progress i wykonawcę; przygotuj plan z review"]
-  G11["Użytkownik<br/>Zaakceptuj konkretną wersję planu"]
-  G12["raven-pr — wcześnie, jeśli autoryzowany<br/>Opublikuj draft z planem i powiązaniem issue"]
-  G13["raven-auto-implement<br/>Zaimplementuj, dodaj testy, wykonaj review i poprawki"]
-  G14["raven-pr<br/>Zaktualizuj PR lub opublikuj go teraz; uruchom CI"]
-  G15["Użytkownik + CI<br/>Odbierz wynik, potwierdź kontrole i zleć merge"]
-  G16["raven-merge<br/>Zmerguj sprawdzony PR, potem zamknij issue jako Done"]
-  G0 --> G1 --> G2 --> G3 --> G4 --> G5 --> G6 --> G7 --> G8 --> G9 --> G10 --> G11 --> G12 --> G13 --> G14 --> G15 --> G16
+```text
+raven-workflow
+Ustal punkt startowy i brakujące przygotowanie
+│
+▼
+raven-shape
+Uzgodnij problem, odbiorców i zakres produktu
+│  zapis: context/foundation/shape-notes.md
+▼
+raven-prd
+Zapisz wymagania i kryteria odbioru
+│  zapis: context/foundation/prd.md
+▼
+raven-architecture
+Ustal decyzje przekrojowe i ograniczenia
+│  zapis: context/foundation/architecture.md
+▼
+raven-init-stack
+LUB raven-medusa-ecommerce-init
+Uruchom wybrany szkielet, bazę i środowisko
+│
+▼
+raven-agents-md LUB raven-md
+Zapisz instrukcje pracy agentów w AGENTS.md
+│
+▼
+raven-test-plan
+Ustal ryzyka, warstwy testów i sposób weryfikacji
+│  zapis: context/foundation/test-plan.md
+▼
+raven-github-setup
+Przygotuj repo GH, tracking i politykę publikacji
+│  Issues: taski i stan projektu
+│  Project: opcjonalny widok
+▼
+raven-hooks
+Skonfiguruj CI: lint, typy i właściwe testy
+│
+▼
+raven-roadmap
+Utwórz issues: wyniki, AC, zależności i kolejność
+│  bez planowania implementacji całego backlogu
+▼
+WYBIERZ ISSUE
+Przejdź do diagramu „Realizacja taska — manual”
 ```
-
-Draft można opublikować już podczas planowania, jeśli obejmuje go wcześniejsza zgoda; nie trzeba czekać na akceptację planu. Bez zgody na wczesną publikację pomiń pierwszy `raven-pr`. Dla kolejnego taska wróć do `raven-auto-plan`, wykorzystując gotowe przygotowanie projektu.
-
-| Krok | Dane wejściowe | Wynik i miejsce zapisu |
-| --- | --- | --- |
-| Shape | Pomysł, rozmowa i materiały użytkownika | Uzgodniony problem i zakres w `context/foundation/shape-notes.md`. |
-| PRD | Notatki i decyzje | Wymagania i kryteria produktu w `context/foundation/prd.md`. |
-| Architektura | PRD i ograniczenia | Decyzje potrzebne przed implementacją w `context/foundation/architecture.md`. |
-| Warsztat | Architektura i wybrany stack | Działający szkielet, instrukcje repo, strategia w `context/foundation/test-plan.md` i właściwe CI. |
-| Roadmapa | Wymagania oraz działający szkielet | Kolejność samodzielnie odbieralnych zmian; szczegółowy plan powstaje dopiero dla wybranego change. |
-
-> Użyj raven-shape. Chcę zbudować […]. Ustalmy problem, odbiorców i najmniejszy kompletny zakres produktu.
 
 ## Brownfield
 
-Zakres lub wznowienie → opcjonalna mapa nieznanego obszaru → rzeczywiste braki instrukcji/test strategy/CI → opcjonalny frame/research/domena → plan. Mała zmiana w znanym miejscu nie potrzebuje mapowania całego repo ani Project. Jira może pozostać źródłem wymagań. Issue GH śledzi wykonanie, linkując ticket i jego wersję, bez kopiowania treści.
-
-Diagram pokazuje wejście do istniejącego projektu i realizację jednego taska w wariancie **auto**. Kroki oznaczone „jeśli” wykonuj tylko przy wskazanej potrzebie. Przy wznowieniu `raven-workflow` kieruje od razu do brakującego etapu, bez ponownego przechodzenia całego diagramu.
-
-```mermaid
-flowchart TB
-  B0["raven-workflow<br/>Odczytaj wskazany task, repo i checkpoint; ustal etap"]
-  B1["raven-repo-map — jeśli obszar jest nieznany<br/>Rozpoznaj kod, zależności i istniejące testy"]
-  B2["raven-agents-md lub raven-md — jeśli brakuje instrukcji<br/>Uzupełnij AGENTS.md na podstawie repo"]
-  B3["raven-test-plan — jeśli brakuje strategii<br/>Ustal ryzyka i potrzebną ochronę testową"]
-  B4["raven-github-setup — jeśli brakuje konfiguracji GH<br/>Uzupełnij repo, tracking issues i politykę publikacji"]
-  B5["raven-hooks — jeśli brakuje właściwego CI<br/>Dodaj kontrole zgodne z istniejącym stackiem"]
-  B6["raven-frame — jeśli problem lub przyczyna są niejasne<br/>Zweryfikuj objaw, założenia i oczekiwany rezultat"]
-  B7["raven-research — jeśli brakuje wiedzy o kodzie<br/>Zbierz dowody potrzebne do zaplanowania zmiany"]
-  B8["raven-domain-distillation — jeśli model domeny jest niejasny<br/>Porównaj język wymagań z istniejącym kodem"]
-  B9["raven-architecture — jeśli potrzebna jest decyzja przekrojowa<br/>Ustal podejście i ograniczenia zmiany"]
-  B10["raven-roadmap — jeśli zlecono uporządkowanie kolejki<br/>Ustal taski GH i zależności; dla źródeł Jira użyj raven-jira-roadmap"]
-  B11["raven-auto-plan dla wybranego issue<br/>Ustaw In progress i wykonawcę; przygotuj plan z review"]
-  B12["Użytkownik<br/>Zaakceptuj konkretną wersję planu"]
-  B13["raven-pr — wcześnie, jeśli autoryzowany<br/>Opublikuj draft z planem i powiązaniem issue"]
-  B14["raven-auto-implement<br/>Zmień kod wraz z testami; wykonaj review i poprawki"]
-  B15["raven-pr<br/>Zaktualizuj PR lub opublikuj go teraz; uruchom CI"]
-  B16["Użytkownik + CI<br/>Odbierz wynik, potwierdź kontrole i zleć merge"]
-  B17["raven-merge<br/>Zmerguj sprawdzony PR, potem zamknij issue jako Done"]
-  B0 --> B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7 --> B8 --> B9 --> B10 --> B11 --> B12 --> B13 --> B14 --> B15 --> B16 --> B17
+```text
+raven-workflow
+Odczytaj wskazany issue, repo, branch i checkpoint
+│
+├─ Task już rozpoczęty?
+│  Wróć do brakującego etapu realizacji taska.
+│  Nie powtarzaj przygotowania projektu.
+│
+▼
+JEŚLI obszar kodu jest nieznany
+raven-repo-map
+Rozpoznaj moduły, zależności i istniejące testy
+│
+▼
+JEŚLI warsztat ma braki — uzupełnij tylko brakujące
+├─ raven-agents-md LUB raven-md
+│  Instrukcje agentów w AGENTS.md
+├─ raven-test-plan
+│  Strategia testowania i ryzyka
+├─ raven-github-setup
+│  Repo GH, tracking issues i polityka publikacji
+└─ raven-hooks
+   CI dla istniejącego stacku
+│
+▼
+JEŚLI wymagania lub rozwiązanie są niejasne
+├─ raven-frame
+│  Oddziel objaw, przyczynę i proponowane rozwiązanie
+├─ raven-research
+│  Zbierz dowody z kodu dla konkretnych pytań
+├─ raven-domain-distillation
+│  Wyjaśnij rozbieżności modelu domeny
+└─ raven-architecture
+   Ustal potrzebne decyzje przekrojowe
+│  Dobierz potrzebne narzędzia, nie wszystkie.
+▼
+JEŚLI zlecono utworzenie lub zmianę kolejki
+raven-roadmap
+LUB raven-jira-roadmap — dla wymagań z Jira
+Ustal taski GH, ich zakres, zależności i kolejność
+│  Jira: źródło wymagań; GH: tracking wykonania
+▼
+WYBIERZ ISSUE
+Przejdź do diagramu „Realizacja taska — manual”
 ```
 
-Dla małego taska w znanym, przygotowanym repo przejdź od `raven-workflow` prosto do `raven-auto-plan`. Rozpoznanie prowadzone już w ramach zleconego planowania odbywa się po ustawieniu issue In progress. Wczesny draft podlega tej samej zasadzie co w greenfield: może powstać podczas planowania albo zostać pominięty do późniejszej publikacji.
+Dla znanego taska w przygotowanym repo przejdź bezpośrednio od `raven-workflow` do realizacji. Rozpoznanie będące częścią zleconego planowania odbywa się już po oznaczeniu issue jako In progress.
 
-W obu diagramach wariant **manual** zastępuje `raven-auto-plan` parą `raven-plan` → `raven-plan-review`, a `raven-auto-implement` parą `raven-implement` → `raven-implement-review`. Akceptacja planu i odbiór użytkownika pozostają w tych samych miejscach. `raven-test`, `raven-auto-test` i `raven-manual-qa` są dodatkowymi narzędziami na osobne zlecenie lub konkretne ryzyko, nie kolejnymi obowiązkowymi etapami.
+## Realizacja taska — manual
 
-| Krok | Dane wejściowe | Wynik |
-| --- | --- | --- |
-| Rozpoznanie lub wznowienie | Zlecenie, instrukcje repo, Git, wskazany plan/PR | Jednoznaczny zakres i następny krok; sam status niczego nie zapisuje. |
-| Mapa, gdy potrzebna | Kod, testy, dokumentacja i wybrana historia Git | Lokalna mapa potrzebnego obszaru, bez pełnego skanu przy każdym zadaniu. |
-| Uzupełnienie warsztatu | Istniejące komendy, runnery i CI | Sprawdzone uruchamianie oraz weryfikacja; zachowany stack i konwencje. |
-| Frame/research, gdy potrzebne | Objaw, wymagania i dowody z kodu | Potwierdzony problem i ustalenia przy zmianie, bez obowiązkowego issue. |
-| Plan | Wymagania, ustalenia i aktualny kod | `context/changes/<id>/plan.md` na branchu zmiany; dalej wspólny cykl. |
-
-Istniejący projekt nie wymaga odtworzenia PRD całego produktu. Roadmapę twórz lub reorganizuj wtedy, gdy obejmuje to zlecenie.
-
-> Użyj raven-plan dla issue #12 w owner/repo. Przygotuj plan poprawki, wykorzystując istniejący kod i testy. Kod i plan na razie lokalnie, bez push/PR.
-
-## Cykl change
-
-```mermaid
-flowchart TD
-  T[Issue: In progress + assignee] --> P[Plan lokalny]
-  P --> R[Review planu]
-  R --> A[Akceptacja fingerprintu]
-  A --> I[Implementacja i testy]
-  I --> V[Jedno niezależne review wymagań, kodu i testów]
-  V -->|Defekt w zakresie| I
-  V --> U[Odbiór użytkownika i aktualne CI]
-  U --> M[Merge za zgodą]
-  M --> DONE[Potwierdzony merge: issue Done]
-  P -. Autoryzowana polityka .-> D[Wczesny draft PR]
-  D -. Aktualizacje w toku pracy .-> I
-  M -. Osobne zlecenie .-> DEP[Deploy]
-```
-
-Manual: raven-plan → raven-plan-review, potem raven-implement → raven-implement-review. Auto: raven-auto-plan i raven-auto-implement koordynują te same artefakty oraz ograniczone pętle napraw. Rutynowe poprawki w zleconym zakresie nie wymagają pytania po każdej komendzie. Po dwóch nieskutecznych próbach tego samego problemu agent zapisuje reprodukcję i potrzebną decyzję.
-
-Wczesny draft PR wykorzystuje wcześniej autoryzowaną politykę `.raven/config.json`; zlecenie planowania/implementacji obejmuje podjęcie jego issue, ale nie daje praw push/PR. Bez niej kod i plan pozostają lokalne przy potwierdzonym trackingu GH, a raven-pr można zlecić dla przygotowanego wyniku. Merge wymaga aktualnych dowodów, CI, odbioru i zgody; „akceptuję, zmerguj” może potwierdzić obie decyzje. Issue pozostaje In progress podczas review i PR; dopiero potwierdzony raven-merge zamyka issue jako Done. Board jest opcjonalnym widokiem. Deploy pozostaje osobno.
-
-Przykładowe osobne zlecenia dla jednej zmiany:
+Wspólna ścieżka dla greenfield i brownfield. Jeden issue = jeden change. Plan, plan testów i checkpoint są w `context/changes/<id>/plan.md` na branchu; domyślnie bez dodatkowego worktree.
 
 ```text
-Użyj raven-auto-plan dla C-03.
-[Po review] Akceptuję przedstawiony plan. Użyj raven-auto-implement dla C-03.
-[Jeżeli nie ma polityki wcześniejszej publikacji] Użyj raven-pr dla C-03.
-[Po odbiorze i CI] Akceptuję wynik. Użyj raven-merge dla C-03.
+raven-plan
+Najpierw: issue → In progress + wykonawca
+Potem: wymagania, plan implementacji i plan testów
+│  zapis: plan.md; bez implementacji
+│
+├─ raven-pr — JEŚLI publikacja jest autoryzowana
+│  Utwórz wczesny draft: link do issue i planu.
+│  Aktualizuj ten sam PR w trakcie pracy.
+│
+▼
+raven-plan-review
+Niezależnie sprawdź zakres, wykonalność i testy
+│
+├─ Uwagi blokujące → raven-plan → ponowne review
+│  Zmiany zakresu wymagają decyzji użytkownika.
+│
+▼
+UŻYTKOWNIK: zaakceptuj konkretną wersję planu
+│  review agenta nie zastępuje tej decyzji
+▼
+raven-implement
+Wykonaj zatwierdzony plan wraz z testami
+│  zapis: kod, testy, postęp i dowody w planie
+│
+├─ Zmiana kontraktu → plan → review → akceptacja
+│  Zwykłe poprawki w zakresie nie restartują planu.
+│
+▼
+raven-implement-review
+Niezależnie oceń wymagania, kod i skuteczność testów
+│
+├─ Defekty → raven-implement → ponowne review
+│  Naprawy i ponowna ocena dotyczą zmienionego zakresu.
+│
+▼
+raven-pr
+Zaktualizuj istniejący PR lub opublikuj nowy
+│  publikacja w zakresie zgody; CI sprawdza wersję PR
+▼
+JEŚLI potrzebne dodatkowe QA
+raven-manual-qa
+Sprawdź działającą funkcję i zapisz defekty
+│  bez automatycznego poprawiania produktu
+│  defekty wracają do implementacji i review
+▼
+UŻYTKOWNIK: odbierz wynik i zleć merge
+CI: wszystkie wymagane kontrole muszą przejść
+│  issue nadal In progress
+▼
+raven-merge
+Zweryfikuj bramki i zmerguj sprawdzony PR
+│
+├─ Merge niepotwierdzony → nie zamykaj issue
+├─ Merge OK, zapis issue zawiódł
+│  Wznów tylko finalizację issue, bez ponownego merge.
+│
+▼
+ISSUE → DONE
+Dopiero po potwierdzonym merge
+│
+▼
+Następny issue → raven-plan
+Deploy wymaga osobnego zlecenia.
 ```
 
-## Artefakty i praca między sesjami
+Blokada na dowolnym etapie: issue pozostaje otwarte, otrzymuje `blocked` i krótki powód. Po rozwiązaniu blokady kontynuuj od checkpointu. Dwie nieskuteczne próby naprawy tego samego problemu zatrzymują pętlę.
 
-| Miejsce | Odpowiedzialność |
-| --- | --- |
-| `context/foundation/` | Wymagania produktu, architektura i strategia testowania. |
-| `context/changes/<id>/plan.md` | Jeden dokument: linki wymagań/issue, implementacja, plan testów, akceptacja, wyniki, postęp i checkpoint. |
-| GitHub Issues | Taski/change, assignees, In progress/blocked/Done oraz roadmapa i zależności; bez lokalnej kopii kolejki. |
-| Pliki obok planu | Research, review i raporty kontroli, tylko gdy potrzebne; PR może do nich linkować. |
-| Git / branch / worktree | Rzeczywista wersja kodu, testów i dokumentów oraz ich historia. |
-| PR i CI | Współpraca, feedback, wyniki kontroli i potwierdzenie merge. |
-| `.raven/config.json` | Powiązanie repo i wcześniej ustalona polityka publikacji. |
-| Lokalny journal runtime w katalogu Git | Odzyskiwanie przerwanych operacji; nie zastępuje wersjonowanego checkpointu. |
+## Skróty auto
 
-Odczyt/status niczego nie mutuje. Na początku zleconego planowania lub implementacji agent ustawia In progress i assignee konkretnego issue. Kolejne zapisy są zdarzeniowe: blokada/odblokowanie i merge; zgodny stan oznacza no-op, bez skanowania boarda. PR linkuje issue i pliki, bez kopiowania planów/raportów do GH. Jeśli merge się udał, a zamknięcie issue nie, wynik brzmi „PR merged; issue nadal wymaga finalizacji”; wznowienie nie powtarza merge.
+Auto zastępuje wybrane wywołania manualne; nie usuwa decyzji użytkownika ani bramek merge.
 
-Jedną zmianę edytuje jeden aktywny autor, identyfikowany również przez sesję. Reviewer pracuje odczytowo; przekazanie pracy jest jawne. Lokalny mutex runtime chroni pojedynczą operację i nie jest blokadą rozproszoną między komputerami.
+```text
+raven-auto-plan
+└─ raven-plan → raven-plan-review → poprawki
+   ↓
+   Akceptacja użytkownika
 
-Przy wznowieniu agent odczytuje konkretny issue, plan, checkpoint i rzeczywisty stan Git, a następnie potrzebny feedback PR. Niedokończona publikacja wznawia publikację, nie implementację. Brak GH nie potwierdza podjęcia taska: agent zgłasza tracking-unconfirmed, zachowuje checkpoint i może wykonać niezależne rozpoznanie read-only, bez rozpoczynania zależnego planowania/implementacji. Blokady są widoczne w issue; nieudany zapis pozostaje jawnie niepotwierdzony.
+raven-auto-implement
+└─ raven-implement → raven-implement-review → poprawki
+   ↓
+   Odbiór użytkownika + CI → raven-merge
+```
 
-## Sytuacje szczególne
+## Osobne zadanie testowe
 
-- Niechroniony refaktor: testy charakteryzacyjne before-change; bugfix: reprodukcja i oczekiwany RED, potem GREEN na poprawce.
-- Dodatkowe ryzyko auth, migracji, rozliczeń lub współbieżności: dobierz tester/audyt do konkretnego problemu. Każdy normalny change nie potrzebuje dodatkowego testera i osobnego test-review.
-- Samodzielna inwestycja w testy: raven-test lub raven-auto-test; globalna strategia: raven-test-plan. Dodatkowe eksploracyjne QA: raven-manual-qa przyjmuje change, PR lub issue.
-- Historia starego Raven: zachowaj artefakty. Kontynuacja ustala mapowanie jawnie; aktualizacja skilli nie migruje archiwów.
+Zwykły task tworzy testy podczas `raven-implement`. Poniższa ścieżka dotyczy osobno zleconych testów lub ochrony przed zmianą.
 
-[Runtime](skills/raven-workflow/references/runtime.md) zapewnia ograniczone start/status/resume, fingerprint, checkpoint, zdarzeniowy helper issue i draft PR dla już wypchniętej gałęzi. Nie zatwierdza planów, nie pushuje i nie jest silnikiem całego procesu.
+```text
+Issue testowe → In progress + wykonawca
+│
+▼
+raven-test
+Dodaj testy, reprodukcję błędu lub ochronę refaktoru
+│
+▼
+raven-test-review
+Niezależnie oceń skuteczność ochrony
+│  uwagi → raven-test → ponowne review
+▼
+raven-pr → odbiór + CI → raven-merge → issue Done
+
+Skrót: raven-auto-test
+Zawiera wykonanie, review i poprawki w zakresie.
+```
+
+---
+
+<details>
+<summary>Katalog skilli i odnośniki</summary>
 
 ## Katalog skilli
 
@@ -192,6 +256,12 @@ Przy wznowieniu agent odczytuje konkretny issue, plan, checkpoint i rzeczywisty 
 | [raven-test-review](skills/raven-test-review/SKILL.md) | Ocena konkretnych testów na zlecenie lub według ryzyka. |
 | [raven-workflow](skills/raven-workflow/SKILL.md) | Router, status i wznowienie z repo. |
 
+
+</details>
+
+<details>
+<summary>Instalacja i utrzymanie</summary>
+
 ## Instalacja, doctor i rozwój
 
 Repo jest źródłem dystrybucji. Python 3.10+ i środowisko lokalne:
@@ -214,3 +284,5 @@ W globalnych instrukcjach wskaż: przy pracy Raven najpierw czytaj raven-workflo
 Doctor sprawdza frontmatter, nazwy, lokalne odsyłacze, katalog, politykę ról i [kontrakt](workflow-contract.json), a `--installed` również zgodność instalacji. `doctor --json` daje raport maszynowy. Kontrakt deklaruje zależności, nie wykonuje workflow: `initial_artifacts` to wymagane zewnętrzne dowody/decyzje, nie fikcyjne zgody. PR jest operacją boczną i nie blokuje lokalnej implementacji. Opcjonalne dodatkowe QA/testy są poza standardowym cyklem; tracking issues jest wymagany, Project pozostaje widokiem.
 
 Statyczny PASS nie dowodzi zachowania agenta ani prawdziwych uprawnień, CI i gotowości aplikacji. Zmiany instrukcji wymagają właściwych testów i niezależnych prób na rzeczywistych wejściach. Workflow [Raven integrity](.github/workflows/integrity.yml) uruchamia kontrole repo; sam YAML nie ustanawia required checks w GitHubie.
+
+</details>
