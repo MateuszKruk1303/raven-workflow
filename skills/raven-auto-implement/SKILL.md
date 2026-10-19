@@ -1,15 +1,15 @@
 ---
 name: raven-auto-implement
-description: "Zrealizuj wskazany plan lub polecenie użytkownika, zweryfikuj zmianę na poziomie `quick`, `standard` albo `thorough` dobranym do ryzyka i podsumuj wynik wyłącznie w końcowej wiadomości czatu."
+description: "Zrealizuj polecenie użytkownika, opcjonalnie ze wskazanym issue lub planem, zweryfikuj zmianę na poziomie `quick`, `standard` albo `thorough` dobranym do ryzyka i podsumuj wynik wyłącznie w końcowej wiadomości czatu."
 ---
 
 # Raven Auto Implement
 
-Zrealizuj wskazany plan razem z aktualnym poleceniem użytkownika i udowodnij, że zmiana działa w stopniu odpowiednim do jej ryzyka. Polecenie doprecyzowuje lub zmienia zakres planu bez ponownego planowania, plan-review ani sprawdzania fingerprintu. Czytaj plan i kod potrzebny do zmiany; nie odtwarzaj cyklu Raven.
+Zrealizuj polecenie użytkownika i udowodnij, że zmiana działa w stopniu odpowiednim do jej ryzyka. Wskazany issue lub plan jest kontekstem; polecenie doprecyzowuje lub zmienia ich zakres bez ponownego planowania i review. Drobna zmiana nie potrzebuje issue ani planu. Czytaj tylko kod i kontekst potrzebny do zmiany; nie odtwarzaj cyklu Raven.
 
 ## Zasady
 
-- **Wejście.** Bez wskazanego planu specyfikacją jest polecenie użytkownika; pytaj tylko, gdy cel jest niejednoznaczny. Gdy plan rozjeżdża się z rzeczywistym kodem, odejdź od niego minimalnie i opisz w finale, co zmieniłeś i dlaczego.
+- **Wejście.** Specyfikacją jest polecenie, uzupełnione wskazanym issue lub planem; pytaj tylko, gdy cel jest niejednoznaczny. Gdy plan rozjeżdża się z rzeczywistym kodem, odejdź od niego minimalnie i opisz w finale, co zmieniłeś i dlaczego.
 - **Decyzje.** Rutynowe decyzje techniczne podejmuj samodzielnie. Pytaj tylko o brakującą decyzję produktową, która rzeczywiście blokuje wykonanie, i w tym czasie kontynuuj niezależną część.
 - **Wykonawca.** Pracujesz jako jeden bieżący agent: bez delegowania, osobnego planisty, testera ani QA. Jedynym wyjątkiem jest niezależne review na poziomie `thorough`. Nie dodajesz etapów, bramek akceptacji, trackingu GitHub, raportów procesowych, checkpointów ani metryk.
 - **Repo.** Przed zmianami zanotuj bazowy SHA. Zachowaj cudzą pracę w working tree. Respektuj instrukcje projektu (także `context/foundation/lessons.md`, jeśli istnieje), bezpieczeństwo oraz rzeczywiste ograniczenia narzędzi i uprawnień. Instrukcje projektu (AGENTS.md) mają pierwszeństwo przed minimalizmem weryfikacji: jeśli wymagają kontroli przed commitem, wykonaj je. Commituj logiczne kroki zgodnie z konwencją projektu; bez push i PR.
@@ -23,14 +23,7 @@ Przed zmianami wybierz poziom i podaj go w jednym zdaniu z powodem. Użytkownik 
 
 - `quick` — zmiana nie zmienia zachowania: copy, style, rename, config, drobny refactor. Przy wątpliwości wybierz `standard`.
 - `standard` — domyślny: zwykła funkcja lub poprawka bez sygnału ryzyka.
-- `thorough` — zmiana dotyka choć jednego sygnału ryzyka:
-  - pieniędzy, cen, rabatów, podatków, płatności;
-  - koszyka, checkoutu, zamówień, stanów magazynowych;
-  - auth, sesji, uprawnień, danych osobowych;
-  - schematu DB, migracji, seedów;
-  - kontraktu API między storefrontem a backendem;
-  - modułu współdzielonego przez kilka obszarów;
-  - usuwania lub nadpisywania danych.
+- `thorough` — błąd w zmianie byłby kosztowny, trudny do odwrócenia lub trudny do zauważenia przed użytkownikiem. Oceń to sam na podstawie projektu i zmiany; przy wątpliwości między `standard` a `thorough` wybierz `thorough`.
 
 Na poziomie `thorough` przeczytaj i wykonaj [references/thorough.md](references/thorough.md) zamiast kroków `quick` i `standard`; sekcje „Sprawdzenie działania”, „Budżet czasu” i „Finał” obowiązują nadal.
 
@@ -39,7 +32,7 @@ Na poziomie `thorough` przeczytaj i wykonaj [references/thorough.md](references/
 Ma udowodnić: zmiana się kompiluje i nie psuje istniejących testów.
 
 1. Implementacja.
-2. Typecheck dotkniętego workspace (np. tylko `apps/storefront`).
+2. Typecheck dotkniętego workspace lub pakietu.
 3. Istniejące testy zmienionych plików lub modułów.
 4. Render tylko przy zmianie wizualnej.
 
