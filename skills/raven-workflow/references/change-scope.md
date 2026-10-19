@@ -1,10 +1,10 @@
 # Granice change i dekompozycja
 
-Wspólny kontrakt dla roadmapy, planowania manual/auto i oceny planu. Nie ustanawia nowego etapu, statusu ani punktacji.
+Wspólne zasady dla roadmapy i planowania. Nie ustanawiają nowego etapu, statusu ani punktacji.
 
 ## Jednostka pracy
 
-**Change** dostarcza jeden ograniczony rezultat, który można osobno zaplanować, zaimplementować, zweryfikować i zmergować. Nie musi sam umożliwiać premiery produktu; pełny proces użytkownika może wymagać wielu changes. Nie wymuszaj flag funkcji tylko po to, by uzasadnić podział. **Task/faza** jest krokiem wykonania tego jednego rezultatu. Fragment z własnym niezależnym odbiorem jest kandydatem na osobny change, a nie automatycznie kolejnym taskiem.
+**Change** dostarcza jeden ograniczony rezultat, który można osobno zrealizować, zweryfikować i zmergować. Nie musi sam umożliwiać premiery produktu; pełny proces użytkownika może wymagać wielu changes. Nie wymuszaj flag funkcji tylko po to, by uzasadnić podział. **Task/faza** jest krokiem wykonania tego jednego rezultatu. Fragment z własnym niezależnym odbiorem jest kandydatem na osobny change, a nie automatycznie kolejnym taskiem.
 
 Zachowaj pionowy zakres: potrzebne UI, API, model danych i walidacja należą do rezultatu. Nie dziel zmian według warstw i nie łącz niezależnych funkcji dlatego, że korzystają z tego samego modelu, ekranu lub procesu. Zależność między rezultatami opisuje kolejność; sama nie uzasadnia ich sklejenia.
 
@@ -14,7 +14,7 @@ Change techniczny jest uzasadniony wykazanym problemem lub nazwanym rezultatem, 
 
 ## Kontrola granic
 
-Przed publikacją każdego change w roadmapie oraz przy ocenie zakresu planowania sprawdź:
+Przed publikacją change w roadmapie oraz przy planowaniu sprawdź:
 
 1. Czy opis nazywa jeden wynik, czy listę funkcji spiętą ogólnym tytułem?
 2. Czy fragmenty można niezależnie pokazać i odebrać przy spełnieniu ich zależności?
@@ -36,16 +36,16 @@ Pokryj cały uzgodniony PRD: wymaganie ma przypisany rezultat, dowód wcześniej
 
 Po odczytaniu wymagań, istniejących decyzji i postępu, **przed szczegółowym researchem i wywiadem**, zastosuj kontrolę granic. Istnienie issue nie dowodzi poprawnego podziału. Wystarczy kontekst potrzebny do oceny wyniku; nie badaj wszystkich integracji, by dopiero potem odkryć zbyt duży zakres.
 
-Gdy zakres jest zbyt szeroki, przedstaw krótki powód, proponowane wyniki i zależności, mapowanie dotychczasowych wymagań oraz rekomendowany pierwszy change. Nie planuj szczegółowo wszystkich części. Planowanie może zaproponować podział; zapis zmian istniejącej kolejki wymaga autoryzacji użytkownika obejmującej tę reorganizację. Jeśli jej jeszcze nie ma, czekaj na tę decyzję przed reorganizacją kolejki lub szczegółowym planowaniem wybranego nowego zakresu. Tryb auto nie daje dodatkowej zgody na rozbudowę produktu ani kolejki.
+Gdy zakres jest zbyt szeroki, przedstaw krótki powód, proponowane wyniki i zależności, mapowanie dotychczasowych wymagań oraz rekomendowany pierwszy change. Nie planuj szczegółowo wszystkich części. Planowanie może zaproponować podział; zapis zmian istniejącej kolejki wymaga autoryzacji użytkownika obejmującej tę reorganizację. Jeśli jej jeszcze nie ma, czekaj na tę decyzję przed reorganizacją kolejki lub szczegółowym planowaniem wybranego nowego zakresu.
 
-Drugą kontrolę wykonaj przed dopracowaniem struktury faz. Nowy niezależny rezultat odkryty w researchu wraca do propozycji podziału, zamiast stawać się kolejną fazą. Gdy odkrycie wymaga istotnego rozszerzenia bieżącego rezultatu, pokaż wpływ i uzyskaj decyzję użytkownika. Dopracuj kontrakty w ustalonych granicach; nowe rozszerzenie nie jest rutynowym uzupełnieniem planu.
+Drugą kontrolę wykonaj przed dopracowaniem struktury faz. Nowy niezależny rezultat odkryty w researchu wraca do propozycji podziału, zamiast stawać się kolejną fazą. Gdy odkrycie wymaga istotnego rozszerzenia bieżącego rezultatu, pokaż wpływ i uzyskaj decyzję użytkownika. Nowe rozszerzenie nie jest rutynowym uzupełnieniem planu.
 
 **Brak otwartych pytań** oznacza rozstrzygnięte wymagania, granice i istotne decyzje architektoniczne tego change. Nie wymaga zaprojektowania przyszłych changes ani każdej decyzji implementacyjnej. Zostaw wykonawcy detale, gdy kontrakt, ograniczenia i sposób weryfikacji są znane. Każde dodatkowe badanie musi odpowiadać na konkretną lukę mogącą zmienić zakres, wykonalność, kontrakt lub kryteria odbioru; zakończ je po rozstrzygnięciu tej luki.
 
-Każdy change ma własny odbiór i właściwy zakres trwałych testów w istniejącym workflow. Nie odkładaj całej weryfikacji na koniec wieloetapowego procesu produktu. Mały change otrzymuje proporcjonalny plan, bez sztucznych tasków ani obowiązku testów każdej warstwy.
+Każdy change ma własny odbiór i właściwy zakres trwałych testów. Nie odkładaj całej weryfikacji na koniec wieloetapowego procesu produktu. Mały change otrzymuje proporcjonalny plan, bez sztucznych tasków ani obowiązku testów każdej warstwy.
 
 ## Podział istniejącej pracy
 
 Zachowaj historię, identyfikatory, decyzje, źródła, dowody i postęp. Propozycja pokazuje mapowanie starego zakresu na nowe rezultaty oraz wpływ na istniejące taski i zależności. Nie pytaj ponownie o uzgodnionych dostawców ani reguły biznesowe; badaj tylko rzeczywistą nową lukę lub sprzeczność.
 
-Po autoryzacji aktualizuj wyłącznie objęte nią elementy zgodnie z kontraktem pracy Git-first. Zachowaj odsyłacze do historycznych planów i dowodów; nowe kontrakty wymagają aktualnego review w dotkniętym zakresie. Nie zamykaj ani nie usuwaj issues/tasków bez osobnego jawnego zlecenia. Samo planowanie, regeneracja opisu lub aktualizacja instrukcji Raven nie migrują istniejących roadmap.
+Po autoryzacji aktualizuj wyłącznie objęte nią issues. Zachowaj odsyłacze do historycznych planów. Nie zamykaj ani nie usuwaj issues/tasków bez osobnego jawnego zlecenia. Samo planowanie, regeneracja opisu lub aktualizacja instrukcji Raven nie migrują istniejących roadmap.

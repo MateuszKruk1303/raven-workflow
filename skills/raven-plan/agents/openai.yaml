@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Plan"
-  short_description: "Plan lokalnego change"
-  default_prompt: "Użyj $raven-plan. Przygotuj lokalny plan wskazanego change w trybie manualnym."
+  short_description: "Plan jednego change, opcjonalnie z review"
+  default_prompt: "Użyj $raven-plan. Przygotuj plan wskazanego issue lub change; review planu uruchom tylko, gdy o nie proszę albo zmiana jest ryzykowna."

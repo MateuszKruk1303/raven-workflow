@@ -14,7 +14,11 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.DS_Store', '__pycache__', '.git'}
-RETIRED = {'raven-seed', 'raven-implement'}
+RETIRED = {
+    'raven-seed', 'raven-implement', 'raven-auto-plan', 'raven-plan-review', 'raven-auto-test',
+    'raven-test-review', 'raven-test-plan', 'raven-frame', 'raven-agents-md', 'raven-rule-review',
+    'raven-jira-roadmap',
+}
 
 
 def retired(name):
@@ -104,8 +108,8 @@ def doctor(root, installed=None):
         if f'skills/{name}/SKILL.md' not in list(markdown_links(readme)):
             fail('catalog.undocumented', name, 'README must link every skill')
     try:
-        validate_process(contract, expected)
-    except (ValueError, KeyError, TypeError) as exc:
+        validate_catalog(contract)
+    except ValueError as exc:
         fail('workflow.contract', 'workflow-contract.json', str(exc))
     if installed is not None:
         if not installed.is_dir():
@@ -116,133 +120,12 @@ def doctor(root, installed=None):
     return errors
 
 
-def validate_process(contract, skills):
-    """Validate the Git-first artifact DAG; live evidence is checked at execution."""
-    if contract['schema_version'] != 2:
+def validate_catalog(contract):
+    """The contract is only a catalog: workflow lives in skills, not in process gates."""
+    if contract.get('schema_version') != 3:
         raise ValueError('Unsupported schema_version')
-    invariants = contract['invariants']
-    expected_invariants = {
-        'plan_review': 'contract_fingerprint',
-        'progress_invalidates_plan_review': False,
-        'tests_with_implementation': True,
-        'normal_implementation_independent_reviews': 1,
-        'mandatory_task_issues': True,
-        'issue_started_before_plan_or_implementation': True,
-        'issue_done_after_merge': True,
-        'project_optional': True,
-        'full_history_read_required': False,
-        'deploy_separate': True,
-        'regression_closure_after_manual_verification': True,
-        'test_stage_may_reuse_without_edits': True,
-        'evidence_freshness': 'dependency_impact',
-        'explicit_pr_records_user_acceptance': True,
-        'automatic_draft_records_user_acceptance': False,
-    }
-    if invariants != expected_invariants:
-        raise ValueError('Invalid Git-first workflow invariants')
-    sources = contract['source_of_truth']
-    if sources != {
-        'change': 'context/changes/<id>/plan.md', 'history': 'git',
-        'configuration': '.raven/config.json', 'collaboration': 'pull_request',
-        'tracker': 'github_issues', 'roadmap': 'github_issues',
-        'manual_instructions': 'final_chat_message',
-    }:
-        raise ValueError('Invalid Git-first sources of truth')
-    if 'roles' in contract:
-        raise ValueError('Contract must not pin agent models or roles configuration')
-    expected_auto = {
-        'skill': 'raven-auto-implement',
-        'execution': 'current_agent',
-        'inputs': ['indicated_plan', 'current_user_instruction'],
-        'scope': 'current_instruction_updates_plan_without_replanning',
-        'verification_levels': ['quick', 'standard', 'thorough'],
-        'default_level': 'standard',
-        'level_change': 'raise_only',
-        'functional_check': 'standard_and_thorough',
-        'independent_review': 'thorough_only_single_round',
-        'existing_tests': 'reuse_before_adding',
-        'unrelated_failures': 'report_without_repair',
-        'handoff': 'final_chat_only',
-    }
-    if (contract.get('auto_implementation') != expected_auto
-            or 'auto_implementation_qa' in contract):
-        raise ValueError('Auto implementation must use the current agent, plan and current instruction, '
-                         'risk-tiered verification and final chat only')
-    stages = contract['stages']
-    ids = [stage['id'] for stage in stages]
-    if len(set(ids)) != len(ids):
-        raise ValueError('Duplicate stage IDs')
-    required = {
-        'plan': ('planner', {'requirements', 'issue_started'}, {'plan_contract'}),
-        'plan_review': ('reviewer', {'plan_contract'}, {'plan_review'}),
-        'pr': ('implementer', {'plan_contract', 'implementation', 'regression_evidence', 'publication_requested', 'user_acceptance'}, {'pull_request'}),
-        'test': ('implementer', {'plan_contract', 'implementation', 'test_evidence', 'code_review', 'manual_verification'}, {'regression_evidence'}),
-        'implement': ('implementer', {'plan_contract'}, {'implementation', 'test_evidence'}),
-        'code_review': ('reviewer', {'plan_contract', 'implementation', 'test_evidence'}, {'code_review'}),
-        'merge': ('implementer', {'pull_request', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested', 'regression_evidence'}, {'merged_pr', 'issue_done'}),
-    }
-    by_id = {s['id']: s for s in stages}
-    if set(by_id) != set(required):
-        raise ValueError('Standard cycle requires exactly the defined stages')
-    external = set(contract['initial_artifacts'])
-    if external != {'requirements', 'user_acceptance', 'publication_requested', 'merge_requested', 'ci_passed', 'issue_started', 'manual_verification'}:
-        raise ValueError('External artifacts must not bypass stage producers')
-    for stage in stages:
-        role, needs, output = required[stage['id']]
-        if stage['role'] != role:
-            raise ValueError(f"Wrong role for {stage['id']}; expected {role}")
-        if not needs <= set(stage['requires']):
-            raise ValueError(f"{stage['id']} must require {', '.join(sorted(needs))}")
-        if set(stage['produces']) & external:
-            raise ValueError('Agent stage cannot produce external acceptance evidence')
-        if set(stage['produces']) != output:
-            raise ValueError(f"Wrong artifact producer: {stage['id']}")
-        if not stage['skills'] or not set(stage['skills']) <= skills:
-            raise ValueError(f"Unknown/empty skills in {stage['id']}")
-        if stage['id'] == 'code_review' and stage['skills'] != ['raven-implement-review']:
-            raise ValueError('Code review must be separately invoked through raven-implement-review')
-        if stage['id'] != 'implement' and 'raven-auto-implement' in stage['skills']:
-            raise ValueError('Auto implementation owns only the implement stage')
-        if stage['id'] == 'implement' and stage['skills'] != ['raven-auto-implement']:
-            raise ValueError('Implementation must be owned by raven-auto-implement')
-        if stage['id'] == 'merge' and stage['skills'] != ['raven-merge']:
-            raise ValueError(f"{stage['id']} must be owned by raven-merge")
-        if role in ('reviewer', 'tester') and stage.get('fresh_context') is not True:
-            raise ValueError(f"Independent context required for {stage['id']}")
-        modes = stage.get('modes', ['manual', 'auto'])
-        expected_modes = {'manual', 'auto'}
-        if set(modes) != expected_modes:
-            raise ValueError(f"Wrong modes for {stage['id']}")
-    if any(stage.get('requires_by_mode') for stage in stages):
-        raise ValueError('Manual and auto must share the same artifact handoffs')
-    if by_id['implement']['requires'] != ['plan_contract']:
-        raise ValueError('Implementation requires only the plan')
-    if set(by_id['code_review'].get('covers', [])) != {'requirements', 'code', 'tests'}:
-        raise ValueError('Independent review must cover requirements, code and tests')
-    if by_id['pr'].get('side_operation') or by_id['pr'].get('early_draft'):
-        raise ValueError('Standard PR follows regression closure; early drafts use explicit exceptions')
-    if by_id['test']['skills'] != ['raven-test']:
-        raise ValueError('Regression closure must be owned by raven-test')
-    expected_exceptions = {
-        'early_draft': {'authorization': 'explicit_unaccepted_draft_or_existing_policy',
-                        'user_acceptance': False, 'requires_completed_implementation': False},
-        'missing_test_evidence': {'requires_explicit_confirmation': True,
-                                  'records_gaps': True, 'waives_merge_gates': False},
-    }
-    if contract.get('publication_exceptions') != expected_exceptions:
-        raise ValueError('Publication exceptions must preserve acceptance and merge gates')
-    if 'raven-test' in contract.get('optional_workflows', {}).get('additional_validation', {}).get('skills', []):
-        raise ValueError('Standard regression closure cannot be only additional validation')
-    for mode in ('manual', 'auto'):
-        produced = set(external)
-        for stage in stages:
-            if mode not in stage.get('modes', ['manual', 'auto']):
-                continue
-            needs = set(stage['requires']) | set(stage.get('requires_by_mode', {}).get(mode, []))
-            missing = needs - produced
-            if missing:
-                raise ValueError(f"Unmet handoff ({mode}) for {stage['id']}: {sorted(missing)}")
-            produced.update(stage['produces'])
+    if set(contract) != {'schema_version', 'skills'}:
+        raise ValueError('Contract is a catalog only; no stages, gates, roles or models')
 
 
 def sync_plan(source, destination, names):
@@ -319,7 +202,7 @@ def main():
                 for issue in issues:
                     print(f"FAIL [{issue['code']}] {issue['path']}: {issue['detail']}")
             else:
-                print('PASS: metadata, links, catalog, process contract' + (' and installation match' if args.installed else ''))
+                print('PASS: metadata, links, catalog' + (' and installation match' if args.installed else ''))
             return bool(issues)
         if issues:
             raise ValueError('Repository fails doctor; fix before synchronization')

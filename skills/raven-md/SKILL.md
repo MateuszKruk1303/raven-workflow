@@ -1,9 +1,11 @@
 ---
 name: raven-md
-description: "Utwórz lub uaktualnij AGENTS.md na podstawie rzeczywistych plików, poleceń i konwencji projektu. Użyj do inicjalizacji instrukcji dla agentów w repozytorium lub wybranym podkatalogu. Nie inicjalizuje folderów kontekstu ani stacku."
+description: "Utwórz, uaktualnij lub oceń AGENTS.md (albo inny plik instrukcji AI) na podstawie rzeczywistych plików, poleceń i konwencji projektu. Review daje kartę wyników bez przepisywania zasad. Nie inicjalizuje folderów kontekstu ani stacku."
 ---
 
 # Raven MD
+
+Dwa tryby: **tworzenie/aktualizacja** (domyślny) i **review** — gdy użytkownik prosi o ocenę pliku instrukcji. W trybie review stosuj [procedurę przeglądu](references/review.md): pięć kontroli (długość, fragmenty kodu/config, precyzja, nadmiarowa wiedza, kolejność), karta wyników z `path:line` i Top 3 actions w czacie, bez edycji pliku poza zatwierdzoną zmianą kolejności. Prywatnych globalnych instrukcji nie kopiuj do repo.
 
 Twórz zwięzły przewodnik dla agenta pracującego w projekcie. Wynikiem jest jeden plik `AGENTS.md`, z konkretnymi zasadami, działającymi odnośnikami i poleceniami opartymi na źródłach. Zachowaj język istniejącego dokumentu, a dla nowego użyj języka użytkownika. Tytuł nowego dokumentu: `# Repository Guidelines`.
 
@@ -31,9 +33,9 @@ Dla podkatalogu skup się na sąsiednich plikach, lokalnych konfiguracjach i jed
 
 ## Kontekst Raven
 
-Jeśli projekt rzeczywiście używa Raven, przeczytaj istotne istniejące dokumenty w `context/pilot/`, w szczególności `workflow.md`, PRD i roadmapę. Zapisz tylko reguły potrzebne przyszłemu agentowi i linki do kanonicznych źródeł; nie kopiuj całych instrukcji skilli ani bieżącego statusu chunka.
+Jeśli projekt używa Raven, przeczytaj istotne dokumenty w `context/foundation/` (PRD, architektura). Zapisz tylko reguły potrzebne przyszłemu agentowi i linki do kanonicznych źródeł; nie kopiuj instrukcji skilli.
 
-Nie twórz zależności od osobistych ścieżek `~/.codex/skills`. Nie narzucaj modeli agentów, procesu pilota, zakazów edycji testów ani struktury archiwów projektowi, który ich nie przyjął. Nie inicjalizuj `context/` przy okazji edycji instrukcji; potrzebne katalogi tworzy właściwy etap Raven.
+Nie twórz zależności od osobistych ścieżek `~/.codex/skills`. Nie narzucaj modeli agentów, procesu, zakazów edycji testów ani struktury archiwów projektowi, który ich nie przyjął. Nie inicjalizuj `context/` przy okazji edycji instrukcji; potrzebne katalogi tworzy właściwy etap Raven.
 
 ## Utwórz albo zaktualizuj
 

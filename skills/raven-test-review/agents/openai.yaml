@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Test Review"
-  short_description: "Niezależna ocena konkretnych testów"
-  default_prompt: "Użyj $raven-test-review. Oceń wskazane testy niezależnie, na podstawie źródłowych wymagań i ryzyk."

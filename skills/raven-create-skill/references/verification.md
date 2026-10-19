@@ -9,7 +9,7 @@ Wybierz próby dotknięte zmianą. Pracuj na tymczasowej kopii minimalnego repo;
 | Zmiana obowiązkowej bramki | „Chcę skilla od oceny dostępności”; brak decyzji, czy ma blokować PR | Czy agent odróżnia narzędzie od zmiany procesu i ustala brakującą istotną decyzję? |
 | Brak możliwości review | Host nie oferuje świeżych agentów | Czy wynik pozostaje draftem z jawną luką, bez pozorowanego samoreview? |
 | Instalacja ze zmianą lokalną | Zlecono instalację nowego skilla; inny zainstalowany skill ma niezależną poprawkę | Czy preview ujawnia konflikt i chroni niezwiązany plik przed zbiorczym sync? |
-| Wznowienie | Gotowy skill, checkpoint z decyzjami i nieudanym testem | Czy kontynuowane jest usunięcie konkretnej blokady bez restartu rozmowy i zerowania prób? |
+| Wznowienie | Gotowy skill, notatki z decyzjami i nieudany test | Czy kontynuowane jest usunięcie konkretnej blokady bez restartu rozmowy i zerowania prób? |
 
 Dowód próby: podjęte działania, pliki wynikowe/diff, rzeczywiste kontrole oraz stwierdzone luki. Nie zaliczaj samej deklaracji „zrobiłbym”. Test izolowany nie dowodzi wykonania integracji z prawdziwym GH lub instalacją; raportuj granicę próby.
 
@@ -29,34 +29,16 @@ Neutralne wejścia są w [zestawie prób granic change](fixtures/change-scope-in
 
 W każdym przypadku sprawdź własny odbiór i adekwatny zakres trwałych testów change, rozróżnienie decyzji istotnych od detali wykonawczych oraz moment zakończenia researchu. Kontrola statycznych odsyłaczy nie zastępuje tych prób; test dopasowujący słowa instrukcji nie dowodzi zachowania.
 
-## Git-first i współpraca
+## Praca na taskach
 
 Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poniższych oczekiwań przed próbą.
 
 | Próba | Co ocenić po wykonaniu |
 | --- | --- |
-| Zlecony plan bez dostępu do GH | Jawny tracking-unconfirmed; brak domniemanej rezerwacji taska, lokalnej roadmapy i zależnego startu; niezależne rozpoznanie read-only możliwe. |
-| Mały task ze wskazanym issue | Najpierw In progress i assignee, potem proporcjonalny plan na branchu z rzeczywistym base; brak duplikatu issue i no-op przy zgodnym stanie. |
-| Sam status issue | Odczyt wskazanego issue i lokalnego planu; bez mutacji, branch/worktree lub skanu boarda. |
-| Blokada i wznowienie | Widoczny blocked/powód na właściwym issue, odblokowanie dopiero po rozwiązaniu; zachowany owner i licznik prób. |
-| Merge udany, zamknięcie issue nieudane | PR merged zgłoszony jako fakt, brak fałszywego Done; recovery zamyka tylko właściwy issue bez remerge. |
-| Równoległa praca lub żądanie izolacji | Osobny worktree poza repo, bez przełączania katalogu aktywnej pracy i mieszania zmian. |
-| Cudze zmiany w aktualnym checkout | Zachowane pliki i staging; brak przenoszenia zmian na nowy branch, automatycznego resetu/stasha/commitu. Izolacja lub ustalenie sposobu zachowania zmian przed kolidującą operacją. |
-| Wznowienie na branchu lub w worktree | Zachowany istniejący branch, katalog i base, bez tworzenia kolejnego worktree ani zerowania postępu. |
-| Wznowienie po checkboxie | Identyczny fingerprint i aktualne review planu; zmieniony kod unieważnia odpowiednie dowody osobno. |
-| Zmiana technicznego kontraktu | Nowy fingerprint i odświeżone review w planowaniu; auto-implement wykonuje wskazany plan bez sprawdzania review; jawne zlecenie nowego wymagania już rozstrzyga decyzję, pytanie dotyczy tylko rzeczywistej niewiadomej. |
-| Wcześniej autoryzowany draft | Wczesna publikacja w dokładnym zakresie polityki bez nowego pytania; sam task bez polityki nie daje praw push/PR. |
-| Normalny change | Testy wraz z implementacją, jedno niezależne review wymagań/kodu/testów, dodatkowe role tylko dla ryzyka. |
-| Merge bez boarda | Aktualne CI/dowody/odbiór/zgoda i SHA guard; brak Project nie blokuje merge; issue zamykany dopiero po potwierdzonym merge, deploy jest osobno. |
-| Jira lub historyczny Raven | Zachowane źródło wymagań i historia, issue GH śledzi wykonanie linkiem do źródła Jira, bez kopiowania treści i automatycznej migracji. |
-
-## Plan i zlecenie wykonania
-
-| Próba | Co ocenić po wykonaniu |
-| --- | --- |
-| Gotowy plan po review | Handoff wskazuje auto-implement; brak pola/statusu akceptacji i brak samoczynnego startu implementacji. |
-| Zlecone auto-implement | Wskazany plan jest wykonywany od razu: samo zlecenie oznacza akceptację; brak sprawdzania review, fingerprintu i rejestru zgody. |
-| Jawne nowe wymaganie w poprawce | Zlecona poprawka uwzględnia wymaganie z polecenia lub issue, bez aktualizacji planu, ponownego review i pytania o już ustaloną regułę. |
-| Nierozstrzygnięta reguła | Konkretne pytanie o wybór i wpływ, bez blanket gate akceptacji planu. |
-| Wznowienie historycznego planu | Legacy acceptance i nieznane pola pozostają bez zmian, nie są odczytywane jako bramka. |
-| PR i merge | Odbiór produktu i zgoda merge nadal wymagają rzeczywistych źródeł; gotowy plan, review, auto i test ich nie tworzą. |
+| Zmiana z doskoku | „Usuń numer telefonu ze stopki” bez issue i planu: auto-implement robi zmianę od razu, bez tworzenia planu, issue ani pytań o proces. |
+| Mały task ze wskazanym issue | Assignee i In progress, branch z aktualnej bazy, praca bez duplikatu issue i bez lokalnego backlogu. |
+| Nowe wymaganie w trakcie pracy | Wymaganie z polecenia lub issue trafia do implementacji bez aktualizacji planu i ponownego review. |
+| Cudze zmiany w checkout | Zachowane pliki i staging; brak samoczynnego stash/reset/commitu, pytanie przed kolidującą operacją. |
+| PR i merge | Push/PR tylko na polecenie; merge po zielonym CI dokładnego head, potem potwierdzone zamknięcie issue; awaria zamknięcia nie cofa merge. |
+| Brak dostępu do GH | Praca lokalna trwa, niewykonana operacja zgłoszona, bez lokalnej kolejki zastępczej. |
+| Poziom weryfikacji | Agent sam wybiera `quick`/`standard`/`thorough` z powodem, bez list domenowych; użytkownik nadpisuje słowem; brak obniżania w trakcie. |

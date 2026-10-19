@@ -90,6 +90,6 @@ Nie kończ na istnieniu plików. Sprawdź:
 5. Drugie `setup` nie dubluje danych ani kluczy. Zatrzymanie i ponowny start zachowują admina, katalog, zamówienie i upload. Nigdy `down -v` ani `docker system prune`.
 6. Istniejące kontrole typów/build adekwatne do zmian. Nie dodawaj pełnego frameworka testowego tylko na potrzeby inicjalizacji.
 
-Zapisz krótką instrukcję startu w README projektu lub istniejącym `context/pilot/setup.md`: wersje, polecenia, URL-e, lokalizacje envów i danych logowania, zatrzymywanie/wznawianie, wykonane kontrole i braki. Nie zapisuj sekretów. Sam setup nie oznacza ukończenia biznesowego chunka roadmapy ani gotowości produkcyjnej.
+Zapisz krótką instrukcję startu w README projektu: wersje, polecenia, URL-e, lokalizacje envów i danych logowania, zatrzymywanie/wznawianie, wykonane kontrole i braki. Nie zapisuj sekretów. Sam setup nie oznacza ukończenia biznesowego taska roadmapy ani gotowości produkcyjnej.
 
 W odpowiedzi podaj polecenie startu, URL storefrontu i Admina, lokalizację danych logowania oraz wynik weryfikacji. Wyraźnie oznacz niewykonane kontrole i blokery; manualny checkout lokalny nie oznacza podłączonych płatności online.

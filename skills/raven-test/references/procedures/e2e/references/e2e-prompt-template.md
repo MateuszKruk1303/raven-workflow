@@ -18,11 +18,11 @@ prompt file for the specific risk, filled from the fields below.
 ## Template
 
 ```text
-We are adding an E2E test for this risk from context/foundation/test-plan.md:
+We are adding an E2E test for this risk from the change's acceptance criteria:
 [risk id/title + short description]
 
 Research anchor:
-[test-plan.md phase reference, change folder, or specific flow from the rollout plan]
+[issue AC, change plan, or specific flow]
 
 Business scenario (one observable behavior that must stay true after this flow):
 [what the user sees that must not break — this becomes your assertion]
@@ -39,15 +39,15 @@ Assert the business outcome that would fail if this risk materialized.
 Explain in one sentence which regression this test catches.
 ```
 
-## Worked example (RavenCards, test-plan.md Phase 6)
+## Worked example (RavenCards)
 
 ```text
-We are adding an E2E test for this risk from context/foundation/test-plan.md:
+We are adding an E2E test for this risk from the change's acceptance criteria:
 Risk #1+#2: Generated flashcards are lost after page reload — atomic save
 writes cards to DB, but data doesn't survive a full SSR page reload.
 
 Research anchor:
-test-plan.md Phase 6, scenario (a): "generate → review → save full happy path
+Issue AC, scenario (a): "generate → review → save full happy path
 with OpenRouter mocked at network layer, asserts atomic save and deck state
 across SSR↔island handoff."
 

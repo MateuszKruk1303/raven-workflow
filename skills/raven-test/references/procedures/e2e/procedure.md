@@ -1,12 +1,12 @@
 # Trwałe E2E: plan → generate → review → verify
 
-Wewnętrzna procedura dla implementacji lub osobnego zlecenia testów, zgodna z [kontraktem Git-first](../../../../raven-workflow/references/change-contract.md). Nie tworzy drugiego workflow ani task issues. Czytaj lokalny kontrakt, strategię, test-stack, istniejący seed i tylko potrzebne referencje. Testy powstają z implementacją, a normalne review change obejmuje je razem z kodem.
+Wewnętrzna procedura raven-test, zgodna z [pracą na taskach GitHub](../../../../raven-workflow/references/git-workflow.md). Czytaj wymagania (issue, plan), test-stack, istniejący seed i tylko potrzebne referencje. Testy powstają z implementacją, a normalne review change obejmuje je razem z kodem.
 
 ## Setup i dobór ryzyka
 
-Ustal źródła Expected, fingerprint, base/head/tree, zakres kroku i scenariusze chronione na poziomie przeglądarki. Nie wybieraj nowego niezależnego zakresu. Potwierdź istniejący runner i możliwość uruchomienia aplikacji. Jeśli są braki, zastosuj [e2e-setup](../e2e-setup/procedure.md) w zatwierdzonym zakresie. Nie instaluj drugiego runnera i nie konfiguruj CI przy okazji.
+Ustal źródła Expected, zakres i scenariusze chronione na poziomie przeglądarki. Nie wybieraj nowego niezależnego zakresu. Potwierdź istniejący runner i możliwość uruchomienia aplikacji. Jeśli są braki, zastosuj [e2e-setup](../e2e-setup/procedure.md) w zatwierdzonym zakresie. Nie instaluj drugiego runnera i nie konfiguruj CI przy okazji.
 
-Sprawdź istniejące pokrycie: wykorzystaj skuteczny test zamiast duplikować asercje. Jeśli unit/integration chroni ryzyko lepiej, wybierz tę warstwę. Pominięcie nowego E2E wymaga rzeczywistego dowodu ochrony albo uzasadnienia nieadekwatności; nie odhaczaj testu niewykonanego jako PASS. Testy before-change mogą wykazać EXPECTED_RED zgodnie z [kontraktem](../../before-change.md).
+Sprawdź istniejące pokrycie: wykorzystaj skuteczny test zamiast duplikować asercje. Jeśli unit/integration chroni ryzyko lepiej, wybierz tę warstwę. Pominięcie nowego E2E wymaga rzeczywistego dowodu ochrony albo uzasadnienia nieadekwatności; nie odhaczaj testu niewykonanego jako PASS. Testy before-change mogą wykazać EXPECTED_RED.
 
 ## Plan i generowanie
 
@@ -21,6 +21,6 @@ Sprawdź każdy wygenerowany test: czy asercja wykrywa błąd, Expected ma nieza
 
 Uruchom nowe/zmienione testy i odpowiednie regresje z właściwą konfiguracją. Wykonaj powtórny przebieg E2E, by sprawdzić izolację i cleanup. Przypadkowy sukces, retry bez reprodukcji i błąd runnera nie dowodzą poprawności. Gdy skuteczność asercji jest niepewna, wykonaj kontrolowaną perturbację w izolacji i bezwarunkowo przywróć kod. Błąd składni nie jest dowodem ochrony zachowania.
 
-Naprawiaj potwierdzone defekty w zleconym zakresie. Nie osłabiaj testu dla green. Po dwóch nieskutecznych próbach jednego problemu zapisz reprodukcję, próby, blokadę i next; nowa sesja nie resetuje licznika. Nowe wymaganie lub nieobjęte działanie wraca do użytkownika.
+Naprawiaj potwierdzone defekty w zleconym zakresie. Nie osłabiaj testu dla green. Po dwóch nieskutecznych próbach jednego problemu zatrzymaj się i zgłoś reprodukcję oraz blokadę. Nowe wymaganie lub nieobjęte działanie wraca do użytkownika.
 
-Zapisz polecenia, wyniki, tree/HEAD, środowisko i luki w lokalnym test-report/checkpoint. Progress jest w planie poza blokiem kontraktu; dokumenty należą do repo i celowego stagingu. Nie wymagaj zgody na komunikat każdego commitu. Nie odhaczaj odbioru człowieka. Oddaj wynik wywołującemu skillowi; samo E2E nie publikuje PR, nie merguje i nie uruchamia dodatkowych etapów automatycznie.
+Polecenia, wyniki i luki podaj w czacie. Commituj testy celowym stagingiem. Oddaj wynik wywołującemu skillowi; samo E2E nie publikuje PR, nie merguje i nie uruchamia dodatkowych etapów automatycznie.

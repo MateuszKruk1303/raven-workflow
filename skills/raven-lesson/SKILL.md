@@ -4,7 +4,7 @@ description: Na wyraźne zlecenie użytkownika zapisz jedną powtarzalną reguł
 ---
 # /raven-lesson — Uchwyć powtarzalną regułę
 
-Dodaj pojedynczy wpis do `context/foundation/lessons.md`, aby przyszłe uruchomienia `/raven-research`, `/raven-plan i /raven-auto-plan` i `/raven-auto-implement` (wraz z etapami review) ponownie odczytały go jako wcześniejszą wskazówkę. Wywołaj go, gdy zauważysz wzorzec wart utrwalenia, bez czekania na ustrukturyzowany przegląd.
+Dodaj pojedynczy wpis do `context/foundation/lessons.md`, aby przyszłe uruchomienia `/raven-research`, `/raven-plan` i `/raven-auto-implement` ponownie odczytały go jako wcześniejszą wskazówkę. Wywołaj go, gdy zauważysz wzorzec wart utrwalenia, bez czekania na ustrukturyzowany przegląd.
 
 „Lekcja” jest powtarzalną regułą — a nie jednorazową poprawką błędu. Kryterium brzmi: „to zmieniłoby sposób ujęcia problemu lub poprawkę w przeszłej pracy i będzie nadal się pojawiać”. Jeśli to opis pojedynczego incydentu, jest to niewłaściwy skill.
 
@@ -77,7 +77,7 @@ Jeśli `context/foundation/lessons.md` nie istnieje, utwórz go z tym kanoniczny
 ```
 # Lessons Learned
 
-> Append-only register of recurring rules and patterns. Re-read at start by /raven-research, /raven-plan i /raven-auto-plan, /raven-auto-implement and their review stages.
+> Append-only register of recurring rules and patterns. Re-read at start by /raven-research, /raven-plan, /raven-auto-implement.
 
 ```
 

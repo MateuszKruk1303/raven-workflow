@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Plan Review"
-  short_description: "Niezależne review lokalnego planu"
-  default_prompt: "Użyj $raven-plan-review. Oceń lokalny plan wskazanego change niezależnie względem wymagań i kodu."

@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Test"
-  short_description: "Domknięcie regresji i ochrona before-change"
-  default_prompt: "Użyj $raven-test. Domknij regresję wskazanego change: wykorzystaj istniejącą ochronę i dowody, uzupełnij tylko nazwane luki."
+  short_description: "Trwałe testy: luki regresji i before-change"
+  default_prompt: "Użyj $raven-test. Zmapuj wymagania na istniejące testy i dopisz tylko brakującą ochronę."

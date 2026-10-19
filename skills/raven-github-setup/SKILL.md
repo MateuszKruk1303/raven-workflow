@@ -1,20 +1,15 @@
 ---
 name: raven-github-setup
-description: "Przygotuj lub uzupełnij wskazane repo GitHub i politykę publikacji Raven. Przygotuj wymagany tracking issues; Project jest opcjonalny."
+description: "Przygotuj lub uzupełnij repo GitHub do pracy na taskach: remote, włączone Issues, etykiety in-progress/blocked; Project tylko na zlecenie."
 ---
 
-# Raven Github Setup
+# Raven GitHub Setup
 
-Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
 
-Ustal rzeczywisty zakres setupu: remote/repo, polityka publikacji i wymagany tracking GitHub Issues. Zweryfikuj Issues oraz etykiety in-progress/blocked (lub ich istniejące mapowanie), utwórz tylko brakujące elementy objęte setupem. Nie twórz testowych tasków ani Project jako domyślnej infrastruktury.
+1. **Cel.** Repo z jawnego wskazania albo jednoznacznego remote; konflikt rozstrzygnij przed zapisem. Sprawdź konto (`gh auth status`) i owner/repo bez ujawniania tokenów. Brak dostępu nie oznacza braku zasobu.
+2. **Repo.** Zlecone nowe repo twórz jako prywatne; widoczności istniejącego nie zmieniaj bez polecenia. Poufnych treści firmy nie umieszczaj w osobistym repo przez domysł.
+3. **Issues.** Sprawdź, że są włączone, oraz etykiety `in-progress` i `blocked` (albo ich istniejące odpowiedniki). Utwórz tylko brakujące.
+4. **Project (opcjonalnie, na zlecenie).** Widok tych samych issues, nie drugi stan pracy. Pola i opcje mapuj po ID, zachowaj istniejące statusy i automatyzacje.
 
-Odczytaj remotes, instrukcje, `.raven/config.json` i historyczne `context/foundation/github.json`, jeśli wskazane. Zweryfikuj tożsamość konta i pełne owner/repo bez ujawniania tokenów. Wybierz cel z jawnego wskazania, istniejącego powiązania lub jednoznacznego remote; konflikty rozstrzygnij przed zapisem. Brak dostępu nie oznacza braku zasobu.
-
-Zlecone nowe repo twórz prywatne. Zachowaj widoczność istniejącego repo, chyba że użytkownik wyraźnie zleci jej zmianę. Dla poufnych artefaktów wybierz zatwierdzone prywatne miejsce; prywatny Project nie ukrywa treści publicznego repo. Nie kopiuj danych firmy do osobistego repo przez domysł.
-
-Zapisz `.raven/config.json` zgodnie z kontraktem pracy: repository, publication i tracker typu github-issues z nazwami etykiet. Domyślny `mode: local` nie upoważnia do push/PR. `draft-pr` i `authorized_by` zapisuj tylko dla rzeczywiście udzielonej polityki z jej zakresem i źródłem. Nie traktuj setupu ani tokena jako zgody publikacji produktu.
-
-Jeżeli zlecono Project, odczytaj istniejące zasoby/pola/opcje po ID z paginacją; zachowaj ludzkie statusy i automatyzacje. Potwierdź prywatność, uprawnienia i readback osobno dla repo i Project. Utwórz wyłącznie brakujące zlecone elementy; nie usuwaj cudzych pól, nie włączaj auto-add/auto-close. Utrwal opcjonalne mapowanie w konfiguracji jako widok tych samych issues, bez drugiego stanu wykonania. [Referencja](references/github-contract.md) opisuje granice.
-
-Nie commituj/pushuj, nie twórz testowych issues/PR, nie konfiguruj sekretów, CI, branch protection ani deploya przy okazji. Oddaj wynik odczytu i konkretne pozostałe braki. Nie migruj historycznych artefaktów ani nie uruchamiaj roadmapy automatycznie.
+Nie twórz testowych issues ani PR, nie konfiguruj sekretów, CI, branch protection ani deploya przy okazji. W czacie: repo, wynik odczytu po zapisie i pozostałe braki.

@@ -1,18 +1,30 @@
 ---
 name: raven-test
-description: "Domknij regresję change po ręcznej weryfikacji: wykorzystaj istniejące testy i dowody, uzupełnij tylko nazwane luki. Obsługuje też osobne zlecenia testów i before-change."
+description: "Zapewnij trwałą ochronę testami dla change, bugfixu lub refaktoru: wykorzystaj istniejące testy, dopisz tylko brakujące, a przed ryzykowną zmianą zabezpiecz obecne zachowanie (before-change)."
 ---
 
 # Raven Test
 
-Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md). Standardowo ten etap następuje po ręcznej weryfikacji według końcowej wiadomości czatu implementatora i poprawkach auto-implement, przed raven-pr. Samo wywołanie nie jest odbiorem wyniku, potwierdzeniem wykonania kroków ręcznych ani zgodą publikacji.
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [dyscyplinę wykonania](references/implementation-discipline.md).
 
-Odtwórz wskazany change/branch, plan, fingerprint, checkpoint, istniejące testy, review, QA i rzeczywisty feedback użytkownika. Nie wymagaj osobnego issue dla tego etapu istniejącego change. Przy zapisie testów potwierdź tracking jak przy implementacji; odczyt/uruchomienie istniejących kontroli nie tworzy taska. Jeśli brak informacji o ręcznej weryfikacji, zapisz brak bez fikcyjnego odbioru; niezależny audyt ochrony można wykonać już teraz. Osobne zlecenie testów/ochrony refaktoru nie wymaga wcześniejszego UI acceptance.
+Jedyny skill do trwałych testów. Na żądanie: domknięcie regresji po zmianie, osobne zadanie testowe albo ochrona przed zmianą. `raven-auto-implement` sam dopisuje testy potrzebne do swojej zmiany; ten skill jest na dodatkowe lub osobne potrzeby.
 
-1. Wykonaj [audyt i domknięcie regresji](references/regression-closure.md): mapa AC/ryzyko → istniejąca trwała ochrona → aktualny dowód → nazwana luka. Expected wyprowadzaj z wymagań; nie kopiuj outputu implementacji. Czytaj [źródła i review testów](references/test-review.md), a dla ochrony przed zmianą [before-change](references/before-change.md).
-2. Wykorzystaj dobrą ochronę bez przepisywania i duplikatów. Dobierz najtańszą skuteczną warstwę wyłącznie dla luk: unit dla logiki, integration dla granic DB/usług/API, E2E dla realnego przepływu/UI. Selektywnie utrwal QA, jeśli chroni istotną dotąd niechronioną regresję. Brak globalnej strategii nie blokuje tego zadania; nie dodawaj frameworka ani każdej warstwy na zapas.
-3. Stosuj [dyscyplinę implementacji](references/implementation-discipline.md) do potrzebnych edycji w istniejącym kontrakcie. Dla E2E przeczytaj tylko potrzebne [setup](references/procedures/e2e-setup/procedure.md) i [wykonanie](references/procedures/e2e/procedure.md): izolacja, seed, cleanup, powtórka potrzebna do sprawdzenia izolacji. Nie osłabiaj asercji dla PASS. Aktualizacja testu po zaakceptowanej zmianie zachowania wskazuje nowe wymaganie i uzasadnienie.
-4. Uruchom nowe/zmienione testy i zależne regresje, a wcześniejsze wyniki wykorzystaj po ocenie wpływu kodu, konfiguracji, zależności i środowiska. Nie powtarzaj całej suite, review ani QA bez nazwanej przyczyny. Osobne test-review/auto-test są na zlecenie lub realne ryzyko, nie automatycznym dodatkiem. Defekt produktu w zakresie napraw w ramach autoryzacji z proporcjonalnymi kontrolami; po ukończonym auto zastosuj zasady krótkiej poprawki i podaj aktualną instrukcję ręczną wyłącznie w końcowej wiadomości czatu i oznacz zależne review/QA do ponownej oceny w osobno zleconym etapie; historyczne qa_required lub tryb auto same nie uruchamiają QA. Nowe wymaganie bierz z issue lub polecenia, bez aktualizacji planu i ponownego review; jawne zlecenie tej zmiany jest już decyzją. Pytaj tylko o nierozstrzygnięty wybór lub rozszerzenie poza zlecenie.
-5. Zapisz `test_stage` i dowody w kanonicznym checkpointcie; obszerny raport tylko gdy potrzebny. Podaj wykorzystaną ochronę, zamknięte/otwarte luki, polecenia/wyniki/wersje, podstawę reuse, wystarczalność dla tego zakresu i ograniczenia. **Zakończenie bez zmian testów jest poprawne**, gdy istniejąca ochrona wystarcza i wskazują to konkretne dowody. Nie zapisuj zakończenia na podstawie samego wywołania skilla.
+## Kroki
 
-Oddaj wynik domknięcia regresji i handoff `raven-pr <id>`. Braki pozostają jawne, historyczne PASS zachowują wersję; BLOCKED/NOT VERIFIED nie stają się PASS. Dwie nieskuteczne próby jednego problemu zatrzymują zależną pętlę. Nie odbieraj funkcji za użytkownika i nie publikuj PR z samego zlecenia testów.
+1. **Mapa.** Dla każdego AC (z issue, planu lub polecenia) i istotnego ryzyka ustal: jaki istniejący test go chroni i jaką asercją. Brak takiego testu to nazwana luka. Expected wyprowadzaj z wymagań, nie z outputu implementacji.
+2. **Luki.** Dopisuj testy tylko dla nazwanych luk. Dobra istniejąca ochrona zostaje bez zmian i bez duplikatów. Najtańsza skuteczna warstwa: unit dla logiki, integration dla granic DB/usług/API, E2E dla realnego przepływu w UI. Nie dodawaj frameworka ani warstw na zapas.
+3. **E2E.** Gdy potrzebne, czytaj tylko potrzebne: [setup Playwright](references/procedures/e2e-setup/procedure.md) i [pisanie testów](references/procedures/e2e/procedure.md). Dla nowego zachowania prowadzonego testem: [TDD](references/procedures/tdd/procedure.md).
+4. **Skuteczność.** Każdy nowy test musi móc nie przejść: niezależne Expected, sensowna asercja skutku, izolacja i cleanup, mocki tylko na zewnętrznych granicach. Przy niepewności zrób kontrolowaną perturbację kodu i bezwarunkowo ją cofnij. Nie osłabiaj asercji dla zielonego wyniku.
+5. **Uruchomienie.** Nowe i zmienione testy plus zależne regresje. Pełną suite tylko z konkretnego powodu.
+
+## Before-change
+
+Przed refaktorem bez ochrony: test charakteryzacyjny utrwala świadomie chronione zachowanie, nie przypadkowy błąd. Dla bugfixu test na starym kodzie może zakończyć się `EXPECTED_RED`: podaj asercję, obserwowany błąd i źródło oczekiwania. Błąd runnera lub środowiska nie dowodzi reprodukcji.
+
+## Defekt produktu
+
+Wykryty defekt w zakresie zlecenia napraw proporcjonalnie i podaj w czacie aktualną instrukcję odbioru. Defekt poza zakresem zgłoś bez naprawy.
+
+## Finał
+
+W czacie: mapa AC → test, zamknięte i otwarte luki, uruchomione polecenia z wynikiem. **Zakończenie bez nowych testów jest poprawne**, gdy mapa pokazuje wystarczającą ochronę. Testy commituj w logicznych krokach. Nie publikuj PR z samego zlecenia testów.

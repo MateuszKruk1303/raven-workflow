@@ -27,7 +27,7 @@ Stan kodu: działający checkout, metody dostawy i zamówienia; adapter przewoź
 
 ## 3. Płatność i awarie
 
-Polecenie: „Użyj raven-auto-plan dla C-08: płatności kartą Stripe w istniejącym procesie zakupu.”
+Polecenie: „Użyj raven-plan dla C-08: płatności kartą Stripe w istniejącym procesie zakupu.”
 
 Issue C-08: Kupujący płaci raz za zamówienie; po awarii sieci może bezpiecznie ponowić próbę. System przyjmuje powtarzające się oraz opóźnione webhooki. Wyświetlany status odzwierciedla faktyczne rozliczenie. Pobrana kwota bez zakończonego utworzenia zamówienia pozostaje powiązana z próbą zakupu i jest widoczna w istniejącym panelu operatora do uzgodnionej obsługi. Nigdy nie powstaje drugie obciążenie tej samej próby.
 
@@ -45,7 +45,7 @@ Polecenie: „Kontynuuj raven-plan dla C-31: reset hasła przez email. Poniżej 
 
 Issue C-31: Użytkownik prosi o reset, otrzymuje jednorazowy link ważny 30 minut i ustawia nowe hasło zgodnie z istniejącą polityką. Odpowiedź formularza nie ujawnia istnienia konta. Token po użyciu jest nieważny. Dostawca poczty i reguły resetu są uzgodnione.
 
-Checkpoint: zakres wstępnie oceniono, wywiad zakończony, struktura robocza. Research R-7 potwierdził istniejący transport emaili i bibliotekę tokenów. Odkrył także żądanie operatorów zapisane w PRD FR-19: panel masowego zapraszania pracowników z CSV, raportem błędów wierszy i ponowieniem zaproszenia. Aktualna roadmapa nie ma FR-19; oba zachowania używają kont użytkowników i poczty. Autor roboczej notatki dopisał „Phase 3: import CSV i zaproszenia”. Użytkownik zlecił tylko kontynuowanie C-31.
+Stan pracy: zakres wstępnie oceniono, wywiad zakończony, struktura robocza. Research R-7 potwierdził istniejący transport emaili i bibliotekę tokenów. Odkrył także żądanie operatorów zapisane w PRD FR-19: panel masowego zapraszania pracowników z CSV, raportem błędów wierszy i ponowieniem zaproszenia. Aktualna roadmapa nie ma FR-19; oba zachowania używają kont użytkowników i poczty. Autor roboczej notatki dopisał „Phase 3: import CSV i zaproszenia”. Użytkownik zlecił tylko kontynuowanie C-31.
 
 ## 6. Zmiana z wieloma krokami
 
@@ -57,8 +57,8 @@ Stan: jeden deployowalny monolit i wspólny kontrakt `Money` w trzech częściac
 
 ## 7. Rozpoczęta praca z historią
 
-Polecenie: „Wznów raven-auto-plan dla C-07 i popraw granice planu. Na razie nie zmieniaj pozostałej kolejki.”
+Polecenie: „Wznów raven-plan dla C-07 i popraw granice planu. Na razie nie zmieniaj pozostałej kolejki.”
 
 Issue C-07 „Zakupy i obsługa sklepu”: zamówienie, Stripe/COD, Furgonetka dla zamówień i nadań ręcznych, potwierdzenie Resend oraz ranking produktów. Zakres i reguły jak w przypadku 1, zapisane w PRD v2. C-08 „Faktura do zamówienia” jest blocked by C-07. C-09 „Raport dzienny płatności” jest blocked by C-07. Pozostałe issues są poza zleceniem.
 
-Historia: snapshot planu v1 i plan-review R-2 zachowane w komentarzach; decyzja D-3 zaakceptowała Stripe i COD, D-4 zatwierdziła reużycie Furgonetka dla nadań ręcznych, D-5 zatwierdziła Resend i reguły ponowień. Nowy plan nie ma jeszcze niezależnego review. C-07/T-01 „Złożenie zamówienia” In progress: model i serwis wykonane na branchu, zapisane dowody unit/integration; UI nieukończone. C-07/T-02 „Płatności i wysyłka” Backlog, bez kodu. C-07/T-03 „Email i ranking” Backlog. Ostatni checkpoint zawiera SHA, mapowanie Progress i raport researchu przewoźnika R-6. Brak merge. Użytkownik nie upoważnił do zamknięcia żadnego issue ani taska.
+Historia: plan v1 i jego review R-2 w historii Git; decyzja D-3 zaakceptowała Stripe i COD, D-4 zatwierdziła reużycie Furgonetka dla nadań ręcznych, D-5 zatwierdziła Resend i reguły ponowień. Nowy plan nie ma jeszcze niezależnego review. C-07/T-01 „Złożenie zamówienia” In progress: model i serwis wykonane na branchu, zapisane dowody unit/integration; UI nieukończone. C-07/T-02 „Płatności i wysyłka” Backlog, bez kodu. C-07/T-03 „Email i ranking” Backlog. Ostatni checkpoint zawiera SHA, mapowanie Progress i raport researchu przewoźnika R-6. Brak merge. Użytkownik nie upoważnił do zamknięcia żadnego issue ani taska.

@@ -1,22 +1,27 @@
 ---
 name: raven-roadmap
-description: "Utwórz lub odśwież kolejność samodzielnych changes na podstawie PRD. GitHub Issues przechowuje taski, zależności i stan roadmapy; Project jest opcjonalnym widokiem."
+description: "Utwórz lub odśwież kolejkę samodzielnych changes jako GitHub Issues, ze źródłem w PRD albo wskazanych ticketach, sprincie lub epice Jira. Bez planów implementacji i zapisów do Jira."
 ---
 
 # Raven Roadmap
 
-Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [granice change](../raven-workflow/references/change-scope.md).
 
-Do wplecenia dodatkowego wymagania w zakres i AC jednego wskazanego istniejącego issue użyj [raven-issue-update](../raven-issue-update/SKILL.md). Roadmapa potrafi aktualizować istniejące issues w ramach zleconej zmiany kolejki; pojedynczy dodatek nie wymaga jej reorganizacji ani ponownego podziału PRD.
+Roadmapa to GitHub Issues w ustalonym repo: jeden issue = jeden samodzielnie odbieralny wynik. Zlecenie roadmapy obejmuje zapis tych issues. Project jest opcjonalnym widokiem. Nie twórz lokalnej roadmapy ani drugiego backlogu. Dodatek do jednego istniejącego issue to [raven-issue-update](../raven-issue-update/SKILL.md), nie reorganizacja kolejki.
 
-Przeczytaj [granice change](../raven-workflow/references/change-scope.md). Wejście to PRD/zaakceptowane wymagania, istniejąca architektura i stan produktu. Roadmapa ustala rezultaty oraz zależności, nie zatwierdza planu implementacji.
+## Źródło
 
-Roadmapę utrzymuj wyłącznie w GitHub Issues ustalonego repo. Zlecenie utworzenia lub aktualizacji roadmapy obejmuje zapis jej issues w uzgodnionym zakresie. Project jest opcjonalnym widokiem; nie twórz lokalnej roadmapy, drugiego backlogu ani boarda przy okazji. Brak dostępu oznacza niewykonaną publikację: przedstaw propozycję w rozmowie i nazwij brak, bez udawania gotowej roadmapy. Sam odczyt/status nie mutuje.
+- **PRD** (`context/foundation/prd.md` lub wskazany dokument): pokryj całe uzgodnione PRD — każde wymaganie ma swój change, dowód wcześniejszego dostarczenia albo jawne odroczenie.
+- **Jira** (klucze, URL, sprint, epika): pobierz opisy, AC i relacje tylko z tego zakresu. Epika lub sprint to kontener, nie change; jeden ticket może być change, zbyt szeroki dzielisz. Issue GH linkuje ticket (z ID i datą aktualizacji), bez kopiowania treści ani statusu. Do Jiry nie zapisujesz. Status Jira Done nie dowodzi merge.
 
-Podziel uzgodnione wymagania na osobno planowalne, weryfikowalne i mergeowalne wyniki. Zachowaj pionowy zakres oraz wymagane gwarancje; nie twórz zmian „cały backend”/„cały frontend”, issues dla faz implementacji. Jeden issue to jeden task/change. Każdy ma numer/URL, krótki wynik, zakres/wyłączenia, źródła, AC, zależności i kolejność. Większy nierozdzielny zakres krótko uzasadnij. Dalsze changes pozostają na poziomie rezultatu, bez szczegółowego projektowania przyszłych integracji.
+## Podział
 
-Pokryj całe uzgodnione PRD: wymaganie przypisane do change, już dostarczone z dowodem albo jawnie odłożone decyzją. Nie zamieniaj wyłączeń w nowy backlog. Graf zależności musi być acykliczny; relacja rodzic–dziecko nie jest zależnością wykonania. Milestones są opcjonalne. Zwykłą sekwencję i techniczny podział wynikający z PRD wykonaj autonomicznie; zmiana wymagań/priorytetów lub odroczenie koniecznej gwarancji wymaga decyzji.
+Dziel na pionowe wyniki (UI, API, dane i walidacja razem), nie na warstwy ani fazy. Każdy issue: wynik, zakres i wyłączenia, link do źródła, obserwowalne AC, zależności. Graf zależności acykliczny. Większy nierozdzielny zakres krótko uzasadnij. Zwykły podział uzgodnionego zakresu wykonaj sam; zmiana wymagań lub priorytetów wymaga decyzji użytkownika.
 
-Przy aktualizacji zachowaj ID, decyzje, postęp i historię. Nie reorganizuj istniejącej kolejki przy samym pytaniu o status albo plan jednego change. Nie migruj historycznej roadmapy bez zlecenia. [Zapis i weryfikacja](references/github-publication.md) określają oszczędne operacje na issues GH.
+## Zapis
 
-Oddaj linki do roadmapy w GH, pierwszy gotowy do planowania rezultat, zależności i rzeczywiste luki. Nie twórz pełnych planów wszystkich changes ani nie uruchamiaj implementacji.
+Przed tworzeniem sprawdź istniejące issues w zakresie, żeby nie duplikować (także po timeout). Przy odświeżeniu aktualizuj tylko różnice, zachowując treści ludzi, assignees i statusy; pokaż added/changed/unchanged/out-of-scope. Nie ustawiaj In progress ani nie zamykaj issues przy układaniu kolejki. Po zapisie odczytaj issues. Bez dostępu do GitHub oddaj propozycję w czacie i nazwij niewykonany zapis.
+
+## Finał
+
+W czacie: linki do issues, kolejność i zależności, pierwszy change gotowy do pracy, luki. Nie twórz planów wszystkich changes ani nie uruchamiaj implementacji.

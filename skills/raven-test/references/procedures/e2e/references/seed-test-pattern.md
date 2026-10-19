@@ -33,7 +33,7 @@ uses `getByRole`, generated tests do too. If the seed has
   idempotent (it creates a record), don't retry it — wait for the hydration
   signal once, then fill and submit.
 - **Risk-tied assertions.** The test name should bind it unambiguously to a risk
-  from `context/foundation/test-plan.md`: `test('flashcard data persists after
+  from the change's acceptance criteria: `test('flashcard data persists after
   page reload', ...)`, not `test('test 1', ...)`.
 
 ## Exemplar

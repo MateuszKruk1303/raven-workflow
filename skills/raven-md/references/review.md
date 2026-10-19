@@ -1,14 +1,8 @@
-# Wewnętrzna procedura Raven
-
-To część implementacji skilla Raven, nie osobna komenda. Czytaj ją wraz z nadrzędnym SKILL.md, który określa tryb manual/auto i uprawnienia. Wszystkie szablony, referencje i skrypty są dostarczone lokalnie w tym katalogu. Nie wyszukuj ani nie instaluj innych pakietów workflow.
-
-**Obowiązujące zasady wykonania:** [kontrakt pracy Git-first](../../../../raven-workflow/references/change-contract.md). Plan, raporty i checkpoint są wersjonowanymi plikami repo. Testy powstają wraz z implementacją; dodatkowe osobne etapy wynikają ze zlecenia lub ryzyka. Publikacja zewnętrzna wymaga odpowiedniej autoryzacji.
-
 # Przegląd zasad Raven
 
 Oceń plik zasad dla AI w pięciu osiach i zwróć konkretne poprawki. Plikiem poddawanym przeglądowi jest dowolny markdown z zasadami dla AI przekazany przez użytkownika — ta umiejętność nie zakłada pliku konfiguracji AI projektu (AGENTS.md), AGENTS.md ani żadnego konkretnego narzędzia.
 
-Ta umiejętność nigdy nie edytuje pliku. Tworzy kartę wyników. Użytkownik decyduje, co wdrożyć.
+Tryb review nie edytuje pliku. Tworzy kartę wyników w czacie. Użytkownik decyduje, co wdrożyć.
 
 ## Rozpoznawanie danych wejściowych
 

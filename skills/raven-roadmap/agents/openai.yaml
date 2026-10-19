@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Roadmap"
-  short_description: "Roadmapa w repo lub istniejącym trackerze"
-  default_prompt: "Użyj $raven-roadmap. Utwórz roadmapę z ustalonego PRD w repo albo wskazanym istniejącym trackerze, bez duplikowania backlogu."
+  short_description: "Kolejka changes jako GitHub Issues z PRD lub Jira"
+  default_prompt: "Użyj $raven-roadmap. Utwórz lub odśwież kolejkę changes jako GitHub Issues ze wskazanego PRD albo ticketów Jira."

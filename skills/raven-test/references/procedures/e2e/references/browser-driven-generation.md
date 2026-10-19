@@ -92,7 +92,7 @@ scenario independent:
 - **Navigate and set up the page first**, then explore from the snapshot before any
   other interaction.
 - **Plan from the risk**, not the page. Feed yourself the one risk from
-  `context/foundation/test-plan.md` this phase protects — a focused plan for that
+  the change's acceptance criteria this test protects — a focused plan for that
   flow, not a generic crawl of every button.
 - **Each scenario must be independent and runnable in any order** — its own setup,
   action, assertion, and cleanup, always assuming a fresh/blank starting state. This
@@ -127,7 +127,7 @@ the steps live, then writing the code from what actually happened:
 - **Keep a provenance header** linking the spec back to its risk and seed, e.g.:
 
   ```ts
-  // risk: test-plan.md #1 — flashcard data persists after reload
+  // risk: AC1 — flashcard data persists after reload
   // seed: tests/seed.spec.ts
   ```
 

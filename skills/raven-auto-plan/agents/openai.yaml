@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Auto Plan"
-  short_description: "Lokalny plan i niezależne review"
-  default_prompt: "Użyj $raven-auto-plan. Przygotuj lokalny plan wskazanego change i niezależne review, po czym oddaj gotowy plan i wskaż raven-auto-implement jako następny krok."

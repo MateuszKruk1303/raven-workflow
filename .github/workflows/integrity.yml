@@ -22,4 +22,3 @@ jobs:
       - run: python -m pip install -r requirements-dev.txt
       - run: python tools/raven.py doctor
       - run: python -m unittest discover -s tests -v
-      - run: python skills/raven-auto-plan/scripts/test_snapshot_fingerprint.py

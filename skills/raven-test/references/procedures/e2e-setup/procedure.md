@@ -2,7 +2,7 @@
 
 To część implementacji skilla Raven, nie osobna komenda. Czytaj ją wraz z nadrzędnym SKILL.md, który określa tryb manual/auto i uprawnienia. Wszystkie szablony, referencje i skrypty są dostarczone lokalnie w tym katalogu. Nie wyszukuj ani nie instaluj innych pakietów workflow.
 
-**Obowiązujące zasady wykonania:** [kontrakt pracy Git-first](../../../../raven-workflow/references/change-contract.md). Plan, raporty i checkpoint są wersjonowanymi plikami repo. Testy powstają wraz z implementacją; dodatkowe osobne etapy wynikają ze zlecenia lub ryzyka. Publikacja zewnętrzna wymaga odpowiedniej autoryzacji.
+**Obowiązujące zasady wykonania:** [praca na taskach GitHub](../../../../raven-workflow/references/git-workflow.md).
 
 # Konfiguracja Raven E2E — infrastruktura Playwright dla `/raven-test`
 
@@ -26,7 +26,7 @@ Nie będzie:
 - pisać testów E2E poza seedem — tym zajmuje się `/raven-test`;
 - dotykać workflow CI;
 - nadpisywać istniejącego klucza konfiguracji lub speca bez pytania;
-- pisać do pliku reguł agenta (pliku konfiguracji AI projektu (AGENTS.md), …). Reguły E2E są istotne tylko podczas pracy nad testami E2E, więc znajdują się w `references/e2e-quality-rules.md` umiejętności i są ładowane przez `/raven-test`, a nie w każdej sesji. Blok reguł E2E dopisany przez wcześniejszą wersję tej umiejętności pozostaje bez zmian; możesz go usunąć;
+- pisać do pliku reguł agenta (pliku konfiguracji AI projektu (AGENTS.md), …). Reguły E2E są istotne tylko podczas pracy nad testami E2E, więc znajdują się w `../e2e/references/e2e-quality-rules.md` umiejętności i są ładowane przez `/raven-test`, a nie w każdej sesji. Blok reguł E2E dopisany przez wcześniejszą wersję tej umiejętności pozostaje bez zmian; możesz go usunąć;
 - odczytywać ani wyświetlać wartości sekretów, tworzyć użytkowników poza lokalnym stosem ani zatwierdzać danych uwierzytelniających;
 - samodzielnie zatwierdzać odbioru — publikację, commity i review prowadzi wywołujący skill w ustalonym trybie manual/auto.
 
@@ -59,7 +59,7 @@ Czytaj, nie zapisuj. Zbierz te fakty i pokaż je użytkownikowi jako jedną kró
 7. **Nakładanie się test runnera jednostkowego.** Jeśli skonfigurowano runner jednostkowy (np. Vitest, Jest), sprawdź jego globy include. Jeśli również zbierałyby `tests/e2e/**/*.spec.ts`, specy E2E muszą zostać tam wykluczone — zanotuj to dla kroku 3.
 8. **Podejście do auth.** Spójrz na middleware / route guards, stronę logowania i jej formularz oraz dostawcę auth (np. Supabase, Auth.js, Clerk, niestandardową sesję). Zapisz: chronione trasy, ścieżkę logowania, stronę docelową po logowaniu oraz to, czy dostawca działa lokalnie (np. `supabase/config.toml` → lokalny stos przez `npx supabase start`). W ogóle bez logowania → `auth: none`.
 9. **Env aplikacji.** Który ignorowany przez git plik env odczytuje aplikacja (np. `.env`), czy preview odczytuje inny (zobacz `references/playwright-setup-templates.md` → Preview env) oraz czy URL backendu wskazuje tam lokalny stos. Odczytuj tylko **nazwy** zmiennych, nigdy wartości — z wyjątkiem sprawdzenia, czy URL backendu jest lokalny.
-10. **Plan testów i stan.** `context/foundation/test-plan.md` (ryzyka na poziomie przeglądarki) oraz `context/foundation/test-stack.md` (istniejąca sekcja `## E2E`).
+10. **Stan.** `context/foundation/test-stack.md` (istniejąca sekcja `## E2E`).
 
 Jeśli projekt nie ma aplikacji webowej do sterowania (w ogóle brak polecenia server/preview), zatrzymaj się i powiedz, że E2E potrzebuje uruchamialnej aplikacji.
 
@@ -87,12 +87,12 @@ Użyj `references/playwright-setup-templates.md`.
 
 ## 4. Seed
 
-Seed jest wzorem, który kopiuje każdy wygenerowany test (`references/seed-test-pattern.md`), więc musi być mały, poprawny i zielony.
+Seed jest wzorem, który kopiuje każdy wygenerowany test (`../e2e/references/seed-test-pattern.md`), więc musi być mały, poprawny i zielony.
 
 - **Seed istnieje** (ścieżka `seed` z `test-stack.md` lub `seed.spec.ts`) → nie przepisuj go; tylko go uruchom (poniżej).
-- **Brak seeda → wybierz jedno ryzyko.** Jeśli `$ARGUMENTS` wskazuje jedno, użyj go. W przeciwnym razie, jeśli istnieje `context/foundation/test-plan.md`, weź jego ryzyka **na poziomie przeglądarki** i wybierz to, które jest **najszybsze do zazielenienia bez mocków**, np. przekierowanie auth gate zamiast przepływu wywołującego zewnętrzne API. Ryzyko jest na poziomie przeglądarki, gdy jego wiersz w tabeli risk-response planu testów wymienia e2e jako (część) najtańszej warstwy, albo gdy faza wdrażania E2E wymienia je w scenariuszu. W obu przypadkach nie jest na poziomie przeglądarki, gdy ten wiersz odradza e2e (ma to pierwszeństwo przed wymienieniem go w fazie wdrażania) (oba warunki zachodzą: najtańsza warstwa to unit/integration **i** kolumna antywzorca ostrzega przed e2e; pusta kolumna antywzorca go nie wyklucza). Pozostaw pozostałe dla `/raven-test`. Gdy nie ma strategii, wykorzystaj wymagania i ryzyka lokalnego change. Zapytaj wyłącznie o rzeczywiście brakujące oczekiwanie. Ryzyko bez id (opisane przez użytkownika) otrzymuje krótki slug kebab-case, np. `auth-gate-roundtrip`.
+- **Brak seeda → wybierz jedno ryzyko.** Jeśli `$ARGUMENTS` wskazuje jedno, użyj go. W przeciwnym razie weź ryzyka na poziomie przeglądarki z AC issue lub planu i wybierz to, które jest **najszybsze do zazielenienia bez mocków**, np. przekierowanie auth gate zamiast przepływu wywołującego zewnętrzne API. Zapytaj wyłącznie o rzeczywiście brakujące oczekiwanie. Ryzyko bez id (opisane przez użytkownika) otrzymuje krótki slug kebab-case, np. `auth-gate-roundtrip`.
 - **Czy rezultat jest zaimplementowany?** Zbadaj przepływ, zanim zdecydujesz się na ryzyko. Jeśli obserwowalny rezultat nie odpowiada temu, co aplikacja robi obecnie (np. użytkownik oczekuje powrotu na chronioną stronę, ale logowanie zawsze prowadzi do `/`), powiedz o tym użytkownikowi. Następnie utwórz seed dla części, która jest zaimplementowana, i zapisz resztę jako niezaimplementowaną albo wybierz inne ryzyko. Nigdy nie asercjuj zachowania, którego aplikacja nie posiada.
-- **Zapisz** `tests/e2e/seed.spec.ts` (lub katalog E2E istniejący w projekcie), postępując według czterech wzorców z `references/seed-test-pattern.md`: lokatory oparte na rolach, samodzielny setup → action → assertion → cleanup, oczekiwania na stan oraz nazwa testu wskazująca ryzyko. Najpierw zbadaj przepływ narzędziem wybranym według `references/tool-wiring.md` i użyj nazw dostępności widocznych w snapshocie. Poczekaj, aż formularz będzie interaktywny, zanim zaczniesz wpisywać tekst (zobacz wzorzec seeda: dane wpisane do formularza, który nie ukończył jeszcze hydratacji, zostają utracone). Dodaj komentarz o pochodzeniu z identyfikatorem ryzyka. Seed, którego ryzykiem jest ścieżka wylogowanego użytkownika, rezygnuje z zapisanej sesji (zobacz wzorzec seeda).
+- **Zapisz** `tests/e2e/seed.spec.ts` (lub katalog E2E istniejący w projekcie), postępując według czterech wzorców z `../e2e/references/seed-test-pattern.md`: lokatory oparte na rolach, samodzielny setup → action → assertion → cleanup, oczekiwania na stan oraz nazwa testu wskazująca ryzyko. Najpierw zbadaj przepływ narzędziem wybranym według `references/tool-wiring.md` i użyj nazw dostępności widocznych w snapshocie. Poczekaj, aż formularz będzie interaktywny, zanim zaczniesz wpisywać tekst (zobacz wzorzec seeda: dane wpisane do formularza, który nie ukończył jeszcze hydratacji, zostają utracone). Dodaj komentarz o pochodzeniu z identyfikatorem ryzyka. Seed, którego ryzykiem jest ścieżka wylogowanego użytkownika, rezygnuje z zapisanej sesji (zobacz wzorzec seeda).
 - **Uruchom go na zielono z zimnego serwera** za pomocą polecenia dla pojedynczego speca (projekt `setup` uruchamia się najpierw jako zależność). Najpierw zatrzymaj serwer eksploracyjny i potwierdź, że nic nie nasłuchuje na porcie (polecenie z kroku 1.5 nic nie wypisuje), aby `webServer` sam zbudował i uruchomił aplikację. Ciepły serwer ukrywa wyścigi hydratacji i nieaktualne buildy, więc seed, który zazielenił się tylko względem takiego serwera, nie jest potwierdzony. Jeśli backend jest lokalnym stosem, upewnij się, że działa. Przy czerwonym wyniku: przeczytaj błąd i trace, popraw seed lub setup — nigdy nie osłabiaj asercji, aż przestanie móc się nie powieść, i nigdy nie pomijaj testu. Następnie zadaj pytanie kontrolne: czy ta asercja nie powiodłaby się, gdyby ryzyko wystąpiło? Jeśli nie, wzmocnij ją. (Pełne celowe sprawdzenie przez uszkodzenie należy do `/raven-test`.)
 
 ## 5. Integracja agenta
@@ -105,7 +105,7 @@ Zapisz sekcję `## E2E` w `context/foundation/test-stack.md` dokładnie zgodnie 
 
 ## 7. Przekazanie
 
-Wybierz kolejne ryzyko z `test-plan.md`: ryzyko o najwyższym priorytecie, które (a) **nie jest ryzykiem seeda**, (b) jest **na poziomie przeglądarki** (reguła kroku 4, która odczytuje kolumnę najtańszej warstwy planu testów) oraz (c) **nie ma jeszcze speca** (przeszukaj nagłówki pochodzenia i nazwy testów katalogu E2E pod kątem jego id). Skopiuj `/raven-test <risk-id>` do schowka. Jeśli żadne ryzyko nie kwalifikuje się lub nie ma planu testów, skopiuj `/raven-test` bez ryzyka (poprosi o jedno). Nigdy nie przekazuj ryzyka seeda. Następnie wypisz:
+Wskaż kolejne ryzyko na poziomie przeglądarki z AC issue lub planu, które nie jest ryzykiem seeda i nie ma jeszcze speca, jako `/raven-test <ryzyko>`. Bez takiego ryzyka wskaż samo `/raven-test`. Następnie wypisz:
 
 ```
 E2E setup — done
@@ -125,12 +125,12 @@ Next — write the first reviewed test for a risk:
 → /raven-test [risk-id, or nothing] (✓ copied)
 ```
 
-Zwróć wynik do wywołującego raven-test lub raven-auto-test. Kontynuuj uzgodnione fazy testowe dopiero po potwierdzeniu działania setupu; nie uruchamiaj rekurencyjnie skilla testów.
+Zwróć wynik do wywołującego raven-test. Kontynuuj uzgodnione fazy testowe dopiero po potwierdzeniu działania setupu; nie uruchamiaj rekurencyjnie skilla testów.
 
 ## Referencje
 
 - `references/tool-wiring.md` — wybór dostępnego narzędzia, izolacja sesji i ochrona danych.
 - `references/playwright-setup-templates.md` — szablony konfiguracji, setupu auth, użytkownika testowego i `.gitignore`.
 - `references/test-stack-e2e-schema.md` — kontrakt sekcji `## E2E` odczytywany przez `/raven-test` i `/raven-test`.
-- `references/seed-test-pattern.md` — cztery wzorce przenoszone przez seed, wraz z przykładem (współdzielone z `/raven-test`).
-- `references/e2e-quality-rules.md` — reguły E2E, których przestrzega seed i które egzekwuje `/raven-test`, wraz z uzasadnieniem (współdzielone z `/raven-test`).
+- `../e2e/references/seed-test-pattern.md` — cztery wzorce przenoszone przez seed, wraz z przykładem (współdzielone z `/raven-test`).
+- `../e2e/references/e2e-quality-rules.md` — reguły E2E, których przestrzega seed i które egzekwuje `/raven-test`, wraz z uzasadnieniem (współdzielone z `/raven-test`).

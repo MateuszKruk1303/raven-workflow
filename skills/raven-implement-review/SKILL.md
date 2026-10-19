@@ -1,16 +1,28 @@
 ---
 name: raven-implement-review
-description: "Przeprowadź jedno niezależne review change: zgodność z wymaganiami, poprawność kodu i skuteczność testów. Zapisz raport w repo dla ocenianego zakresu i fingerprintu."
+description: "Niezależne review zmiany: zgodność z wymaganiami, poprawność kodu i skuteczność testów. Read-only; wynik w czacie."
 ---
 
 # Raven Implement Review
 
-Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
 
-Świeży reviewer nie dziedziczy transkryptu autora i nie edytuje produktu. Przeczytaj [procedurę review](references/procedures/impl-review/procedure.md). Przyjmij change/plan/branch/PR, wymagania i publiczne decyzje; ustal rzeczywisty base/head i dirty state, nie wyznaczaj bazy na podstawie daty planu.
+Review wykonuje świeży agent bez transkryptu autora. Nie edytuje produktu ani testów.
 
-Normalne review obejmuje kod **oraz testy i wymagania**. Zweryfikuj mapę kryteriów na dowody, zachowania błędów, integracje, regresje, adekwatność asercji i luki. Testy autora są dowodem, nie wyrocznią wymagań. Nie wymagaj wcześniejszego osobnego testera ani ponownego test-review po pozytywnym pełnym review.
+## Wejście
 
-Zapisz `review.md` z zakresem, fingerprintem, kontrolami, oceną i konkretnymi finding IDs. Dodatkowe role rekomenduj tylko przy nazwanym ryzyku. Koordynator realizuje autoryzowane rutynowe poprawki w zakresie i odświeża potrzebną część review; wybór nowego zakresu/ryzyka należy do użytkownika. Raport nie jest odbiorem człowieka ani zgodą na merge.
+Issue lub polecenie, plan (jeśli jest), branch lub PR. Ustal rzeczywisty zakres diffu: baza, head, niezacommitowane zmiany. Zakres może dotyczyć całego change albo tylko wskazanych testów.
 
-Oceniaj bieżące testy i gotowość implementacji do ręcznej weryfikacji. Raport review nie udaje wykonania późniejszego raven-test ani nie zamyka audytu regresji samym PASS. Wskaż istniejącą ochronę i konkretne luki do ponownego użycia, bez odkładania wymaganej poprawności kodu.
+## Ocena
+
+1. **Wymagania.** Każde AC ma pokrycie w kodzie i dowód (test, sprawdzenie). Brak dowodu oznacz NOT VERIFIED.
+2. **Poprawność.** Reguły, ścieżki błędów, przypadki brzegowe, wyścigi. Prześledź krytyczne ścieżki od wejścia do skutku.
+3. **Architektura.** Zgodność z istniejącymi wzorcami i granicami modułów.
+4. **Bezpieczeństwo i dane.** Uprawnienia, walidacja wejścia, utrata lub nadpisanie danych.
+5. **Testy.** Czy wykryją regresję: niezależne Expected (nie przepisane z implementacji), sensowne asercje, izolacja i cleanup, adekwatne mocki. Testy autora są dowodem, nie wyrocznią.
+
+Uruchom kontrolę, która rozstrzyga wątpliwość. Nie zgłaszaj stylistyki ani hipotetycznych problemów spoza zakresu jako blokady.
+
+## Wynik
+
+W czacie: zakres (baza..head), uruchomione kontrole z wynikiem, uwagi z ważnością (critical/warning/suggestion), miejscem `plik:linia`, scenariuszem i rekomendacją, oraz werdykt. Plik raportu tylko na prośbę użytkownika. Review nie jest odbiorem ani zgodą na merge.

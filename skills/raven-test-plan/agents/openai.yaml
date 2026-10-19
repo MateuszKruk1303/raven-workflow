@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Test Plan"
-  short_description: "Strategia testów w repo"
-  default_prompt: "Użyj $raven-test-plan. Przygotuj lub odśwież strategię testów w context/foundation/test-plan.md."

@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Merge"
-  short_description: "Merge z aktualnymi dowodami i CI"
-  default_prompt: "Użyj $raven-merge. Zmerguj właściwy PR wskazanego change po aktualnych dowodach, CI i odbiorze; tracker aktualizuj tylko jeśli objęty zgodą."
+  short_description: "Merge po zielonym CI i zamknięcie issue"
+  default_prompt: "Użyj $raven-merge. Zmerguj wskazany PR po zielonym CI i potwierdź zamknięcie powiązanego issue."

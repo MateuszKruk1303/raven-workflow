@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven PR"
-  short_description: "Odbiór wskazanej wersji, push i publikacja PR"
-  default_prompt: "Użyj $raven-pr dla wskazanego change: zapisz odbiór tej wersji, sprawdź dowody domknięcia regresji i opublikuj lub zaktualizuj PR."
+  short_description: "Push i publikacja PR powiązanego z issue"
+  default_prompt: "Użyj $raven-pr: wypchnij bieżący branch i utwórz lub zaktualizuj PR powiązany z issue."

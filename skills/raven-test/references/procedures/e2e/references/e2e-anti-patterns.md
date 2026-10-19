@@ -11,7 +11,7 @@ Syntactically valid, semantically empty. The test creates a deck, adds a card,
 reloads — and then asserts that the page title contains "Dashboard." It passes,
 but it never checks that the card survived the reload. A false sense of safety.
 
-**Control question:** would this assertion fail if the `test-plan.md` risk
+**Control question:** would this assertion fail if the risk
 materialized? If not, it's a naive assertion.
 
 **Fix:** assert the actual business outcome (after reload, the deck heading and

@@ -5,13 +5,13 @@ description: Wpleć dodatkowe lub doprecyzowane wymaganie do treści wskazanego 
 
 # Raven Issue Update
 
-Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
 
 Zlecenie „zaktualizuj issue o…” obejmuje zapis **body jednego wskazanego istniejącego issue**. Nie wymagaj dodatkowej rutynowej zgody na ten zapis. Samo pytanie, pomysł bez polecenia zapisu lub prośba o propozycję pozostaje read-only. Nie twórz nowych issues, komentarzy ani lokalnego backlogu; nie zmieniaj tytułu, zależności, kolejności, statusu, assignee, planu, kodu, PRD ani Jira. Nie podejmuj taska jako In progress: zapis wymagania nie rozpoczyna planowania lub implementacji. To opcjonalny helper, bez obowiązkowego review każdej aktualizacji.
 
 ## Ustal źródło i intencję
 
-Rozwiąż dokładny URL/numer issue albo change ID na podstawie instrukcji repo i istniejących powiązań (`.raven/config.json`, historyczne `context/foundation/github.json`, wskazany plan). Sam numer wymaga jednoznacznego repo, a change ID jednoznacznego mapowania. Nie wybieraj najnowszego/podobnego issue i nie skanuj całej kolejki. Przy brakującym celu zapytaj tylko o identyfikację.
+Rozwiąż dokładny URL/numer issue albo change ID na podstawie instrukcji repo, remote i wskazanego planu. Sam numer wymaga jednoznacznego repo, a change ID jednoznacznego mapowania. Nie wybieraj najnowszego/podobnego issue i nie skanuj całej kolejki. Przy brakującym celu zapytaj tylko o identyfikację.
 
 Odczytaj aktualny pełny body, stan issue i powiązanie z PR/change. Przeczytaj potrzebne do redakcji źródła i decyzje, w tym wskazane wątki. Nie kopiuj całej historii ani ticketów Jira. Rozróżnij nowe wymaganie użytkownika od dotychczasowej decyzji i od propozycji technicznej.
 

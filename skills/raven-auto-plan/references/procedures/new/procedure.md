@@ -1,5 +1,0 @@
-# Tożsamość change
-
-Ustal jeden rezultat zgodnie z [granicami change](../../../../raven-workflow/references/change-scope.md). Wykorzystaj istniejący ID lub nadaj unikalny ID w repo. Przed utworzeniem folderu/planu w zleconym planowaniu zastosuj [przygotowanie brancha](../../../../raven-workflow/references/change-branch.md); stan merged/closed poprzednika nie wskazuje nowego taska. Następnie utwórz `context/changes/<id>/plan.md` podczas planowania w potwierdzonym katalogu change. Osobno zlecone research/frame mogą wcześniej utworzyć folder z własnym raportem; jego istnienie nie zastępuje sprawdzenia brancha przy planowaniu. Powiąż change z jednym issue GH i potwierdź jego podjęcie przed zależnym planowaniem zgodnie z [kontraktem pracy](../../../../raven-workflow/references/change-contract.md). Osobny change.md i Project item nie są wymagane. Zachowaj historyczne pliki, jeśli istnieją; nie wytwarzaj drugiego kanonicznego stanu.
-
-Sprawdź kolizję ID i nie nadpisuj istniejącego zakresu. Samo utworzenie folderu nie zleca implementacji ani publikacji.

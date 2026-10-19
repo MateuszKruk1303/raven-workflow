@@ -2,7 +2,7 @@
 
 ### Example 1: Software / UI Feature — MEDIUM complexity (e.g., Pagination)
 
-Mixed: `Loading UX` is `[S]` (UI behavior — solution detail); `Scale` is `[D]` (problem boundary — how big is the dataset). With a frame brief, ask only `Loading UX`; the scale should already be in the Reframed (or Confirmed) Problem Statement.
+Mixed: `Loading UX` is `[S]` (UI behavior — solution detail); `Scale` is `[D]` (problem boundary — how big is the dataset).
 
 AskUserQuestion with questions:
 
@@ -29,7 +29,7 @@ AskUserQuestion with questions:
 
 ### Example 2: Content / Education — HIGH complexity (e.g., Course Module Design)
 
-Mixed: `Outcome` is `[D]` (defines what success looks like — pure problem framing); `Levels` is `[S]` (audience-handling strategy — how to structure delivery). With a frame brief, ask only `Levels`; the outcome should be settled.
+Mixed: `Outcome` is `[D]` (defines what success looks like — pure problem framing); `Levels` is `[S]` (audience-handling strategy — how to structure delivery).
 
 AskUserQuestion with questions:
 
@@ -56,7 +56,7 @@ AskUserQuestion with questions:
 
 ### Example 3: Strategy / Process — MEDIUM complexity (e.g., Newsletter Workflow)
 
-`Bottleneck` is `[D]` — pure problem framing (which problem to solve). This is exactly the kind of question a frame exists to settle. With a frame brief, skip this entirely; the leading hypothesis is the bottleneck.
+`Bottleneck` is `[D]` — pure problem framing (which problem to solve). Ask it only when the request does not already name the problem.
 
 AskUserQuestion with questions:
 
@@ -75,7 +75,7 @@ AskUserQuestion with questions:
 
 ## Undefined terms in the request
 
-Ranking, selection and state words carry a decision the request never makes. Run this pass in Step 1.1, before choosing interview questions.
+Ranking, selection and state words carry a decision the request never makes. Run this pass before choosing interview questions.
 
 | Term shape        | Examples                                      | Build the smallest case by                                                                             |
 | ----------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------ |

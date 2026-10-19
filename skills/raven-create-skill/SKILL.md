@@ -37,11 +37,11 @@ Użyj `rg` do wyszukania wywołań, odsyłaczy i nazw artefaktów. Czytaj tylko 
 
 - Utwórz lub zmień `skills/raven-<nazwa>/SKILL.md`: precyzyjny trigger, granice, wykonanie i handoff. Referencje i skrypty dodawaj tylko gdy skracają instrukcje lub zapewniają niezawodną, powtarzaną operację.
 - Metadane UI twórz według `skill-creator/references/openai_yaml.md`, odszukanego względem skilla hosta.
-- Dodaj skill do listy `skills` w `workflow-contract.json`, mapy etapów w ręcznym tutorialu raven-workflow i jednego właściwego wiersza katalogu README. Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
+- Dodaj skill do listy `skills` w `workflow-contract.json`, mapy skilli w tutorialu raven-workflow i jednego właściwego wiersza katalogu README. Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
 - Zmień powiązane skille wyłącznie tam, gdzie rzeczywiście zmieniają się wejścia, wyjścia, odpowiedzialności lub wywołania. Zachowaj kompatybilność i istniejące identyfikatory; nie migruj historycznych artefaktów projektów przy okazji.
-- Opcjonalny helper nie staje się wpisem w `stages` standardowego cyklu. Przy uzgodnionej zmianie cyklu uaktualnij razem kontrakt, jego niezmienniki w doctorze, router, konsumentów i testy. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
+- Nie dodawaj etapów, bramek ani dowodów procesu: kontrakt jest tylko katalogiem. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
 
-Wspólne zasady przechowuj w jednym miejscu. Nowy skill odwołuje się do wspólnego kontraktu Git-first, browsera lub niezależności, jeżeli faktycznie ich potrzebuje; nie duplikuj całych procedur i nie ładuj niepowiązanych referencji.
+Wspólne zasady przechowuj w jednym miejscu. Nowy skill odwołuje się do [pracy na taskach GitHub](../raven-workflow/references/git-workflow.md), browsera lub niezależności, jeżeli faktycznie ich potrzebuje; nie duplikuj całych procedur i nie ładuj niepowiązanych referencji.
 
 ## 4. Zweryfikuj zachowanie i niezależnie oceń
 
@@ -62,7 +62,7 @@ Naprawiaj potwierdzone błędy w ustalonym zakresie. Po poprawce odśwież dotkn
 
 ## 5. Oddaj lub zainstaluj
 
-Zakończ konkretnym pakietem: ścieżka skilla, zmienione integracje, przykład użycia, wyniki walidacji/review i ograniczenia. Nie twórz dodatkowego raportu w repo, jeśli nie jest potrzebny do wznowienia. Przy przerwie zachowaj krótki checkpoint w uzgodnionym artefakcie roboczym: decyzje, pliki, otwarte problemy, wyniki i następny krok; nie wznawiaj wywiadu od zera.
+Zakończ konkretnym pakietem: ścieżka skilla, zmienione integracje, przykład użycia, wyniki walidacji/review i ograniczenia. Nie twórz dodatkowego raportu w repo, jeśli nie jest potrzebny do wznowienia. Przy przerwie podsumuj decyzje, pliki, otwarte problemy i następny krok; nie wznawiaj wywiadu od zera.
 
 Instaluj globalnie tylko gdy jest to częścią zlecenia, również wcześniejszego w tej sesji. Uruchom `tools/raven.py sync --to <katalog-skilli>` bez `--apply`, przejrzyj cały diff instalacji i dopiero zastosuj `--apply`. Sync obejmuje całą zarejestrowaną rodzinę: nie nadpisuj niezwiązanych lokalnych modyfikacji, których użytkownik nie objął zleceniem. Przy takim konflikcie oddaj gotowy pakiet i ustal sposób scalenia przed instalacją. Po instalacji uruchom `doctor --installed <katalog-skilli>`; podaj wynik i ścieżkę backupu, jeśli powstał. Samo skopiowanie plików nie potwierdza odświeżenia katalogu skilli w aktywnym UI.
 

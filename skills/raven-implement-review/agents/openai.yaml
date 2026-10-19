@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Implement Review"
   short_description: "Review wymagań, kodu i testów"
-  default_prompt: "Użyj $raven-implement-review. Oceń wskazany change niezależnie: wymagania, kod i testy w jednym review."
+  default_prompt: "Użyj $raven-implement-review. Oceń wskazaną zmianę niezależnie: wymagania, kod i testy."

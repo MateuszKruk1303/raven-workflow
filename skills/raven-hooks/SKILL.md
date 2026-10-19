@@ -7,7 +7,7 @@ description: Skonfiguruj GitHub Actions uruchamiające lint, typecheck i właśc
 
 Seeduj lub uzupełnij checki GitHub Actions dla faktycznego stacku projektu. Nazwa oznacza tutaj CI po PR, nie lokalne hooki agenta. Nie implementuj testów produktu ani nie publikuj PR przy okazji setupu.
 
-Przeczytaj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md), instrukcje repo, manifesty/lockfile, konfigurację workspace, istniejące workflows, test-stack, strategię raven-test-plan i skrypty uruchamiania. Przyjmij wskazany change konfiguracyjny albo utwórz go zgodnie z kontraktem Raven, jeśli zlecenie nie ma jeszcze tożsamości. Nie zakładaj Node/Playwright ani pojedynczego pakietu.
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md). Przeczytaj instrukcje repo, manifesty/lockfile, konfigurację workspace, istniejące workflows, test-stack i skrypty uruchamiania. Nie zakładaj Node/Playwright ani pojedynczego pakietu.
 
 ## Zaprojektuj checki
 
@@ -29,7 +29,7 @@ Przed zapisaniem YAML zweryfikuj bieżącą składnię i wersje actions w oficja
 - Testowe błędy muszą powodować FAIL joba. Nie stosuj continue-on-error, `|| true` ani pass-with-no-tests jako obejścia brakujących wymaganych kontroli. Filtry ścieżek nie mogą zostawiać wymaganych checków stale pending; nie dodawaj ich bez rozstrzygnięcia tego zachowania.
 - Zweryfikuj YAML i workflow dostępnym walidatorem oraz rzeczywiste komendy lokalnie w możliwym zakresie. Jeśli walidator/środowisko są niedostępne, nazwij niewykonaną kontrolę; nie twierdź, że Actions przeszły przed rzeczywistym runem.
 
-Zapisz konfigurację w repo, a wynik w `context/changes/<id>/verification.md`; dla krótkiego wyniku wystarczy istniejący checkpoint planu z dowodami, bez drugiego raportu. Wskaż joby, triggery i politykę draft/ready, komendy, środowisko, pliki, walidację, wymagane secrets/variables (same nazwy) i ograniczenia fork PR. Historia Git przechowuje wcześniejsze wersje; komentarz GH nie jest kanonicznym raportem. Ujawnij brakujące ustawienia bez wymyślania wartości. Nie zmieniaj branch protection/rulesets ani automatyzacji Done bez osobnego zlecenia; samo dodanie workflow nie oznacza, że check blokuje merge.
+Zapisz konfigurację w repo, a wynik podaj w czacie: joby, triggery i politykę draft/ready, komendy, środowisko, pliki, walidację, wymagane secrets/variables (same nazwy) i ograniczenia fork PR. Ujawnij brakujące ustawienia bez wymyślania wartości. Nie zmieniaj branch protection/rulesets ani automatyzacji Done bez osobnego zlecenia; samo dodanie workflow nie oznacza, że check blokuje merge.
 
 Handoff: co będzie uruchamiane po PR, co sprawdzono lokalnie i czego pierwszy run dopiero dowiedzie. Ponowne wywołanie aktualizuje konfigurację bez duplikatów. Nie zmieniaj kodu produktu dla zielonego CI i nie uruchamiaj raven-pr automatycznie.
 
@@ -37,4 +37,4 @@ Handoff: co będzie uruchamiane po PR, co sprawdzono lokalnie i czego pierwszy r
 
 Ten etap jest właścicielem rozpoznania luki między istniejącym workflow Actions a faktycznie wymaganymi checkami. Odczytaj, o ile masz dostęp, rulesets/branch protection docelowej gałęzi; w raporcie rozróżnij: skonfigurowany job, potwierdzony run i check blokujący merge. Brak dostępu oznacza UNKNOWN, nie brak reguł.
 
-Gdy użytkownik osobno zleci wymuszanie bramek, przygotuj konkretną zmianę istniejących reguł z rzeczywistymi nazwami checków, zachowując pozostałe zabezpieczenia. Zastosuj ją w zakresie zlecenia i odczytaj stan po zapisie. Nie twórz obowiązkowego checka, który nie emituje wyniku dla właściwych PR. GitHub Issues jest wymaganym trackerem Raven; automatyzacja CI nie przejmuje jego statusu. [raven-merge](../raven-merge/SKILL.md) merguje sprawdzony PR na zlecenie; brak boarda lub awaria jego aktualizacji nie blokują poprawnego merge. Done/closed powiązanego issue zapisuje raven-merge dopiero po potwierdzeniu udanego merge. Sam setup CI nie daje zgody na zmianę tych ustawień.
+Gdy użytkownik osobno zleci wymuszanie bramek, przygotuj konkretną zmianę istniejących reguł z rzeczywistymi nazwami checków, zachowując pozostałe zabezpieczenia. Zastosuj ją w zakresie zlecenia i odczytaj stan po zapisie. Nie twórz obowiązkowego checka, który nie emituje wyniku dla właściwych PR. Automatyzacja CI nie zmienia statusu issues; merge i zamknięcie issue należą do [raven-merge](../raven-merge/SKILL.md). Sam setup CI nie daje zgody na zmianę tych ustawień.

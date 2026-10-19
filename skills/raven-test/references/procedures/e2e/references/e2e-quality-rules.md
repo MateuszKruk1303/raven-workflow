@@ -30,8 +30,8 @@ apply known patterns far more reliably than they invent new ones.
 
 ## Governing rules (the reasoning behind the rules)
 
-- **Don't generate E2E tests from scratch.** Start from `test-plan.md`: pick the
-  2–3 highest risks that need browser-level coverage and feed them as input. A
+- **Don't generate E2E tests from scratch.** Start from the change's acceptance criteria
+  (issue or plan): pick the 2–3 highest risks that need browser-level coverage and feed them as input. A
   risk needs E2E when it crosses several system boundaries (auth, routing, API,
   DB) or exists only in the rendered UI; if an isolated function can prove it, a
   unit test is enough.
@@ -41,7 +41,7 @@ apply known patterns far more reliably than they invent new ones.
 - **Name the test after the risk:** `test('flashcard data persists after page
   reload', ...)`, not `test('test 1', ...)`.
 - **The assertion must fail if the risk materializes.** Control question for
-  every assertion: would this fail if the `test-plan.md` risk came true? If not,
+  every assertion: would this fail if the risk came true? If not,
   it's decorative.
 
 ## Why these rules (source authority)
