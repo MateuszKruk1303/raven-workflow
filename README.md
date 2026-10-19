@@ -1,6 +1,6 @@
 # Raven Workflow
 
-[Model pracy](#model-pracy) · [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Task](#task) · [Katalog](#katalog-skilli)
+[Model pracy](#model-pracy) · [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Wzorce pracy](#wzorce-pracy) · [Katalog](#katalog-skilli)
 
 Skille Raven wywołujesz bezpośrednio. `raven-workflow` to opcjonalny tutorial uruchamiany wyłącznie ręcznie.
 
@@ -19,54 +19,120 @@ Zasady: [praca na taskach GitHub](skills/raven-workflow/references/git-workflow.
 
 ## Greenfield
 
+Nowy produkt od pomysłu do pierwszego taska. Każdy krok zapisuje jeden dokument, z którego korzysta następny.
+
 ```text
-raven-shape         chaotyczny pomysł → uporządkowane notatki (shape-notes.md)
+raven-shape          chaotyczny pomysł, notatki, rozmowy → uporządkowany problem, odbiorcy, MVP, reguły
+│                    context/foundation/shape-notes.md
 ▼
-raven-prd           wymagania i kryteria odbioru (prd.md)
+raven-prd            wymagania i kryteria odbioru
+│                    context/foundation/prd.md
 ▼
-raven-architecture  decyzje przekrojowe (architecture.md)
+raven-architecture   decyzje przekrojowe: dane, integracje, auth, granice modułów
+│                    context/foundation/architecture.md
 ▼
-raven-init-stack LUB raven-medusa-ecommerce-init
+raven-init-stack     szkielet Better T Stack + lokalny Postgres
+LUB raven-medusa-ecommerce-init   sklep Medusa + Next.js
 ▼
-raven-md · raven-hooks · raven-github-setup   AGENTS.md, CI, repo i etykiety
+raven-md             AGENTS.md z faktycznych komend i konwencji
+raven-github-setup   repo, Issues, etykiety in-progress/blocked
+raven-hooks          CI: lint, typecheck, testy po PR
 ▼
-raven-roadmap       issues: wyniki, AC, zależności
+raven-roadmap        PRD → issues: wyniki, AC, zależności, kolejność
 ▼
-Task
+pierwszy issue → wzorzec „Task z issue”
 ```
 
 ## Brownfield
 
-Mały znany task: od razu [Task](#task). W razie potrzeby wcześniej:
-
-- `raven-repo-map`: nieznany obszar kodu;
-- `raven-research`: konkretne pytania do kodu;
-- `raven-domain-distillation`: rozbieżności języka domeny;
-- `raven-architecture`: decyzje przekrojowe;
-- `raven-md`, `raven-hooks`, `raven-github-setup`: tylko brakujący warsztat;
-- `raven-roadmap`: kolejka z PRD albo ticketów Jira.
-
-## Task
+Istniejący projekt. Dobierz tylko to, czego brakuje; mały znany task nie wymaga niczego z poniższych.
 
 ```text
-issue (opcjonalnie)
+Nieznany kod?                    raven-repo-map            mapa obszarów, zależności, historii, ryzyk
+Konkretne pytanie do kodu?       raven-research            odpowiedź z dowodami path:line
+Język biznesu ≠ model w kodzie?  raven-domain-distillation słownik i rozbieżności
+Decyzja przekrojowa?             raven-architecture        architecture.md
+Brak AGENTS.md / CI / etykiet?   raven-md · raven-hooks · raven-github-setup
+Słabe AGENTS.md?                 raven-md (tryb review)    karta wyników, bez przepisywania
+Kolejka z PRD lub Jiry?          raven-roadmap             issues linkujące źródło
+Refaktor bez testów?             raven-test (before-change) przed zmianą
 ▼
-raven-plan (opcjonalnie)    plan jednego wyniku; review planu tylko na żądanie lub przy ryzyku
-▼
-raven-auto-implement        poziom weryfikacji wg ryzyka:
-│                             quick     typecheck + istniejące testy
-│                             standard  + działanie w uruchomionej aplikacji (domyślny)
-│                             thorough  + baseline, testy obszaru, scenariusz błędu, 1 niezależne review
-│                           finał w czacie: co zmieniono, co sprawdzono, ograniczenia, instrukcja odbioru
-▼
-ręczny odbiór → poprawki: raven-auto-implement z bieżącym poleceniem
-▼
-raven-pr                    push + PR z Closes #N
-▼
-raven-merge                 zielone CI dokładnego head → merge → issue zamknięty
+wzorzec pracy poniżej
 ```
 
-Na żądanie lub przy ryzyku: `raven-implement-review` (wymagania, kod i testy), `raven-test` (trwałe testy, before-change), `raven-manual-qa` (eksploracyjne QA). Żaden z nich nie uruchamia się automatycznie.
+## Wzorce pracy
+
+### Zmiana z doskoku
+
+Drobna rzecz bez issue i planu: copy, styl, usunięcie elementu, config.
+
+```text
+raven-auto-implement — usuń numer telefonu ze stopki
+```
+
+Agent zwykle wybiera `quick`, robi commit i podaje w czacie, jak sprawdzić efekt. Push, PR i merge zlecasz osobno, jeśli chcesz.
+
+### Task z issue
+
+Typowa funkcja lub poprawka.
+
+```text
+raven-plan #42              (opcjonalnie) plan w realnym kodzie; review planu na żądanie
+raven-auto-implement #42    implementacja + weryfikacja (domyślnie standard)
+  ↳ ręczny odbiór według instrukcji z czatu
+  ↳ problem? raven-auto-implement #42 — <co nie działa>
+raven-pr #42                push + PR z Closes #42
+raven-merge #42             zielone CI → merge → issue zamknięty
+```
+
+Plan pomijasz, gdy issue i polecenie wystarczą. Nowe wymaganie w trakcie pracy dopisujesz do polecenia albo przez `raven-issue-update`; planu nie aktualizujesz.
+
+### Ryzykowna zmiana
+
+Gdy błąd byłby kosztowny, trudny do odwrócenia lub trudny do zauważenia przed użytkownikiem.
+
+```text
+raven-plan #57 — z review         świeży agent ocenia plan, jedna runda poprawek
+raven-auto-implement #57          agent sam wybierze thorough albo powiesz: „thorough”
+raven-implement-review #57        (opcjonalnie) niezależne review całego change przed PR
+raven-pr → raven-merge
+```
+
+`thorough` dokłada baseline testów, testy całego obszaru, ścieżkę end-to-end ze scenariuszem błędu i jedno niezależne review.
+
+### Bugfix
+
+```text
+raven-test — reprodukcja: <opis błędu>     (opcjonalnie) test EXPECTED_RED na obecnym kodzie
+raven-auto-implement — napraw <błąd>       poprawka; test przechodzi na zielono
+```
+
+Przy prostym błędzie wystarczy samo `raven-auto-implement`: jeśli brakuje testu na naprawione zachowanie, dopisze go sam.
+
+### Refaktor
+
+```text
+raven-test — before-change <moduł>         testy charakteryzacyjne obecnego zachowania
+raven-auto-implement — refaktor <moduł>    zmiana przy zielonych testach
+```
+
+### Kontrola jakości na żądanie
+
+```text
+raven-implement-review <branch/PR>   wymagania, poprawność, bezpieczeństwo, skuteczność testów
+raven-test <change>                  mapa AC → test, tylko brakujące testy
+raven-manual-qa <issue/PR>           eksploracja w przeglądarce, defekty z reprodukcją
+```
+
+Żaden z nich nie uruchamia się automatycznie i żaden nie jest warunkiem PR.
+
+### Jira w zespole
+
+```text
+raven-roadmap — PROJ-120..PROJ-128   issues GH linkujące tickety, bez kopiowania i zapisów do Jiry
+```
+
+Dalej wzorzec „Task z issue”. Wymagania zostają w Jirze, wykonanie śledzisz w GitHub.
 
 ## Katalog skilli
 
