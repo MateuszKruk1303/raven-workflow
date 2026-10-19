@@ -50,6 +50,10 @@ class DoctorTests(unittest.TestCase):
         (self.root / 'skills/raven-pilot-init').mkdir()
         self.assertIn('skill.retired', self.codes())
 
+    def test_removed_raven_implement_cannot_return(self):
+        (self.root / 'skills/raven-implement').mkdir()
+        self.assertIn('skill.retired', self.codes())
+
     def test_catalog_omission_fails(self):
         p = self.root / 'README.md'
         p.write_text(p.read_text().replace('(skills/raven-browser/SKILL.md)', '(skills/raven-workflow/SKILL.md)'))
@@ -93,8 +97,9 @@ class ProcessTests(unittest.TestCase):
             ('requires', ['plan_review', 'issue_started']),
             ('inputs', ['plan_contract', 'plan_review']),
             ('scope', 'replan_and_review_current_instruction'),
-            ('checks', 'full_suite'), ('critical_path', 'always'),
-            ('expand_checks', 'always'), ('existing_tests', 'duplicate_all_layers'),
+            ('verification_levels', ['standard']), ('default_level', 'thorough'),
+            ('level_change', 'any'), ('functional_check', 'never'),
+            ('independent_review', 'every_level'), ('existing_tests', 'duplicate_all_layers'),
             ('unrelated_failures', 'repair_all'), ('handoff', 'acceptance.md'),
             ('retry_limit_per_defect', 2), ('checkpoint', 'required'),
         ]
@@ -108,26 +113,25 @@ class ProcessTests(unittest.TestCase):
     def test_auto_inputs_are_sufficient_without_workflow_artifacts(self):
         self.check()
         auto = self.contract['auto_implementation']
-        self.assertEqual(auto['execution'], 'standalone_current_agent')
+        self.assertEqual(auto['execution'], 'current_agent')
         self.assertEqual(set(auto['inputs']), {'indicated_plan', 'current_user_instruction'})
-        for stage in self.contract['stages']:
-            self.assertNotIn(auto['skill'], stage['skills'])
-        self.assertEqual(self.stage('implement')['skills'], ['raven-implement'])
-        self.assertEqual(set(self.stage('implement')['requires']),
-                         {'plan_contract', 'plan_review', 'issue_started'})
+        self.assertEqual(auto['verification_levels'], ['quick', 'standard', 'thorough'])
+        self.assertEqual(auto['independent_review'], 'thorough_only_single_round')
+        self.assertEqual(self.stage('implement')['skills'], ['raven-auto-implement'])
+        self.assertEqual(self.stage('implement')['requires'], ['plan_contract'])
         self.assertEqual(self.stage('code_review')['skills'], ['raven-implement-review'])
         self.assertIn('code_review', self.stage('test')['requires'])
         self.assertIn('regression_evidence', self.stage('pr')['requires'])
         self.assertIn('code_review', self.stage('merge')['requires'])
 
-    def test_auto_cannot_be_attached_to_standard_implementation(self):
-        self.stage('implement')['skills'].append('raven-auto-implement')
-        with self.assertRaisesRegex(ValueError, 'standalone'):
+    def test_implementation_owned_only_by_auto_implement(self):
+        self.stage('implement')['skills'].append('raven-test')
+        with self.assertRaisesRegex(ValueError, 'owned by raven-auto-implement'):
             self.check()
 
-    def test_auto_exception_cannot_change_standard_workflow_scope(self):
-        self.contract.pop('standard_workflow_scope')
-        with self.assertRaisesRegex(ValueError, 'outside standard workflow scope'):
+    def test_auto_implement_cannot_own_other_stages(self):
+        self.stage('test')['skills'].append('raven-auto-implement')
+        with self.assertRaisesRegex(ValueError, 'only the implement stage'):
             self.check()
 
     def test_auto_implementation_cannot_own_code_review(self):
@@ -163,17 +167,17 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'external acceptance'):
             self.check()
 
-    def test_plan_review_gate_cannot_disappear(self):
-        stage = next(s for s in self.contract['stages'] if s['id'] == 'implement')
-        stage['requires'].remove('plan_review')
-        with self.assertRaisesRegex(ValueError, 'must require'):
-            self.check()
+    def test_implementation_requires_only_plan(self):
+        for extra in ('plan_review', 'issue_started', 'pull_request'):
+            with self.subTest(extra=extra):
+                self.stage('implement')['requires'] = ['plan_contract', extra]
+                with self.assertRaisesRegex(ValueError, 'requires only the plan'):
+                    self.check()
 
     def test_new_plan_handoff_has_review_without_plan_acceptance(self):
         self.check()
         self.assertNotIn('plan_accepted', self.contract['initial_artifacts'])
-        self.assertEqual(set(self.stage('implement')['requires']),
-                         {'plan_contract', 'plan_review', 'issue_started'})
+        self.assertEqual(self.stage('implement')['requires'], ['plan_contract'])
         self.assertEqual(self.contract['invariants']['plan_review'], 'contract_fingerprint')
         self.assertFalse(self.contract['invariants']['progress_invalidates_plan_review'])
         for stage in self.contract['stages']:
@@ -185,9 +189,9 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'External artifacts'):
             self.check()
 
-    def test_cheaper_reviewer_is_rejected(self):
-        self.contract['roles']['reviewer'] = copy.deepcopy(self.contract['roles']['implementer'])
-        with self.assertRaisesRegex(ValueError, 'Astra/high'):
+    def test_contract_does_not_pin_models(self):
+        self.contract['roles'] = {'reviewer': {'model': 'any-model', 'effort': 'high'}}
+        with self.assertRaisesRegex(ValueError, 'must not pin agent models'):
             self.check()
 
     def test_reviewer_role_cannot_become_author(self):
@@ -222,11 +226,6 @@ class ProcessTests(unittest.TestCase):
         self.assertNotIn('pull_request', self.stage('implement')['requires'])
         self.assertNotIn('side_operation', self.stage('pr'))
         self.assertEqual(self.stage('test')['produces'], ['regression_evidence'])
-
-    def test_local_implementation_does_not_require_publication(self):
-        self.stage('implement')['requires'].append('pull_request')
-        with self.assertRaisesRegex(ValueError, 'Local implementation'):
-            self.check()
 
     def test_standard_publication_requires_regression_and_external_acceptance(self):
         self.check()
@@ -324,12 +323,11 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
             self.check()
 
-    def test_issue_start_is_required_before_planning_and_implementation(self):
-        for name in ('plan', 'implement'):
-            self.stage(name)['requires'].remove('issue_started')
-            with self.assertRaisesRegex(ValueError, 'must require'):
-                self.check()
-            self.stage(name)['requires'].append('issue_started')
+    def test_issue_start_is_required_before_planning(self):
+        self.stage('plan')['requires'].remove('issue_started')
+        with self.assertRaisesRegex(ValueError, 'must require'):
+            self.check()
+        self.stage('plan')['requires'].append('issue_started')
 
     def test_merge_cannot_also_claim_board_done(self):
         self.stage('merge')['produces'].append('board_done')

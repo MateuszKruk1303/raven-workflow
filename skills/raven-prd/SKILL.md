@@ -11,8 +11,6 @@ description: >
 ---
 # PRD: Generowanie context/foundation/prd.md z shape-notes
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
-
 Ta umiejętność jest drugim ogniwem w łańcuchu bootstrapowania. Kolejność dalszych etapów określa raven-workflow. Jej jedyne zadanie: wziąć plik ukształtowanych notatek i wygenerować `context/foundation/prd.md`, który jest zgodny z zablokowanym schematem PRD, kierując każdą lukę do `## Open Questions` zamiast wymyślać treść.
 
 Umiejętność automatycznie kieruje do poprawnego szablonu na podstawie `context_type` w danych wejściowych:

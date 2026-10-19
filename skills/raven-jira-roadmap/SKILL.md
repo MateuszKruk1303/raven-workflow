@@ -5,7 +5,7 @@ description: "Ustal zakres i kolejność pracy Raven ze wskazanych ticketów, sp
 
 # Raven Jira Roadmap
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Jira przechowuje wymagania i biznesowy status. Plan/kod/dowody Raven są wersjonowane w Git, a PR służy współpracy. GitHub Issues jest jedynym trackerem wykonania Raven i roadmapy; nie utrzymuj lokalnego backlogu ani kopii biznesowych statusów Jira.
 

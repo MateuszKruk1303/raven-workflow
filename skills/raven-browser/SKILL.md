@@ -6,8 +6,6 @@ description: >-
 
 # Raven Browser
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
-
 ## Wybór trybu
 
 Domyślnie używaj **Playwright CLI** w osobnej sesji testowej. Automatyczna weryfikacja UI, polecenie „sprawdź aplikację”, wywołanie samego `raven-browser` ani instrukcja innego skilla o sprawdzeniu przeglądarkowym nie oznaczają wyboru osobistej przeglądarki.

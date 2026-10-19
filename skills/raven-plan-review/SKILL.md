@@ -5,9 +5,9 @@ description: "Niezależnie oceń lokalny plan change względem wymagań i kodu. 
 
 # Raven Plan Review
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-Przeczytaj [procedurę review](references/procedures/plan-review/procedure.md). Review wykonuje świeży reviewer Astra/high, który nie tworzył ocenianego planu. Pakiet wejścia obejmuje pełny kontrakt, źródła/wersje, publiczne decyzje, potrzebny kod i [granice change](../raven-workflow/references/change-scope.md).
+Przeczytaj [procedurę review](references/procedures/plan-review/procedure.md). Review wykonuje świeży reviewer, który nie tworzył ocenianego planu. Pakiet wejścia obejmuje pełny kontrakt, źródła/wersje, publiczne decyzje, potrzebny kod i [granice change](../raven-workflow/references/change-scope.md).
 
 Zapisz `context/changes/<id>/plan-review.md`, wskazując fingerprint, dowody, realne ryzyka, ważność i konkretną poprawkę. Nie traktuj ilości faz lub plików jako punktacji. Oceniaj wykonalność, zachowanie, granice, zgodność architektury, testy i wystarczalność decyzji.
 

@@ -5,8 +5,6 @@ description: "Utwórz lub uaktualnij AGENTS.md na podstawie rzeczywistych plikó
 
 # Raven MD
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
-
 Twórz zwięzły przewodnik dla agenta pracującego w projekcie. Wynikiem jest jeden plik `AGENTS.md`, z konkretnymi zasadami, działającymi odnośnikami i poleceniami opartymi na źródłach. Zachowaj język istniejącego dokumentu, a dla nowego użyj języka użytkownika. Tytuł nowego dokumentu: `# Repository Guidelines`.
 
 ## Cel i zakres

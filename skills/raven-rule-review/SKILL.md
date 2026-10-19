@@ -5,7 +5,7 @@ description: "Oceń AGENTS.md lub inny plik instrukcji AI w pięciu wymiarach. Z
 
 # Raven Rule Review
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Przeczytaj [procedurę](references/procedures/rule-review/procedure.md) i [kontrakt raportów](../raven-repo-map/references/github-brownfield.md). Zachowaj pięć kontroli: długość, fragmenty kodu/config, precyzja, nadmiarowa wiedza i kolejność, z wyjątkami, scorecard, path:line i Top 3 actions.
 

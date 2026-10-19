@@ -7,7 +7,7 @@ description: Zaprojektuj, dopracuj w rozmowie i utwórz lub zmień skill Raven w
 
 Rozwijaj Raven jako spójny proces. Wynik to działający pakiet zmian w repo skilli: instrukcje, potrzebne zasoby, integracja i dowody sprawdzenia. Utworzenie nowego katalogu nie jest celem samym w sobie — rozszerzenie istniejącego skilla może lepiej rozwiązywać potrzebę.
 
-Stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Projektowanie **i autorstwo instrukcji tworzonych lub zmienianych przez ten metaskill** wykonuje `gpt-6-astra` / `high`; końcowe review wykonuje osobna świeża Astra/high, bez transkryptu autora. Ustaw rzeczywiste parametry uruchomienia, nie tylko deklarację w promptcie. Delegowany autor/reviewer nie uruchamia ponownie całego metaskilla. Pytania użytkownika obsługuje koordynator.
+Końcowe review wykonuje osobny świeży reviewer, bez transkryptu autora. Delegowany reviewer nie uruchamia ponownie całego metaskilla. Pytania użytkownika obsługuje koordynator.
 
 ## 1. Ustal repo i zakres
 
@@ -27,7 +27,7 @@ Ustal i krótko podsumuj:
 - wejścia, źródła prawdy, wynik i obserwowalne warunki ukończenia;
 - miejsce w workflow: opcjonalne narzędzie, wariant istniejącego etapu czy nowy etap;
 - co wykonuje agent, jakie decyzje należą do użytkownika i jakie zapisy obejmuje wywołanie;
-- modele, narzędzia i zachowanie przy brakujących możliwościach, przerwaniu oraz wznowieniu.
+- narzędzia i zachowanie przy brakujących możliwościach, przerwaniu oraz wznowieniu.
 
 Porównaj nowy skill z rozszerzeniem istniejącego. Zarekomenduj rozwiązanie i wyjaśnij istotny kompromis. Nie zmieniaj wybranego przez użytkownika celu ani nie dodawaj obowiązkowego etapu pod pozorem integracji. Zmiana znaczenia istniejącego procesu (np. nowa bramka, automatyczne zapisy do innej usługi, inna odpowiedzialność za akceptację) wymaga jawnej decyzji użytkownika, chyba że już ją podjął. Pokaż konkretnie dotychczasowe i proponowane zachowanie; nie pytaj o zgodę na rutynowe odsyłacze, testy lub katalog.
 
@@ -35,8 +35,8 @@ Porównaj nowy skill z rozszerzeniem istniejącego. Zarekomenduj rozwiązanie i 
 
 Użyj `rg` do wyszukania wywołań, odsyłaczy i nazw artefaktów. Czytaj tylko znalezionych producentów/konsumentów oraz ich wspólne kontrakty. Nie przepisuj całej rodziny Raven. Przed edycją wskaż krótko dotknięte pliki i powód każdej integracji.
 
-- Utwórz lub zmień `skills/raven-<nazwa>/SKILL.md`: precyzyjny trigger, granice, wykonanie i handoff. Włącz odsyłacz do wspólnej polityki ról. Referencje i skrypty dodawaj tylko gdy skracają instrukcje lub zapewniają niezawodną, powtarzaną operację.
-- Metadane UI twórz według `skill-creator/references/openai_yaml.md`, odszukanego względem skilla hosta. Nie wpisuj tam fikcyjnych ustawień modeli.
+- Utwórz lub zmień `skills/raven-<nazwa>/SKILL.md`: precyzyjny trigger, granice, wykonanie i handoff. Referencje i skrypty dodawaj tylko gdy skracają instrukcje lub zapewniają niezawodną, powtarzaną operację.
+- Metadane UI twórz według `skill-creator/references/openai_yaml.md`, odszukanego względem skilla hosta.
 - Dodaj skill do listy `skills` w `workflow-contract.json`, mapy etapów w ręcznym tutorialu raven-workflow i jednego właściwego wiersza katalogu README. Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
 - Zmień powiązane skille wyłącznie tam, gdzie rzeczywiście zmieniają się wejścia, wyjścia, odpowiedzialności lub wywołania. Zachowaj kompatybilność i istniejące identyfikatory; nie migruj historycznych artefaktów projektów przy okazji.
 - Opcjonalny helper nie staje się wpisem w `stages` standardowego cyklu. Przy uzgodnionej zmianie cyklu uaktualnij razem kontrakt, jego niezmienniki w doctorze, router, konsumentów i testy. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
@@ -56,7 +56,7 @@ Użyj także walidatora `quick_validate.py` z dostępnego `skill-creator` dla no
 
 Dobierz próby z [referencji scenariuszy](references/verification.md). Statyczny doctor nie dowodzi zgodności znaczenia instrukcji. Dla zmiany zachowania wykonaj forward-test w izolacji: autor dostarcza rzeczywiste wejście i źródła, świeży reviewer sam wyprowadza przebieg, a koordynator porównuje wynik z ustalonym kontraktem. Nie podawaj reviewerowi oczekiwanej odpowiedzi ani hipotezy błędu. Nie publikuj testowych issue, nie steruj prywatną przeglądarką i nie uruchamiaj produkcyjnych zapisów w ramach próby.
 
-Końcowy reviewer Astra/high otrzymuje wymagania użytkownika, publiczne decyzje, aktualny diff (także nowe pliki), zakres zmian, źródła i wyniki kontroli. Sprawdza spójność producent → konsument, granice uprawnień, niezależność, wznowienie, dublowanie zasad i koszt kontekstu. Pracuje read-only; raportuje konkretne błędy i lokalizacje. Gdy brak świeżego reviewera, oddaj draft i wskaż brak review; nie deklaruj pełnej gotowości.
+Końcowy świeży reviewer otrzymuje wymagania użytkownika, publiczne decyzje, aktualny diff (także nowe pliki), zakres zmian, źródła i wyniki kontroli. Sprawdza spójność producent → konsument, granice uprawnień, niezależność, wznowienie, dublowanie zasad i koszt kontekstu. Pracuje read-only; raportuje konkretne błędy i lokalizacje. Gdy brak świeżego reviewera, oddaj draft i wskaż brak review; nie deklaruj pełnej gotowości.
 
 Naprawiaj potwierdzone błędy w ustalonym zakresie. Po poprawce odśwież dotknięte testy i review. Po dwóch nieskutecznych próbach tego samego problemu zatrzymaj zależną pętlę z reprodukcją i decyzją potrzebną od użytkownika; zmiana agenta nie zeruje licznika. Uwagi zmieniające zakres wracają do decyzji, nie do automatycznej przebudowy.
 
@@ -66,4 +66,4 @@ Zakończ konkretnym pakietem: ścieżka skilla, zmienione integracje, przykład 
 
 Instaluj globalnie tylko gdy jest to częścią zlecenia, również wcześniejszego w tej sesji. Uruchom `tools/raven.py sync --to <katalog-skilli>` bez `--apply`, przejrzyj cały diff instalacji i dopiero zastosuj `--apply`. Sync obejmuje całą zarejestrowaną rodzinę: nie nadpisuj niezwiązanych lokalnych modyfikacji, których użytkownik nie objął zleceniem. Przy takim konflikcie oddaj gotowy pakiet i ustal sposób scalenia przed instalacją. Po instalacji uruchom `doctor --installed <katalog-skilli>`; podaj wynik i ścieżkę backupu, jeśli powstał. Samo skopiowanie plików nie potwierdza odświeżenia katalogu skilli w aktywnym UI.
 
-Commit, push, publikacja PR i zmiana konfiguracji modeli nie wynikają z samego tworzenia skilla. Wykonuj je tylko w zakresie zlecenia. Nie instaluj draftu jako zweryfikowanej wersji po FAIL/BLOCKED wymaganej kontroli.
+Commit, push i publikacja PR nie wynikają z samego tworzenia skilla. Wykonuj je tylko w zakresie zlecenia. Nie instaluj draftu jako zweryfikowanej wersji po FAIL/BLOCKED wymaganej kontroli.

@@ -5,9 +5,9 @@ description: "Niezależnie oceń konkretne testy lub ochronę before-change. Uż
 
 # Raven Test Review
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-Przeczytaj [kontrakt źródeł i oceny testów](../raven-test/references/test-review.md). Świeży reviewer Astra/high dostaje wymagania, zakres, publiczne decyzje i dowody, bez transkryptu autora. Nie edytuje kodu ani testów.
+Przeczytaj [kontrakt źródeł i oceny testów](../raven-test/references/test-review.md). Świeży reviewer dostaje wymagania, zakres, publiczne decyzje i dowody, bez transkryptu autora. Nie edytuje kodu ani testów.
 
 Sprawdź zachowanie chronione testem, niezależne Expected, zdolność wykrycia regresji, izolację/cleanup i adekwatność mocków. Zapisz `test-review.md` z fingerprintem, ocenianym drzewem, poleceniami, finding IDs i ograniczeniami. Raport nie jest testem ani zgodą na merge. W zleconym cyklu napraw potwierdzone defekty wracają do autora bez nowej rutynowej zgody, z limitem dwóch nieskutecznych prób. Nowy zakres wymaga decyzji.
 

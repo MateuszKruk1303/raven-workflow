@@ -5,8 +5,6 @@ description: "Dopracuj pomysł na nowy produkt lub znaczącą zmianę istniejąc
 
 # Raven Shape
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
-
 Przeprowadź użytkownika od pomysłu do notatek pozwalających napisać PRD. Wynik: `context/foundation/shape-notes.md`, zgodny z wejściem `$raven-prd`. Jawnie wskazane starsze notatki można wykorzystać jako źródło, bez automatycznego przenoszenia historii. Utrzymuj jeden kanoniczny dokument notatek.
 
 ## Start i wznowienie

@@ -5,9 +5,9 @@ description: "Przeprowadź jedno niezależne review change: zgodność z wymagan
 
 # Raven Implement Review
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-Świeży reviewer Astra/high nie dziedziczy transkryptu autora i nie edytuje produktu. Przeczytaj [procedurę review](references/procedures/impl-review/procedure.md). Przyjmij change/plan/branch/PR, wymagania i publiczne decyzje; ustal rzeczywisty base/head i dirty state, nie wyznaczaj bazy na podstawie daty planu.
+Świeży reviewer nie dziedziczy transkryptu autora i nie edytuje produktu. Przeczytaj [procedurę review](references/procedures/impl-review/procedure.md). Przyjmij change/plan/branch/PR, wymagania i publiczne decyzje; ustal rzeczywisty base/head i dirty state, nie wyznaczaj bazy na podstawie daty planu.
 
 Normalne review obejmuje kod **oraz testy i wymagania**. Zweryfikuj mapę kryteriów na dowody, zachowania błędów, integracje, regresje, adekwatność asercji i luki. Testy autora są dowodem, nie wyrocznią wymagań. Nie wymagaj wcześniejszego osobnego testera ani ponownego test-review po pozytywnym pełnym review.
 

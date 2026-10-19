@@ -5,7 +5,7 @@ description: Zbadaj pytanie o kod lub wykonalność change i zapisz lokalny rese
 
 # Raven Research
 
-Stosuj [politykę ról](../raven-workflow/references/agent-policy.md) i [kontrakt pracy](../raven-workflow/references/change-contract.md). Odtwórz lokalny change i źródła; nowy raport może utworzyć folder bez issue/Project. Nie przygotowuj planu ani implementacji podczas samego researchu.
+Stosuj [kontrakt pracy](../raven-workflow/references/change-contract.md). Odtwórz lokalny change i źródła; nowy raport może utworzyć folder bez issue/Project. Nie przygotowuj planu ani implementacji podczas samego researchu.
 
 ## 1. Ustal dowody i zakres
 

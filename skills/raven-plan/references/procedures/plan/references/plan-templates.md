@@ -32,7 +32,7 @@ Dostosuj rozmiar do jednego rezultatu. Nie dodawaj faz tylko dla wypełnienia sz
 - Domknięcie regresji: [po ręcznej weryfikacji raven-test audytuje istniejącą ochronę i dowody; uzupełnia tylko nazwane luki, może zakończyć bez nowych testów]
 
 ## Ryzyka i bramki
-[Ochrona zachowania, migracja/rollback, konkretne ryzyka i testy. Manual gates tylko gdy rzeczywiście potrzebne. Auto-implement ma jednego wykonawcę; osobno wywołane code review i opcjonalne szerokie QA nie uruchamiają się automatycznie.]
+[Ochrona zachowania, migracja/rollback, konkretne ryzyka i testy. Manual gates tylko gdy rzeczywiście potrzebne. Auto-implement ma jednego wykonawcę i dobiera poziom weryfikacji do ryzyka; osobno wywołane code review i opcjonalne szerokie QA nie uruchamiają się automatycznie.]
 <!-- raven:contract:end -->
 
 ## Progress

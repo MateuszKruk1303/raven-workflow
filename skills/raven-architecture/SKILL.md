@@ -5,8 +5,6 @@ description: Interaktywnie ustal przekrojowe decyzje architektoniczne i utwórz 
 
 # Raven Architecture
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
-
 Zbuduj z użytkownikiem zrozumiały obraz architektury całego produktu: odpowiedzialności części systemu, przepływy, miejsca przechowywania danych, granice integracji i zasady operacyjne. Wynikiem jest `context/foundation/architecture.md`, a nie implementacja, lista bibliotek ani roadmapa. Czytaj najpierw [raven-workflow](../raven-workflow/SKILL.md).
 
 ## Zakres i uprawnienia

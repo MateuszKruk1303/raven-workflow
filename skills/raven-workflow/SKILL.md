@@ -5,7 +5,7 @@ description: "Ręcznie wywoływany tutorial i wprowadzenie do Raven. Objaśnij e
 
 # Raven Workflow
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Wywołuj wyłącznie na wyraźne ręczne polecenie użytkownika jako tutorial, wprowadzenie i podpowiedzi. Samo użycie innego raven-*, pytanie o gotowość lub wznowienie nie uruchamia tego skilla. Instrukcje potrzebnego etapu i wspólne referencje czytaj bezpośrednio; nie uruchamiaj etapów podczas tutorialu. Stan taska i roadmapy pochodzi z GitHub Issues, szczegóły wykonania z planu i bieżących dowodów, nie z pamięci rozmowy.
 
@@ -26,19 +26,17 @@ Ograniczone deterministyczne operacje opisuje [runtime](references/runtime.md); 
 
 ## Cykl change
 
-Poniżej możliwa kolejność osobnych zleceń. Samodzielne `raven-auto-implement` wymaga tylko wskazanego planu i aktualnego polecenia; nie uzależnia wykonania od review planu, fingerprintu, GitHuba ani checkpointów i nie uruchamia kolejnych etapów.
+Poniżej możliwa kolejność osobnych zleceń. `raven-auto-implement` wymaga tylko wskazanego planu lub polecenia; nie uzależnia wykonania od review planu, fingerprintu, GitHuba ani checkpointów i nie uruchamia kolejnych etapów.
 
 | Etap | Wykonanie i wynik |
 | --- | --- |
 | Plan | [raven-plan](../raven-plan/SKILL.md) + [raven-plan-review](../raven-plan-review/SKILL.md) albo [raven-auto-plan](../raven-auto-plan/SKILL.md); gotowy plan i aktualne review wskazują raven-auto-implement jako następny krok |
-| Implementacja | [raven-auto-implement](../raven-auto-implement/SKILL.md): jeden bieżący agent wykonuje plan i aktualne polecenie, szybko sprawdza zmienione zachowanie i zawsze podaje krótkie podsumowanie oraz instrukcję odbioru krok po kroku wyłącznie w końcowej wiadomości czatu; bez delegowania i przełączania modelu |
+| Implementacja | [raven-auto-implement](../raven-auto-implement/SKILL.md): jeden bieżący agent wykonuje plan i aktualne polecenie, weryfikuje zmianę na poziomie `quick`, `standard` lub `thorough` dobranym do ryzyka (na `thorough` z jednym niezależnym review) i podaje podsumowanie oraz instrukcję odbioru krok po kroku wyłącznie w końcowej wiadomości czatu |
 | Ręczna weryfikacja | Korzysta z instrukcji odbioru w końcowej wiadomości czatu; feedback może zlecić krótką poprawkę auto-implement, bez ponownego planowania |
 | Osobne code review | [raven-implement-review](../raven-implement-review/SKILL.md): niezależna ocena przed standardowym PR; auto-implement nie uruchamia jej samo |
 | Domknięcie regresji | [raven-test](../raven-test/SKILL.md) audytuje istniejące testy/review/QA i uzupełnia tylko nazwane luki; może skończyć bez edycji testów |
 | Odbiór i PR | Jawne [raven-pr](../raven-pr/SKILL.md) dla jednoznacznej wersji zapisuje odbiór i publikuje/aktualizuje PR po krótkim preflight |
 | Merge | Osobno zlecony [raven-merge](../raven-merge/SKILL.md), aktualne dowody i CI; honoruje zapisany odbiór, potwierdza merge i zamyka issue |
-
-Manualna alternatywa: [raven-implement](../raven-implement/SKILL.md) + [raven-implement-review](../raven-implement-review/SKILL.md) realizują kod/testy i ocenę, bez obowiązkowego auto QA ani domyślnego końcowego domknięcia regresji. Następnie ręczna weryfikacja, raven-test i raven-pr. Implementacja nadal zawiera potrzebne testy; późniejszy audyt nie generuje automatycznie nowej suite ani dodatkowego review/QA.
 
 Wcześnie autoryzowany draft pozostaje możliwą operacją boczną, bez odbioru użytkownika. Sama polityka draftu, PASS, test lub istnienie PR nie oznaczają odbioru. Braki standardowego preflight PR wymagają konkretnego pytania z raven-pr; zgoda publikacji z brakami nie omija merge/CI. Issue pozostaje In progress do udanego merge.
 
@@ -50,4 +48,4 @@ Wcześnie autoryzowany draft pozostaje możliwą operacją boczną, bez odbioru 
 
 [Granice change](references/change-scope.md) obowiązują roadmapę, plan i review. [Rule review](../raven-rule-review/SKILL.md) ocenia instrukcje; [lesson](../raven-lesson/SKILL.md) utrwala powtarzalną regułę na zlecenie; [create-skill](../raven-create-skill/SKILL.md) rozwija Raven. Skille domenowe stosuj do odpowiedniej pracy, bez dodawania etapów procesu.
 
-Wycofane raven-pilot-* i raven-seed nie wracają. Zachowaj historyczne artefakty i decyzje. Kontynuacja starej pracy wymaga jawnego mapowania do lokalnego change; nie kasuj ani nie migruj historii podczas aktualizacji skilli.
+Wycofane raven-pilot-*, raven-seed i raven-implement nie wracają. Zachowaj historyczne artefakty i decyzje. Kontynuacja starej pracy wymaga jawnego mapowania do lokalnego change; nie kasuj ani nie migruj historii podczas aktualizacji skilli.

@@ -42,15 +42,11 @@ respect the host's concurrency limit. Avoid overlapping scans or having the pare
 repeat a worker's search. Independent verification is a distinct task with a
 reason, not an accidental duplicate.
 
-## Capability and model choice
+## Capability
 
-Use tools and selectors actually exposed by the host. Skill text does not enable
-delegation or change the parent model. If selection is supported and permitted,
-use a lighter available model for bounded discovery/extraction with checkable
-anchors. Keep synthesis, conflicting evidence, architecture and security reasoning
-with a sufficiently capable agent; a cheap profile is not a correctness argument.
-Honor explicit user model choices. If no selector exists, use the available model
-and report a material fallback; never claim routing occurred without native evidence.
+Use tools actually exposed by the host. Skill text does not enable delegation.
+Keep synthesis, conflicting evidence, architecture and security reasoning with
+the coordinating agent. Never claim delegation occurred without native evidence.
 
 On launch failure, inspect the concrete error. Retry only after a relevant input
 or capability correction; do not repeatedly submit the same failed launch. If

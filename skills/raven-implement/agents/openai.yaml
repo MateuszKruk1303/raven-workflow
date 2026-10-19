@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Implement"
-  short_description: "Implementacja change wraz z testami"
-  default_prompt: "Użyj $raven-implement. Wykonaj wskazany lokalny plan change wraz z potrzebnymi testami i checkpointem."

@@ -5,7 +5,7 @@ description: "Przygotuj lub uzupełnij wskazane repo GitHub i politykę publikac
 
 # Raven Github Setup
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Ustal rzeczywisty zakres setupu: remote/repo, polityka publikacji i wymagany tracking GitHub Issues. Zweryfikuj Issues oraz etykiety in-progress/blocked (lub ich istniejące mapowanie), utwórz tylko brakujące elementy objęte setupem. Nie twórz testowych tasków ani Project jako domyślnej infrastruktury.
 

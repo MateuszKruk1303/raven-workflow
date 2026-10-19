@@ -12,7 +12,6 @@
     "raven-frame",
     "raven-github-setup",
     "raven-hooks",
-    "raven-implement",
     "raven-implement-review",
     "raven-init-stack",
     "raven-issue-update",
@@ -36,24 +35,6 @@
     "raven-test-review",
     "raven-workflow"
   ],
-  "roles": {
-    "planner": {
-      "model": "gpt-6-astra",
-      "effort": "high"
-    },
-    "reviewer": {
-      "model": "gpt-6-astra",
-      "effort": "high"
-    },
-    "tester": {
-      "model": "gpt-6-astra",
-      "effort": "high"
-    },
-    "implementer": {
-      "model": "gpt-6.1-sol",
-      "effort": "low"
-    }
-  },
   "initial_artifacts": [
     "requirements",
     "publication_requested",
@@ -97,13 +78,11 @@
     {
       "id": "implement",
       "skills": [
-        "raven-implement"
+        "raven-auto-implement"
       ],
       "role": "implementer",
       "requires": [
-        "plan_contract",
-        "plan_review",
-        "issue_started"
+        "plan_contract"
       ],
       "produces": [
         "implementation",
@@ -214,14 +193,21 @@
   },
   "auto_implementation": {
     "skill": "raven-auto-implement",
-    "execution": "standalone_current_agent",
+    "execution": "current_agent",
     "inputs": [
       "indicated_plan",
       "current_user_instruction"
     ],
     "scope": "current_instruction_updates_plan_without_replanning",
-    "checks": "changed_behavior_and_directly_affected_functions",
-    "expand_checks": "only_after_concrete_problem",
+    "verification_levels": [
+      "quick",
+      "standard",
+      "thorough"
+    ],
+    "default_level": "standard",
+    "level_change": "raise_only",
+    "functional_check": "standard_and_thorough",
+    "independent_review": "thorough_only_single_round",
     "existing_tests": "reuse_before_adding",
     "unrelated_failures": "report_without_repair",
     "handoff": "final_chat_only"
@@ -256,6 +242,5 @@
       "records_gaps": true,
       "waives_merge_gates": false
     }
-  },
-  "standard_workflow_scope": "stages_roles_sources_and_invariants_exclude_standalone_auto_implementation"
+  }
 }

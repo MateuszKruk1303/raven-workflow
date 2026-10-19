@@ -5,7 +5,7 @@ description: "Utwórz lub odśwież kolejność samodzielnych changes na podstaw
 
 # Raven Roadmap
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Do wplecenia dodatkowego wymagania w zakres i AC jednego wskazanego istniejącego issue użyj [raven-issue-update](../raven-issue-update/SKILL.md). Roadmapa potrafi aktualizować istniejące issues w ramach zleconej zmiany kolejki; pojedynczy dodatek nie wymaga jej reorganizacji ani ponownego podziału PRD.
 

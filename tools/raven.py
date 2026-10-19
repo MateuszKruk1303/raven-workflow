@@ -14,6 +14,11 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.DS_Store', '__pycache__', '.git'}
+RETIRED = {'raven-seed', 'raven-implement'}
+
+
+def retired(name):
+    return name.startswith('raven-pilot-') or name in RETIRED
 
 
 def files(directory):
@@ -57,7 +62,7 @@ def doctor(root, installed=None):
     for name in sorted(actual - expected):
         fail('skill.unregistered', name, 'Register new skill or remove retired directory')
     for name in sorted(actual):
-        if name.startswith('raven-pilot-') or name == 'raven-seed':
+        if retired(name):
             fail('skill.retired', name, 'Retired skill must not be distributed')
         p = root / 'skills' / name / 'SKILL.md'
         try:
@@ -70,8 +75,6 @@ def doctor(root, installed=None):
                 raise ValueError('Frontmatter name must equal directory name')
             if not isinstance(metadata.get('description'), str) or not metadata['description'].strip():
                 raise ValueError('Nonempty description required')
-            if 'agent-policy.md' not in list_target_names(text):
-                fail('policy.missing', p.relative_to(root), 'Entrypoint must link shared role policy')
         except (OSError, ValueError, yaml.YAMLError) as exc:
             fail('skill.metadata', p.relative_to(root), str(exc))
         ui = p.parent / 'agents/openai.yaml'
@@ -113,10 +116,6 @@ def doctor(root, installed=None):
     return errors
 
 
-def list_target_names(text):
-    return [Path(urlsplit(link).path).name for link in markdown_links(text)]
-
-
 def validate_process(contract, skills):
     """Validate the Git-first artifact DAG; live evidence is checked at execution."""
     if contract['schema_version'] != 2:
@@ -149,25 +148,18 @@ def validate_process(contract, skills):
         'manual_instructions': 'final_chat_message',
     }:
         raise ValueError('Invalid Git-first sources of truth')
-    roles = contract['roles']
-    for name in ('planner', 'reviewer', 'tester', 'implementer'):
-        role = roles[name]
-        if not role['model'] or role['effort'] not in ('low', 'medium', 'high'):
-            raise ValueError(f'Invalid role {name}')
-    if any(roles[name] != {'model': 'gpt-6-astra', 'effort': 'high'} for name in ('planner', 'reviewer', 'tester')):
-        raise ValueError('Planning and independent assessment require Astra/high')
-    if roles['implementer'] != {'model': 'gpt-6.1-sol', 'effort': 'low'}:
-        raise ValueError('Default implementer must use Sol/low')
-    # Standalone auto does not consume the standard workflow's gates or roles.
-    if contract.get('standard_workflow_scope') != 'stages_roles_sources_and_invariants_exclude_standalone_auto_implementation':
-        raise ValueError('Auto implementation must remain outside standard workflow scope')
+    if 'roles' in contract:
+        raise ValueError('Contract must not pin agent models or roles configuration')
     expected_auto = {
         'skill': 'raven-auto-implement',
-        'execution': 'standalone_current_agent',
+        'execution': 'current_agent',
         'inputs': ['indicated_plan', 'current_user_instruction'],
         'scope': 'current_instruction_updates_plan_without_replanning',
-        'checks': 'changed_behavior_and_directly_affected_functions',
-        'expand_checks': 'only_after_concrete_problem',
+        'verification_levels': ['quick', 'standard', 'thorough'],
+        'default_level': 'standard',
+        'level_change': 'raise_only',
+        'functional_check': 'standard_and_thorough',
+        'independent_review': 'thorough_only_single_round',
         'existing_tests': 'reuse_before_adding',
         'unrelated_failures': 'report_without_repair',
         'handoff': 'final_chat_only',
@@ -175,7 +167,7 @@ def validate_process(contract, skills):
     if (contract.get('auto_implementation') != expected_auto
             or 'auto_implementation_qa' in contract):
         raise ValueError('Auto implementation must use the current agent, plan and current instruction, '
-                         'focused checks and final chat only')
+                         'risk-tiered verification and final chat only')
     stages = contract['stages']
     ids = [stage['id'] for stage in stages]
     if len(set(ids)) != len(ids):
@@ -185,7 +177,7 @@ def validate_process(contract, skills):
         'plan_review': ('reviewer', {'plan_contract'}, {'plan_review'}),
         'pr': ('implementer', {'plan_contract', 'implementation', 'regression_evidence', 'publication_requested', 'user_acceptance'}, {'pull_request'}),
         'test': ('implementer', {'plan_contract', 'implementation', 'test_evidence', 'code_review', 'manual_verification'}, {'regression_evidence'}),
-        'implement': ('implementer', {'plan_contract', 'plan_review', 'issue_started'}, {'implementation', 'test_evidence'}),
+        'implement': ('implementer', {'plan_contract'}, {'implementation', 'test_evidence'}),
         'code_review': ('reviewer', {'plan_contract', 'implementation', 'test_evidence'}, {'code_review'}),
         'merge': ('implementer', {'pull_request', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested', 'regression_evidence'}, {'merged_pr', 'issue_done'}),
     }
@@ -209,10 +201,10 @@ def validate_process(contract, skills):
             raise ValueError(f"Unknown/empty skills in {stage['id']}")
         if stage['id'] == 'code_review' and stage['skills'] != ['raven-implement-review']:
             raise ValueError('Code review must be separately invoked through raven-implement-review')
-        if 'raven-auto-implement' in stage['skills']:
-            raise ValueError('Auto implementation is standalone, not a workflow stage')
-        if stage['id'] == 'implement' and stage['skills'] != ['raven-implement']:
-            raise ValueError('Standard implementation must be owned by raven-implement')
+        if stage['id'] != 'implement' and 'raven-auto-implement' in stage['skills']:
+            raise ValueError('Auto implementation owns only the implement stage')
+        if stage['id'] == 'implement' and stage['skills'] != ['raven-auto-implement']:
+            raise ValueError('Implementation must be owned by raven-auto-implement')
         if stage['id'] == 'merge' and stage['skills'] != ['raven-merge']:
             raise ValueError(f"{stage['id']} must be owned by raven-merge")
         if role in ('reviewer', 'tester') and stage.get('fresh_context') is not True:
@@ -223,8 +215,8 @@ def validate_process(contract, skills):
             raise ValueError(f"Wrong modes for {stage['id']}")
     if any(stage.get('requires_by_mode') for stage in stages):
         raise ValueError('Manual and auto must share the same artifact handoffs')
-    if 'pull_request' in by_id['implement']['requires']:
-        raise ValueError('Local implementation must not require publication')
+    if by_id['implement']['requires'] != ['plan_contract']:
+        raise ValueError('Implementation requires only the plan')
     if set(by_id['code_review'].get('covers', [])) != {'requirements', 'code', 'tests'}:
         raise ValueError('Independent review must cover requirements, code and tests')
     if by_id['pr'].get('side_operation') or by_id['pr'].get('early_draft'):
@@ -265,7 +257,7 @@ def sync_plan(source, destination, names):
             if action:
                 changes.append({'action': action, 'path': f'{name}/{rel}'})
     for p in sorted(destination.glob('raven-*')):
-        if p.is_dir() and (p.name.startswith('raven-pilot-') or p.name == 'raven-seed'):
+        if p.is_dir() and retired(p.name):
             changes.append({'action': 'retire', 'path': p.name})
     return changes
 
@@ -275,7 +267,7 @@ def synchronize(source, destination, names, apply=False):
     if source == destination or source in destination.parents or destination in source.parents:
         raise ValueError('Source and destination must be separate, non-nested directories')
     if any(p.is_symlink() for base in (source, destination) for p in base.rglob('*')
-           if any(part in names or part.startswith('raven-pilot-') or part == 'raven-seed' for part in p.relative_to(base).parts)):
+           if any(part in names or retired(part) for part in p.relative_to(base).parts)):
         raise ValueError('Symlinked skill paths are unsupported; use physical directories')
     changes = sync_plan(source, destination, names)
     # Reject type changes before any writes; replacing directories implicitly is unsafe.

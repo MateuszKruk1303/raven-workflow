@@ -278,7 +278,7 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.6 Per-rollout-phase notes
 
-(Optional. After each phase lands, /raven-implement appends a 2-3 line note
+(Optional. After each phase lands, append a 2-3 line note
 here capturing anything surprising the rollout phase taught — e.g., "Phase
 2 found we needed a fixture catalog under `packages/course-content/test/fixtures/`;
 new content tests should reuse it.")

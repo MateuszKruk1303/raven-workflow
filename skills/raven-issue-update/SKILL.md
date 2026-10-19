@@ -5,7 +5,7 @@ description: Wpleć dodatkowe lub doprecyzowane wymaganie do treści wskazanego 
 
 # Raven Issue Update
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md). Redakcję wymagań wykonuje planista `gpt-6-astra` / `high` zgodnie z polityką rzeczywistego uruchomienia.
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Zlecenie „zaktualizuj issue o…” obejmuje zapis **body jednego wskazanego istniejącego issue**. Nie wymagaj dodatkowej rutynowej zgody na ten zapis. Samo pytanie, pomysł bez polecenia zapisu lub prośba o propozycję pozostaje read-only. Nie twórz nowych issues, komentarzy ani lokalnego backlogu; nie zmieniaj tytułu, zależności, kolejności, statusu, assignee, planu, kodu, PRD ani Jira. Nie podejmuj taska jako In progress: zapis wymagania nie rozpoczyna planowania lub implementacji. To opcjonalny helper, bez obowiązkowego review każdej aktualizacji.
 

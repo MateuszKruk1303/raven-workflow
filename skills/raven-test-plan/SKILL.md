@@ -5,7 +5,7 @@ description: "Twórz, wznawiaj i odświeżaj strategię testowania w context/fou
 
 # Raven Test Plan
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Przeczytaj [procedurę strategii](references/procedures/test-plan/procedure.md) i jej [schemat](references/procedures/test-plan/references/test-plan-schema.md). Zachowaj discovery, profil none/sparse/meaningful, rzeczywiste obawy użytkownika, koszt × sygnał, challenger, Risk Response Guidance, cookbook, negative space i handoff. Sygnał z historii nie jest wiedzą o zachowaniu.
 

@@ -5,8 +5,6 @@ description: Zbuduj lub odśwież mapę istniejącego repo na podstawie historii
 
 # Raven Repo Map
 
-Przy wykonywaniu lub delegowaniu pracy stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md). Sam routing/status nie uruchamia agentów.
-
 Procedura Wide Scan tworzy mapę istniejącego repo w context/foundation/repo-map.md. Mapa pomaga wybrać miejsce dalszej analizy, nie zastępuje czytania kodu konkretnej zmiany.
 
 Przeczytaj [kontrakt raportów brownfield](references/github-brownfield.md). Przyjmij repo, opcjonalny obszar i okno historii oraz istniejący raport mapy. Dla nowej mapy projektu zapisz jeden lokalny raport według kontraktu. Dla zadania ograniczonego do jednego modułu nie narzucaj mapowania całego systemu.

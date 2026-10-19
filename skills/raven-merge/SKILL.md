@@ -5,7 +5,7 @@ description: "Zmerguj wskazany PR/change po aktualnych dowodach, CI, odbiorze i 
 
 # Raven Merge
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Zlecenie „zmerguj C-03” upoważnia do merge jednoznacznego PR; nie pytaj ponownie o tę zgodę. Odbiór wyniku musi być potwierdzony; honoruj zapis `user_acceptance` z jawnego raven-pr dla aktualnego zakresu i wersji bez ponownego pytania; jedna wypowiedź „akceptuję, zmerguj” może dostarczyć obu decyzji. Sam status, plan lub PASS nie stanowią zgody merge.
 

@@ -5,9 +5,9 @@ description: "Przygotuj lokalny plan change i przeprowadź jedno niezależne rev
 
 # Raven Auto Plan
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-Koordynuj planistę i świeżego reviewera według polityki ról. Nie deleguj ponownie całego skilla. Wykorzystuj [procedurę planu](../raven-plan/references/procedures/plan/procedure.md) oraz [procedurę review](../raven-plan-review/references/procedures/plan-review/procedure.md). Obie role dostają aktualne wymagania, lokalny plan i wskazane źródła, bez transkryptu drugiej roli.
+Koordynuj planistę i świeżego reviewera; reviewer nie dziedziczy transkryptu planisty. Nie deleguj ponownie całego skilla. Wykorzystuj [procedurę planu](../raven-plan/references/procedures/plan/procedure.md) oraz [procedurę review](../raven-plan-review/references/procedures/plan-review/procedure.md). Obie role dostają aktualne wymagania, lokalny plan i wskazane źródła, bez transkryptu drugiej roli.
 
 1. Rozwiąż konkretny issue i change; stary branch po merged/closed tasku nie wybiera kolejnego issue. Przed zapisami folderu/planu i delegowaniem zastosuj [przygotowanie brancha](../raven-workflow/references/change-branch.md): dla nowego change zapytaj o nowy branch (bez ponowienia istniejącej zgody), po zgodzie przygotuj aktualną bazę i branch, a przy wznowieniu odzyskaj dotychczasowy. Potwierdź In progress oraz assignee według wspólnego kontraktu przed szczegółowym researchem i planowaniem. Dopiero w potwierdzonym katalogu change utwórz folder planu dla nowego rezultatu. Stosuj [granice change](../raven-workflow/references/change-scope.md) przed szczegółowym researchem. Przy podziale istniejącej kolejki uzyskaj brakującą zgodę; auto nie rozszerza zakresu.
 2. Planista przygotowuje kompletny kontrakt i proporcjonalne kroki z testami, rozdzielając kontrole implementacji od audytu/domknięcia regresji raven-test po ręcznej weryfikacji. Wykorzystuje istniejące decyzje, pyta tylko o rzeczywiste luki. Wymaga potwierdzonego issue; Project pozostaje opcjonalny.

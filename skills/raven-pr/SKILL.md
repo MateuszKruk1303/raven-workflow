@@ -5,7 +5,7 @@ description: "Opublikuj lub aktualizuj PR konkretnego change po domknięciu regr
 
 # Raven Pr
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Jawne wywołanie `raven-pr <id>` dla jednoznacznie wskazanego change i wersji oznacza **odbiór tej wersji przez użytkownika oraz zgodę na zwykły push i utworzenie/aktualizację właściwego PR**. Nie pytaj ponownie o tę samą decyzję. Zapisz jej rzeczywiste źródło, zakres i wersję w `user_acceptance`; agent rejestruje decyzję, nie tworzy jej sam. Przy kilku change/wersjach ustal wskazanie przed zależnym zapisem. Sam PASS, status, istnienie PR, polityka automatycznego draftu ani wywołanie auto/test nie są odbiorem. Jawnie nieodebrany draft również nie oznacza odbioru.
 

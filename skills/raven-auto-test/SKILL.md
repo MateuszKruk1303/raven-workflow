@@ -5,9 +5,9 @@ description: "Wykonaj osobne zlecenie testów lub before-change z niezależnym r
 
 # Raven Auto Test
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
-Koordynuj autora testów Sol/low i jednego świeżego reviewera Astra/high. Autor stosuje [raven-test](../raven-test/SKILL.md), reviewer [kontrakt test-review](../raven-test/references/test-review.md). Przekaż obu te same wersje wymagań, zakres/base/head i publiczne decyzje; reviewer nie dziedziczy transkryptu autora.
+Koordynuj autora testów i jednego świeżego reviewera. Autor stosuje [raven-test](../raven-test/SKILL.md), reviewer [kontrakt test-review](../raven-test/references/test-review.md). Przekaż obu te same wersje wymagań, zakres/base/head i publiczne decyzje; reviewer nie dziedziczy transkryptu autora.
 
 Odtwórz plan/checkpoint i bieżące dowody. Autor dodaje testy oraz uruchamia potrzebne kontrole; reviewer sprawdza skuteczność asercji, źródło Expected, pokrycie ryzyk i izolację. Potwierdzone błędy w zleconym zakresie wracają automatycznie do autora. Po dwóch nieskutecznych próbach tego samego problemu zatrzymaj zależną pętlę z reprodukcją. Zmiana kontraktu lub nieobjęte działanie zewnętrzne wraca do decyzji użytkownika.
 

@@ -5,7 +5,7 @@ description: "Przygotuj lub popraw lokalny plan change w repo. Manualne planowan
 
 # Raven Plan
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Przeczytaj [granice change](../raven-workflow/references/change-scope.md) oraz [procedurę planowania](references/procedures/plan/procedure.md). Planista pracuje na wymaganiach i realnym kodzie; nie implementuje produktu.
 

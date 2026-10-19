@@ -5,7 +5,7 @@ description: "Zweryfikuj założenia przed planowaniem. Oddziel obserwację od p
 
 # Raven Frame
 
-Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
+Stosuj [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
 Przeczytaj [procedurę frame](references/procedures/frame/procedure.md). Wejście to opis, lokalny change/research, PR albo wskazane źródło wymagań. Odczytaj pełny istotny kontekst, nie całą historię GH. Wykorzystaj już rozstrzygnięte obserwacje i zakres, zamiast wymuszać ponowny wywiad.
 

@@ -38,7 +38,7 @@ Publikacja wymaga `.raven/config.json` z `repository.owner/name/base_branch`, `p
 
 Dla komend zapisu wybierz dokładnie jedną flagę `--dry-run` albo `--apply`; dry-run pokazuje zamiar bez sieci. W konfiguracji wymagane są `repository` oraz `tracker.type: github-issues`, z `tracker.labels.in_progress` i `tracker.labels.blocked`. Sam config lub token nie stanowi zlecenia. Polityka publikacji kodu jest odrębna; lokalny `start` tworzący worktree nie podejmuje issue.
 
-`issue --event start` stosuj na początku zleconego planowania/implementacji, po rozstrzygnięciu wykonawcy i session ownership. Wykonawca jest jawnym loginem GH, nie domyślną tożsamością tokena. Helper odmawia przejęcia obcego assignee i zamkniętego issue. Zgodny stan to no-op. Przy blocked najpierw potwierdź rozwiązanie przyczyny; dopiero świadomy start usuwa etykietę i zarządzany powód blokady. Samo wznowienie/status nie odblokowuje taska.
+`issue --event start` stosuj na początku zleconego planowania (auto-implement nie prowadzi trackingu), po rozstrzygnięciu wykonawcy i session ownership. Wykonawca jest jawnym loginem GH, nie domyślną tożsamością tokena. Helper odmawia przejęcia obcego assignee i zamkniętego issue. Zgodny stan to no-op. Przy blocked najpierw potwierdź rozwiązanie przyczyny; dopiero świadomy start usuwa etykietę i zarządzany powód blokady. Samo wznowienie/status nie odblokowuje taska.
 
 Dla `block`/`merge` wykonawca pochodzi z wcześniejszego journalu start albo jawnego `--assignee LOGIN`; przy nowym checkout podaj potwierdzonego ownera zamiast zgadywać. Checkpoint przechowuje `issue` jako pełny URL (string), a `owner` jako osobne pole.
 

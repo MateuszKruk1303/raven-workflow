@@ -44,7 +44,7 @@ Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poni
 | Cudze zmiany w aktualnym checkout | Zachowane pliki i staging; brak przenoszenia zmian na nowy branch, automatycznego resetu/stasha/commitu. Izolacja lub ustalenie sposobu zachowania zmian przed kolidującą operacją. |
 | Wznowienie na branchu lub w worktree | Zachowany istniejący branch, katalog i base, bez tworzenia kolejnego worktree ani zerowania postępu. |
 | Wznowienie po checkboxie | Identyczny fingerprint i aktualne review planu; zmieniony kod unieważnia odpowiednie dowody osobno. |
-| Zmiana technicznego kontraktu | Nowy fingerprint i aktualne review przed zależną implementacją; jawne zlecenie nowego wymagania już rozstrzyga decyzję, pytanie dotyczy tylko rzeczywistej niewiadomej. |
+| Zmiana technicznego kontraktu | Nowy fingerprint i odświeżone review w planowaniu; auto-implement wykonuje wskazany plan bez sprawdzania review; jawne zlecenie nowego wymagania już rozstrzyga decyzję, pytanie dotyczy tylko rzeczywistej niewiadomej. |
 | Wcześniej autoryzowany draft | Wczesna publikacja w dokładnym zakresie polityki bez nowego pytania; sam task bez polityki nie daje praw push/PR. |
 | Normalny change | Testy wraz z implementacją, jedno niezależne review wymagań/kodu/testów, dodatkowe role tylko dla ryzyka. |
 | Merge bez boarda | Aktualne CI/dowody/odbiór/zgoda i SHA guard; brak Project nie blokuje merge; issue zamykany dopiero po potwierdzonym merge, deploy jest osobno. |
@@ -55,8 +55,7 @@ Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poni
 | Próba | Co ocenić po wykonaniu |
 | --- | --- |
 | Gotowy plan po review | Handoff wskazuje auto-implement; brak pola/statusu akceptacji i brak samoczynnego startu implementacji. |
-| Zlecone auto/manual implement | Jednoznaczny plan z aktualnym review jest wykonywany bez decyzji o akceptacji planu ani jej zastępczego rejestru. |
-| Zmieniony kontrakt, stare review | Zależne wykonanie czeka na aktualne review; brak formalnej akceptacji nie usuwa tej kontroli. |
+| Zlecone auto-implement | Wskazany plan jest wykonywany od razu: samo zlecenie oznacza akceptację; brak sprawdzania review, fingerprintu i rejestru zgody. |
 | Jawne nowe wymaganie w poprawce | Aktualizacja planu i dotkniętego review, następnie zlecona poprawka bez ponownego pytania o już ustaloną regułę. |
 | Nierozstrzygnięta reguła | Konkretne pytanie o wybór i wpływ, bez blanket gate akceptacji planu. |
 | Wznowienie historycznego planu | Legacy acceptance i nieznane pola pozostają bez zmian, nie są odczytywane jako bramka. |

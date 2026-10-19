@@ -10,5 +10,3 @@
 - Dwie nieskuteczne próby jednego problemu zatrzymują zależną pętlę. Zapisz oczekiwane/obserwowane zachowanie, próby i następny krok. Nie resetuj licznika nową sesją.
 
 - Nie osłabiaj asercji ani nie wyłączaj testów dla PASS. Aktualizuj nieaktualny test po zaakceptowanej zmianie zachowania tylko z uzasadnieniem i Expected z nowego kontraktu. Odrębny nowy feedback ma własny identyfikator problemu i licznik; nie jest kolejną porażką wcześniej naprawionego defektu.
-
-- W auto-implement nie naprawiaj automatycznie zastanych niezwiązanych testów/fixture/locatorów/infrastruktury. Zapisz ograniczenie i wybierz adekwatny dostępny kanał sprawdzenia; brak potwierdzenia krytycznej ścieżki lub wymaganej bramki pozostaje BLOCKED/NOT VERIFIED. Po poprawce ponów reprodukcję i zależną regresję.

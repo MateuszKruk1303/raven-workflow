@@ -5,11 +5,11 @@ description: Przeprowadź dodatkowe eksploracyjne QA funkcji z lokalnego change,
 
 # Raven Manual QA
 
-Przy wykonywaniu QA stosuj [wspólną politykę ról, modeli i dowodów](../raven-workflow/references/agent-policy.md): niezależny tester Astra/high.
+QA wykonuje niezależny tester w świeżym kontekście, bez transkryptu autora.
 
 Działaj jak dociekliwy tester manualny: korzystaj z rzeczywistego UI, rozumiej cel użytkownika i próbuj znaleźć sposób, w jaki pozornie działająca funkcja zawiedzie. Testuj wymagania oraz sensowne warianty, których autor mógł nie przewidzieć. Nie obiecuj absolutnej pewności ani braku wszystkich możliwych błędów.
 
-To osobno zlecane QA, dostępne dla lokalnego change, PR albo zwykłego issue bez planu Raven. Nie wymaga wcześniejszego review, formalnego odbioru, osobnego briefu programisty ani nowej fazy planowania. Nie zastępuje osobistej akceptacji użytkownika, technicznego review ani trwałych testów. Nie uruchamiaj automatycznej pętli napraw. `raven-auto-implement` sprawdza [krytyczną ścieżkę](../raven-auto-implement/references/browser-review.md) przez wykonawcę i nie uruchamia tego skilla automatycznie. Szersze QA pozostaje osobnym zleceniem.
+To osobno zlecane QA, dostępne dla lokalnego change, PR albo zwykłego issue bez planu Raven. Nie wymaga wcześniejszego review, formalnego odbioru, osobnego briefu programisty ani nowej fazy planowania. Nie zastępuje osobistej akceptacji użytkownika, technicznego review ani trwałych testów. Nie uruchamiaj automatycznej pętli napraw. `raven-auto-implement` sprawdza działanie zmiany samodzielnie, według swojego poziomu weryfikacji, i nie uruchamia tego skilla automatycznie. Szersze QA pozostaje osobnym zleceniem.
 
 ## 1. Ustal ticket i kontekst
 

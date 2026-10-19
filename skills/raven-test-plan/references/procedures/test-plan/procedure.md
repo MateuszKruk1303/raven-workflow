@@ -20,7 +20,7 @@ Zapisz dostępne możliwości CLI/browser/CI/platform tylko w zakresie ich przyd
 
 Pytaj o nierozstrzygnięte obawy, najdroższe awarie, krytyczne przepływy, zakres danych i akceptowalny koszt sygnału. Wykorzystaj wcześniej udzielone odpowiedzi; nie wymagaj stałej liczby pytań. Pokaż rekomendację i kompromis.
 
-Challenger sprawdza założenia mapy ryzyk, martwe pola i propozycje nadmiernego E2E. Przy niezależnym delegowaniu stosuj wspólną politykę ról i świeży kontekst; nie traktuj samokontroli jako niezależnego dowodu. Dobór dodatkowej analizy wynika ze skali i ryzyka, nie sztywnej liczby agentów.
+Challenger sprawdza założenia mapy ryzyk, martwe pola i propozycje nadmiernego E2E. Przy niezależnym delegowaniu użyj świeżego kontekstu; nie traktuj samokontroli jako niezależnego dowodu. Dobór dodatkowej analizy wynika ze skali i ryzyka, nie sztywnej liczby agentów.
 
 ## 3. Brief i decyzja
 
