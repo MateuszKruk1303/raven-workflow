@@ -1,12 +1,11 @@
-# Dyscyplina wykonania
+# Execution discipline
 
-- Oczekiwane zachowanie wyprowadzaj z wymagań; kod i aktualny output nie zmieniają wymagań.
-- Poznaj wzorce przed edycją. Wykonuj najmniejszą poprawkę domykającą wymagany rezultat, z jego błędami i gwarancjami. Nie dodawaj infrastruktury na zapas.
-- Przed niechronionym refaktorem zabezpiecz zachowanie. Test błędu powinien ujawnić regresję na starej wersji, jeśli jest to praktyczne. EXPECTED_RED przed bugfixem nie jest końcowym PASS.
-- Testy, konfiguracja i dokumentacja potrzebna do działania są częścią implementacji. Dobierz najtańszą skuteczną warstwę i wykorzystaj istniejące testy; nie sprawdzaj obowiązkowo tego samego zachowania na unit + integration + E2E. Nie powielaj implementacji w asercjach.
-- Dowody odnoszą się do konkretnego drzewa, konfiguracji i środowiska. Zmiana unieważnia dotknięty wynik, niekoniecznie wszystkie niezależne kontrole.
-- Zachowaj cudze zmiany/staging, wykonuj celowy staging i przegląd diffu. Commity grupuj logicznie.
-- Drobna korekta mieści się w zakresie; zmiana istotnej decyzji lub wymagań wraca do użytkownika. Odróżniaj defekt od nowego życzenia.
-- Dwie nieskuteczne próby jednego problemu zatrzymują zależną pętlę. Zgłoś oczekiwane i obserwowane zachowanie oraz próby.
-
-- Nie osłabiaj asercji ani nie wyłączaj testów dla PASS. Aktualizuj nieaktualny test po zaakceptowanej zmianie zachowania tylko z uzasadnieniem i Expected z nowego wymagania.
+- Derive expected behavior from the requirements; code and current output do not change the requirements.
+- Learn the patterns before editing. Make the smallest fix that completes the required outcome, with its errors and guarantees. Do not add infrastructure in advance.
+- Before an unprotected refactor, lock in the behavior. A bug test should expose the regression on the old version when practical. EXPECTED_RED before a bugfix is not a final PASS.
+- Tests, configuration and documentation needed for things to work are part of the implementation. Pick the cheapest effective layer and reuse existing tests; do not mandatorily check the same behavior at unit + integration + E2E. Do not duplicate the implementation in assertions.
+- Evidence refers to a concrete tree, configuration and environment. A change invalidates the affected result, not necessarily all independent checks.
+- Preserve other people's changes/staging, stage deliberately and review the diff. Group commits logically.
+- A small correction is within scope; a change of a significant decision or requirement goes back to the user. Distinguish a defect from a new wish.
+- Two unsuccessful attempts at one problem stop the dependent loop. Report expected and observed behavior and the attempts.
+- Do not weaken assertions or disable tests for a PASS. Update a stale test after an accepted behavior change only with a justification and Expected from the new requirement.

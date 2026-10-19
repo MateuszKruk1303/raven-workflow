@@ -1,29 +1,30 @@
 ---
 name: raven-lesson
-description: "Na wyraźne zlecenie zapisz jedną powtarzalną regułę projektu w context/foundation/lessons.md: agent proponuje wpis z kontekstu rozmowy, użytkownik akceptuje lub poprawia. Nie publikuje do GitHuba ani nie zmienia AGENTS.md."
+description: "On explicit request, record one recurring project rule in context/foundation/lessons.md: the agent proposes an entry from the conversation, the user accepts or corrects it. Does not publish to GitHub or change AGENTS.md or CLAUDE.md."
+disable-model-invocation: true
 ---
 
 # Raven Lesson
 
-Dopisz jedną regułę do `context/foundation/lessons.md`. Plik czytają `raven-research`, `raven-plan`, `raven-auto-implement`, `raven-test` i `raven-implement-review`.
+Append one rule to `context/foundation/lessons.md`. The file is read by `raven-research`, `raven-plan`, `raven-auto-implement`, `raven-test` and `raven-implement-review`. Talk to the user in their language; write the entry in the language the file already uses, or the user's language for a new file.
 
-Lekcja to reguła, która będzie wracać i zmieniłaby sposób pracy — nie opis jednorazowej poprawki. Pojedynczy incydent bez wzorca odeślij do zwykłej poprawki.
+A lesson is a rule that will come back and would change how work is done — not a description of a one-off fix. Send a single incident without a pattern to an ordinary fix.
 
-## Kroki
+## Steps
 
-1. **Propozycja.** Z polecenia i kontekstu rozmowy przygotuj wpis. Pytaj tylko o pole, którego nie da się rzetelnie ustalić; nie zmyślaj incydentu.
+1. **Proposal.** Prepare the entry from the instruction and the conversation context. Ask only about a field that cannot be reliably determined; do not invent an incident.
 
    ```markdown
-   ## <Krótki tytuł reguły w trybie rozkazującym>
+   ## <Short rule title in the imperative>
 
-   - **Context**: <gdzie obowiązuje: obszar, typ zmiany lub wzorzec plików — konkretnie, nie „wszędzie”>
-   - **Problem**: <co idzie nie tak bez reguły; incydent lub powtarzalny schemat>
-   - **Rule**: <reguła w 1–2 zdaniach: „Zawsze…”, „Nigdy…”, „Przed X zrób Y”>
-   - **Applies to**: <research, plan, auto-implement, test, implement-review albo all>
+   - **Context**: <where it applies: area, type of change or file pattern — concretely, not "everywhere">
+   - **Problem**: <what goes wrong without the rule; incident or recurring pattern>
+   - **Rule**: <the rule in 1–2 sentences: "Always…", "Never…", "Before X do Y">
+   - **Applies to**: <research, plan, auto-implement, test, implement-review or all>
    ```
 
-2. **Akceptacja.** Pokaż wpis i zapytaj: dodaj / popraw / anuluj. Jeśli użytkownik podał już gotową treść i jednoznacznie zatwierdził dokładny wpis, nie pytaj ponownie.
-3. **Zapis.** Gdy pliku nie ma, utwórz go z nagłówkiem:
+2. **Acceptance.** Show the entry and ask: add / correct / cancel. If the user already gave the exact content and unambiguously approved it, do not ask again.
+3. **Write.** When the file does not exist, create it with the header:
 
    ```markdown
    # Lessons Learned
@@ -31,8 +32,8 @@ Lekcja to reguła, która będzie wracać i zmieniłaby sposób pracy — nie op
    > Append-only register of recurring rules. Read by raven-research, raven-plan, raven-auto-implement, raven-test, raven-implement-review.
    ```
 
-   Wpis dopisz na końcu. Nie zmieniaj, nie porządkuj ani nie usuwaj istniejących wpisów — poprawki starych reguł użytkownik robi ręcznie. Po zapisie odczytaj plik i potwierdź, że nowy wpis jest ostatni.
+   Append the entry at the end. Do not change, reorder or delete existing entries — the user edits old rules by hand. After writing, read the file and confirm the new entry is last.
 
-## Granice
+## Boundaries
 
-Jeden wpis na wywołanie. Inne skille mogą zasugerować lekcję, ale jej nie zapisują. Bez publikacji do GitHuba, commitu, zmian kodu i automatycznego kopiowania do AGENTS.md (to osobne zlecenie przez `raven-md`). W czacie podaj ścieżkę i tytuł dodanej reguły.
+One entry per invocation. Other skills may suggest a lesson but do not write it. No publishing to GitHub, no commit, no code changes and no automatic copying into AGENTS.md or CLAUDE.md (that is a separate request through `raven-md`). In chat give the path and title of the added rule.

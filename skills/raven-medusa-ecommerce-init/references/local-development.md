@@ -1,76 +1,76 @@
-# Kontrakt lokalnego developmentu
+# Local development contract
 
-Czytaj przy tworzeniu konfiguracji, envów i bootstrapu. Nazwy zmiennych i API sprawdzaj w wygenerowanej wersji startera; poniższe przykłady nie zastępują jego kodu.
+Read when creating configuration, envs and the bootstrap. Check variable names and APIs in the generated starter version; the examples below do not replace its code.
 
-## Compose i izolacja
+## Compose and isolation
 
-Skopiuj asset Compose jako `compose.yaml`, jeśli projekt nie ma już konfiguracji; istniejącą konfigurację scal. Wybierz stabilny `COMPOSE_PROJECT_NAME`, np. slug projektu i krótki hash jego rzeczywistej ścieżki. Zapisz go w env i zachowuj przy kolejnych uruchomieniach. Nie używaj globalnych `container_name`, zewnętrznych wspólnych sieci ani nazw wolumenów współdzielonych między sklepami.
+Copy the Compose asset as `compose.yaml` if the project has no configuration yet; merge an existing one. Pick a stable `COMPOSE_PROJECT_NAME`, e.g. the project slug and a short hash of its real path. Write it to env and keep it on later runs. Do not use global `container_name`, external shared networks or volume names shared between shops.
 
-Szablon używa PostgreSQL 17 i Redis 7 jako punktu wyjścia. Potwierdź kompatybilność wybranej Medusy i przypnij konkretny obraz/tag lub digest. Nie zmieniaj major wersji PostgreSQL przy istniejącym wolumenie. PostgreSQL 18+ wymaga osobnego sprawdzenia układu katalogów i mountów.
+The template uses PostgreSQL 17 and Redis 7 as a starting point. Confirm compatibility with the chosen Medusa and pin a specific image/tag or digest. Do not change the PostgreSQL major version with an existing volume. PostgreSQL 18+ needs a separate check of the directory layout and mounts.
 
-Porty bazy i Redis binduj do loopback. Aplikacje na hoście używają `127.0.0.1` i opublikowanego portu, nie nazw DNS usług Compose. Uruchom `docker compose config --quiet`; nie wypisuj rozwiniętej konfiguracji z hasłami. Nie włączaj publicznych tuneli ani portów routera.
+Bind the database and Redis ports to loopback. Apps on the host use `127.0.0.1` and the published port, not Compose service DNS names. Run `docker compose config --quiet`; do not print the expanded configuration with passwords. Do not enable public tunnels or router ports.
 
-Pełne kontenery aplikacji stosuj, gdy użytkownik tego chce. Wtedy oprzyj się na [oficjalnej konfiguracji Docker](https://docs.medusajs.com/learn/installation/docker), uwzględniając workspace pnpm, osobne zależności kontenera i hot reload. Rozróżnij URL wewnętrzny backendu od URL dostępnego w przeglądarce. `http://medusa:9000` nie nadaje się jako publiczny URL klienta uruchomionego w przeglądarce hosta.
+Use full app containers when the user wants it. Then rely on the [official Docker configuration](https://docs.medusajs.com/learn/installation/docker), accounting for the pnpm workspace, separate container dependencies and hot reload. Distinguish the backend's internal URL from the URL reachable in the browser. `http://medusa:9000` does not work as the public URL of a client running in the host's browser.
 
-## Envy i dane dostępowe
+## Envs and credentials
 
-| Plik domyślny | Zawartość |
+| Default file | Contents |
 |---|---|
-| `.env` | Projekt Compose, obrazy, porty i dane lokalnej bazy |
-| `apps/backend/.env` | Połączenia backendu, CORS, JWT/cookie secrets |
-| `apps/storefront/.env.local` | Publiczny adres backendu, publishable key, region i adres storefrontu |
-| `.local/dev-credentials.json` | Lokalny login administratora i wygenerowane hasło |
-| Szablony `.env.example` / `.env.template` | Te same nazwy zmiennych, bez prawdziwych sekretów |
+| `.env` | Compose project, images, ports and local database credentials |
+| `apps/backend/.env` | Backend connections, CORS, JWT/cookie secrets |
+| `apps/storefront/.env.local` | Public backend address, publishable key, region and storefront address |
+| `.local/dev-credentials.json` | Local admin login and generated password |
+| `.env.example` / `.env.template` templates | The same variable names, without real secrets |
 
-Zachowaj konwencję szablonów startera. Rzeczywiste envy i plik credentials mają być ignorowane w Git; `git check-ignore` nie zastępuje sprawdzenia, czy sekret nie jest już śledzony. Nie przepisuj historii Git. Ogranicz uprawnienia plików z sekretami, np. do `0600` na POSIX. Nie wyświetlaj ich zawartości w logach ani raporcie.
+Keep the starter's template convention. Real envs and the credentials file must be ignored in Git; `git check-ignore` does not replace checking that a secret is not already tracked. Do not rewrite Git history. Restrict permissions of secret files, e.g. to `0600` on POSIX. Do not display their contents in logs or the report.
 
-Generuj sekrety kryptograficznym RNG: co najmniej 32 bajty dla JWT i cookie, losowe hasło bazy i administratora. Zachowuj istniejące wartości. Zmiana `POSTGRES_PASSWORD` przy istniejącym wolumenie nie zmienia hasła roli w bazie; nie naprawiaj tego usunięciem danych. Nie przechowuj hasła admina w package.json ani argumentach zapisanych w dokumentacji. Jeżeli CLI wymaga hasła w argv, nie loguj komendy z rozwiniętą wartością.
+Generate secrets with a cryptographic RNG: at least 32 bytes for JWT and cookie, random database and admin passwords. Keep existing values. Changing `POSTGRES_PASSWORD` with an existing volume does not change the role's password in the database; do not fix that by deleting data. Do not store the admin password in package.json or in arguments written in documentation. If the CLI needs the password in argv, do not log the command with the expanded value.
 
-Wartości połączeń zapisuj literalnie w env konsumenta. Nie zakładaj, że dotenv, Next i Compose identycznie rozwijają odwołania do innych zmiennych. Poprawnie koduj hasło w URL PostgreSQL lub generuj hasło URL-safe. Przed operacjami na bazie sprawdź efektywną konfigurację procesu, uwzględniając zmienne powłoki mające pierwszeństwo przed plikiem.
+Write connection values literally in the consumer's env. Do not assume dotenv, Next and Compose expand references to other variables identically. Encode the password correctly in the PostgreSQL URL or generate a URL-safe password. Before database operations check the process's effective configuration, including shell variables that take precedence over the file.
 
-Typowe zmienne backendu:
+Typical backend variables:
 
 - `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `COOKIE_SECRET`.
-- `STORE_CORS`: rzeczywisty origin storefrontu.
-- `ADMIN_CORS`: origin Admina i serwera developerskiego, jeśli potrzebny.
-- `AUTH_CORS`: originy storefrontu i Admina wymagane przez ich logowanie.
+- `STORE_CORS`: the storefront's real origin.
+- `ADMIN_CORS`: the origin of Admin and the dev server, if needed.
+- `AUTH_CORS`: the storefront and Admin origins their sign-in needs.
 
-Nie kopiuj domen dokumentacji ani wildcardów do CORS bez potrzeby. `localhost` i `127.0.0.1` to różne originy; wybierz spójne URL-e. Zmiana portu musi dotrzeć także do polecenia uruchamiającego aplikację, CORS, redirectów i serwowania plików.
+Do not copy documentation domains or wildcards into CORS without need. `localhost` and `127.0.0.1` are different origins; choose consistent URLs. A port change must also reach the app start command, CORS, redirects and file serving.
 
-Typowe zmienne storefrontu:
+Typical storefront variables:
 
 - `NEXT_PUBLIC_MEDUSA_BACKEND_URL`, `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`.
-- `NEXT_PUBLIC_DEFAULT_REGION`: kod kraju obsługiwanego przez rzeczywisty region w bazie.
-- `NEXT_PUBLIC_BASE_URL`: lokalny adres z `http`, jeżeli nie skonfigurowano TLS.
+- `NEXT_PUBLIC_DEFAULT_REGION`: the code of a country served by a real region in the database.
+- `NEXT_PUBLIC_BASE_URL`: the local address with `http`, if TLS is not configured.
 
-Sprawdź kod SDK i server actions: inna wersja może używać `MEDUSA_BACKEND_URL` lub innych nazw. Nie dodawaj nieodczytywanych envów. Publishable key jest publiczny; klucz administracyjny i sekrety backendu nigdy nie trafiają do `NEXT_PUBLIC_*`. Stripe, Cloud i S3 pozostaw opcjonalne, bez fałszywych kluczy mających sugerować działającą integrację.
+Check the SDK code and server actions: another version may use `MEDUSA_BACKEND_URL` or other names. Do not add envs nobody reads. The publishable key is public; the admin key and backend secrets never go into `NEXT_PUBLIC_*`. Leave Stripe, Cloud and S3 optional, without fake keys suggesting a working integration.
 
-## Medusa, Redis i pliki
+## Medusa, Redis and files
 
-Scal konfigurację z `medusa-config.ts`. Jeżeli lokalna baza wymaga wyłączenia SSL, ogranicz to do lokalnej konfiguracji; nie wyłączaj SSL uniwersalnie dla wdrożeń.
+Merge configuration into `medusa-config.ts`. If the local database needs SSL disabled, limit that to the local configuration; do not disable SSL universally for deployments.
 
-`REDIS_URL` sam nie konfiguruje modułów. Sprawdź [konfigurację Medusy](https://docs.medusajs.com/learn/configurations/medusa-config) oraz [oficjalnych providerów Redis](https://docs.medusajs.com/learn/deployment/general). Domyślnie podłącz `projectConfig.redisUrl` do sesji i natywny `@medusajs/medusa/event-bus-redis` do event busa, z wersją zgodną z backendem. Przetestuj start i działanie; nie dodawaj duplikatu modułu obecnego już w starterze.
+`REDIS_URL` alone does not configure modules. Check the [Medusa configuration](https://docs.medusajs.com/learn/configurations/medusa-config) and the [official Redis providers](https://docs.medusajs.com/learn/deployment/general). By default connect `projectConfig.redisUrl` to sessions and the native `@medusajs/medusa/event-bus-redis` to the event bus, with a version matching the backend. Test startup and operation; do not add a duplicate of a module already in the starter.
 
-Pozostałe moduły pozostaw zgodne ze starterem. Jeśli jego funkcje wymagają współdzielonego workflow engine lub lockingu, zastosuj aktualnych natywnych providerów Redis. Nie kopiuj historycznych nazw opcji z innych wersji. Nie dodawaj opcjonalnych feature flags i modułu cache wyłącznie dlatego, że Redis już działa. W dokumentacji setupu podaj, które funkcje korzystają z Redis, a które pozostają lokalne/in-memory.
+Leave other modules as in the starter. If its features need a shared workflow engine or locking, use the current native Redis providers. Do not copy historical option names from other versions. Do not add optional feature flags and a cache module just because Redis already runs. In the setup documentation state which features use Redis and which stay local/in-memory.
 
-Użyj [lokalnego providera plików](https://docs.medusajs.com/resources/architectural-modules/file/local). Sprawdź rzeczywisty katalog uploadu i publiczny `backend_url` wybranej wersji, dostępność obrazu z hosta i konfigurację Next Images. Upload wykonuj przez Medusę; samo wrzucenie pliku do katalogu nie weryfikuje providera. Ignoruj uploady w Git, zachowuj je przy restartach. Nie dodawaj MinIO lub Mailpit bez rzeczywistej potrzeby; wysyłka maili nie jest częścią lokalnego checkoutu, jeśli starter jej nie wymaga.
+Use the [local file provider](https://docs.medusajs.com/resources/architectural-modules/file/local). Check the real upload directory and the public `backend_url` of the chosen version, image availability from the host and the Next Images configuration. Upload through Medusa; dropping a file into the directory does not verify the provider. Ignore uploads in Git, keep them across restarts. Do not add MinIO or Mailpit without a real need; sending emails is not part of the local checkout if the starter does not require it.
 
-## Migracje i bootstrap
+## Migrations and bootstrap
 
-Sprawdź oficjalny seed i CLI wybranej wersji. Przykładowo migracje mogą działać przez `pnpm --dir apps/backend exec medusa db:migrate`, a seed przez skrypt `medusa exec`; używaj faktycznych skryptów startera i właściwego cwd. Zatrzymaj operację przy wskazaniu bazy spoza lokalnego Compose tego projektu, chyba że użytkownik wyraźnie wskazał i autoryzował inne środowisko developerskie.
+Check the official seed and CLI of the chosen version. For example migrations may run through `pnpm --dir apps/backend exec medusa db:migrate`, and the seed through a `medusa exec` script; use the starter's actual scripts and the right cwd. Stop the operation when it points to a database outside this project's local Compose, unless the user explicitly named and authorized another development environment.
 
-Zapewnij spójne powiązania store → sales channel → publishable key oraz region → kraj/waluta/ceny, lokalizację i dostępność magazynu, fulfillment i opcję dostawy. Korzystaj z oficjalnych workflows i SDK wybranej wersji, nie bezpośrednich insertów do wewnętrznych tabel.
+Ensure consistent links store → sales channel → publishable key and region → country/currency/prices, stock location and availability, fulfillment and a delivery option. Use the official workflows and SDK of the chosen version, not direct inserts into internal tables.
 
-Przy ponowieniu sprawdzaj każdą grupę wymaganych encji i uzupełniaj brakujące. Wykorzystuj stabilne identyfikatory/handle lub własne oznaczenie danych demonstracyjnych; „istnieje jakiś produkt” nie wystarcza. Kontroluj wynik częściowo zakończonego seeda. Publikowany klucz ma obsługiwać kanał produktów wyświetlanych przez storefront. Jeśli klucza nie można ponownie odczytać, zachowaj wcześniej bezpiecznie zapisaną wartość; nie twórz nowego przy każdym starcie.
+On a retry check each group of required entities and fill in the missing ones. Use stable identifiers/handles or your own marking of demo data; "some product exists" is not enough. Control the result of a partially finished seed. The publishable key must serve the channel of the products the storefront displays. If the key cannot be read again, keep the previously safely stored value; do not create a new one on every start.
 
-Admina utwórz tylko, gdy go brakuje. Jeśli konto istnieje, ale hasło nie jest dostępne, nie resetuj go automatycznie: podaj konkretny problem dostępu. Błędy inne niż jednoznaczne „encja istnieje” muszą przerywać bootstrap.
+Create the admin only when it is missing. If the account exists but the password is not available, do not reset it automatically: report the concrete access problem. Errors other than an unambiguous "entity exists" must abort the bootstrap.
 
-Stosuj kraj/walutę ustalone w projekcie; dla polskiego sklepu PL/PLN. Bez ustaleń można zachować demonstracyjny region startera. Nie ustawiaj samego `NEXT_PUBLIC_DEFAULT_REGION=pl` bez regionu i cen w bazie.
+Use the country/currency agreed in the project; for a Polish shop PL/PLN. Without findings you may keep the starter's demo region. Do not set just `NEXT_PUBLIC_DEFAULT_REGION=pl` without a region and prices in the database.
 
-Do sprawdzenia checkoutu użyj dostępnego natywnego manualnego/systemowego providera płatności i lokalnej opcji dostawy. Zweryfikuj, że storefront potrafi je obsłużyć. W razie potrzeby dodaj minimalną obsługę istniejącego providera wyłącznie dla developmentu; nie buduj własnego systemu płatności. Nie włączaj automatycznie płatności testowych wymagających zewnętrznego konta. Ustalony brak rzeczywistej płatności lub wysyłki maila opisz jako zakres środowiska, nie jako działającą integrację.
+To check checkout use the available native manual/system payment provider and a local delivery option. Verify the storefront can handle them. If needed add minimal handling of the existing provider only for development; do not build your own payment system. Do not automatically enable test payments that need an external account. Describe an agreed absence of real payment or email sending as the environment's scope, not as a working integration.
 
-## Polecenia i odbiór
+## Commands and acceptance
 
-`setup` odpowiada za przygotowanie i uzupełnianie środowiska; `dev` tylko za jego start i HMR. Skrypt `setup` uruchamiaj przez `pnpm run setup` — samo `pnpm setup` to wbudowana komenda pnpm. Wykorzystaj orkiestrator startera. Każdy skrypt ma propagować błędy, korzystać z właściwego env i sprzątać wyłącznie własne procesy. Unikaj globalnego `pkill` i dopisywania `|| true` do migracji lub seedowania.
+`setup` is responsible for preparing and completing the environment; `dev` only for starting it and HMR. Run the `setup` script as `pnpm run setup` — plain `pnpm setup` is a built-in pnpm command. Use the starter's orchestrator. Every script must propagate errors, use the right env and clean up only its own processes. Avoid a global `pkill` and appending `|| true` to migrations or seeding.
 
-Weryfikacja obejmuje rzeczywisty drugi setup i restart bez usuwania wolumenów. Nie zastępuj tego kontrolą składni. Zapisz wykonane polecenia, wersje CLI/Medusy/Next/Node/pnpm/obrazów oraz wyniki bez sekretów. Nie ogłaszaj gotowego środowiska, jeśli Docker, logowanie lub checkout nadal są zablokowane.
+Verification includes a real second setup and a restart without deleting volumes. Do not replace that with a syntax check. Record the commands run, the CLI/Medusa/Next/Node/pnpm/image versions and results without secrets. Do not announce a ready environment if Docker, sign-in or checkout are still blocked.

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven GitHub Setup"
-  short_description: "Repo, Issues i etykiety do pracy na taskach"
-  default_prompt: "Użyj $raven-github-setup. Przygotuj wskazane repo GitHub do pracy na taskach: Issues i etykiety in-progress/blocked."

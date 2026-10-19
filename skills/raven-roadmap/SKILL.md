@@ -1,27 +1,28 @@
 ---
 name: raven-roadmap
-description: "Utwórz lub odśwież kolejkę samodzielnych changes jako GitHub Issues, ze źródłem w PRD albo wskazanych ticketach, sprincie lub epice Jira. Bez planów implementacji i zapisów do Jira."
+description: "Create or refresh a queue of self-contained changes as GitHub Issues, sourced from the PRD or from given Jira tickets, sprint or epic. No implementation plans and no writes to Jira."
+argument-hint: "[prd path | Jira keys]"
 ---
 
 # Raven Roadmap
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [granice change](../raven-workflow/references/change-scope.md).
+Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md) and [change boundaries](../raven-workflow/references/change-scope.md). Talk to the user in their language; write issues in the language the repository uses, or the user's language for a new repository.
 
-Roadmapa to GitHub Issues w ustalonym repo: jeden issue = jeden samodzielnie odbieralny wynik. Zlecenie roadmapy obejmuje zapis tych issues. Project jest opcjonalnym widokiem. Nie twórz lokalnej roadmapy ani drugiego backlogu. Dodatek do jednego istniejącego issue to [raven-issue-update](../raven-issue-update/SKILL.md), nie reorganizacja kolejki.
+The roadmap is GitHub Issues in the established repo: one issue = one independently acceptable outcome. A roadmap request covers writing those issues. A Project is an optional view. Do not create a local roadmap or a second backlog. An addition to one existing issue is [raven-issue-update](../raven-issue-update/SKILL.md), not a queue reorganization.
 
-## Źródło
+## Source
 
-- **PRD** (`context/foundation/prd.md` lub wskazany dokument): pokryj całe uzgodnione PRD — każde wymaganie ma swój change, dowód wcześniejszego dostarczenia albo jawne odroczenie.
-- **Jira** (klucze, URL, sprint, epika): pobierz opisy, AC i relacje tylko z tego zakresu. Epika lub sprint to kontener, nie change; jeden ticket może być change, zbyt szeroki dzielisz. Issue GH linkuje ticket (z ID i datą aktualizacji), bez kopiowania treści ani statusu. Do Jiry nie zapisujesz. Status Jira Done nie dowodzi merge.
+- **PRD** (`context/foundation/prd.md` or a given document): cover the whole agreed PRD — every requirement has its change, evidence of earlier delivery or an explicit deferral.
+- **Jira** (keys, URL, sprint, epic): fetch descriptions, AC and relations only for that scope. An epic or sprint is a container, not a change; one ticket can be a change, a too-wide one gets split. The GH issue links the ticket (with ID and update date), without copying content or status. Never write to Jira. A Jira Done status does not prove a merge.
 
-## Podział
+## Split
 
-Dziel na pionowe wyniki (UI, API, dane i walidacja razem), nie na warstwy ani fazy. Każdy issue: wynik, zakres i wyłączenia, link do źródła, obserwowalne AC, zależności. Graf zależności acykliczny. Większy nierozdzielny zakres krótko uzasadnij. Zwykły podział uzgodnionego zakresu wykonaj sam; zmiana wymagań lub priorytetów wymaga decyzji użytkownika.
+Split into vertical outcomes (UI, API, data and validation together), not layers or phases. Every issue: outcome, scope and exclusions, link to the source, observable AC, dependencies. The dependency graph is acyclic. Briefly justify a larger inseparable scope. Do an ordinary split of the agreed scope yourself; changing requirements or priorities needs the user's decision.
 
-## Zapis
+## Write
 
-Przed tworzeniem sprawdź istniejące issues w zakresie, żeby nie duplikować (także po timeout). Przy odświeżeniu aktualizuj tylko różnice, zachowując treści ludzi, assignees i statusy; pokaż added/changed/unchanged/out-of-scope. Nie ustawiaj In progress ani nie zamykaj issues przy układaniu kolejki. Po zapisie odczytaj issues. Bez dostępu do GitHub oddaj propozycję w czacie i nazwij niewykonany zapis.
+Before creating, check existing issues in scope to avoid duplicates (also after a timeout). When refreshing, update only the differences, preserving people's text, assignees and statuses; show added/changed/unchanged/out-of-scope. Do not set In progress or close issues while building the queue. Read the issues back after writing. Without GitHub access, give the proposal in chat and name the write that was not performed.
 
-## Finał
+## Final message
 
-W czacie: linki do issues, kolejność i zależności, pierwszy change gotowy do pracy, luki. Nie twórz planów wszystkich changes ani nie uruchamiaj implementacji.
+In chat: links to the issues, order and dependencies, the first change ready for work, gaps. Do not create plans for all changes or start implementation.

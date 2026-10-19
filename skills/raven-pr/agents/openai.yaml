@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven PR"
-  short_description: "Push i publikacja PR powiązanego z issue"
-  default_prompt: "Użyj $raven-pr: wypchnij bieżący branch i utwórz lub zaktualizuj PR powiązany z issue."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Architecture"
-  short_description: "Uzgodnij architekturę produktu krok po kroku"
-  default_prompt: "Użyj $raven-architecture, przeanalizuj wymagania, repo i roadmapę oraz poprowadź mnie przez decyzje do architecture.md."

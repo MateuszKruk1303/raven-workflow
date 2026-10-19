@@ -1,29 +1,30 @@
 ---
 name: raven-prd
-description: "Wygeneruj context/foundation/prd.md z shape-notes.md lub surowych notatek, zgodnie ze schematem PRD (greenfield 10 sekcji, brownfield 11). Generator dokumentu, nie autor: luki trafiają do Open Questions. Użyj po raven-shape, gdy notatki są gotowe („stwórz PRD”, „write the PRD”)."
+description: "Generate context/foundation/prd.md from shape-notes.md or raw notes, following the PRD schema (greenfield 10 sections, brownfield 11). A document generator, not an author: gaps go into Open Questions. Use after raven-shape when the notes are ready (\"create the PRD\", \"write the PRD\")."
+argument-hint: "[notes path]"
 ---
 
 # Raven PRD
 
-Zamień uzgodnione notatki w `context/foundation/prd.md` zgodny ze [schematem PRD](references/prd-schema.md). Schemat jest jedynym źródłem nazw sekcji, ich kolejności i kluczy frontmatter; przeczytaj go przed generowaniem. Format wejścia opisuje [format shape-notes](../raven-shape/references/shape-notes.md).
+Turn the agreed notes into `context/foundation/prd.md` conforming to the [PRD schema](references/prd-schema.md). The schema is the only source of section names, their order and frontmatter keys; read it before generating. The input format is described by the [shape-notes format](../raven-shape/references/shape-notes.md). Talk to the user in their language; section headings stay as the schema defines them, the content uses the language of the notes.
 
-Skill jest generatorem, nie autorem. Nie wymyśla reguł biznesowych, kryteriów sukcesu, historyjek, priorytetów FR, kontroli dostępu ani non-goals. Czego brakuje w wejściu, to trafia do `## Open Questions`.
+The skill is a generator, not an author. It does not invent business rules, success criteria, stories, FR priorities, access control or non-goals. What is missing from the input goes into `## Open Questions`.
 
-Pomiń, gdy użytkownik nie ma jeszcze notatek (wskaż `raven-shape`) albo chce precyzyjnie edytować istniejący PRD — skill zapisuje całe pliki.
+Skip it when the user has no notes yet (point to `raven-shape`) or wants precise edits to an existing PRD — the skill writes whole files.
 
-## Kroki
+## Steps
 
-1. **Wejście.** Ścieżka z argumentu (bez początkowego `@`) albo domyślnie `context/foundation/shape-notes.md`. Przeczytaj plik w całości. Gdy go nie ma, zaproponuj: najpierw `raven-shape` (zalecane), wklejenie surowych notatek albo anulowanie.
-2. **Kontekst.** `context_type` z frontmatter notatek. Gdy go brak, oceń intencję i stan produktu (README, kod, historia; sam starter lub lockfile nie oznacza brownfield) i potwierdź wynik z użytkownikiem.
-3. **Ocena wejścia.** Oceniaj znaczenie, nie nagłówki: akceptuj polskie i angielskie sekcje, FR w tabelach lub listach, scenariusze bez formalnego Given/When/Then. Zachowaj istniejące ID i źródła wymagań. Priorytety z shape mapuj: `pilot` → `must-have`, `later` → `nice-to-have`. Checkpoint shape'a pomaga wznowić pracę, ale nie dowodzi kompletności. Pytaj tylko o decyzje konieczne do ustalenia zakresu; zlecony szkic z niepełnych notatek wykonaj bez ponownego pytania.
-4. **Generowanie w pamięci.**
-   - Frontmatter według schematu: `status: draft` (nigdy wyżej), `version: 1`, `created` z `date +%Y-%m-%d` (przy nadpisaniu zachowaj pierwotne `created`). Brakujące pole: `# TODO: <pole> — see Open Questions` i wpis w Open Questions. Bez pól stackowych (`team_profile`, `tech_preferences`, `deployment_constraint`).
-   - Sekcje `##` dokładnie według schematu dla danego `context_type`, w jego kolejności. Bez sekcji spoza schematu (model danych, decyzje implementacyjne, testy, CI/CD).
-   - Treść: przepisz wiernie słowa użytkownika, zmieniając tylko kształt wymagany schematem. Częściowa treść kończy się TODO; brak treści to nagłówek z TODO. Każde TODO ma numerowany wpis w Open Questions z konsekwencją luki. Jawnie uzasadniony brak reguły lub zmiany zapisz jako taki, nie jako lukę.
-   - Brownfield opisuje różnicę, nie cały system: zachowania do utrzymania trafiają do `## Scope of Change` jako zachowane, a nie do Non-Goals.
-5. **Kontrola przed zapisem.** Porównaj nagłówki i klucze frontmatter ze schematem oraz sprawdź podsekcje Success Criteria. Przejrzyj treść (poza brownfield `## Current System Overview`) pod kątem wycieku implementacji: dostawcy i usługi, notacja schematu/ORM, miejsce wykonania (client/server/edge), mechanizm egzekwowania (per IP, token bucket), elementy UI w NFR, protokoły, reguły domenowe opisane przez komponent („baza zapisuje…”). Nazwa produktu wskazanego przez użytkownika jako inspiracja lub wymagana integracja jest dozwolona z rolą i źródłem. Przy dryfie struktury lub wycieku **nie zapisuj**: pokaż konkretne trafienia i zaproponuj przeformułowanie na obserwowalną właściwość albo pozostawienie szczegółu w notatkach dla dalszego etapu.
-6. **Zapis.** Aktualny PRD jest zawsze w `context/foundation/prd.md` — czytają go dalsze skille. Gdy plik już istnieje, zapytaj: nadpisanie (zalecane; poprzednią wersję zachowuje historia Git, `version` = poprzednia + 1) albo przerwanie. Nie twórz plików `prd-vN.md`.
+1. **Input.** The path from the argument (without a leading `@`) or by default `context/foundation/shape-notes.md`. Read the file in full. When it is missing, offer: `raven-shape` first (recommended), pasting raw notes, or cancelling.
+2. **Context.** `context_type` from the notes' frontmatter. When it is missing, judge the intent and product state (README, code, history; a starter or lockfile alone does not mean brownfield) and confirm the result with the user.
+3. **Assess the input.** Judge meaning, not headings: accept Polish and English sections, FRs in tables or lists, scenarios without formal Given/When/Then. Keep existing requirement IDs and sources. Map shape priorities: `pilot` → `must-have`, `later` → `nice-to-have`. The shape checkpoint helps resume work but does not prove completeness. Ask only about decisions needed to settle scope; produce a requested draft from incomplete notes without asking again.
+4. **Generate in memory.**
+   - Frontmatter per the schema: `status: draft` (never higher), `version: 1`, `created` from `date +%Y-%m-%d` (on overwrite keep the original `created`). A missing field: `# TODO: <field> — see Open Questions` and an Open Questions entry. No stack fields (`team_profile`, `tech_preferences`, `deployment_constraint`).
+   - `##` sections exactly per the schema for the given `context_type`, in its order. No sections outside the schema (data model, implementation decisions, tests, CI/CD).
+   - Content: faithfully restate the user's words, changing only the shape the schema requires. Partial content ends with a TODO; no content is a heading with a TODO. Every TODO has a numbered Open Questions entry with the consequence of the gap. Record an explicitly justified absence of a rule or change as such, not as a gap.
+   - Brownfield describes the difference, not the whole system: behaviors to keep go into `## Scope of Change` as preserved, not into Non-Goals.
+5. **Check before writing.** Compare headings and frontmatter keys with the schema and check the Success Criteria subsections. Review the content (except brownfield `## Current System Overview`) for implementation leakage: vendors and services, schema/ORM notation, execution location (client/server/edge), enforcement mechanism (per IP, token bucket), UI elements in NFRs, protocols, domain rules described through a component ("the database stores…"). The name of a product the user named as inspiration or a required integration is allowed with its role and source. On structural drift or leakage **do not write**: show the concrete hits and propose rephrasing as an observable property, or leaving the detail in the notes for a later stage.
+6. **Write.** The current PRD is always `context/foundation/prd.md` — later skills read it. When the file already exists, ask: overwrite (recommended; Git history keeps the previous version, `version` = previous + 1) or abort. Do not create `prd-vN.md` files.
 
-## Finał
+## Final message
 
-W czacie: ścieżka, `context_type`, sekcje wypełnione i oznaczone TODO, liczba Open Questions oraz szczegóły techniczne z notatek, które zostały poza PRD dla architektury lub stacku. Zaproponuj następny krok według rzeczywistego stanu projektu (zwykle `raven-architecture`; w brownfield to, czego faktycznie brakuje). Nie uruchamiaj kolejnego skilla — PRD najpierw przegląda człowiek.
+In chat: the path, `context_type`, sections filled and marked TODO, the number of Open Questions and the technical details from the notes left outside the PRD for architecture or stack. Propose the next step based on the project's real state (usually `/raven-architecture`; in brownfield, whatever is actually missing). Do not run the next skill — a human reviews the PRD first.

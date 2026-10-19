@@ -1,64 +1,64 @@
-# Wejścia prób planowania i roadmapy
+# Planning and roadmap trial inputs
 
-Każdy przypadek jest niezależny. Użyj wskazanego skilla z repo Raven oraz podanych materiałów jako zastanego stanu projektu. To próba offline: nie łącz się z GitHubem, nie publikuj ani nie instaluj. Treść do publikacji, planowane mutacje i odpowiedź użytkownikowi zapisz w przydzielonym katalogu tymczasowym. Nie implementuj produktu. Jeśli potrzebujesz dodatkowych danych lub decyzji, przedstaw następny krok i zależną pracę, której nie da się jeszcze wykonać. Źródła poniżej są pełnym dostępnym wejściem próby.
+Each case is independent. Use the indicated skill from the Raven repo and the given materials as the existing project state. This is an offline trial: do not connect to GitHub, do not publish or install. Write the content to publish, planned mutations and the answer to the user in the assigned temporary directory. Do not implement the product. If you need additional data or decisions, present the next step and the dependent work that cannot be done yet. The sources below are the full available trial input.
 
-## 1. Zakup w sklepie
+## 1. Shop purchase
 
-Polecenie: „Użyj raven-roadmap, aby przygotować i opublikować roadmapę całego poniższego PRD. Projekt ma skonfigurowany prywatny GitHub Project, pustą kolejkę i nie ma jeszcze milestone'ów.”
+Instruction: "Use raven-roadmap to prepare and publish the roadmap for the whole PRD below. The project has a configured private GitHub Project, an empty queue and no milestones yet."
 
 PRD v1:
 
-- FR-01: Kupujący składa zamówienie z koszyka, podaje adres, widzi pełną kwotę i otrzymuje numer zamówienia. Sklep korzysta ze wspólnego zapasu produktów dla wszystkich kanałów; potwierdzone zamówienie ma rezerwować właściwą liczbę sztuk, a jednoczesny zakup ostatniej sztuki nie może skończyć się dwoma potwierdzonymi zamówieniami.
-- FR-02: Kupujący wybiera płatność kartą przez Stripe lub za pobraniem (COD). Rozliczenie jest w PLN. Ponowienie żądania i webhooka nie może podwójnie pobrać pieniędzy. Gdy płatność została pobrana, a utworzenie zamówienia nie powiodło się, kupujący ma otrzymać jednoznaczny stan, a operator możliwość odnalezienia i rozliczenia takiego przypadku.
-- FR-03: Kupujący wybiera kuriera lub Paczkomat; operator tworzy i pobiera etykietę przez Furgonetka dla zamówienia sklepowego. Ta sama obsługa Furgonetka ma pozwalać operatorowi nadawać paczki z panelu bez zamówienia sklepowego; przesyłka ręczna ma własny adres i zawartość.
-- FR-04: Po potwierdzeniu zamówienia kupujący otrzymuje email przez Resend z numerem, kwotą i podsumowaniem. Awaria wysyłki nie cofa zamówienia; operator widzi błąd i może ponowić wysyłkę bez duplikatów przy jednoczesnych próbach.
-- FR-05: Operator widzi ranking 10 produktów według liczby sztuk w opłaconych zamówieniach z ostatnich 30 dni. Remisy: rosnąco po SKU. Zamówienia COD liczą się dopiero po oznaczeniu otrzymania zapłaty.
-- Wszystkie FR są wymagane do premiery. Priorytet: prawidłowe składanie i rozliczanie zamówień, potem obsługa wysyłki i komunikacji, następnie ranking.
+- FR-01: The buyer places an order from the cart, gives an address, sees the full amount and receives an order number. The shop uses a shared product stock for all channels; a confirmed order must reserve the right number of units, and a simultaneous purchase of the last unit must not end with two confirmed orders.
+- FR-02: The buyer chooses card payment via Stripe or cash on delivery (COD). Settlement is in PLN. Retrying the request and the webhook must not charge money twice. When the payment was charged but creating the order failed, the buyer must get an unambiguous state, and the operator a way to find and settle such a case.
+- FR-03: The buyer chooses a courier or a parcel locker; the operator creates and downloads a label via Furgonetka for a shop order. The same Furgonetka integration must let the operator send parcels from the panel without a shop order; a manual shipment has its own address and contents.
+- FR-04: After the order is confirmed, the buyer receives an email via Resend with the number, amount and summary. A sending failure does not revert the order; the operator sees the error and can retry sending without duplicates on simultaneous attempts.
+- FR-05: The operator sees a ranking of 10 products by units in paid orders from the last 30 days. Ties: ascending by SKU. COD orders count only after marking the payment as received.
+- All FRs are required for launch. Priority: correct placing and settling of orders, then shipping and communication, then the ranking.
 
-Stan kodu: istnieją katalog, koszyk i panel operatora. Jest jeden serwis zapasu obsługujący sprzedaż w innym kanale i sprawdzony kontrakt atomowej rezerwacji. Brak zamówień sklepowych, płatności, przesyłek, emaili transakcyjnych i rankingu. Dostawcy wskazani w PRD są zatwierdzeni. Szczegóły integracji nie zostały jeszcze badane.
+Code state: catalog, cart and operator panel exist. There is one stock service serving sales in another channel and a verified atomic reservation contract. No shop orders, payments, shipments, transactional emails or ranking. The vendors named in the PRD are approved. Integration details have not been researched yet.
 
-## 2. Wybór Paczkomatu
+## 2. Parcel locker choice
 
-Polecenie: „Użyj raven-plan dla C-12: dodaj wybór Paczkomatu w istniejącym checkout.”
+Instruction: "Use raven-plan for C-12: add parcel locker choice to the existing checkout."
 
-Issue C-12: Kupujący wybiera punkt w istniejącym widżecie przewoźnika. Podsumowanie pokazuje kod i adres punktu. Zamówienie zapisuje kod oraz snapshot adresu; API odrzuca brak punktu przy metodzie Paczkomat i nieznany kod. Dla pozostałych metod punkt nie jest wymagany. Kwota dostawy się nie zmienia.
+Issue C-12: The buyer picks a point in the carrier's existing widget. The summary shows the point's code and address. The order stores the code and an address snapshot; the API rejects a missing point for the parcel locker method and an unknown code. For other methods a point is not required. The delivery amount does not change.
 
-Stan kodu: działający checkout, metody dostawy i zamówienia; adapter przewoźnika ma już `getPickupPoint(code)` i zwraca kod/adres albo brak. Zmiana dotyka komponentu checkout, podsumowania, DTO, walidatora API, serwisu zamówień i migracji danych. Repo ma runner unit/integration oraz działające E2E checkoutu. Dostawca i reguły są zatwierdzone, struktura planu nie była jeszcze omawiana.
+Code state: working checkout, delivery methods and orders; the carrier adapter already has `getPickupPoint(code)` and returns the code/address or nothing. The change touches the checkout component, summary, DTO, API validator, order service and a data migration. The repo has a unit/integration runner and working checkout E2E. The vendor and rules are approved; the plan structure has not been discussed yet.
 
-## 3. Płatność i awarie
+## 3. Payment and failures
 
-Polecenie: „Użyj raven-plan dla C-08: płatności kartą Stripe w istniejącym procesie zakupu.”
+Instruction: "Use raven-plan for C-08: Stripe card payments in the existing purchase process."
 
-Issue C-08: Kupujący płaci raz za zamówienie; po awarii sieci może bezpiecznie ponowić próbę. System przyjmuje powtarzające się oraz opóźnione webhooki. Wyświetlany status odzwierciedla faktyczne rozliczenie. Pobrana kwota bez zakończonego utworzenia zamówienia pozostaje powiązana z próbą zakupu i jest widoczna w istniejącym panelu operatora do uzgodnionej obsługi. Nigdy nie powstaje drugie obciążenie tej samej próby.
+Issue C-08: The buyer pays once per order; after a network failure they can safely retry. The system accepts repeated and delayed webhooks. The displayed status reflects the actual settlement. A charged amount without completed order creation stays linked to the purchase attempt and is visible in the existing operator panel for agreed handling. A second charge for the same attempt never occurs.
 
-Decyzje D-1: Stripe wybrany. D-2: zapisywany identyfikator próby zakupu służy jako klucz idempotencji. D-3: istniejąca kolejka wykonuje ponownie finalizację zamówienia; po wyczerpaniu trzech prób operator używa istniejącego narzędzia zwrotu, a klient widzi „weryfikujemy płatność”. Nie potrzeba nowego panelu ani nowego silnika kolejek. Kod zamówień, kolejka i panel są już dostarczone. Użytkownik zatwierdził te reguły, ale nie strukturę faz tego planu.
+Decisions D-1: Stripe chosen. D-2: the stored purchase attempt identifier is the idempotency key. D-3: the existing queue retries order finalization; after three attempts are exhausted the operator uses the existing refund tool, and the customer sees "we are verifying the payment". No new panel or new queue engine is needed. The order code, queue and panel are already delivered. The user approved these rules but not the phase structure of this plan.
 
-## 4. Zmiana etykiety w wielu plikach
+## 4. Label change across many files
 
-Polecenie: „Użyj raven-plan dla C-21. Etykieta pola Tax ID ma brzmieć NIP w polskiej wersji aplikacji; angielski tekst pozostaje Tax ID.”
+Instruction: "Use raven-plan for C-21. The Tax ID field label must read NIP in the Polish version of the app; the English text stays Tax ID."
 
-Issue: Jeden wspólny klucz tłumaczeń jest skopiowany w 18 paczkach UI. Trzeba ujednolicić polskie tłumaczenie na NIP wszędzie tam, gdzie jest używane, także w dostępnym opisie pola i PDF podsumowania. Nie zmieniają się format danych, walidacja ani API. Wszystkie odwołania do klucza zlokalizowano w aktualnym raporcie R-4; repo ma testy tłumaczeń i rendering PDF. Użytkownik zatwierdził zakres. Brak rozpoczętej implementacji.
+Issue: One shared translation key is copied across 18 UI packages. The Polish translation must be unified to NIP wherever it is used, including the field's accessible description and the summary PDF. Data format, validation and API do not change. All references to the key were located in the current report R-4; the repo has translation tests and PDF rendering. The user approved the scope. No implementation started.
 
-## 5. Wynik odkryty podczas planowania
+## 5. Outcome discovered during planning
 
-Polecenie: „Kontynuuj raven-plan dla C-31: reset hasła przez email. Poniżej wynik ostatniego badania.”
+Instruction: "Continue raven-plan for C-31: password reset by email. Below is the result of the latest research."
 
-Issue C-31: Użytkownik prosi o reset, otrzymuje jednorazowy link ważny 30 minut i ustawia nowe hasło zgodnie z istniejącą polityką. Odpowiedź formularza nie ujawnia istnienia konta. Token po użyciu jest nieważny. Dostawca poczty i reguły resetu są uzgodnione.
+Issue C-31: The user requests a reset, receives a one-time link valid for 30 minutes and sets a new password per the existing policy. The form's response does not reveal whether the account exists. The token is invalid after use. The mail vendor and reset rules are agreed.
 
-Stan pracy: zakres wstępnie oceniono, wywiad zakończony, struktura robocza. Research R-7 potwierdził istniejący transport emaili i bibliotekę tokenów. Odkrył także żądanie operatorów zapisane w PRD FR-19: panel masowego zapraszania pracowników z CSV, raportem błędów wierszy i ponowieniem zaproszenia. Aktualna roadmapa nie ma FR-19; oba zachowania używają kont użytkowników i poczty. Autor roboczej notatki dopisał „Phase 3: import CSV i zaproszenia”. Użytkownik zlecił tylko kontynuowanie C-31.
+Work state: scope pre-assessed, interview finished, working structure. Research R-7 confirmed the existing email transport and token library. It also discovered an operator request recorded in PRD FR-19: a panel for bulk inviting employees from CSV, with a row error report and invitation retry. The current roadmap has no FR-19; both behaviors use user accounts and mail. The author of the working note added "Phase 3: CSV import and invitations". The user ordered only continuing C-31.
 
-## 6. Zmiana z wieloma krokami
+## 6. Change with many steps
 
-Polecenie: „Użyj raven-plan dla C-42: atomowe przejście rozliczenia zamówienia z float PLN na integer groszy.”
+Instruction: "Use raven-plan for C-42: atomic transition of order settlement from float PLN to integer grosze."
 
-Issue C-42: Ten sam wynik rozliczenia musi być reprezentowany jako całkowita liczba groszy od zatwierdzenia zamówienia przez księgę do raportu. Obowiązuje uzgodnione zaokrąglenie half-up na pozycji i suma pozycji. Kwoty historyczne muszą dać identyczny wynik rozliczenia. Test zgodności obejmuje zamówienie → zapis księgi → eksport raportu.
+Issue C-42: The same settlement result must be represented as an integer number of grosze from order approval through the ledger to the report. The agreed half-up rounding per line item and the sum of line items apply. Historical amounts must give an identical settlement result. The compatibility test covers order → ledger entry → report export.
 
-Stan: jeden deployowalny monolit i wspólny kontrakt `Money` w trzech częściach; uzgodnione okno migracji z wstrzymaniem zapisów. Analiza R-9 wykazała, że mieszane wersje kontraktu interpretują tę samą liczbę raz jako PLN, raz jako grosze. Nie ma trybu równoległych formatów; dodanie go byłoby osobnym mechanizmem migracji, którego projekt nie potrzebuje przy uzgodnionym oknie. Wstępny przebieg: przygotowanie i sprawdzenie konwersji danych, wspólna zmiana wszystkich producentów/konsumentów Money, przełączenie w oknie i sprawdzenie zgodności. Testy charakteryzacyjne istnieją. Kryteria poprawności, kontrakt, okno i rollback z backupu zostały zatwierdzone. Struktura planu wymaga oceny.
+State: one deployable monolith and a shared `Money` contract in three parts; an agreed migration window with writes paused. Analysis R-9 showed that mixed contract versions interpret the same number once as PLN, once as grosze. There is no parallel-format mode; adding one would be a separate migration mechanism the project does not need given the agreed window. Preliminary flow: prepare and check the data conversion, a joint change of all Money producers/consumers, the switch in the window and a compatibility check. Characterization tests exist. Correctness criteria, contract, window and rollback from backup were approved. The plan structure needs assessment.
 
-## 7. Rozpoczęta praca z historią
+## 7. Started work with history
 
-Polecenie: „Wznów raven-plan dla C-07 i popraw granice planu. Na razie nie zmieniaj pozostałej kolejki.”
+Instruction: "Resume raven-plan for C-07 and fix the plan boundaries. Do not change the rest of the queue for now."
 
-Issue C-07 „Zakupy i obsługa sklepu”: zamówienie, Stripe/COD, Furgonetka dla zamówień i nadań ręcznych, potwierdzenie Resend oraz ranking produktów. Zakres i reguły jak w przypadku 1, zapisane w PRD v2. C-08 „Faktura do zamówienia” jest blocked by C-07. C-09 „Raport dzienny płatności” jest blocked by C-07. Pozostałe issues są poza zleceniem.
+Issue C-07 "Purchases and shop operations": order, Stripe/COD, Furgonetka for orders and manual shipments, Resend confirmation and product ranking. Scope and rules as in case 1, recorded in PRD v2. C-08 "Invoice for an order" is blocked by C-07. C-09 "Daily payment report" is blocked by C-07. Other issues are outside the order.
 
-Historia: plan v1 i jego review R-2 w historii Git; decyzja D-3 zaakceptowała Stripe i COD, D-4 zatwierdziła reużycie Furgonetka dla nadań ręcznych, D-5 zatwierdziła Resend i reguły ponowień. Nowy plan nie ma jeszcze niezależnego review. C-07/T-01 „Złożenie zamówienia” In progress: model i serwis wykonane na branchu, zapisane dowody unit/integration; UI nieukończone. C-07/T-02 „Płatności i wysyłka” Backlog, bez kodu. C-07/T-03 „Email i ranking” Backlog. Ostatni checkpoint zawiera SHA, mapowanie Progress i raport researchu przewoźnika R-6. Brak merge. Użytkownik nie upoważnił do zamknięcia żadnego issue ani taska.
+History: plan v1 and its review R-2 in Git history; decision D-3 accepted Stripe and COD, D-4 approved reusing Furgonetka for manual shipments, D-5 approved Resend and the retry rules. The new plan has no independent review yet. C-07/T-01 "Placing an order" In progress: model and service done on a branch, unit/integration evidence recorded; UI unfinished. C-07/T-02 "Payments and shipping" Backlog, no code. C-07/T-03 "Email and ranking" Backlog. The last checkpoint contains the SHA, the Progress mapping and the carrier research report R-6. No merge. The user did not authorize closing any issue or task.

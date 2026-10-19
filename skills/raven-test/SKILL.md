@@ -1,30 +1,31 @@
 ---
 name: raven-test
-description: "Zapewnij trwałą ochronę testami dla change, bugfixu lub refaktoru: wykorzystaj istniejące testy, dopisz tylko brakujące, a przed ryzykowną zmianą zabezpiecz obecne zachowanie (before-change)."
+description: "Provide durable test protection for a change, bugfix or refactor: reuse existing tests, add only the missing ones, and before a risky change lock in current behavior (before-change)."
+argument-hint: "[change | before-change <module> | reproduce <bug>]"
 ---
 
 # Raven Test
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [dyscyplinę wykonania](references/implementation-discipline.md). Respektuj `context/foundation/lessons.md`, jeśli istnieje.
+Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md) and [execution discipline](references/implementation-discipline.md). Respect `context/foundation/lessons.md` if present. Talk to the user in their language.
 
-Jedyny skill do trwałych testów. Na żądanie: domknięcie regresji po zmianie, osobne zadanie testowe albo ochrona przed zmianą. `raven-auto-implement` sam dopisuje testy potrzebne do swojej zmiany; ten skill jest na dodatkowe lub osobne potrzeby.
+The only skill for durable tests. On request: closing regression gaps after a change, a separate testing task, or protection before a change. `raven-auto-implement` adds the tests its own change needs; this skill is for additional or separate needs.
 
-## Kroki
+## Steps
 
-1. **Mapa.** Dla każdego AC (z issue, planu lub polecenia) i istotnego ryzyka ustal: jaki istniejący test go chroni i jaką asercją. Brak takiego testu to nazwana luka. Expected wyprowadzaj z wymagań, nie z outputu implementacji.
-2. **Luki.** Dopisuj testy tylko dla nazwanych luk. Dobra istniejąca ochrona zostaje bez zmian i bez duplikatów. Najtańsza skuteczna warstwa: unit dla logiki, integration dla granic DB/usług/API, E2E dla realnego przepływu w UI. Nie dodawaj frameworka ani warstw na zapas.
-3. **E2E.** Gdy potrzebne, czytaj tylko potrzebne: [setup Playwright](references/procedures/e2e-setup/procedure.md) i [pisanie testów](references/procedures/e2e/procedure.md). Dla nowego zachowania prowadzonego testem: [TDD](references/procedures/tdd/procedure.md).
-4. **Skuteczność.** Każdy nowy test musi móc nie przejść: niezależne Expected, sensowna asercja skutku, izolacja i cleanup, mocki tylko na zewnętrznych granicach. Przy niepewności zrób kontrolowaną perturbację kodu i bezwarunkowo ją cofnij. Nie osłabiaj asercji dla zielonego wyniku.
-5. **Uruchomienie.** Nowe i zmienione testy plus zależne regresje. Pełną suite tylko z konkretnego powodu.
+1. **Map.** For every AC (from the issue, plan or instruction) and significant risk, establish which existing test protects it and with which assertion. No such test is a named gap. Derive Expected from the requirements, not from implementation output.
+2. **Gaps.** Add tests only for named gaps. Good existing protection stays unchanged and without duplicates. The cheapest effective layer: unit for logic, integration for DB/service/API boundaries, E2E for a real flow in the UI. Do not add a framework or layers in advance.
+3. **E2E.** When needed, read only what is needed: [Playwright setup](references/procedures/e2e-setup/procedure.md) and [writing tests](references/procedures/e2e/procedure.md). For new behavior driven by tests: [TDD](references/procedures/tdd/procedure.md).
+4. **Effectiveness.** Every new test must be able to fail: independent Expected, a meaningful assertion of the effect, isolation and cleanup, mocks only at external boundaries. When unsure, make a controlled perturbation of the code and always revert it. Do not weaken assertions for a green result.
+5. **Run.** New and changed tests plus dependent regressions. The full suite only for a concrete reason.
 
 ## Before-change
 
-Przed refaktorem bez ochrony: test charakteryzacyjny utrwala świadomie chronione zachowanie, nie przypadkowy błąd. Dla bugfixu test na starym kodzie może zakończyć się `EXPECTED_RED`: podaj asercję, obserwowany błąd i źródło oczekiwania. Błąd runnera lub środowiska nie dowodzi reprodukcji.
+Before an unprotected refactor: a characterization test locks in deliberately protected behavior, not an accidental bug. For a bugfix, a test on the old code may end in `EXPECTED_RED`: give the assertion, the observed failure and the source of the expectation. A runner or environment error does not prove reproduction.
 
-## Defekt produktu
+## Product defect
 
-Wykryty defekt w zakresie zlecenia napraw proporcjonalnie i podaj w czacie aktualną instrukcję odbioru. Defekt poza zakresem zgłoś bez naprawy.
+Fix a detected defect within the requested scope proportionately and give current acceptance instructions in chat. Report an out-of-scope defect without fixing it.
 
-## Finał
+## Final message
 
-W czacie: mapa AC → test, zamknięte i otwarte luki, uruchomione polecenia z wynikiem. **Zakończenie bez nowych testów jest poprawne**, gdy mapa pokazuje wystarczającą ochronę. Testy commituj w logicznych krokach. Nie publikuj PR z samego zlecenia testów.
+In chat: AC → test map, closed and open gaps, commands run with results. **Finishing without new tests is correct** when the map shows sufficient protection. Commit tests in logical steps. Do not publish a PR from a testing request alone.

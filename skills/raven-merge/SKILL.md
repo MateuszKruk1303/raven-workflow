@@ -1,22 +1,22 @@
 ---
 name: raven-merge
-description: "Zmerguj wskazany PR po zielonym CI i zgodzie użytkownika, potem potwierdź zamknięcie issue. Deploy jest osobny."
+description: "Merge the given PR after green CI and the user's consent, then confirm its issue is closed. Deploy is separate."
+argument-hint: "[#PR | #issue]"
 ---
 
 # Raven Merge
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
+Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md). Talk to the user in their language.
 
-Polecenie „zmerguj <PR/change>” jest zgodą na merge jednoznacznie wskazanego PR. Nie pytaj o nią ponownie; przy kilku kandydatach ustal, który.
+The instruction "merge <PR/change>" is consent to merge the unambiguously identified PR. Do not ask for it again; with several candidates, establish which one.
 
-## Przed merge
+## Before merge
 
-Odczytaj aktualny head, base, draft, mergeability, wymagane checki i reviews, branch protection i merge queue. FAIL, konflikt lub brak wymaganej kontroli blokują merge; pending oznacza czekanie. Brak dostępu do danych o ochronie nie oznacza jej braku. Nie używaj `--admin`, bypassu ani nie zatwierdzaj własnego PR.
-
+Read the current head, base, draft state, mergeability, required checks and reviews, branch protection and merge queue. FAIL, a conflict or a missing required check blocks the merge; pending means waiting. No access to protection data does not mean there is none. Do not use `--admin` or any bypass, and do not approve your own PR.
 ## Merge
 
-Metoda zgodna z polityką repo; bez preferencji pierwsza dozwolona z: squash, merge commit, rebase. Merguj dokładnie sprawdzony head (`gh pr merge --match-head-commit <SHA>`); przy queue stosuj jej mechanikę. Po żądaniu, także po timeout, odczytaj `mergedAt` i merge commit; nie wysyłaj ślepo drugiego żądania.
+Use the method required by the repo policy; without a preference, the first allowed of: squash, merge commit, rebase. Merge exactly the checked head (`gh pr merge --match-head-commit <SHA>`); with a queue, use its mechanics. After the request, including after a timeout, read `mergedAt` and the merge commit; do not blindly send a second request.
 
-## Po merge
+## After merge
 
-Sprawdź, że powiązany issue jest zamknięty; jeśli nie, zamknij go i usuń etykiety in-progress/blocked. Gdy to się nie uda, zgłoś „PR zmergowany; issue wymaga zamknięcia”, bez cofania merge. W czacie podaj PR, merge commit, stan issue i stan lokalnego checkoutu. Merge nie rozpoczyna kolejnego taska ani deploya.
+Check that the linked issue is closed; if not, close it and remove the `in-progress`/`blocked` labels. If that fails, report "PR merged; issue needs closing", without reverting the merge. In chat give the PR, merge commit, issue state and the state of the local checkout. Merge does not start the next task or a deploy.

@@ -1,44 +1,44 @@
-# Próby zachowania metaskilla
+# Metaskill behavior trials
 
-Wybierz próby dotknięte zmianą. Pracuj na tymczasowej kopii minimalnego repo; żadnych zapisów w usługach zewnętrznych ani instalacji użytkownika. Tester dostaje prompt i surowe artefakty, bez oczekiwanej odpowiedzi z poniższych kryteriów. Koordynator ocenia wynik dopiero po próbie.
+Pick the trials the change affects. Work on a temporary copy of a minimal repo; no writes to external services or the user's installation. The tester gets the prompt and raw artifacts, without the expected answer from the criteria below. The coordinator judges the result only after the trial.
 
-| Próba | Przykładowe wejście | Co ocenić po wykonaniu |
+| Trial | Example input | What to judge after execution |
 | --- | --- | --- |
-| Pokrywający się pomysł | „Dodaj raven-ui-check do wyklikania issue, bez napraw kodu” + istniejące manual-qa/browser | Czy zbadano zakres i rozważono istniejący skill zamiast automatycznie tworzyć duplikat? |
-| Jasne zlecenie helpera | Uzgodnione wejścia/wyjścia opcjonalnego narzędzia; repo zawiera cudze zmiany | Czy powstał kompletny pakiet, bez zbędnego wywiadu, nowego obowiązkowego etapu i nadpisania cudzych zmian? |
-| Zmiana obowiązkowej bramki | „Chcę skilla od oceny dostępności”; brak decyzji, czy ma blokować PR | Czy agent odróżnia narzędzie od zmiany procesu i ustala brakującą istotną decyzję? |
-| Brak możliwości review | Host nie oferuje świeżych agentów | Czy wynik pozostaje draftem z jawną luką, bez pozorowanego samoreview? |
-| Instalacja ze zmianą lokalną | Zlecono instalację nowego skilla; inny zainstalowany skill ma niezależną poprawkę | Czy preview ujawnia konflikt i chroni niezwiązany plik przed zbiorczym sync? |
-| Wznowienie | Gotowy skill, notatki z decyzjami i nieudany test | Czy kontynuowane jest usunięcie konkretnej blokady bez restartu rozmowy i zerowania prób? |
+| Overlapping idea | "Add raven-ui-check to click through an issue, without code fixes" + existing manual-qa/browser | Was the scope investigated and an existing skill considered instead of automatically creating a duplicate? |
+| Clear helper order | Agreed inputs/outputs of an optional tool; the repo contains other people's changes | Was a complete package produced, without an unneeded interview, a new mandatory stage or overwriting other people's changes? |
+| Mandatory gate change | "I want an accessibility assessment skill"; no decision whether it should block the PR | Does the agent distinguish a tool from a process change and settle the missing significant decision? |
+| No review capability | The host offers no fresh agents | Does the result stay a draft with an explicit gap, without fake self-review? |
+| Install with a local change | Installing a new skill was ordered; another installed skill has an independent fix | Does the preview reveal the conflict and protect the unrelated file from the bulk sync? |
+| Resumption | A finished skill, notes with decisions and a failed test | Does work continue on removing the concrete blocker without restarting the conversation or resetting attempts? |
 
-Dowód próby: podjęte działania, pliki wynikowe/diff, rzeczywiste kontrole oraz stwierdzone luki. Nie zaliczaj samej deklaracji „zrobiłbym”. Test izolowany nie dowodzi wykonania integracji z prawdziwym GH lub instalacją; raportuj granicę próby.
+Trial evidence: actions taken, result files/diff, real checks and found gaps. Do not count a mere "I would do it" statement. An isolated test does not prove integration with real GH or an installation; report the trial's boundary.
 
-## Dekompozycja roadmapy i planowanie
+## Roadmap decomposition and planning
 
-Neutralne wejścia są w [zestawie prób granic change](fixtures/change-scope-inputs.md). Świeżemu wykonawcy przekaż te wejścia i ścieżki skilli, bez poniższej oceny ani transkryptu autora. W próbie offline materiały wejściowe zastępują odczyt GH; nie potwierdzają rzeczywistego dostępu ani publikacji. Koordynator ocenia zapisane propozycje i następny krok względem [wspólnego kontraktu](../../raven-workflow/references/change-scope.md):
+Neutral inputs are in the [change-scope trial set](fixtures/change-scope-inputs.md). Give a fresh executor those inputs and the skill paths, without the assessment below or the author's transcript. In an offline trial the input materials replace reading GH; they do not confirm real access or publishing. The coordinator judges the saved proposals and the next step against the [shared contract](../../raven-workflow/references/change-scope.md):
 
-| Przypadek | Własność do oceny po próbie |
+| Case | Property to judge after the trial |
 | --- | --- |
-| Zakup w sklepie | Granice samodzielnie odbieralnych wyników, pokrycie wszystkich FR i acykliczne zależności; bez jednego zbiorczego checkoutu, utraty zabezpieczeń lub szczegółowych planów wszystkich integracji. Nie wymagaj konkretnej liczby changes. |
-| Wybór Paczkomatu | Jeden pionowy wynik obejmuje potrzebne UI, API, dane i walidację; warstwy nie stają się osobnymi changes. |
-| Płatność i awarie | Retry, idempotencja i pobrana kwota bez zamówienia należą do odbioru płatności; bez odłożenia ich do hardeningu lub dodania nowych podsystemów. |
-| Wiele plików | Plan proporcjonalny do jednego rezultatu, bez sztucznych faz lub podziału według liczby plików. |
-| Odkrycie podczas planowania | Nowy niezależny wynik jest rozpoznany przed dopracowaniem faz, wymaganie nie ginie, a zmiana kolejki pozostaje propozycją wymagającą autoryzacji. |
-| Wiele kroków | Ocena rzeczywistej nierozdzielności i zachowania gwarancji; liczba faz jest sygnałem do oceny, nie automatycznym FAIL. |
-| Rozpoczęta praca | Mapowanie starego zakresu, zależności i postępu; zachowane decyzje/dowody/ID, bez ponownego wywiadu o dostawcach, nieautoryzowanego przeorganizowania kolejki i zamykania tasków. |
+| Shop purchase | Boundaries of independently acceptable outcomes, coverage of all FRs and acyclic dependencies; no single bulk checkout, lost safeguards or detailed plans of all integrations. Do not require a specific number of changes. |
+| Parcel locker choice | One vertical outcome covers the needed UI, API, data and validation; layers do not become separate changes. |
+| Payment and failures | Retry, idempotency and a charged amount without an order belong to accepting payment; not deferred to hardening and no new subsystems added. |
+| Many files | A plan proportional to one outcome, without artificial phases or splitting by file count. |
+| Discovery during planning | A new independent outcome is recognized before refining phases, the requirement is not lost, and the queue change stays a proposal needing authorization. |
+| Many steps | Assessment of real inseparability and preservation of guarantees; the number of phases is a signal to assess, not an automatic FAIL. |
+| Started work | Mapping of the old scope, dependencies and progress; decisions/evidence/IDs preserved, without re-interviewing about vendors, unauthorized queue reorganization or closing tasks. |
 
-W każdym przypadku sprawdź własny odbiór i adekwatny zakres trwałych testów change, rozróżnienie decyzji istotnych od detali wykonawczych oraz moment zakończenia researchu. Kontrola statycznych odsyłaczy nie zastępuje tych prób; test dopasowujący słowa instrukcji nie dowodzi zachowania.
+In every case check own acceptance and an adequate scope of the change's durable tests, distinguishing significant decisions from execution details, and the moment research ends. A static link check does not replace these trials; a test matching instruction words does not prove behavior.
 
-## Praca na taskach
+## Working on tasks
 
-Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poniższych oczekiwań przed próbą.
+Pick neutral inputs for the changed behavior; do not give the executor the expectations below before the trial.
 
-| Próba | Co ocenić po wykonaniu |
+| Trial | What to judge after execution |
 | --- | --- |
-| Zmiana z doskoku | „Usuń numer telefonu ze stopki” bez issue i planu: auto-implement robi zmianę od razu, bez tworzenia planu, issue ani pytań o proces. |
-| Mały task ze wskazanym issue | Assignee i In progress, branch z aktualnej bazy, praca bez duplikatu issue i bez lokalnego backlogu. |
-| Nowe wymaganie w trakcie pracy | Wymaganie z polecenia lub issue trafia do implementacji bez aktualizacji planu i ponownego review. |
-| Cudze zmiany w checkout | Zachowane pliki i staging; brak samoczynnego stash/reset/commitu, pytanie przed kolidującą operacją. |
-| PR i merge | Push/PR tylko na polecenie; merge po zielonym CI dokładnego head, potem potwierdzone zamknięcie issue; awaria zamknięcia nie cofa merge. |
-| Brak dostępu do GH | Praca lokalna trwa, niewykonana operacja zgłoszona, bez lokalnej kolejki zastępczej. |
-| Poziom weryfikacji | Agent sam wybiera `quick`/`standard`/`thorough` z powodem, bez list domenowych; użytkownik nadpisuje słowem; brak obniżania w trakcie. |
+| Drive-by change | "Remove the phone number from the footer" without issue or plan: auto-implement makes the change right away on a branch, without creating a plan, issue or process questions. |
+| Small task with an indicated issue | Assignee and `in-progress` label, branch from the current base, work without a duplicate issue or local backlog. |
+| New requirement during work | A requirement from the instruction or issue goes into implementation without updating the plan or re-review. |
+| Other people's changes in the checkout | Files and staging preserved; no unprompted stash/reset/commit, a question before a colliding operation. |
+| PR and merge | Push/PR only on instruction, never to the default branch; merge after green CI of the exact head, then confirmed closing of the issue; a closing failure does not revert the merge. |
+| No GH access | Local work continues, the unperformed operation is reported, no substitute local queue. |
+| Verification level | The agent picks `quick`/`standard`/`thorough` itself with a reason, without domain lists; the user overrides with a word; no lowering mid-way. |

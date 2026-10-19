@@ -1,63 +1,63 @@
 ---
 name: raven-shape
-description: "Dopracuj pomysł na nowy produkt lub znaczącą zmianę istniejącego systemu w uporządkowanej rozmowie o problemie, odbiorcach i zakresie produktu. Zapisuj i wznawiaj shape-notes.md dla skilli Raven przed PRD. Użyj przy kształtowaniu wizji, zakresu MVP, wymagań i reguł biznesowych; nie do implementacji pojedynczego błędu."
+description: "Refine an idea for a new product or a significant change to an existing system in a structured conversation about the problem, users and product scope. Write and resume shape-notes.md for Raven skills before the PRD. Use for shaping the vision, MVP scope, requirements and business rules; not for implementing a single bug."
 ---
 
 # Raven Shape
 
-Przeprowadź użytkownika od pomysłu do notatek pozwalających napisać PRD. Wynik: `context/foundation/shape-notes.md`, zgodny z wejściem `$raven-prd`. Jawnie wskazane starsze notatki można wykorzystać jako źródło, bez automatycznego przenoszenia historii. Utrzymuj jeden kanoniczny dokument notatek.
+Take the user from an idea to notes good enough to write a PRD. Result: `context/foundation/shape-notes.md`, matching the input of `/raven-prd`. Explicitly given older notes may be used as a source, without automatically carrying over history. Keep one canonical notes document.
 
-## Start i wznowienie
+## Start and resume
 
-1. Przeczytaj lokalne instrukcje oraz podany opis lub pliki. Zachowaj pierwotny opis i jego źródło. Sprawdź istniejące notatki, PRD i README; wcześniejsze dokumenty spoza tego etapu traktuj jako źródła do odczytu, bez automatycznej migracji ani modyfikowania.
-2. Rozpoznaj greenfield albo brownfield z intencji i zawartości projektu. Sam manifest startera nie oznacza istniejącego produktu. Przy brownfield sprawdź tylko kod i dokumenty potrzebne do zrozumienia zmiany; rozróżnij zachowanie zaobserwowane od deklarowanego.
-3. Jeśli brakuje `context/foundation/`, utwórz tylko potrzebny katalog.
-4. Przeczytaj całe istniejące `shape-notes.md` i [format notatek](references/shape-notes.md). Wznów od checkpointu; jeśli wcześniejsze notatki nie mają checkpointu, ustal postęp z ich treści. Zachowaj sekcje, źródła i decyzje, których nie definiuje nowy format. Nie rozpoczynaj wywiadu ponownie bez powodu.
-5. Krótko podsumuj znane ustalenia i przejdź do najważniejszej niewiadomej. Ustal nazwę projektu (`project`), jeśli jej brakuje — PRD jej nie wymyśla. Gdy nie podano pomysłu i nie ma go w źródłach, poproś o krótki opis odbiorcy, problemu i zamierzonej zmiany.
+1. Read local instructions and the given description or files. Keep the original description and its source. Check existing notes, PRD and README; treat earlier documents from outside this stage as sources to read, without automatic migration or modification.
+2. Recognize greenfield or brownfield from the intent and project content. A starter manifest alone does not mean an existing product. For brownfield check only the code and documents needed to understand the change; distinguish observed from declared behavior.
+3. If `context/foundation/` is missing, create only the needed directory.
+4. Read the whole existing `shape-notes.md` and the [notes format](references/shape-notes.md). Resume from the checkpoint; if earlier notes have no checkpoint, determine progress from their content. Keep sections, sources and decisions the new format does not define. Do not restart the interview without a reason.
+5. Briefly summarize known findings and move on to the most important unknown. Establish the project name (`project`) if it is missing — the PRD does not invent it. When no idea was given and none is in the sources, ask for a short description of the user, the problem and the intended change.
 
-## Sposób rozmowy
+## Conversation style
 
-- Prowadź rozmowę w języku użytkownika. Zadawaj zwykle jedno konkretne pytanie albo niewielki zestaw ściśle powiązanych pytań. Nie pytaj o liczbę rund ani informacje już dostępne.
-- Kolejność tematów poniżej jest domyślna, nie obowiązkowym kwestionariuszem. Odpowiedź może zamknąć kilka tematów. Nie wymagaj osobnego zatwierdzenia każdego kroku.
-- Formatuj wymagania na podstawie wypowiedzi i źródeł. Propozycje agenta oznaczaj jawnie; nie przedstawiaj ich jako decyzji użytkownika. Brak odpowiedzi to niewiadoma, nie zgoda.
-- Po istotnej odpowiedzi utrwal checkpoint, decyzje i otwarte pytania. Zapisuj użyteczny draft także przy przerwaniu lub pominięciu tematu.
+- Talk to the user in their language, and write the notes in it. Usually ask one concrete question or a small set of closely related questions. Do not ask about the number of rounds or about information already available.
+- The topic order below is a default, not a mandatory questionnaire. One answer may close several topics. Do not require separate approval of every step.
+- Format requirements based on what the user said and on sources. Mark the agent's proposals explicitly; do not present them as user decisions. No answer is an unknown, not agreement.
+- After a significant answer, persist the checkpoint, decisions and open questions. Save a useful draft also on interruption or a skipped topic.
 
-## Tematy odkrywania
+## Discovery topics
 
-### 1. Problem, wizja i odbiorcy
+### 1. Problem, vision and users
 
-Ustal, kto ma problem, jak rozwiązuje go dziś, dlaczego obecne obejście nie wystarcza i jaka zmiana przyniesie wartość. Oddziel wizję docelową od pierwszego pilota. Dla brownfield opisz obecny system, oczekiwaną różnicę i zachowania, które muszą przetrwać.
+Establish who has the problem, how they solve it today, why the current workaround is not enough and what change will bring value. Separate the target vision from the first pilot. For brownfield describe the current system, the expected difference and the behaviors that must survive.
 
-### 2. Dostęp i role
+### 2. Access and roles
 
-Ustal sposób wejścia do produktu, role, właścicieli danych i granice widoczności. Nie zakładaj potrzeby kont ani wielu ról. W istniejącym systemie rozróżnij obecne uprawnienia od planowanych zmian. Pytaj o doświadczenie i uprawnienia, nie wybór biblioteki auth.
+Establish how users enter the product, the roles, data owners and visibility boundaries. Do not assume accounts or multiple roles are needed. In an existing system distinguish current permissions from planned changes. Ask about experience and permissions, not about choosing an auth library.
 
-### 3. Najmniejszy kompletny przepływ i sukces
+### 3. Smallest complete flow and success
 
-Przejdź od wejścia użytkownika do osiągnięcia wartości. Ustal, co stanowi najmniejszą użyteczną wersję, jakie ręczne operacje są akceptowane i jak dotrzeć do pierwszych użytkowników. Zapisz hipotezę wartości oraz obserwowalny sygnał sukcesu lub porażki; nie wymyślaj progów ani terminów.
+Go from the user's entry to reaching value. Establish what makes the smallest useful version, which manual operations are acceptable and how to reach the first users. Record the value hypothesis and an observable signal of success or failure; do not invent thresholds or deadlines.
 
-Jeśli zakres rośnie, nazwij konkretne kosztowne elementy i zaproponuj ograniczenie lub odłożenie ich. Odnieś koszt do rzeczywistego czasu i budżetu użytkownika. Nie narzucaj limitu tygodni ani liczby kroków; świadomie większy zakres jest poprawną decyzją.
+If the scope grows, name the concrete costly elements and propose limiting or deferring them. Relate the cost to the user's real time and budget. Do not impose a limit of weeks or steps; a consciously larger scope is a valid decision.
 
-### 4. Wymagania i scenariusze
+### 4. Requirements and scenarios
 
-Z przepływu wyprowadź szkice FR z trwałymi ID `FR-001`, aktorem, możliwością, priorytetem `pilot` lub `later` i źródłem. Dla brownfield oznacz `new`, `modified` lub `preserved`. Nie numeruj ponownie istniejących wymagań przy edycji i nie wykorzystuj usuniętych ID.
+From the flow derive draft FRs with durable IDs `FR-001`, actor, capability, priority `pilot` or `later` and source. For brownfield mark `new`, `modified` or `preserved`. Do not renumber existing requirements when editing and do not reuse deleted IDs.
 
-Zapisz główny scenariusz i istotne wyjątki jako obserwowalne kryteria, np. Given/When/Then. Podważaj kosztowne lub nieoczywiste założenia: co przemawia za usunięciem wymagania, co się stanie przy błędzie, dlaczego jest potrzebne w pilocie? Nie wymuszaj osobnej rundy kontrargumentów dla każdego FR.
+Record the main scenario and significant exceptions as observable criteria, e.g. Given/When/Then. Challenge costly or non-obvious assumptions: what speaks for removing the requirement, what happens on failure, why is it needed in the pilot? Record a challenged assumption and its resolution next to the FR. Do not force a separate counter-argument round for every FR.
 
-### 5. Reguły biznesowe, dane i jakość
+### 5. Business rules, data and quality
 
-Ustal rzeczywiste reguły decyzji, walidacji, obliczeń lub przejść stanów: wejście, wynik i wyjątki. Jeśli produkt to prosta ewidencja, sprawdź jej wartość wobec obecnego rozwiązania; nie wymyślaj dodatkowej logiki tylko po to, by wyjść poza CRUD.
+Establish the real rules of decisions, validation, calculations or state transitions: input, result and exceptions. If the product is a simple record-keeping tool, check its value against the current solution; do not invent extra logic just to go beyond CRUD.
 
-Zapisz istotne dane i ograniczenia potrzebne do zrozumienia reguł, bez projektowania schematu bazy. Ustal adekwatne wymagania jakościowe: prywatność, dostępność, utratę danych, czas odpowiedzi lub obsługiwane urządzenia. Cele liczbowe wymagają źródła lub oznaczenia jako propozycja. Dla brownfield uwzględnij integracje, zgodność danych i ryzyko regresji; czysta zmiana infrastruktury nie musi mieć nowej reguły domenowej.
+Record significant data and constraints needed to understand the rules, without designing a database schema. Establish adequate quality requirements: privacy, availability, data loss, response time or supported devices. Numeric targets need a source or marking as a proposal. For brownfield include integrations, data compatibility and regression risk; a pure infrastructure change does not need a new domain rule.
 
-### 6. Granice i ograniczenia
+### 6. Boundaries and constraints
 
-Zapisz poza zakresem, przyszłe pomysły, typ produktu, początkową skalę oraz znane ograniczenia czasu i kosztu. Nie prowadź wyboru stacku. Zastaną technologię i dobrowolnie podane preferencje zachowaj jako kontekst do późniejszego przygotowania, nie nową zatwierdzoną architekturę.
+Record out of scope, future ideas, product type, initial scale and known time and cost constraints. Do not lead the stack choice. Keep the existing technology and voluntarily given preferences as context for later preparation, not as a new approved architecture.
 
-## Kontrola i przekazanie
+## Check and hand off
 
-Sprawdź kompletność problemu i odbiorcy, przepływu, dostępu, wymagań, reguł, sygnału sukcesu oraz wyłączeń; dla brownfield także zachowania do zachowania. Przy każdej rzeczywistej luce zapisz nazwę, konsekwencję i otwarte pytanie. `Nie dotyczy` jest prawidłowym wynikiem z uzasadnieniem.
+Check completeness of the problem and user, flow, access, requirements, rules, success signal and exclusions; for brownfield also the behaviors to preserve. For every real gap record the name, consequence and open question. `Not applicable` with a justification is a valid result.
 
-Gdy brakuje decyzji zmieniającej produkt, zapytaj konkretnie. Użytkownik może zakończyć z lukami: zapisz `warned`, nie fikcyjne uzgodnienie. Bez luk ustaw `complete`; przy trwającej rozmowie `in_progress`. W podsumowaniu podaj plik, najważniejsze niewiadome i następny krok `$raven-prd`. Samo shape nie uruchamia PRD, budowy, testów ani publikacji.
+When a product-changing decision is missing, ask concretely. The user may finish with gaps: record `warned`, not a fictional agreement. Without gaps set `complete`; during an ongoing conversation `in_progress`. In the summary give the file, the most important unknowns and the next step `/raven-prd`. Shape alone does not run the PRD, build, tests or publishing.
 
-Nie edytuj istniejącego PRD, roadmapy, kodu ani archiwów. Jeśli nowe ustalenia zmieniają wcześniejsze PRD lub istniejące issues roadmapy, opisz rozbieżność w notatkach i wskaż potrzebę aktualizacji przez `raven-prd`, `raven-roadmap` lub `raven-issue-update`.
+Do not edit the existing PRD, roadmap, code or archives. If new findings change an earlier PRD or existing roadmap issues, describe the discrepancy in the notes and point to the update needed through `raven-prd`, `raven-roadmap` or `raven-issue-update`.

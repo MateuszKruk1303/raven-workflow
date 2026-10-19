@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Merge"
-  short_description: "Merge po zielonym CI i zamknięcie issue"
-  default_prompt: "Użyj $raven-merge. Zmerguj wskazany PR po zielonym CI i potwierdź zamknięcie powiązanego issue."

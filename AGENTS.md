@@ -1,5 +1,9 @@
-# Instrukcje repozytorium Raven
+# Raven repository instructions
 
-Nie umieszczaj w AGENTS.md ścieżek specyficznych dla komputera użytkownika. Używaj ścieżek względem repozytorium lub opisuj sposób ustalenia lokalizacji z bieżącego środowiska.
+<!-- CLAUDE.md imports this file with `@AGENTS.md`. Keep shared instructions here. -->
 
-Skille Raven utrzymuj w tym repozytorium i instaluj w projektach, które ich potrzebują. Nie instaluj ani nie synchronizuj ich globalnie bez wyraźnego zlecenia użytkownika. Zmiana skilli w repozytorium nie uruchamia automatycznej aktualizacji ich kopii w innych projektach.
+Do not put paths specific to the user's machine in AGENTS.md or CLAUDE.md. Use repository-relative paths or describe how to find the location from the current environment.
+
+Maintain Raven skills in this repository and install them in the projects that need them. Do not install or sync them globally without an explicit request from the user. Changing skills here does not update their copies in other projects.
+
+Write skill files in English. Skills target Claude Code: use `/raven-<name>` invocation and Claude Code frontmatter (`disable-model-invocation` and similar). Project instructions support both formats: AGENTS.md holds the shared content and CLAUDE.md imports it with `@AGENTS.md`.

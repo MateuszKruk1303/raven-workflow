@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Roadmap"
-  short_description: "Kolejka changes jako GitHub Issues z PRD lub Jira"
-  default_prompt: "Użyj $raven-roadmap. Utwórz lub odśwież kolejkę changes jako GitHub Issues ze wskazanego PRD albo ticketów Jira."

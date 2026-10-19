@@ -1,6 +1,0 @@
-interface:
-  display_name: "Raven Lesson"
-  short_description: "Zapis jednej uzgodnionej lekcji w projekcie"
-  default_prompt: "Użyj $raven-lesson, aby uzgodnić i zapisać jedną powtarzalną regułę w context/foundation/lessons.md."
-policy:
-  allow_implicit_invocation: false

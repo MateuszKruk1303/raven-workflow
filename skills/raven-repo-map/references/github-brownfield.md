@@ -1,9 +1,9 @@
-# Raporty brownfield w Git
+# Brownfield reports in Git
 
-Mapa całego repo ma jedno miejsce: `context/foundation/repo-map.md`. Mapa ograniczona do obszaru jednego change trafia do `context/changes/<id>/repo-map.md`. Nie twórz issues artefaktów, snapshotów komentarzy ani drugiej kopii raportu.
+A map of the whole repo has one place: `context/foundation/repo-map.md`. A map limited to the area of one change goes to `context/changes/<id>/repo-map.md`. Do not create artifact issues, comment snapshots or a second copy of the report.
 
-Raport zawiera cel/zakres, źródła i wersje, HEAD/branch/dirty state, czas badania, dowody path:line, metodę, niepewności i następny krok. Używaj rzeczywistych metadanych; nieznane oznacz. Odróżniaj fakty, interpretacje i decyzje. Aktualizuj plik z czytelnym diffem; historię przechowuje Git.
+The report contains the goal/scope, sources and versions, HEAD/branch/dirty state, time of the investigation, path:line evidence, method, uncertainties and the next step. Use real metadata; mark unknowns. Distinguish facts, interpretations and decisions. Update the file with a readable diff; Git keeps the history.
 
-Poufne materiały należą do zatwierdzonego repo artefaktów, które może być inne niż repo kodu. Jawnie zapisz mapowanie; nie kopiuj do osobistego remote. Prywatny Project nie zapewnia prywatności publicznego repo. Brak dostępu do źródła oznacza lukę, nie pozwolenie na zastępczą publikację.
+Confidential materials belong in the approved artifacts repo, which may differ from the code repo. Record the mapping explicitly; do not copy to a personal remote. A private Project does not make a public repo private. No access to a source is a gap, not permission for a substitute publication.
 
-Przy wznowieniu czytaj bieżący raport i tylko wskazane źródła potrzebne do luki. Nie pobieraj całej historii issues. Historyczne artefakty GH pozostają na miejscu; migracja wymaga osobnego zlecenia.
+When resuming, read the current report and only the sources needed for the gap. Do not fetch the whole issue history. Historical GH artifacts stay in place; migration needs a separate request.

@@ -1,6 +1,0 @@
-interface:
-  display_name: "Raven Browser"
-  short_description: "Sprawdzaj aplikację domyślnie przez Playwright CLI"
-  default_prompt: "Użyj $raven-browser, aby zweryfikować zaimplementowaną funkcjonalność, domyślnie przez Playwright CLI."
-policy:
-  allow_implicit_invocation: true

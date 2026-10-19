@@ -1,6 +1,6 @@
-# Format shape-notes.md
+# shape-notes.md format
 
-Plik docelowy: `context/foundation/shape-notes.md`. Przy nowym dokumencie użyj poniższego frontmatter. Daty mają format ISO; nieznane wartości pozostają `null`.
+Target file: `context/foundation/shape-notes.md`. For a new document use the frontmatter below. Dates use ISO format; unknown values stay `null`.
 
 ```yaml
 ---
@@ -18,25 +18,26 @@ checkpoint:
 ---
 ```
 
-- `context_type`: `greenfield` lub `brownfield`; przy nierozstrzygniętym kontekście `null`.
-- `status`: `in_progress`, `complete` (tematy rozstrzygnięte lub uzasadnione jako nieistotne), `warned` (zakończono z jawnymi lukami na prośbę użytkownika).
-- Tematy checkpointu: `problem`, `access`, `flow`, `requirements`, `rules`, `scope`, `cross_check`; przy zakończeniu `current_topic: null`.
-- `frs_drafted` liczy aktywne FR, nie wyznacza kolejnego numeru ID.
+- `project`: the project name the user gave; `/raven-prd` copies it into the PRD.
+- `context_type`: `greenfield` or `brownfield`; `null` while the context is unsettled.
+- `status`: `in_progress`, `complete` (topics settled or justified as irrelevant), `warned` (finished with explicit gaps at the user's request).
+- Checkpoint topics: `problem`, `access`, `flow`, `requirements`, `rules`, `scope`, `cross_check`; on completion `current_topic: null`.
+- `frs_drafted` counts active FRs; it does not determine the next ID number.
 
-Treść organizuj w sekcje:
+Organize the content into sections (translate the headings when the notes are in another language):
 
-1. Źródła i pierwotny pomysł — opis użytkownika, odnośniki, pochodzenie przejętych ustaleń.
-2. Obecny system — tylko brownfield: obecne zachowanie, planowana różnica, stan potwierdzony w źródłach.
-3. Wizja, problem i odbiorcy — obejście problemu i wartość produktu.
-4. Dostęp i role — granice danych i uprawnień, ewentualnie świadomy brak kont.
-5. Hipoteza i walidacja — dotarcie do użytkowników, sygnał wyniku, próg albo niewiadoma.
-6. Zakres pilota i przepływy — pełna droga do wartości, scenariusze i wyjątki.
-7. Wymagania funkcjonalne — trwałe ID, priorytet, źródło, kryteria i ewentualna kategoria zmiany.
-8. Reguły biznesowe i dane — reguły, ograniczenia, wyjątki.
-9. Wymagania jakościowe i zachowanie do zachowania — obserwowalne gwarancje.
-10. Poza zakresem i akceptowane uproszczenia — także ręczne operacje i wizja na później.
-11. Ograniczenia i kontekst techniczny — czas, koszty, skala, zastany stack i preferencje do dalszego etapu.
-12. Decyzje, założenia i otwarte pytania — odróżnij decyzję użytkownika, dowód ze źródła i propozycję agenta.
-13. Kontrola kompletności — konkretne luki i konsekwencje, następny krok przy wznowieniu.
+1. Sources and original idea — the user's description, links, origin of adopted findings.
+2. Current system — brownfield only: current behavior, planned difference, state confirmed in sources.
+3. Vision, problem and users — the workaround for the problem and the product's value.
+4. Access and roles — data and permission boundaries, or a conscious absence of accounts.
+5. Hypothesis and validation — reaching users, the result signal, the threshold or the unknown.
+6. Pilot scope and flows — the full path to value, scenarios and exceptions.
+7. Functional requirements — durable ID, priority (`pilot`/`later`), source, criteria and optional change category.
+8. Business rules and data — rules, constraints, exceptions.
+9. Quality requirements and behavior to preserve — observable guarantees.
+10. Out of scope and accepted simplifications — including manual operations and the later vision.
+11. Constraints and technical context — time, costs, scale, existing stack and preferences for a later stage.
+12. Decisions, assumptions and open questions — distinguish a user decision, evidence from a source and an agent proposal.
+13. Completeness check — concrete gaps and consequences, the next step when resuming.
 
-Nie wypełniaj sekcji wymyślonymi treściami. Nieznane informacje oznacz jako nieustalone. Zachowaj dodatkowe sekcje istniejących notatek Raven i ich ustalenia; format nie wymaga przepisywania dokumentu tylko dla zgodności nagłówków. To notatki wejściowe dla PRD, nie gotowy PRD ani plan implementacji.
+Do not fill sections with invented content. Mark unknown information as unsettled. Keep extra sections of existing Raven notes and their findings; the format does not require rewriting the document just to match headings. These are input notes for the PRD, not a finished PRD or implementation plan.

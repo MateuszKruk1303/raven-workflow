@@ -1,215 +1,216 @@
 # Raven Workflow
 
-[Model pracy](#model-pracy) · [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Wzorce pracy](#wzorce-pracy) · [Po który skill sięgnąć](#skille-raven--po-który-sięgnąć-i-kiedy) · [Katalog](#katalog-skilli)
+[Working model](#working-model) · [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Work patterns](#work-patterns) · [Which skill to use](#raven-skills--which-one-to-use-and-when) · [Catalog](#skill-catalog)
 
-Skille Raven wywołujesz bezpośrednio. `raven-workflow` to opcjonalny tutorial uruchamiany wyłącznie ręcznie.
+Raven skills for Claude Code. You invoke them directly with `/raven-<name>`; write in any language and the agent answers in it. `raven-workflow` is an optional tutorial, invoked manually only.
 
-## Model pracy
+## Working model
 
-Pracujemy na taskach w GitHub Issues, bez dodatkowej maszynerii procesu.
+We work on tasks in GitHub Issues, without extra process machinery.
 
-- **Issue** niesie wymagania biznesowe i kryteria odbioru. Jira, jeśli jest, zostaje źródłem wymagań; issue tylko ją linkuje.
-- **Plan** (`context/changes/<id>/plan.md`) jest opcjonalnym, jednorazowym kontekstem roboczym agenta. Nie jest kontraktem: nie ma fingerprintu, checkpointów ani statusów. Nowe wymaganie trafia do issue albo polecenia.
-- **Stan pracy** to issue, branch, commity i PR.
-- **Drobna zmiana** (usunięcie przycisku, zmiana numeru telefonu) nie potrzebuje issue ani planu: `raven-auto-implement` z samym poleceniem.
-- **Push, PR i merge** tylko na wyraźne polecenie.
-- **Wyniki i instrukcja odbioru** trafiają do czatu, nie do raportów. PR dostaje krótką sekcję „Weryfikacja”: co faktycznie sprawdzono i czego nie.
+- **Issue** carries the business requirements and acceptance criteria. Jira, if used, stays the requirements source; the issue only links it.
+- **Plan** (`context/changes/<id>/plan.md`) is an optional, one-off working context for the agent. It is not a contract: no fingerprint, checkpoints or statuses. A new requirement goes into the issue or the instruction.
+- **Work state** is the issue, branch, commits and PR.
+- **Small change** (removing a button, changing a phone number) needs no issue or plan: `/raven-auto-implement` with just the instruction.
+- **Push, PR and merge** only on explicit instruction.
+- **Results and acceptance instructions** go to the chat, not to reports. The PR gets a short "Verification" section: what was actually checked and what was not.
+- **Project instructions**: `AGENTS.md` holds the shared content and `CLAUDE.md` imports it with `@AGENTS.md`, so both formats work.
 
-Zasady: [praca na taskach GitHub](skills/raven-workflow/references/git-workflow.md), [granice change](skills/raven-workflow/references/change-scope.md).
+Rules: [working on GitHub tasks](skills/raven-workflow/references/git-workflow.md), [change scope](skills/raven-workflow/references/change-scope.md).
 
 ## Greenfield
 
-Nowy produkt od pomysłu do pierwszego taska. Każdy krok zapisuje jeden dokument, z którego korzysta następny.
+A new product from idea to the first task. Each step writes one document the next one uses.
 
 ```text
-raven-shape          chaotyczny pomysł, notatki, rozmowy → uporządkowany problem, odbiorcy, MVP, reguły
+raven-shape          messy idea, notes, conversations → structured problem, audience, MVP, rules
 │                    context/foundation/shape-notes.md
 ▼
-raven-prd            wymagania i kryteria odbioru
+raven-prd            requirements and acceptance criteria
 │                    context/foundation/prd.md
 ▼
-raven-architecture   decyzje przekrojowe: dane, integracje, auth, granice modułów
+raven-architecture   cross-cutting decisions: data, integrations, auth, module boundaries
 │                    context/foundation/architecture.md
 ▼
-raven-init-stack     szkielet Better T Stack + lokalny Postgres
-LUB raven-medusa-ecommerce-init   sklep Medusa + Next.js
+raven-init-stack     Better T Stack skeleton + local Postgres
+OR raven-medusa-ecommerce-init   Medusa + Next.js shop
 ▼
-raven-md             AGENTS.md z faktycznych komend i konwencji
-raven-github-setup   repo, Issues, etykiety in-progress/blocked
-raven-hooks          CI: lint, typecheck, testy po PR
+raven-md             AGENTS.md + CLAUDE.md from the real commands and conventions
+raven-github-setup   repo, Issues, in-progress/blocked labels
+raven-hooks          CI: lint, typecheck, tests after a PR
 ▼
-raven-roadmap        PRD → issues: wyniki, AC, zależności, kolejność
+raven-roadmap        PRD → issues: outcomes, AC, dependencies, order
 ▼
-pierwszy issue → wzorzec „Task z issue”
+first issue → the "Task from an issue" pattern
 ```
 
 ## Brownfield
 
-Istniejący projekt. Dobierz tylko to, czego brakuje; mały znany task nie wymaga niczego z poniższych.
+An existing project. Pick only what is missing; a small known task needs none of these.
 
 ```text
-Nieznany kod?                    raven-repo-map            mapa obszarów, zależności, historii, ryzyk
-Konkretne pytanie do kodu?       raven-research            odpowiedź z dowodami path:line
-Decyzja przekrojowa?             raven-architecture        architecture.md
-Brak AGENTS.md / CI / etykiet?   raven-md · raven-hooks · raven-github-setup
-Słabe AGENTS.md?                 raven-md (tryb review)    karta wyników, bez przepisywania
-Kolejka z PRD lub Jiry?          raven-roadmap             issues linkujące źródło
-Refaktor bez testów?             raven-test (before-change) przed zmianą
+Unknown code?                       raven-repo-map            map of areas, dependencies, history, risks
+Concrete question about the code?   raven-research            answer with path:line evidence
+Cross-cutting decision?             raven-architecture        architecture.md
+No AGENTS.md / CI / labels?         raven-md · raven-hooks · raven-github-setup
+Weak AGENTS.md or CLAUDE.md?        raven-md (review mode)    scorecard, no rewriting
+Queue from a PRD or Jira?           raven-roadmap             issues linking the source
+Refactor without tests?             raven-test (before-change) before the change
 ▼
-wzorzec pracy poniżej
+a work pattern below
 ```
 
-## Wzorce pracy
+## Work patterns
 
-### Zmiana z doskoku
+### Drive-by change
 
-Drobna rzecz bez issue i planu: copy, styl, usunięcie elementu, config.
+A small thing without issue or plan: copy, style, removing an element, config.
 
 ```text
-raven-auto-implement — usuń numer telefonu ze stopki
+/raven-auto-implement remove the phone number from the footer
 ```
 
-Agent zwykle wybiera `quick`, robi commit na krótkim branchu (nigdy na domyślnym) i podaje w czacie, jak sprawdzić efekt. Push, PR i merge zlecasz osobno, jeśli chcesz.
+The agent usually picks `quick`, commits on a short branch (never on the default one) and tells you in chat how to check the result. Push, PR and merge are separate requests, if you want them.
 
-### Task z issue
+### Task from an issue
 
-Typowa funkcja lub poprawka.
+A typical feature or fix.
 
 ```text
-raven-plan #42              (opcjonalnie) plan w realnym kodzie; review planu na żądanie
-raven-auto-implement #42    implementacja + weryfikacja (domyślnie standard)
-  ↳ ręczny odbiór według instrukcji z czatu
-  ↳ problem? raven-auto-implement #42 — <co nie działa>
-raven-pr #42                push + PR z Closes #42
-raven-merge #42             zielone CI → merge → issue zamknięty
+/raven-plan #42              (optional) plan in the real code; plan review on request
+/raven-auto-implement #42    implementation + verification (standard by default)
+  ↳ manual acceptance following the chat instructions
+  ↳ problem? /raven-auto-implement #42 — <what does not work>
+/raven-pr #42                push + PR with Closes #42
+/raven-merge #42             green CI → merge → issue closed
 ```
 
-Plan pomijasz, gdy issue i polecenie wystarczą. Nowe wymaganie w trakcie pracy dopisujesz do polecenia albo przez `raven-issue-update`; planu nie aktualizujesz.
+Skip the plan when the issue and instruction are enough. A new requirement during work goes into the instruction or through `/raven-issue-update`; the plan is not updated.
 
-### Ryzykowna zmiana
+### Risky change
 
-Gdy błąd byłby kosztowny, trudny do odwrócenia lub trudny do zauważenia przed użytkownikiem.
+When a mistake would be costly, hard to reverse or hard to notice before the user does.
 
 ```text
-raven-plan #57 — z review         świeży agent ocenia plan, jedna runda poprawek
-raven-auto-implement #57          agent sam wybierze thorough albo powiesz: „thorough”
-raven-implement-review #57        (opcjonalnie) niezależne review całego change przed PR
-raven-pr → raven-merge
+/raven-plan #57 — with review     a fresh agent assesses the plan, one round of fixes
+/raven-auto-implement #57         the agent picks thorough itself, or you say "thorough"
+/raven-implement-review #57       (optional) independent review of the whole change before the PR
+/raven-pr → /raven-merge
 ```
 
-`thorough` dokłada baseline testów, testy całego obszaru, ścieżkę end-to-end ze scenariuszem błędu i jedno niezależne review.
+`thorough` adds a test baseline, tests of the whole area, an end-to-end path with a failure scenario and one independent review.
 
 ### Bugfix
 
 ```text
-raven-test — reprodukcja: <opis błędu>     (opcjonalnie) test EXPECTED_RED na obecnym kodzie
-raven-auto-implement — napraw <błąd>       poprawka; test przechodzi na zielono
+/raven-test reproduce <bug description>    (optional) EXPECTED_RED test on the current code
+/raven-auto-implement fix <bug>            the fix; the test goes green
 ```
 
-Przy prostym błędzie wystarczy samo `raven-auto-implement`: jeśli brakuje testu na naprawione zachowanie, dopisze go sam.
+For a simple bug `/raven-auto-implement` alone is enough: if a test for the fixed behavior is missing, it adds one.
 
-### Refaktor
+### Refactor
 
 ```text
-raven-test — before-change <moduł>         testy charakteryzacyjne obecnego zachowania
-raven-auto-implement — refaktor <moduł>    zmiana przy zielonych testach
+/raven-test before-change <module>         characterization tests of the current behavior
+/raven-auto-implement refactor <module>    the change with tests green
 ```
 
-### Kontrola jakości na żądanie
+### Quality checks on request
 
 ```text
-raven-implement-review <branch/PR>   wymagania, poprawność, bezpieczeństwo, skuteczność testów
-raven-test <change>                  mapa AC → test, tylko brakujące testy
-raven-manual-qa <issue/PR>           eksploracja w przeglądarce, defekty z reprodukcją
+/raven-implement-review <branch/PR>   requirements, correctness, security, test effectiveness
+/raven-test <change>                  AC → test map, only the missing tests
+/raven-manual-qa <issue/PR>           exploration in the browser, defects with reproduction
 ```
 
-Żaden z nich nie uruchamia się automatycznie i żaden nie jest warunkiem PR.
+None of them runs automatically and none is a precondition for a PR.
 
-### Jira w zespole
+### Jira in a team
 
 ```text
-raven-roadmap — PROJ-120..PROJ-128   issues GH linkujące tickety, bez kopiowania i zapisów do Jiry
+/raven-roadmap PROJ-120..PROJ-128   GH issues linking the tickets, no copying and no writes to Jira
 ```
 
-Dalej wzorzec „Task z issue”. Wymagania zostają w Jirze, wykonanie śledzisz w GitHub.
+Then the "Task from an issue" pattern. Requirements stay in Jira, execution is tracked in GitHub.
 
-## Skille Raven — po który sięgnąć i kiedy
+## Raven skills — which one to use and when
 
-Instalacja w projekcie: `npx skills add MateuszKruk1303/raven-workflow`, aktualizacja: `npx skills update -p -y`.
+Install in a project: `npx skills add MateuszKruk1303/raven-workflow`, update: `npx skills update -p -y`.
 
-Skille są ułożone w kolejności, w jakiej zwykle pojawiają się w pracy. Żaden etap nie jest obowiązkowy — drobną zmianę zrobisz samym `raven-auto-implement`.
+The skills are in the order they usually appear in work. No stage is mandatory — a small change needs only `/raven-auto-implement`.
 
-| Etap | Kiedy sięgasz | Skill | Co dostajesz |
+| Stage | When you reach for it | Skill | What you get |
 | --- | --- | --- | --- |
-| **0. Zgubiłem się** | _„Nie wiem, gdzie jestem i co dalej.”_ | [`raven-workflow`](skills/raven-workflow/SKILL.md) | Etap pracy z issue, brancha, commitów i PR oraz następny skill. Niczego nie zmienia. |
-| **1. Mam pomysł** | _„Mam pomysł, ale jest jeszcze mglisty.”_ | [`raven-shape`](skills/raven-shape/SKILL.md) | Problem, odbiorcy, MVP i reguły w `shape-notes.md`. Rozmowę można wznowić. |
-| | _„Wiem, czego chcę — niech to będzie porządny dokument.”_ | [`raven-prd`](skills/raven-prd/SKILL.md) | `context/foundation/prd.md`: wymagania, zakres, wyłączenia. |
-| **2. Stawiam fundamenty** | _„Chcę podjąć duże decyzje świadomie.”_ | [`raven-architecture`](skills/raven-architecture/SKILL.md) | Opcje z kompromisami i rekomendacją w `context/foundation/architecture.md`. |
-| | _„Chcę działający szkielet bez ręcznego klejenia.”_ | [`raven-init-stack`](skills/raven-init-stack/SKILL.md) | Better T Stack + lokalny Postgres; decyzje w `tech-stack.md`. |
-| | _„Robię sklep na Medusie i ma ruszyć lokalnie.”_ | [`raven-medusa-ecommerce-init`](skills/raven-medusa-ecommerce-init/SKILL.md) | Monorepo Medusa + Next.js: migracje, seed, admin, storefront. |
-| | _„Agent gubi się w repo albo łamie konwencje.”_ | [`raven-md`](skills/raven-md/SKILL.md) | `AGENTS.md` z faktów repo albo karta wyników (tryb review). |
-| | _„Nie chcę pamiętać o lincie i testach przed merge.”_ | [`raven-hooks`](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck, testy po PR. |
-| | _„Chcę pracować na taskach w GitHubie.”_ | [`raven-github-setup`](skills/raven-github-setup/SKILL.md) | Remote, Issues, etykiety `in-progress`/`blocked`; Project na zlecenie. |
-| **3. Układam kolejkę** | _„Mam PRD i nie wiem, od czego zacząć.”_ | [`raven-roadmap`](skills/raven-roadmap/SKILL.md) | Małe changes jako GitHub Issues w kolejności; źródło: PRD lub Jira. |
-| | _„Przypomniało mi się jeszcze jedno wymaganie.”_ | [`raven-issue-update`](skills/raven-issue-update/SKILL.md) | Wymaganie wplecione w treść i AC istniejącego issue. |
-| **4. Wchodzę w nieznany kod** | _„Dostałem cudze repo i nie wiem, co gdzie jest.”_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Obszary, zależności, historia, ryzyka — raport z dowodami. |
-| | _„Muszę wiedzieć, jak to naprawdę działa.”_ | [`raven-research`](skills/raven-research/SKILL.md) | Odpowiedź z dowodami, opcje i luki w `context/changes/<id>/research.md`. |
-| **5. Robię change** | _„Task jest ryzykowny, agent nie może strzelać.”_ | [`raven-plan`](skills/raven-plan/SKILL.md) | Plan jednego change w realnym kodzie; review planu na żądanie. |
-| | _„Po prostu to zrób — i udowodnij, że działa.”_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Commity, weryfikacja `quick`/`standard`/`thorough`, instrukcja odbioru w czacie. |
-| | _„Chcę zobaczyć to w przeglądarce.”_ | [`raven-browser`](skills/raven-browser/SKILL.md) | Izolowana sesja Playwright dla innych skilli; Brave tylko na polecenie. |
-| | _„Niech ktoś spróbuje to zepsuć.”_ | [`raven-manual-qa`](skills/raven-manual-qa/SKILL.md) | Eksploracja w UI, defekty z reprodukcją w czacie. Niczego nie naprawia. |
-| | _„Chcę drugiej pary oczu na ten kod.”_ | [`raven-implement-review`](skills/raven-implement-review/SKILL.md) | Read-only review: wymagania, poprawność, skuteczność testów. |
-| | _„Nie chcę, żeby to się po cichu zepsuło.”_ | [`raven-test`](skills/raven-test/SKILL.md) | Tylko brakujące testy; before-change przed refaktorem. |
-| **6. Oddaję pracę** | _„Jestem zadowolony — wystawiam to.”_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push i PR powiązany z issue, z sekcją „Weryfikacja”; bez merge. |
-| | _„CI zielone, akceptuję — zamykamy.”_ | [`raven-merge`](skills/raven-merge/SKILL.md) | Merge po zielonym CI i Twojej zgodzie, zamknięty issue. |
-| **7. Uczę się na błędach** | _„Znowu ten sam błąd.”_ | [`raven-lesson`](skills/raven-lesson/SKILL.md) | Jedna reguła w `context/foundation/lessons.md`, czytana przez kolejne skille. |
-| | _„Brakuje mi narzędzia w Raven.”_ | [`raven-create-skill`](skills/raven-create-skill/SKILL.md) | Nowy lub zmieniony skill Raven z walidacją. |
+| **0. I'm lost** | _"I don't know where I am or what's next."_ | [`raven-workflow`](skills/raven-workflow/SKILL.md) | The work stage from the issue, branch, commits and PR, and the next skill. Changes nothing. |
+| **1. I have an idea** | _"I have an idea, but it's still vague."_ | [`raven-shape`](skills/raven-shape/SKILL.md) | Problem, audience, MVP and rules in `shape-notes.md`. The conversation can be resumed. |
+| | _"I know what I want — make it a proper document."_ | [`raven-prd`](skills/raven-prd/SKILL.md) | `context/foundation/prd.md`: requirements, scope, exclusions. |
+| **2. Laying foundations** | _"I want to make the big decisions consciously."_ | [`raven-architecture`](skills/raven-architecture/SKILL.md) | Options with trade-offs and a recommendation in `context/foundation/architecture.md`. |
+| | _"I want a working skeleton without manual gluing."_ | [`raven-init-stack`](skills/raven-init-stack/SKILL.md) | Better T Stack + local Postgres; decisions in `tech-stack.md`. |
+| | _"I'm building a Medusa shop and it has to run locally."_ | [`raven-medusa-ecommerce-init`](skills/raven-medusa-ecommerce-init/SKILL.md) | Medusa + Next.js monorepo: migrations, seed, admin, storefront. |
+| | _"The agent gets lost in the repo or breaks conventions."_ | [`raven-md`](skills/raven-md/SKILL.md) | `AGENTS.md` + `CLAUDE.md` from repo facts, or a scorecard (review mode). |
+| | _"I don't want to remember lint and tests before merge."_ | [`raven-hooks`](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck, tests after a PR. |
+| | _"I want to work on tasks in GitHub."_ | [`raven-github-setup`](skills/raven-github-setup/SKILL.md) | Remote, Issues, `in-progress`/`blocked` labels; a Project on request. |
+| **3. Building the queue** | _"I have a PRD and don't know where to start."_ | [`raven-roadmap`](skills/raven-roadmap/SKILL.md) | Small changes as GitHub Issues in order; source: PRD or Jira. |
+| | _"I remembered one more requirement."_ | [`raven-issue-update`](skills/raven-issue-update/SKILL.md) | The requirement woven into the body and AC of an existing issue. |
+| **4. Entering unknown code** | _"I got someone else's repo and don't know what's where."_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Areas, dependencies, history, risks — a report with evidence. |
+| | _"I need to know how this really works."_ | [`raven-research`](skills/raven-research/SKILL.md) | An answer with evidence, options and gaps in `context/changes/<id>/research.md`. |
+| **5. Doing a change** | _"The task is risky, the agent can't guess."_ | [`raven-plan`](skills/raven-plan/SKILL.md) | A plan of one change in the real code; plan review on request. |
+| | _"Just do it — and prove it works."_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Commits, `quick`/`standard`/`thorough` verification, acceptance instructions in chat. |
+| | _"I want to see it in the browser."_ | [`raven-browser`](skills/raven-browser/SKILL.md) | An isolated Playwright session for other skills; Brave only on instruction. |
+| | _"Let someone try to break it."_ | [`raven-manual-qa`](skills/raven-manual-qa/SKILL.md) | Exploration in the UI, defects with reproduction in chat. Fixes nothing. |
+| | _"I want a second pair of eyes on this code."_ | [`raven-implement-review`](skills/raven-implement-review/SKILL.md) | Read-only review: requirements, correctness, test effectiveness. |
+| | _"I don't want this to break silently."_ | [`raven-test`](skills/raven-test/SKILL.md) | Only the missing tests; before-change before a refactor. |
+| **6. Handing off** | _"I'm happy — shipping it."_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push and a PR linked to the issue, with a "Verification" section; no merge. |
+| | _"CI is green, I accept — let's close."_ | [`raven-merge`](skills/raven-merge/SKILL.md) | Merge after green CI and your consent, issue closed. |
+| **7. Learning from mistakes** | _"The same mistake again."_ | [`raven-lesson`](skills/raven-lesson/SKILL.md) | One rule in `context/foundation/lessons.md`, read by later skills. |
+| | _"I'm missing a tool in Raven."_ | [`raven-create-skill`](skills/raven-create-skill/SKILL.md) | A new or changed Raven skill with validation. |
 
-## Katalog skilli
+## Skill catalog
 
-| Skill | Co robi | Testy | Wynik |
+| Skill | What it does | Tests | Result |
 | --- | --- | --- | --- |
-| [raven-architecture](skills/raven-architecture/SKILL.md) | Przekrojowe decyzje architektoniczne na podstawie PRD i kodu. | Nie pisze; uwzględnia testowalność. | `context/foundation/architecture.md` |
-| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Realizuje polecenie, opcjonalnie z issue lub planem; jeden agent. | **Tak:** wykorzystuje istniejące, dopisuje dla luk; `quick`/`standard`/`thorough`. | Commity (bez push/PR) i finał w czacie |
-| [raven-browser](skills/raven-browser/SKILL.md) | Steruje przeglądarką (domyślnie osobna sesja Playwright CLI) dla innych skilli. | Scenariusze ad hoc; nie zastępuje trwałych E2E. | Obserwacje, screenshoty, logi |
-| [raven-create-skill](skills/raven-create-skill/SKILL.md) | Projektuje i zmienia skille Raven z niezależnym review. | Doctor, testy repo, forward-test zachowania. | Pakiet skilla w tym repo |
-| [raven-github-setup](skills/raven-github-setup/SKILL.md) | Repo, włączone Issues, etykiety in-progress/blocked; Project na zlecenie. | Nie dotyczy. | Konfiguracja GitHub |
-| [raven-hooks](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck i właściwe testy po PR. | Uruchamia w CI; nie pisze testów produktu. | Pliki workflow CI |
-| [raven-implement-review](skills/raven-implement-review/SKILL.md) | Świeży reviewer: wymagania, poprawność, architektura, bezpieczeństwo, skuteczność testów. | Ocenia; nie poprawia. | Uwagi i werdykt w czacie |
-| [raven-init-stack](skills/raven-init-stack/SKILL.md) | Better T Stack, lokalny Postgres, env. | Sprawdza setup i typy. | Szkielet aplikacji, `tech-stack.md` |
-| [raven-issue-update](skills/raven-issue-update/SKILL.md) | Wplata wymaganie w zakres i AC istniejącego issue. | Nie dotyczy; readback zapisu. | Zaktualizowany body issue |
-| [raven-lesson](skills/raven-lesson/SKILL.md) | Utrwala powtarzalną regułę projektu na zlecenie. | Nie pisze. | `context/foundation/lessons.md` |
-| [raven-manual-qa](skills/raven-manual-qa/SKILL.md) | Eksploracyjne QA działającej funkcji w przeglądarce. | Nie pisze i nie naprawia. | Defekty z reprodukcją w czacie |
-| [raven-md](skills/raven-md/SKILL.md) | Tworzy, aktualizuje lub ocenia AGENTS.md na podstawie faktów z repo. | Nie pisze. | `AGENTS.md` albo karta wyników |
-| [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Lokalny starter Medusa + Next.js: baza, Redis, migracje, seed, admin, storefront. | Sprawdza start i podstawowy przepływ zakupu. | Działające lokalne monorepo |
-| [raven-merge](skills/raven-merge/SKILL.md) | Merge po zielonym CI dokładnego head, potem zamknięcie issue. | Czyta wynik CI. | Zmergowany PR, zamknięty issue |
-| [raven-plan](skills/raven-plan/SKILL.md) | Plan jednego wyniku w realnym kodzie; opcjonalne review planu przez świeżego agenta. | Planuje; nie pisze. | `context/changes/<id>/plan.md` |
-| [raven-pr](skills/raven-pr/SKILL.md) | Push i utworzenie lub aktualizacja PR powiązanego z issue, z sekcją „Weryfikacja”. | Nie uruchamia; opisuje faktycznie wykonane kontrole. | PR |
-| [raven-prd](skills/raven-prd/SKILL.md) | PRD z notatek shape lub surowych ustaleń. | Nie pisze; definiuje zachowania do weryfikacji. | `context/foundation/prd.md` |
-| [raven-repo-map](skills/raven-repo-map/SKILL.md) | Mapa istniejącego repo: obszary, zależności, historia, ryzyka. | Nie pisze. | `context/foundation/repo-map.md` |
-| [raven-research](skills/raven-research/SKILL.md) | Odpowiedzi na konkretne pytania o kod lub wykonalność, z dowodami. | Uruchamia tylko, gdy odpowiada to na pytanie. | `research.md` |
-| [raven-roadmap](skills/raven-roadmap/SKILL.md) | Kolejka changes jako GitHub Issues, z PRD albo Jira. | Nie pisze. | Issues z AC i zależnościami |
-| [raven-shape](skills/raven-shape/SKILL.md) | Rozmowa porządkująca chaotyczny pomysł: problem, odbiorcy, MVP, reguły. | Nie pisze. | `context/foundation/shape-notes.md` |
-| [raven-test](skills/raven-test/SKILL.md) | Trwała ochrona testami: mapa AC → test, tylko brakujące testy, before-change. | **Tak:** tylko dla nazwanych luk. | Testy w repo, mapa w czacie |
-| [raven-workflow](skills/raven-workflow/SKILL.md) | Ręczny tutorial: model pracy i mapa skilli. | Nie dotyczy. | Objaśnienie w rozmowie |
+| [raven-architecture](skills/raven-architecture/SKILL.md) | Cross-cutting architecture decisions based on the PRD and code. | Does not write; accounts for testability. | `context/foundation/architecture.md` |
+| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Carries out an instruction, optionally with an issue or plan; one agent. | **Yes:** uses existing ones, adds them for gaps; `quick`/`standard`/`thorough`. | Commits (no push/PR) and a summary in chat |
+| [raven-browser](skills/raven-browser/SKILL.md) | Drives the browser (by default a separate Playwright CLI session) for other skills. | Ad hoc scenarios; does not replace durable E2E. | Observations, screenshots, logs |
+| [raven-create-skill](skills/raven-create-skill/SKILL.md) | Designs and changes Raven skills with an independent review. | Doctor, repo tests, behavior forward-test. | Skill package in this repo |
+| [raven-github-setup](skills/raven-github-setup/SKILL.md) | Repo, enabled Issues, in-progress/blocked labels; a Project on request. | Not applicable. | GitHub configuration |
+| [raven-hooks](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck and the right tests after a PR. | Runs them in CI; does not write product tests. | CI workflow files |
+| [raven-implement-review](skills/raven-implement-review/SKILL.md) | Fresh reviewer: requirements, correctness, architecture, security, test effectiveness. | Assesses; does not fix. | Remarks and verdict in chat |
+| [raven-init-stack](skills/raven-init-stack/SKILL.md) | Better T Stack, local Postgres, env. | Checks setup and types. | App skeleton, `tech-stack.md` |
+| [raven-issue-update](skills/raven-issue-update/SKILL.md) | Weaves a requirement into the scope and AC of an existing issue. | Not applicable; write readback. | Updated issue body |
+| [raven-lesson](skills/raven-lesson/SKILL.md) | Records a recurring project rule on request. | Does not write. | `context/foundation/lessons.md` |
+| [raven-manual-qa](skills/raven-manual-qa/SKILL.md) | Exploratory QA of a running feature in the browser. | Does not write or fix. | Defects with reproduction in chat |
+| [raven-md](skills/raven-md/SKILL.md) | Creates, updates or assesses AGENTS.md and CLAUDE.md based on repo facts. | Does not write. | `AGENTS.md` + `CLAUDE.md`, or a scorecard |
+| [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Local Medusa + Next.js starter: database, Redis, migrations, seed, admin, storefront. | Checks startup and the basic purchase flow. | Working local monorepo |
+| [raven-merge](skills/raven-merge/SKILL.md) | Merge after green CI of the exact head, then closing the issue. | Reads the CI result. | Merged PR, closed issue |
+| [raven-plan](skills/raven-plan/SKILL.md) | Plan of one outcome in the real code; optional plan review by a fresh agent. | Plans; does not write. | `context/changes/<id>/plan.md` |
+| [raven-pr](skills/raven-pr/SKILL.md) | Push and create or update the PR linked to the issue, with a "Verification" section. | Does not run; describes the checks actually done. | PR |
+| [raven-prd](skills/raven-prd/SKILL.md) | PRD from shape notes or raw findings. | Does not write; defines behaviors to verify. | `context/foundation/prd.md` |
+| [raven-repo-map](skills/raven-repo-map/SKILL.md) | Map of an existing repo: areas, dependencies, history, risks. | Does not write. | `context/foundation/repo-map.md` |
+| [raven-research](skills/raven-research/SKILL.md) | Answers to concrete questions about the code or feasibility, with evidence. | Runs them only when that answers the question. | `research.md` |
+| [raven-roadmap](skills/raven-roadmap/SKILL.md) | Queue of changes as GitHub Issues, from a PRD or Jira. | Does not write. | Issues with AC and dependencies |
+| [raven-shape](skills/raven-shape/SKILL.md) | Conversation structuring a messy idea: problem, audience, MVP, rules. | Does not write. | `context/foundation/shape-notes.md` |
+| [raven-test](skills/raven-test/SKILL.md) | Durable test protection: AC → test map, only the missing tests, before-change. | **Yes:** only for named gaps. | Tests in the repo, map in chat |
+| [raven-workflow](skills/raven-workflow/SKILL.md) | Manual tutorial: working model and skill map. | Not applicable. | Explanation in the conversation |
 
 <details>
-<summary>Instalacja i utrzymanie</summary>
+<summary>Installation and maintenance</summary>
 
-Repo jest źródłem dystrybucji. Python 3.10+:
+The repo is the distribution source. Python 3.10+:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt
 .venv/bin/python tools/raven.py doctor
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python tools/raven.py sync --to <katalog-skilli>          # podgląd
-.venv/bin/python tools/raven.py sync --to <katalog-skilli> --apply  # zapis z backupem
-.venv/bin/python tools/raven.py doctor --installed <katalog-skilli>
+.venv/bin/python tools/raven.py sync --to <skills-dir>          # preview
+.venv/bin/python tools/raven.py sync --to <skills-dir> --apply  # write with backup
+.venv/bin/python tools/raven.py doctor --installed <skills-dir>
 ```
 
-Sync obejmuje tylko rodzinę Raven. Robi backup dotkniętych katalogów, usuwa nieaktualne pliki i wycofane skille. Przejrzyj podgląd, bo sync nadpisuje lokalne modyfikacje skilli Raven.
+Sync covers only the Raven family. It backs up the affected directories, removes stale files and retired skills. Review the preview, because sync overwrites local modifications of Raven skills.
 
-Doctor sprawdza frontmatter, nazwy, lokalne linki i [katalog](workflow-contract.json): każdy skill zarejestrowany i opisany w README, a wycofany nie wraca — ani jako katalog, ani jako wzmianka lub artefakt w treści skilli (lista w `tools/raven.py`). Katalog nie zawiera etapów, bramek, ról ani modeli. Statyczny PASS nie dowodzi zachowania agenta; zmiany instrukcji sprawdzaj próbami na rzeczywistych wejściach. [Raven integrity](.github/workflows/integrity.yml) uruchamia te kontrole w CI.
+Doctor checks frontmatter, names, local links and the [catalog](workflow-contract.json): every skill registered and described in the README, and a retired one does not come back — neither as a directory nor as a mention or artifact in skill content (list in `tools/raven.py`). The catalog has no stages, gates, roles or models. A static PASS does not prove agent behavior; check instruction changes with trials on real inputs. [Raven integrity](.github/workflows/integrity.yml) runs these checks in CI.
 
 </details>

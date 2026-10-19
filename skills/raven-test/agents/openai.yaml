@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Test"
-  short_description: "Trwałe testy: luki regresji i before-change"
-  default_prompt: "Użyj $raven-test. Zmapuj wymagania na istniejące testy i dopisz tylko brakującą ochronę."

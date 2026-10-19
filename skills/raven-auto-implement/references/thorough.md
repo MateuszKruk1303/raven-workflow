@@ -1,28 +1,28 @@
-# Poziom `thorough`
+# The `thorough` level
 
-Ma udowodnić: funkcja działa, nie psuje swojego obszaru i wytrzymuje typowe błędy. Zasady wspólne, sprawdzenie działania i format finału pozostają jak w [SKILL.md](../SKILL.md); ten plik zastępuje tylko kroki poziomu.
+Must prove: the feature works, does not break its area and withstands typical errors. Shared rules, "Checking it works" and the final message format stay as in [SKILL.md](../SKILL.md); this file replaces only the level steps.
 
-## Kroki
+## Steps
 
-1. **Baseline.** Przed edycją uruchom testy dotkniętego obszaru, aby oddzielić zastane awarie od wprowadzonych.
-2. **Implementacja.**
-3. **Statyczne kontrole.** Lint i typecheck wszystkich dotkniętych workspace.
-4. **Testy obszaru.** Wszystkie testy unit i e2e dotkniętego obszaru (cały spec modułu, nie tylko nowy przypadek); porównaj wynik z baseline.
-5. **Sprawdzenie działania** jako pełna ścieżka end-to-end od wejścia do trwałego skutku, plus co najmniej jeden scenariusz błędu dobrany do ryzyka zmiany.
-6. **Niezależne review** (domyślnie, jedna runda — niżej).
+1. **Baseline.** Before editing, run the tests of the affected area to separate pre-existing failures from introduced ones.
+2. **Implementation.**
+3. **Static checks.** Lint and typecheck of all affected workspaces.
+4. **Area tests.** All unit and e2e tests of the affected area (the module's whole spec, not just the new case); compare the result with the baseline.
+5. **Checking it works** as a full end-to-end path from input to durable effect, plus at least one error scenario chosen for the change's risk.
+6. **Independent review** (by default, one round — below).
 
-Orientacyjny narzut weryfikacji: ~25–45 min, w tym review z poprawkami ~10–20 min.
+Approximate verification overhead: ~25–45 min, including review with fixes ~10–20 min.
 
-## Niezależne review
+## Independent review
 
-Uruchom jednego świeżego agenta bez transkryptu autora. Przekaż mu polecenie użytkownika, wskazany issue lub plan, diff od bazowego SHA do HEAD wraz z niezacommitowanymi zmianami i nowymi plikami oraz wyniki kontroli. Reviewer pracuje read-only i ocenia zgodność z wymaganiami, poprawność oraz skuteczność testów, wskazując konkretne lokalizacje.
+Launch one fresh subagent without the author's transcript. Give it the user's instruction, the given issue or plan, the diff from the base SHA to HEAD together with uncommitted changes and new files, and the check results. The reviewer works read-only and assesses requirement fit, correctness and test effectiveness, pointing to concrete locations.
 
-Wykonaj jedną rundę poprawek dla potwierdzonych uwag i ponów kontrole, które dotyczą poprawionego kodu. Uwag, których nie poprawiasz, nie ukrywaj: trafiają do finału z uzasadnieniem. Nie uruchamiaj kolejnych rund review. Gdy host nie pozwala uruchomić świeżego agenta, zgłoś brak review w finale jako ograniczenie; samoocena autora nie jest review.
+Do one round of fixes for confirmed findings and rerun the checks that concern the fixed code. Do not hide findings you do not fix: they go into the final message with a justification. Do not run further review rounds. When the host cannot launch a fresh subagent, report the missing review in the final message as a limitation; the author's self-assessment is not a review.
 
-## Dodatki w finale
+## Additions to the final message
 
-Oprócz elementów z SKILL.md podaj:
+Besides the elements from SKILL.md, give:
 
-- ryzyka rezydualne;
-- wynik review i co z nim zrobiono (poprawione / odrzucone z uzasadnieniem);
-- w instrukcji odbioru krok negatywny: co powinno się nie udać i jak to wygląda.
+- residual risks;
+- the review result and what was done with it (fixed / rejected with justification);
+- a negative step in the acceptance instructions: what should fail and what that looks like.

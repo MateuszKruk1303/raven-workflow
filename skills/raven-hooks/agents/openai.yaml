@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Hooks"
-  short_description: "GitHub Actions dla właściwych kontroli"
-  default_prompt: "Użyj $raven-hooks. Skonfiguruj wymagane kontrole GitHub Actions na podstawie rzeczywistych poleceń projektu."

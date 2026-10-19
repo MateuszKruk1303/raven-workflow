@@ -22,9 +22,8 @@ Do not create task files or bookkeeping calls for a single located lookup.
 
 ## Dispatch contract
 
-In Claude Code, dispatch with the `Agent` tool (`Task` in older Claude Code
-versions) — `subagent_type: "Explore"` for locating code, `"general-purpose"`
-for analysis; in other hosts use the native equivalent.
+Dispatch with the `Agent` tool — `subagent_type: "Explore"` for locating code,
+`"general-purpose"` for analysis.
 
 Each child receives one bounded question, relevant paths and known findings,
 current constraints/corrections, and an explicit completion condition. Specify

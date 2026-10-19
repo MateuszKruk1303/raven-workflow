@@ -1,7 +1,7 @@
 # E2E Quality Rules
 
 These rules govern every E2E test the agent writes. They are **not** copied into
-your agent's rules file (`CLAUDE.md`, `AGENTS.md`, …): they matter only while
+the project's `AGENTS.md` or `CLAUDE.md`: they matter only while
 you work on E2E tests, so they ship with the skills and load when one runs.
 The e2e-setup procedure writes the seed to follow them; the e2e procedure reads
 this file before it generates a test and reviews every test against it. The rules

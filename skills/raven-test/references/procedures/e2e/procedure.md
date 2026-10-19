@@ -1,26 +1,26 @@
-# Trwałe E2E: plan → generate → review → verify
+# Durable E2E: plan → generate → review → verify
 
-Wewnętrzna procedura raven-test, zgodna z [pracą na taskach GitHub](../../../../raven-workflow/references/git-workflow.md). Czytaj wymagania (issue, plan), test-stack, istniejący seed i tylko potrzebne referencje. Testy powstają z implementacją, a normalne review change obejmuje je razem z kodem.
+Internal raven-test procedure, following [working on GitHub tasks](../../../../raven-workflow/references/git-workflow.md). Read the requirements (issue, plan), test-stack, the existing seed and only the references you need. Tests are created together with the implementation, and the normal review of the change covers them together with the code.
 
-## Setup i dobór ryzyka
+## Setup and risk selection
 
-Ustal źródła Expected, zakres i scenariusze chronione na poziomie przeglądarki. Nie wybieraj nowego niezależnego zakresu. Potwierdź istniejący runner i możliwość uruchomienia aplikacji. Jeśli są braki, zastosuj [e2e-setup](../e2e-setup/procedure.md) w zatwierdzonym zakresie. Nie instaluj drugiego runnera i nie konfiguruj CI przy okazji.
+Establish the sources of Expected, the scope and the scenarios protected at browser level. Do not pick a new independent scope. Confirm the existing runner and that the app can be started. If something is missing, apply [e2e-setup](../e2e-setup/procedure.md) within the approved scope. Do not install a second runner and do not configure CI on the side.
 
-Sprawdź istniejące pokrycie: wykorzystaj skuteczny test zamiast duplikować asercje. Jeśli unit/integration chroni ryzyko lepiej, wybierz tę warstwę. Pominięcie nowego E2E wymaga rzeczywistego dowodu ochrony albo uzasadnienia nieadekwatności; nie odhaczaj testu niewykonanego jako PASS. Testy before-change mogą wykazać EXPECTED_RED.
+Check existing coverage: reuse an effective test instead of duplicating assertions. If unit/integration protects the risk better, pick that layer. Skipping a new E2E needs real evidence of protection or a justification of inadequacy; do not tick an unrun test as PASS. Before-change tests may show EXPECTED_RED.
 
-## Plan i generowanie
+## Plan and generate
 
-1. Odczytaj [zasady jakości](references/e2e-quality-rules.md), [antywzorce](references/e2e-anti-patterns.md) i [wzorzec seed](references/seed-test-pattern.md). Każdy scenariusz ma źródło wymagania/ryzyka, warunki/dane, kroki i niezależny Expected, ustalony przed obserwacją outputu.
-2. Dla eksploracji stosuj [browser-driven generation](references/browser-driven-generation.md) i [tool wiring](../e2e-setup/references/tool-wiring.md). Domyślnie Playwright CLI w osobnej sesji; przełączenie na prywatną przeglądarkę wymaga polecenia lub zgody według raven-browser. Najpierw rzeczywiście otwórz i przygotuj stronę, potem czytaj snapshot dostępności. Nie wymyślaj lokatorów. Screenshot używaj dla ryzyka wizualnego, nie jako zamiennik drzewa dostępności.
-3. Uruchom build/preview z poleceń i portu test-stack/webServer; `E2E_PORT` ma pierwszeństwo, gdy konfiguracja je wspiera. Jeśli potrzebne zewnętrzne API są mockowane, zastosuj [mockowanie](references/mocking-external-apis.md) przed buildem/eksploracją. Nie wykonuj rzeczywistych płatności ani wiadomości na podstawie samego dostępu. Prowadź własne procesy i zatrzymaj je przed właściwym VERIFY, jeśli runner zarządza serwerem.
-4. Przejdź happy path oraz istotny błąd/granicę. Generuj testy oparte na zaobserwowanych rolach/nazwach, na wzorcu seed i [szablonie generowania](references/e2e-prompt-template.md). Preferuj stabilne dostępne lokatory; unikaj arbitralnych sleep, kruchych selektorów, zależności od kolejności i współdzielonego mutable state. Używaj testowych kont i unikalnych rekordów z cleanup.
+1. Read the [quality rules](references/e2e-quality-rules.md), [anti-patterns](references/e2e-anti-patterns.md) and the [seed pattern](references/seed-test-pattern.md). Every scenario has a requirement/risk source, conditions/data, steps and an independent Expected set before observing output.
+2. For exploration apply [browser-driven generation](references/browser-driven-generation.md) and [tool wiring](../e2e-setup/references/tool-wiring.md). By default Playwright CLI in a separate session; switching to the personal browser needs an instruction or consent per raven-browser. First actually open and prepare the page, then read the accessibility snapshot. Do not invent locators. Use screenshots for visual risk, not as a substitute for the accessibility tree.
+3. Start build/preview from the test-stack/webServer commands and port; `E2E_PORT` takes precedence when the config supports it. If required external APIs are mocked, apply [mocking](references/mocking-external-apis.md) before build/exploration. Do not perform real payments or messages based on access alone. Manage your own processes and stop them before the actual VERIFY if the runner manages the server.
+4. Go through the happy path and a significant error/boundary. Generate tests based on observed roles/names, on the seed pattern and the [generation template](references/e2e-prompt-template.md). Prefer stable accessible locators; avoid arbitrary sleeps, brittle selectors, order dependence and shared mutable state. Use test accounts and unique records with cleanup.
 
-## Review i verify
+## Review and verify
 
-Sprawdź każdy wygenerowany test: czy asercja wykrywa błąd, Expected ma niezależne źródło, mock nie omija badanego kontraktu, a lokator i oczekiwanie reprezentują użytkownika. Wewnętrzna samokontrola generowania nie jest niezależnym review końcowym. Normalny reviewer change może pokryć ten wymiar bez oddzielnego agenta.
+Check every generated test: does the assertion detect the failure, does Expected have an independent source, does the mock not bypass the contract under test, and do the locator and wait represent the user. The internal self-check during generation is not an independent final review. The normal reviewer of the change can cover this dimension without a separate agent.
 
-Uruchom nowe/zmienione testy i odpowiednie regresje z właściwą konfiguracją. Wykonaj powtórny przebieg E2E, by sprawdzić izolację i cleanup. Przypadkowy sukces, retry bez reprodukcji i błąd runnera nie dowodzą poprawności. Gdy skuteczność asercji jest niepewna, wykonaj kontrolowaną perturbację w izolacji i bezwarunkowo przywróć kod. Błąd składni nie jest dowodem ochrony zachowania.
+Run new/changed tests and the relevant regressions with the right configuration. Do a repeated E2E run to check isolation and cleanup. Accidental success, retry without reproduction and runner errors do not prove correctness. When assertion effectiveness is uncertain, make a controlled perturbation in isolation and always restore the code. A syntax error is not evidence of protecting behavior.
 
-Naprawiaj potwierdzone defekty w zleconym zakresie. Nie osłabiaj testu dla green. Po dwóch nieskutecznych próbach jednego problemu zatrzymaj się i zgłoś reprodukcję oraz blokadę. Nowe wymaganie lub nieobjęte działanie wraca do użytkownika.
+Fix confirmed defects within the requested scope. Do not weaken a test for green. After two unsuccessful attempts at one problem, stop and report the reproduction and the blocker. A new requirement or uncovered action goes back to the user.
 
-Polecenia, wyniki i luki podaj w czacie. Commituj testy celowym stagingiem. Oddaj wynik wywołującemu skillowi; samo E2E nie publikuje PR, nie merguje i nie uruchamia dodatkowych etapów automatycznie.
+Give commands, results and gaps in chat. Commit tests with deliberate staging. Return the result to raven-test; E2E by itself does not publish a PR, merge or start further stages automatically.

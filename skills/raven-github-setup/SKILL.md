@@ -1,15 +1,16 @@
 ---
 name: raven-github-setup
-description: "Przygotuj lub uzupełnij repo GitHub do pracy na taskach: remote, włączone Issues, etykiety in-progress/blocked; Project tylko na zlecenie."
+description: "Prepare or complete a GitHub repo for working on tasks: remote, enabled Issues, in-progress/blocked labels; a Project only on request."
+argument-hint: "[owner/repo]"
 ---
 
 # Raven GitHub Setup
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
+Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md). Talk to the user in their language.
 
-1. **Cel.** Repo z jawnego wskazania albo jednoznacznego remote; konflikt rozstrzygnij przed zapisem. Sprawdź konto (`gh auth status`) i owner/repo bez ujawniania tokenów. Brak dostępu nie oznacza braku zasobu.
-2. **Repo.** Zlecone nowe repo twórz jako prywatne; widoczności istniejącego nie zmieniaj bez polecenia. Poufnych treści firmy nie umieszczaj w osobistym repo przez domysł.
-3. **Issues.** Sprawdź, że są włączone, oraz etykiety `in-progress` i `blocked` (albo ich istniejące odpowiedniki). Utwórz tylko brakujące.
-4. **Project (opcjonalnie, na zlecenie).** Widok tych samych issues, nie drugi stan pracy. Pola i opcje mapuj po ID, zachowaj istniejące statusy i automatyzacje.
+1. **Target.** The repo from an explicit instruction or an unambiguous remote; resolve a conflict before writing. Check the account (`gh auth status`) and owner/repo without revealing tokens. No access does not mean the resource is missing.
+2. **Repo.** Create a requested new repo as private; do not change the visibility of an existing one without an instruction. Do not put confidential company content into a personal repo by assumption.
+3. **Issues.** Check that they are enabled, and that the `in-progress` and `blocked` labels (or their existing equivalents) exist. Create only the missing ones.
+4. **Project (optional, on request).** A view of the same issues, not a second work state. Map fields and options by ID, keep existing statuses and automations.
 
-Nie twórz testowych issues ani PR, nie konfiguruj sekretów, CI, branch protection ani deploya przy okazji. W czacie: repo, wynik odczytu po zapisie i pozostałe braki.
+Do not create test issues or PRs, and do not configure secrets, CI, branch protection or deploy on the side. In chat: the repo, the readback result after writing and remaining gaps.

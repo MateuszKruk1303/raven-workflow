@@ -1,32 +1,33 @@
 ---
 name: raven-workflow
-description: "Ręcznie wywoływany tutorial Raven: objaśnij model pracy na taskach GitHub, mapę skilli i pasujący następny krok dla wskazanej pracy. Nie jest routerem ani obowiązkowym etapem."
+description: "Manually invoked Raven tutorial: explain the GitHub-task work model, the skill map and the fitting next step for the work at hand. Not a router or a mandatory stage."
+disable-model-invocation: true
 ---
 
 # Raven Workflow
 
-Wywołuj tylko na wyraźne polecenie, jako tutorial i podpowiedź. Tutorial jest read-only: nie podejmuj issue i nie uruchamiaj innych skilli.
+Run only on explicit request, as a tutorial and hint. The tutorial is read-only: do not take up an issue and do not run other skills. Talk to the user in their language.
 
-## Model pracy
+## Work model
 
-Pracujemy na taskach w GitHub Issues — szczegóły w [pracy na taskach](references/git-workflow.md). Issue niesie wymagania biznesowe, plan jest opcjonalnym jednorazowym kontekstem agenta, a stan pracy to issue, branch, commity i PR. Granice jednego change opisują [granice change](references/change-scope.md).
+Work happens on tasks in GitHub Issues — details in [working on GitHub tasks](references/git-workflow.md). The issue carries business requirements, the plan is optional one-off agent context, and the state of work is the issue, branch, commits and PR. The boundaries of one change are described in [change boundaries](references/change-scope.md).
 
-Przy pytaniu o stan wskazanej pracy odczytaj issue (stan, assignee), branch, commity i PR, objaśnij, gdzie praca jest, i zaproponuj pasujący skill.
+When asked about the state of some work, read the issue (state, assignee), branch, commits and PR, explain where the work stands and suggest the fitting skill.
 
-## Typowa ścieżka
+## Typical path
 
-- **Drobna zmiana:** [raven-auto-implement](../raven-auto-implement/SKILL.md) z samym poleceniem.
-- **Task:** issue → opcjonalnie [raven-plan](../raven-plan/SKILL.md) → [raven-auto-implement](../raven-auto-implement/SKILL.md) → ręczny odbiór według instrukcji z czatu i ewentualne poprawki → [raven-pr](../raven-pr/SKILL.md) → [raven-merge](../raven-merge/SKILL.md).
-- **Na żądanie lub przy ryzyku:** [raven-implement-review](../raven-implement-review/SKILL.md) (wymagania, kod, testy), [raven-test](../raven-test/SKILL.md) (trwałe testy, before-change), [raven-manual-qa](../raven-manual-qa/SKILL.md) (eksploracyjne QA).
+- **Small change:** [raven-auto-implement](../raven-auto-implement/SKILL.md) with just the instruction.
+- **Task:** issue → optionally [raven-plan](../raven-plan/SKILL.md) → [raven-auto-implement](../raven-auto-implement/SKILL.md) → manual acceptance following the chat instructions, plus fixes if needed → [raven-pr](../raven-pr/SKILL.md) → [raven-merge](../raven-merge/SKILL.md).
+- **On request or when risky:** [raven-implement-review](../raven-implement-review/SKILL.md) (requirements, code, tests), [raven-test](../raven-test/SKILL.md) (durable tests, before-change), [raven-manual-qa](../raven-manual-qa/SKILL.md) (exploratory QA).
 
-`raven-auto-implement` dobiera weryfikację do ryzyka (`quick`/`standard`/`thorough`) i nie uruchamia kolejnych skilli.
+`raven-auto-implement` matches verification to risk (`quick`/`standard`/`thorough`) and does not run further skills.
 
-## Przygotowanie projektu
+## Project setup
 
-**Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architektura](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) lub [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [AGENTS.md](../raven-md/SKILL.md), [CI](../raven-hooks/SKILL.md), [GitHub](../raven-github-setup/SKILL.md) → [roadmapa](../raven-roadmap/SKILL.md).
+**Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architecture](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) or [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [AGENTS.md + CLAUDE.md](../raven-md/SKILL.md), [CI](../raven-hooks/SKILL.md), [GitHub](../raven-github-setup/SKILL.md) → [roadmap](../raven-roadmap/SKILL.md).
 
-**Brownfield:** w razie potrzeby [mapa repo](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md) lub [architektura](../raven-architecture/SKILL.md). Mały znany task nie wymaga żadnego z nich. Jira jako źródło wymagań: [raven-roadmap](../raven-roadmap/SKILL.md).
+**Brownfield:** as needed [repo map](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md) or [architecture](../raven-architecture/SKILL.md). A small known task needs none of them. Jira as the requirements source: [raven-roadmap](../raven-roadmap/SKILL.md).
 
-## Narzędzia
+## Tools
 
-[raven-issue-update](../raven-issue-update/SKILL.md) dopisuje wymaganie do istniejącego issue. [raven-browser](../raven-browser/SKILL.md) steruje przeglądarką dla innych skilli. [raven-lesson](../raven-lesson/SKILL.md) utrwala powtarzalną regułę na zlecenie. [raven-create-skill](../raven-create-skill/SKILL.md) rozwija Raven.
+[raven-issue-update](../raven-issue-update/SKILL.md) adds a requirement to an existing issue. [raven-browser](../raven-browser/SKILL.md) drives the browser for other skills. [raven-lesson](../raven-lesson/SKILL.md) records a recurring rule on request. [raven-create-skill](../raven-create-skill/SKILL.md) extends Raven.

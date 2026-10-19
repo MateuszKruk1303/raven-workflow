@@ -1,27 +1,27 @@
-# Szablon planu
+# Plan template
 
-Dostosuj do rozmiaru zmiany; puste sekcje usuń. Plan jest roboczy: nie dopisuj checkpointów, statusów, wyników testów ani historii zmian.
+Adapt to the size of the change; delete empty sections. The plan is a working document: do not add checkpoints, statuses, test results or change history. Translate the headings when the plan is written in another language.
 
 ````markdown
-# <id> — <wynik>
+# <id> — <outcome>
 
 - Issue: <URL>
-- Cel: <obserwowalny wynik dla użytkownika>
+- Goal: <observable outcome for the user>
 
-## Kryteria odbioru
-- AC1: <warunek → zachowanie → co widać>
-- AC2: <istotny błąd lub granica>
+## Acceptance criteria
+- AC1: <condition → behavior → what is visible>
+- AC2: <significant error or boundary>
 
-## Zakres
-<co wchodzi; co świadomie poza zakresem>
+## Scope
+<what is in; what is consciously out of scope>
 
-## Decyzje i podejście
-<rozstrzygnięte decyzje, dotknięte moduły, kontrakty API/danych, kolejność kroków, migracja lub rollback, jeśli potrzebne>
+## Decisions and approach
+<settled decisions, affected modules, API/data contracts, order of steps, migration or rollback if needed>
 
-## Kroki
-1. <krok, dotknięte obszary, testy przy nim>
-2. <tylko jeśli potrzebny>
+## Steps
+1. <step, affected areas, tests with it>
+2. <only if needed>
 
-## Weryfikacja
-<jakie testy i jaką ścieżkę w działającej aplikacji sprawdzić; ryzyka, na które uważać>
+## Verification
+<which tests and which path in the running app to check; risks to watch>
 ````

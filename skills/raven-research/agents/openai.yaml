@@ -1,6 +1,0 @@
-interface:
-  display_name: "Raven Research"
-  short_description: "Lokalny research oparty na źródłach"
-  default_prompt: "Użyj $raven-research. Zbadaj wskazane pytanie i zapisz lokalny research.md z dowodami do późniejszego planowania."
-policy:
-  allow_implicit_invocation: false

@@ -1,9 +1,9 @@
-# Techniczne sprawdzenie UI
+# Technical UI check
 
-Używaj tylko gdy zmienione zachowanie wymaga przeglądarki. Zakres wynika z konkretnej zmiany; ten plik nie wprowadza osobnego QA, krytycznej ścieżki ani raportu.
+Use only when the changed behavior needs a browser. The scope follows from the specific change; this file introduces no separate QA, critical path or report.
 
-Technikę izolowanej sesji opisuje [raven-browser](../../raven-browser/SKILL.md). Korzystaj z niej w bieżącym agencie, bez delegowania ani osobnego procesu QA. Preferuj istniejący test lub izolowaną sesję Playwright; osobista przeglądarka wymaga upoważnienia użytkownika.
+The isolated-session technique is described in [raven-browser](../../raven-browser/SKILL.md). Use it in the current agent, without delegation or a separate QA process. Prefer an existing test or an isolated Playwright session; the personal browser requires the user's authorization.
 
-Sprawdź obserwowalny skutek interakcji. Gdy zmiana dotyczy trwałego zapisu, potwierdź go ponownym odczytem; dla wyglądu obejrzyj render. Do ponowień można zachować mały tymczasowy scenariusz ze sprawdzonymi locatorami i asercjami. Nie wdrażaj nowego frameworka ani nie naprawiaj niezwiązanego harnessu. Zablokowany test zgłoś jako ograniczenie; alternatywny kanał potwierdza tylko zachowanie, które faktycznie obserwuje.
+Check the observable effect of the interaction. When the change concerns a durable write, confirm it by reading back; for appearance, look at the render. For retries you may keep a small temporary scenario with verified locators and assertions. Do not introduce a new framework or fix an unrelated harness. Report a blocked test as a limitation; an alternative channel confirms only the behavior it actually observes.
 
-Używaj własnych danych testowych i sprzątaj tylko je. Nie wykonuj rzeczywistych płatności, wysyłek, publikacji ani operacji na cudzych danych bez upoważnienia; nie resetuj współdzielonej bazy i nie ujawniaj sekretów.
+Use your own test data and clean up only that. Do not perform real payments, shipments, publications or operations on other people's data without authorization; do not reset a shared database and do not reveal secrets.

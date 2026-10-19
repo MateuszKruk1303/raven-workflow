@@ -1,109 +1,109 @@
-# Wewnętrzna procedura Raven
+# Internal Raven procedure
 
-To część implementacji skilla Raven, nie osobna komenda. Czytaj ją wraz z nadrzędnym SKILL.md raven-test, który określa zakres i uprawnienia. Wszystkie szablony, referencje i skrypty są dostarczone lokalnie w tym katalogu. Nie wyszukuj ani nie instaluj innych pakietów workflow.
+This is part of the raven-test skill, not a separate command. Read it together with the parent raven-test SKILL.md, which defines scope and permissions. All templates, references and scripts ship locally in this directory. Do not search for or install other workflow packages.
 
-**Obowiązujące zasady wykonania:** [praca na taskach GitHub](../../../../raven-workflow/references/git-workflow.md).
+**Execution rules that apply:** [working on GitHub tasks](../../../../raven-workflow/references/git-workflow.md).
 
-# Konfiguracja Raven E2E — infrastruktura Playwright dla procedury E2E
+# Raven E2E setup — Playwright infrastructure for the E2E procedure
 
-Przeprowadzasz projekt od „braku Playwright” (lub „pewnego Playwright”) do dokładnie tego, czego potrzebuje [procedura E2E](../e2e/procedure.md), i niczego więcej:
+You take the project from "no Playwright" (or "some Playwright") to exactly what the [E2E procedure](../e2e/procedure.md) needs, and nothing more:
 
 ```
-WYKRYJ → ZAINSTALUJ → SKONFIGURUJ → SEED → INTEGRACJA AGENTA → ZAPISZ → PRZEKAŻ
+DETECT → INSTALL → CONFIGURE → SEED → AGENT WIRING → RECORD → HAND OFF
 ```
 
-Każdy krok najpierw sprawdza, czy jego rezultat już istnieje, i uzupełnia tylko brak. **Drugie uruchomienie na gotowym projekcie nie zmienia żadnych plików** — bez przepisanej konfiguracji, bez globalnej instalacji `playwright-cli`, bez nowej daty `updated`. To jest test tej umiejętności.
+Every step first checks whether its result already exists and fills in only what is missing. **A second run on a finished project changes no files** — no rewritten config, no global `playwright-cli` install, no new `updated` date. That is the test of this procedure.
 
-Opcjonalne wejście od raven-test: identyfikator ryzyka lub jednoliniowy opis ryzyka dla seeda (pomija pytanie o ryzyko w kroku 4).
+Optional input from raven-test: a risk identifier or a one-line risk description for the seed (skips the risk question in step 4).
 
-## Co obejmuje ta umiejętność — a czego nie zrobi
+## What this procedure covers — and what it won't do
 
-Obejmuje: konfigurację Playwright, `tests/e2e/auth.setup.ts`, test seed, integrację `playwright-cli` oraz sekcję `## E2E` w `context/foundation/test-stack.md`.
+Covers: the Playwright config, `tests/e2e/auth.setup.ts`, the seed test, `playwright-cli` wiring and the `## E2E` section in `context/foundation/test-stack.md`.
 
-W konfiguracji „obejmuje” oznacza **wpis aplikacji `webServer`** (ten, którego `url` jest bazowym URL-em) oraz każde pole rejestrowane przez `test-stack.md`. Procedura E2E może później dodać dodatkowe wpisy `webServer` dla serwerów mocków (formę tablicy) i podpiąć swój mock do wpisu aplikacji (`references/playwright-setup-templates.md` → „Who owns what in the config”). Ponowne uruchomienie odczytuje i rejestruje tylko polecenie build + preview wpisu aplikacji, url, port oraz `reuseExistingServer`, i nigdy nie dotyka dodatkowych wpisów.
+In the config, "covers" means **the app `webServer` entry** (the one whose `url` is the base URL) and every field `test-stack.md` records. The E2E procedure may later add extra `webServer` entries for mock servers (array form) and hook its mock into the app entry (`references/playwright-setup-templates.md` → "Who owns what in the config"). A re-run reads and records only the app entry's build + preview command, url, port and `reuseExistingServer`, and never touches extra entries.
 
-Nie będzie:
-- pisać testów E2E poza seedem — tym zajmuje się procedura E2E;
-- dotykać workflow CI;
-- nadpisywać istniejącego klucza konfiguracji lub speca bez pytania;
-- pisać do pliku reguł agenta (AGENTS.md, CLAUDE.md, …). Reguły E2E są istotne tylko podczas pracy nad testami E2E, więc znajdują się w `../e2e/references/e2e-quality-rules.md` i ładuje je procedura E2E, a nie każda sesja. Blok reguł E2E dopisany przez wcześniejszą wersję tej umiejętności pozostaje bez zmian; możesz go usunąć;
-- odczytywać ani wyświetlać wartości sekretów, tworzyć użytkowników poza lokalnym stosem ani zatwierdzać danych uwierzytelniających;
-- samodzielnie zatwierdzać odbioru ani publikować — commity prowadzi raven-test, a PR i review są osobnymi zleceniami.
+It will not:
+- write E2E tests other than the seed — that is the E2E procedure's job;
+- touch CI workflows;
+- overwrite an existing config key or spec without asking;
+- write to the agent rules files (AGENTS.md, CLAUDE.md, …). E2E rules matter only while working on E2E tests, so they live in `../e2e/references/e2e-quality-rules.md` and the E2E procedure loads them, not every session. An E2E rules block added by an earlier version of this procedure stays as is; you may remove it;
+- read or display secret values, create users outside the local stack or commit credentials;
+- approve acceptance or publish on its own — raven-test handles commits, and PR and review are separate requests.
 
-## Konwencje
+## Conventions
 
-> **Pytanie użytkownika — niezależne od hosta.** Gdziekolwiek ta umiejętność mówi *zapytaj użytkownika*, użyj dowolnego narzędzia interaktywnych pytań udostępnianego przez agenta; nie koduj na sztywno jednej nazwy narzędzia. Przed pierwszym pytaniem przeskanuj dostępne narzędzia w poszukiwaniu takiego, które zadaje użytkownikowi pytanie strukturalne (parametr `question` oraz pole `options`/`choices`), i użyj pierwszego dopasowania. Jeśli go nie ma, zapytaj zwykłą wiadomością konwersacyjną z listą opisanych opcji i zaczekaj na odpowiedź — nigdy nie blokuj procedury. Gdy pytasz pierwszy raz, powiedz, którego narzędzia użyto (lub że zastosowano zwykły chat). Pytaj tylko o to, czego nie udało się wykryć.
+> **Asking the user.** Wherever this procedure says *ask the user*, use the `AskUserQuestion` tool with described options. Ask only about what could not be detected.
 
-> **Narzędzie przeglądarkowe.** Odczytaj `references/tool-wiring.md`: zastosuj wybór trybu z raven-browser (domyślnie CLI, MCP na wyraźne polecenie lub zgodę użytkownika). Nie wymagaj dodatkowego skilla, globalnego CLI ani manifestu instalatora.
+> **Browser tool.** Read `references/tool-wiring.md`: apply the mode choice from raven-browser (CLI by default, MCP on the user's explicit instruction or consent). Do not require an extra skill, a global CLI or an installer manifest.
 
-Prowadź w rozmowie krótką checklistę, po jednym wierszu na krok (`- [ ] 1. Detect` … `- [ ] 7. Hand off`), i oznaczaj każdy krok jako `done`, `already in place` lub `changed`. Raport końcowy jest z niej budowany.
+Keep a short checklist in the conversation, one line per step (`- [ ] 1. Detect` … `- [ ] 7. Hand off`), and mark every step `done`, `already in place` or `changed`. The final report is built from it.
 
 ---
 
-## 1. Wykrywanie
+## 1. Detect
 
-Czytaj, nie zapisuj. Zbierz te fakty i pokaż je użytkownikowi jako jedną krótką tabelę przed krokiem 2.
+Read, do not write. Gather these facts and show them to the user as one short table before step 2.
 
-1. **Narzędzie agenta.** Odczytaj `references/tool-wiring.md`. Użyj narzędzi dostępnych w bieżącej sesji i istniejącej konfiguracji projektu; nie wymagaj manifestu instalatora ani instalacji dodatkowych skilli.
-2. **Menedżer pakietów** z lockfile: `package-lock.json` → npm, `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lock`/`bun.lockb` → bun. Używaj go dla każdego polecenia instalacji i uruchomienia.
-3. **Stos i polecenia.** Ze skryptów `package.json` oraz konfiguracji frameworka: polecenie build oraz przypominające produkcyjne polecenie preview/start. Preferuj build + preview zamiast serwera deweloperskiego.
-4. **Port — odczytaj go, nigdy nie zakładaj.** Kolejno:
-   - jawny port w konfiguracji frameworka (np. `server.port` w `astro.config.*`, `preview.port`/`server.port` w `vite.config.*`);
-   - flaga `--port`/`-p` w skrypcie preview/start;
-   - udokumentowana domyślna wartość frameworka dla jego polecenia preview/start (np. Astro 4321, Vite preview 4173, Next.js 3000).
-   Zapisz, skąd pochodzi liczba. Jeśli `E2E_PORT` jest już ustawione w pliku env (nazwa i numer portu nie są sekretem, więc je odczytaj), to jest port używany przez uruchomienie: użytkownik odpowiedział na pytanie o port przy wcześniejszym uruchomieniu, więc nie pytaj o niego ponownie.
-5. **Czy port jest wolny?** Sprawdź port używany przez uruchomienie (`E2E_PORT`, jeśli jest ustawione, w przeciwnym razie wykryty) zanim na nim polegasz: `lsof -nP -iTCP:<port> -sTCP:LISTEN` (macOS/Linux) lub `netstat -ano | findstr :<port>` (Windows); działa też `nc -z localhost <port>`. Jeśli coś nasłuchuje, powiedz to jasno i podaj proces, jeśli potrafisz: przy `reuseExistingServer` poza CI Playwright **po cichu przetestowałby dowolną aplikację już działającą pod tym adresem**. Zaproponuj dwa wyjścia — zatrzymaj ten proces albo ustaw `E2E_PORT=<free port>` w pliku env (konfiguracja je odczytuje). Nigdy nie wybieraj samodzielnie nowego domyślnego portu.
-6. **Istniejący Playwright.** `@playwright/test` w `package.json`; `playwright.config.*` (przeczytaj go w całości: `testDir`, `use.baseURL`, `webServer`, projekty, `storageState`, `trace`, `screenshot`); istniejące specy (`*.spec.ts`, `*.setup.ts`); istniejący seed (plik o nazwie `seed.spec.ts` lub pole `seed` w `test-stack.md`).
-7. **Nakładanie się test runnera jednostkowego.** Jeśli skonfigurowano runner jednostkowy (np. Vitest, Jest), sprawdź jego globy include. Jeśli również zbierałyby `tests/e2e/**/*.spec.ts`, specy E2E muszą zostać tam wykluczone — zanotuj to dla kroku 3.
-8. **Podejście do auth.** Spójrz na middleware / route guards, stronę logowania i jej formularz oraz dostawcę auth (np. Supabase, Auth.js, Clerk, niestandardową sesję). Zapisz: chronione trasy, ścieżkę logowania, stronę docelową po logowaniu oraz to, czy dostawca działa lokalnie (np. `supabase/config.toml` → lokalny stos przez `npx supabase start`). W ogóle bez logowania → `auth: none`.
-9. **Env aplikacji.** Który ignorowany przez git plik env odczytuje aplikacja (np. `.env`), czy preview odczytuje inny (zobacz `references/playwright-setup-templates.md` → Preview env) oraz czy URL backendu wskazuje tam lokalny stos. Odczytuj tylko **nazwy** zmiennych, nigdy wartości — z wyjątkiem sprawdzenia, czy URL backendu jest lokalny.
-10. **Stan.** `context/foundation/test-stack.md` (istniejąca sekcja `## E2E`).
+1. **Agent tool.** Read `references/tool-wiring.md`. Use the tools available in the current session and the project's existing configuration; do not require an installer manifest or additional skills.
+2. **Package manager** from the lockfile: `package-lock.json` → npm, `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lock`/`bun.lockb` → bun. Use it for every install and run command.
+3. **Stack and commands.** From `package.json` scripts and the framework config: the build command and a production-like preview/start command. Prefer build + preview over the dev server.
+4. **Port — read it, never assume.** In order:
+   - an explicit port in the framework config (e.g. `server.port` in `astro.config.*`, `preview.port`/`server.port` in `vite.config.*`);
+   - a `--port`/`-p` flag in the preview/start script;
+   - the framework's documented default for its preview/start command (e.g. Astro 4321, Vite preview 4173, Next.js 3000).
+   Record where the number came from. If `E2E_PORT` is already set in the env file (the name and port number are not secrets, so read them), that is the port the run uses: the user answered the port question on an earlier run, so do not ask again.
+5. **Is the port free?** Check the port the run uses (`E2E_PORT` if set, otherwise the detected one) before relying on it: `lsof -nP -iTCP:<port> -sTCP:LISTEN` (macOS/Linux) or `netstat -ano | findstr :<port>` (Windows); `nc -z localhost <port>` also works. If something is listening, say so clearly and name the process if you can: with `reuseExistingServer` outside CI, Playwright **would silently test whatever app is already running at that address**. Offer two ways out — stop that process or set `E2E_PORT=<free port>` in the env file (the config reads it). Never pick a new default port yourself.
+6. **Existing Playwright.** `@playwright/test` in `package.json`; `playwright.config.*` (read it in full: `testDir`, `use.baseURL`, `webServer`, projects, `storageState`, `trace`, `screenshot`); existing specs (`*.spec.ts`, `*.setup.ts`); an existing seed (a file named `seed.spec.ts` or the `seed` field in `test-stack.md`).
+7. **Unit runner overlap.** If a unit runner is configured (e.g. Vitest, Jest), check its include globs. If they would also pick up `tests/e2e/**/*.spec.ts`, the E2E specs must be excluded there — note it for step 3.
+8. **Auth approach.** Look at middleware / route guards, the sign-in page and its form, and the auth provider (e.g. Supabase, Auth.js, Clerk, custom session). Record: protected routes, sign-in path, landing page after sign-in, and whether the provider runs locally (e.g. `supabase/config.toml` → local stack via `npx supabase start`). No sign-in at all → `auth: none`.
+9. **App env.** Which gitignored env file the app reads (e.g. `.env`), whether preview reads a different one (see `references/playwright-setup-templates.md` → Preview env), and whether the backend URL there points at a local stack. Read only variable **names**, never values — except to check that the backend URL is local.
+10. **State.** `context/foundation/test-stack.md` (existing `## E2E` section).
 
-Jeśli projekt nie ma aplikacji webowej do sterowania (w ogóle brak polecenia server/preview), zatrzymaj się i powiedz, że E2E potrzebuje uruchamialnej aplikacji.
+If the project has no web app to drive (no server/preview command at all), stop and say E2E needs a runnable app.
 
-## 2. Instalacja
+## 2. Install
 
-Tylko to, czego brakuje:
+Only what is missing:
 
-- `@playwright/test` nie znajduje się w `package.json` → dodaj go jako zależność deweloperską wykrytym menedżerem pakietów (`npm i -D @playwright/test`, `pnpm add -D @playwright/test`, `yarn add -D @playwright/test`, `bun add -d @playwright/test`).
-- Przeglądarka: `npx playwright install chromium` (użyj odpowiednika exec menedżera pakietów). Nie wykonuje żadnej operacji, gdy przeglądarka już jest, i nie zmienia plików projektu.
+- `@playwright/test` not in `package.json` → add it as a dev dependency with the detected package manager (`npm i -D @playwright/test`, `pnpm add -D @playwright/test`, `yarn add -D @playwright/test`, `bun add -d @playwright/test`).
+- Browser: `npx playwright install chromium` (use the package manager's exec equivalent). It does nothing when the browser is present and changes no project files.
 
-Zapisz zainstalowaną wersję (`npx playwright --version`).
+Record the installed version (`npx playwright --version`).
 
-## 3. Konfiguracja
+## 3. Configure
 
-Użyj `references/playwright-setup-templates.md`.
+Use `references/playwright-setup-templates.md`.
 
-- **Najpierw `.gitignore`** (przed pierwszym wywołaniem `playwright-cli`): dopisz brakujące linie Playwright z szablonu (co najmniej `playwright/.auth/` oraz `.playwright-cli/`, które tworzy pierwsze wywołanie `playwright-cli`, wraz ze snapshotami i logami konsoli mogącymi zawierać dane uwierzytelniające), i potwierdź, że plik env zawierający dane uwierzytelniające jest ignorowany.
-- **Uruchom aplikację do eksploracji.** Kroki 3 i 4 eksplorują stronę logowania oraz przepływ seeda dostępnym narzędziem przeglądarkowym, więc aplikacja musi działać: uruchom polecenie build, a następnie polecenie preview na porcie z kroku 1.4–1.5 **w tle** (te same polecenia, które uruchamia wpis `webServer`; najpierw sprawdź uwagi dla stosu w szablonie). Zatrzymaj ją oraz każdy demon, który pozostawiła, **przed każdym uruchomieniem `playwright test`**, aby `webServer` uruchomił serwer i przejął nad nim kontrolę. Pozostawiony działający serwer jest po cichu używany ponownie i ukrywa nieaktualny build. Jeśli używasz istniejącego `playwright-cli`, przekaż nazwaną sesję przy każdym wywołaniu (`-s=<repo-name>`); domyślna sesja jest współdzielona przez każdy projekt na maszynie (zgodnie z `references/tool-wiring.md`). `playwright-cli fill` wypisuje wpisaną wartość w swoim wyjściu i logach: gdy wpisujesz hasło użytkownika testowego, nie pokazuj użytkownikowi tego wiersza.
-- **Brak konfiguracji** → utwórz `playwright.config.ts` z szablonu, wypełniony wykrytymi wartościami: stała `PORT` domyślnie używa wykrytego portu i najpierw odczytuje `E2E_PORT`; `webServer` uruchamia build + preview **na tym porcie** (port jest jawnie przekazany poleceniu preview), `url: baseURL`, `reuseExistingServer: !process.env.CI`; `use.baseURL`; projekt `setup` dopasowujący `*.setup.ts`, którego plik sesji to `playwright/.auth/user.json`, ładowany przez `use.storageState` przez projekt przeglądarki, który od niego zależy; `trace: 'on-first-retry'` oraz `screenshot: 'only-on-failure'`; env ładowane jawnie z ignorowanego przez git pliku env.
-- **Konfiguracja istnieje** → dodaj tylko brakujące elementy (szablon → „Extending an existing config”). Jeśli klucz istnieje z inną wartością, ustal przyczynę i wpływ, a przed zmianą zapytaj użytkownika, pokazując starą i nową wartość. Klucze, które już pasują, pozostają identyczne bajt po bajcie. Gdy `webServer` jest tablicą, porównuj tylko wpis aplikacji; pozostałe wpisy to serwery mocków `/raven-test`, więc pozostaw je bez zmian.
-- **Konfiguracja auth** (pomiń, gdy `auth: none`): jeśli nie istnieje `*.setup.ts`, otwórz stronę logowania dostępnym narzędziem przeglądarkowym, wykonaj snapshot i zapisz `tests/e2e/auth.setup.ts` z szablonu, używając zobaczonych nazw dostępności. Loguje się przez prawdziwe UI z użyciem `E2E_USERNAME` / `E2E_PASSWORD` z pliku env i zapisuje `playwright/.auth/user.json`.
-- **Użytkownik testowy**: jeśli `E2E_USERNAME` / `E2E_PASSWORD` nie są ustawione, postępuj zgodnie z sekcją „Test user (local only)” szablonu — potwierdź, że backend jest lokalny, utwórz tam użytkownika (lub poproś użytkownika, by to zrobił), i umieść dwie zmienne w ignorowanym przez git pliku env.
-- **`.env.example`**: niezależnie od tego, czy użytkownik testowy już istniał, dodaj dwie nazwy (bez wartości), jeśli ten plik istnieje i ich nie zawiera.
-- **Nakładanie się runnera jednostkowego** z kroku 1.7: w zleconym zakresie dodaj właściwy katalog E2E do exclude, jeśli zapobiega przejmowaniu testów przez niewłaściwy runner; zachowaj dotychczasowe wykluczenia.
+- **`.gitignore` first** (before the first `playwright-cli` call): append the missing Playwright lines from the template (at least `playwright/.auth/` and `.playwright-cli/`, which the first `playwright-cli` call creates, with snapshots and console logs that may contain credentials), and confirm the env file holding credentials is ignored.
+- **Start the app for exploration.** Steps 3 and 4 explore the sign-in page and the seed flow with the available browser tool, so the app must run: run the build command, then the preview command on the port from steps 1.4–1.5 **in the background** (the same commands the `webServer` entry runs; check the stack notes in the template first). Stop it, and any daemon it left behind, **before every `playwright test` run**, so `webServer` starts the server and owns it. A server left running is silently reused and hides a stale build. When using an existing `playwright-cli`, pass a named session on every call (`-s=<repo-name>`); the default session is shared by every project on the machine (per `references/tool-wiring.md`). `playwright-cli fill` prints the typed value in its output and logs: when typing the test user's password, do not show that line to the user.
+- **No config** → create `playwright.config.ts` from the template, filled with detected values: a `PORT` constant defaulting to the detected port and reading `E2E_PORT` first; `webServer` runs build + preview **on that port** (the port is passed explicitly to the preview command), `url: baseURL`, `reuseExistingServer: !process.env.CI`; `use.baseURL`; a `setup` project matching `*.setup.ts`, whose session file is `playwright/.auth/user.json`, loaded via `use.storageState` by the browser project that depends on it; `trace: 'on-first-retry'` and `screenshot: 'only-on-failure'`; env loaded explicitly from the gitignored env file.
+- **Config exists** → add only the missing pieces (template → "Extending an existing config"). If a key exists with a different value, establish the cause and impact, and ask the user before changing it, showing the old and new value. Keys that already match stay byte-identical. When `webServer` is an array, compare only the app entry; the other entries are the E2E procedure's mock servers, so leave them alone.
+- **Auth setup** (skip when `auth: none`): if no `*.setup.ts` exists, open the sign-in page with the available browser tool, take a snapshot and write `tests/e2e/auth.setup.ts` from the template using the accessible names you saw. It signs in through the real UI with `E2E_USERNAME` / `E2E_PASSWORD` from the env file and saves `playwright/.auth/user.json`.
+- **Test user**: if `E2E_USERNAME` / `E2E_PASSWORD` are not set, follow the template's "Test user (local only)" section — confirm the backend is local, create the user there (or ask the user to), and put the two variables in the gitignored env file.
+- **`.env.example`**: whether or not the test user already existed, add the two names (without values) if that file exists and lacks them.
+- **Unit runner overlap** from step 1.7: within the requested scope, add the right E2E directory to the exclude list if it stops the wrong runner from picking up the tests; keep existing exclusions.
 
 ## 4. Seed
 
-Seed jest wzorem, który kopiuje każdy wygenerowany test (`../e2e/references/seed-test-pattern.md`), więc musi być mały, poprawny i zielony.
+The seed is the pattern every generated test copies (`../e2e/references/seed-test-pattern.md`), so it must be small, correct and green.
 
-- **Seed istnieje** (ścieżka `seed` z `test-stack.md` lub `seed.spec.ts`) → nie przepisuj go; tylko go uruchom (poniżej).
-- **Brak seeda → wybierz jedno ryzyko.** Jeśli raven-test przekazał ryzyko, użyj go. W przeciwnym razie weź ryzyka na poziomie przeglądarki z AC issue lub planu i wybierz to, które jest **najszybsze do zazielenienia bez mocków**, np. przekierowanie auth gate zamiast przepływu wywołującego zewnętrzne API. Zapytaj wyłącznie o rzeczywiście brakujące oczekiwanie. Ryzyko bez id (opisane przez użytkownika) otrzymuje krótki slug kebab-case, np. `auth-gate-roundtrip`.
-- **Czy rezultat jest zaimplementowany?** Zbadaj przepływ, zanim zdecydujesz się na ryzyko. Jeśli obserwowalny rezultat nie odpowiada temu, co aplikacja robi obecnie (np. użytkownik oczekuje powrotu na chronioną stronę, ale logowanie zawsze prowadzi do `/`), powiedz o tym użytkownikowi. Następnie utwórz seed dla części, która jest zaimplementowana, i zapisz resztę jako niezaimplementowaną albo wybierz inne ryzyko. Nigdy nie asercjuj zachowania, którego aplikacja nie posiada.
-- **Zapisz** `tests/e2e/seed.spec.ts` (lub katalog E2E istniejący w projekcie), postępując według czterech wzorców z `../e2e/references/seed-test-pattern.md`: lokatory oparte na rolach, samodzielny setup → action → assertion → cleanup, oczekiwania na stan oraz nazwa testu wskazująca ryzyko. Najpierw zbadaj przepływ narzędziem wybranym według `references/tool-wiring.md` i użyj nazw dostępności widocznych w snapshocie. Poczekaj, aż formularz będzie interaktywny, zanim zaczniesz wpisywać tekst (zobacz wzorzec seeda: dane wpisane do formularza, który nie ukończył jeszcze hydratacji, zostają utracone). Dodaj komentarz o pochodzeniu z identyfikatorem ryzyka. Seed, którego ryzykiem jest ścieżka wylogowanego użytkownika, rezygnuje z zapisanej sesji (zobacz wzorzec seeda).
-- **Uruchom go na zielono z zimnego serwera** za pomocą polecenia dla pojedynczego speca (projekt `setup` uruchamia się najpierw jako zależność). Najpierw zatrzymaj serwer eksploracyjny i potwierdź, że nic nie nasłuchuje na porcie (polecenie z kroku 1.5 nic nie wypisuje), aby `webServer` sam zbudował i uruchomił aplikację. Ciepły serwer ukrywa wyścigi hydratacji i nieaktualne buildy, więc seed, który zazielenił się tylko względem takiego serwera, nie jest potwierdzony. Jeśli backend jest lokalnym stosem, upewnij się, że działa. Przy czerwonym wyniku: przeczytaj błąd i trace, popraw seed lub setup — nigdy nie osłabiaj asercji, aż przestanie móc się nie powieść, i nigdy nie pomijaj testu. Następnie zadaj pytanie kontrolne: czy ta asercja nie powiodłaby się, gdyby ryzyko wystąpiło? Jeśli nie, wzmocnij ją. (Celowe sprawdzenie przez uszkodzenie, gdy skuteczność jest niepewna, należy do procedury E2E.)
+- **Seed exists** (the `seed` path from `test-stack.md` or `seed.spec.ts`) → do not rewrite it; just run it (below).
+- **No seed → pick one risk.** If raven-test passed a risk, use it. Otherwise take the browser-level risks from the issue or plan AC and pick the one **fastest to get green without mocks**, e.g. an auth-gate redirect rather than a flow calling an external API. Ask only about a genuinely missing expectation. A risk without an id (described by the user) gets a short kebab-case slug, e.g. `auth-gate-roundtrip`.
+- **Is the outcome implemented?** Explore the flow before committing to the risk. If the observable outcome does not match what the app currently does (e.g. the user expects a return to the protected page, but sign-in always goes to `/`), tell the user. Then create the seed for the implemented part and record the rest as unimplemented, or pick another risk. Never assert behavior the app does not have.
+- **Write** `tests/e2e/seed.spec.ts` (or the project's existing E2E directory) following the four patterns from `../e2e/references/seed-test-pattern.md`: role-based locators, self-contained setup → action → assertion → cleanup, waiting for state, and a test name naming the risk. Explore the flow first with the tool chosen per `references/tool-wiring.md` and use the accessible names from the snapshot. Wait until the form is interactive before typing (see the seed pattern: input typed into a form that has not finished hydrating is lost). Add a provenance comment with the risk identifier. A seed whose risk is the signed-out path opts out of the saved session (see the seed pattern).
+- **Run it green from a cold server** with the single-spec command (the `setup` project runs first as a dependency). First stop the exploration server and confirm nothing listens on the port (the step 1.5 command prints nothing), so `webServer` builds and starts the app itself. A warm server hides hydration races and stale builds, so a seed that went green only against one is not confirmed. If the backend is a local stack, make sure it runs. On red: read the error and the trace, fix the seed or setup — never weaken the assertion until it cannot fail, and never skip the test. Then ask the control question: would this assertion fail if the risk materialized? If not, strengthen it. (A deliberate break, when effectiveness is uncertain, belongs to the E2E procedure.)
 
-## 5. Integracja agenta
+## 5. Agent wiring
 
-Odczytaj `references/tool-wiring.md` i sprawdź dostęp do wybranego narzędzia na aplikacji testowej. Domyślnie użyj istniejącego CLI lub wywołania przez npx, we własnej nazwanej sesji. MCP wybieraj wyłącznie zgodnie z wyraźnym poleceniem lub zgodą użytkownika, nie jako fallback przy braku CLI. Nie instaluj globalnego CLI ani dodatkowych skilli automatycznie. Brak wybranego narzędzia zgłoś jako konkretną blokadę eksploracji.
+Read `references/tool-wiring.md` and check access to the chosen tool against the test app. By default use the existing CLI or an npx invocation, in its own named session. Pick MCP only on the user's explicit instruction or consent, never as a fallback for a missing CLI. Do not install a global CLI or additional skills automatically. Report a missing chosen tool as a concrete exploration blocker.
 
-## 6. Zapis
+## 6. Record
 
-Zapisz sekcję `## E2E` w `context/foundation/test-stack.md` dokładnie zgodnie z definicją `references/test-stack-e2e-schema.md` — każde wymagane pole, wypełnione faktami z kroków 1–5 (dla `web server command`, tylko polecenie build + preview wpisu aplikacji). Zachowaj resztę pliku. Jeśli wszystkie pola z wyjątkiem `updated` już pasują, pozostaw plik bez zmian. Utwórz `context/foundation/`, jeśli nie istnieje.
+Write the `## E2E` section in `context/foundation/test-stack.md` exactly per `references/test-stack-e2e-schema.md` — every required field, filled with facts from steps 1–5 (for `web server command`, only the app entry's build + preview command). Keep the rest of the file. If all fields except `updated` already match, leave the file unchanged. Create `context/foundation/` if it does not exist.
 
-## 7. Przekazanie
+## 7. Hand off
 
-Podaj w czacie:
+Give in chat:
 
 ```
 E2E setup — done
@@ -122,12 +122,12 @@ Never commit: playwright/.auth/, the env file with E2E_USERNAME / E2E_PASSWORD.
 Next risk for the E2E procedure: [browser-level risk from issue/plan AC without a spec, or "none"]
 ```
 
-Następnie wróć do raven-test: dla nazwanych luk E2E kontynuuj [procedurę E2E](../e2e/procedure.md) dopiero po potwierdzeniu działania setupu, bez ponownego wywoływania skilla.
+Then return to raven-test: for named E2E gaps continue with the [E2E procedure](../e2e/procedure.md) only after the setup is confirmed working, without invoking the skill again.
 
-## Referencje
+## References
 
-- `references/tool-wiring.md` — wybór dostępnego narzędzia, izolacja sesji i ochrona danych.
-- `references/playwright-setup-templates.md` — szablony konfiguracji, setupu auth, użytkownika testowego i `.gitignore`.
-- `references/test-stack-e2e-schema.md` — kontrakt sekcji `## E2E` odczytywany przez procedurę E2E i raven-hooks.
-- `../e2e/references/seed-test-pattern.md` — cztery wzorce przenoszone przez seed, wraz z przykładem (współdzielone z procedurą E2E).
-- `../e2e/references/e2e-quality-rules.md` — reguły E2E, których przestrzega seed i które egzekwuje procedura E2E, wraz z uzasadnieniem.
+- `references/tool-wiring.md` — choice of available tool, session isolation and data protection.
+- `references/playwright-setup-templates.md` — templates for config, auth setup, test user and `.gitignore`.
+- `references/test-stack-e2e-schema.md` — contract of the `## E2E` section read by the E2E procedure and raven-hooks.
+- `../e2e/references/seed-test-pattern.md` — the four patterns the seed carries, with an example (shared with the E2E procedure).
+- `../e2e/references/e2e-quality-rules.md` — E2E rules the seed follows and the E2E procedure enforces, with the reasoning.

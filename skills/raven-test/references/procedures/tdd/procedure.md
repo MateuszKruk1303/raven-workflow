@@ -1,12 +1,12 @@
-# TDD dla odpowiedniego kroku
+# TDD for a fitting step
 
-Ta wewnętrzna procedura realizuje uzgodnione zachowanie red → green → refactor według [pracy na taskach GitHub](../../../../raven-workflow/references/git-workflow.md). Nie udaje test-first dla gotowej implementacji.
+This internal procedure delivers agreed behavior red → green → refactor following [working on GitHub tasks](../../../../raven-workflow/references/git-workflow.md). It does not fake test-first for an already finished implementation.
 
-1. Potwierdź wymaganie, istniejący runner i źródło Expected. Sprawdź, czy zachowanie jeszcze nie istnieje i może być sensownie prowadzone testem. Scaffolding, konfiguracja i czyste dopracowanie wizualne zwykle wymagają innej kontroli; gotowy kod testuj normalnie krokami raven-test (mapa AC → test, luki).
-2. **RED:** napisz najmniejszy test następnego zachowania. Uruchom go i potwierdź konkretną asercję, nie błąd składni/importu/środowiska. Dla bugfixu Expected pochodzi z wymagań; before-change może zakończyć się udokumentowanym EXPECTED_RED.
-3. **GREEN:** napisz minimalną poprawną implementację. Nie obchodź asercji, nie hardcoduj fixture ani nie rozluźniaj wymagań. Uruchom test i właściwe bliskie regresje.
-4. **REFACTOR:** upraszczaj przy green, zachowując kontrakt i ochronę. Nie rozszerzaj zakresu o przyszłe abstrakcje. Powtarzaj dla kolejnego zachowania, aż krok i jego AC są spełnione.
-5. Sprawdź skuteczność testów: oczekiwania niezależne od kodu, sensowne granice/błędy, izolacja i cleanup, najmniejsza skuteczna warstwa. Unikaj kopiowania produkcyjnych obliczeń, nadmiernego mockowania wnętrzności i snapshotów jako substytutu reguł biznesowych.
-6. Wykonaj wymagane kontrole kroku, celowy staging własnych kodu/testów/dokumentów i logiczny commit w zleconym zakresie. Nie wymuszaj commitu dla każdej asercji ani zgody na jego tekst. Odbiór człowieka nie wynika z GREEN.
+1. Confirm the requirement, the existing runner and the source of Expected. Check that the behavior does not exist yet and can sensibly be driven by a test. Scaffolding, configuration and pure visual polish usually need a different check; test finished code normally with the raven-test steps (AC → test map, gaps).
+2. **RED:** write the smallest test of the next behavior. Run it and confirm a concrete assertion failure, not a syntax/import/environment error. For a bugfix, Expected comes from the requirements; before-change may end with a documented EXPECTED_RED.
+3. **GREEN:** write the minimal correct implementation. Do not bypass the assertion, hardcode fixtures or loosen requirements. Run the test and the relevant nearby regressions.
+4. **REFACTOR:** simplify while green, preserving the contract and protection. Do not extend scope with future abstractions. Repeat for the next behavior until the step and its AC are met.
+5. Check test effectiveness: expectations independent of the code, meaningful boundaries/errors, isolation and cleanup, the smallest effective layer. Avoid copying production calculations, over-mocking internals and snapshots as a substitute for business rules.
+6. Run the step's required checks, deliberately stage your own code/tests/docs and make a logical commit within the requested scope. Do not force a commit per assertion or ask for approval of its message. Human acceptance does not follow from GREEN.
 
-Drobna korekta mieści się w zakresie; zmiana struktury wraca do decyzji. Dwie nieskuteczne próby tego samego problemu zatrzymują pętlę z reprodukcją.
+A small correction is within scope; a structural change goes back to a decision. Two unsuccessful attempts at the same problem stop the loop with a reproduction.

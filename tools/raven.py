@@ -83,14 +83,6 @@ def doctor(root, installed=None):
                 raise ValueError('Nonempty description required')
         except (OSError, ValueError, yaml.YAMLError) as exc:
             fail('skill.metadata', p.relative_to(root), str(exc))
-        ui = p.parent / 'agents/openai.yaml'
-        if ui.exists():
-            try:
-                data = yaml.safe_load(ui.read_text())
-                if not isinstance(data, dict) or not isinstance(data.get('interface'), dict):
-                    raise ValueError('Expected interface mapping')
-            except (ValueError, yaml.YAMLError) as exc:
-                fail('skill.ui', ui.relative_to(root), str(exc))
     docs = [root / 'README.md', *sorted((root / 'skills').rglob('*.md'))]
     for p in docs:
         if not p.exists():

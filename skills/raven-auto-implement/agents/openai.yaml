@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Auto Implement"
-  short_description: "Implementacja polecenia z weryfikacją quick/standard/thorough"
-  default_prompt: "Użyj $raven-auto-implement: zrealizuj moje polecenie (z kontekstem wskazanego issue lub planu, jeśli jest), dobierz poziom weryfikacji (quick, standard lub thorough) do ryzyka zmiany i wyłącznie w końcowej wiadomości czatu podaj podsumowanie oraz instrukcję odbioru krok po kroku."

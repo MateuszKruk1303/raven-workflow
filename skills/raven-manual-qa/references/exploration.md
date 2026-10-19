@@ -1,24 +1,24 @@
-# Heurystyki eksploracyjnego QA
+# Exploratory QA heuristics
 
-Dobieraj próby do funkcji, dostępnych danych i ryzyka. Najpierw ustal, jaki skutek użytkownik chce osiągnąć oraz co nie może zostać utracone, zdublowane lub ujawnione. Z każdej istotnej kategorii wybierz rozróżniający przypadek; pomijaj nieadekwatne. To inspiracje, nie obowiązkowa macierz wszystkich kombinacji.
+Pick probes for the feature, the available data and the risk. First establish what effect the user wants and what must not be lost, duplicated or exposed. From each relevant category pick a distinguishing case; skip the irrelevant ones. These are inspirations, not a mandatory matrix of all combinations.
 
-| Obszar | Pomysły na próby | Obserwowany skutek |
+| Area | Probe ideas | Observed effect |
 | --- | --- | --- |
-| Granice danych | Puste pole, same spacje, zero, wartość ujemna, granica limitu i tuż za nią, długi tekst, Unicode, wklejanie | Walidacja, czytelność komunikatu, brak utraty poprawnych pól |
-| Zbiory | Brak rekordów, jeden, wiele w rozsądnym rozmiarze, duplikaty, podobne nazwy, brak pól opcjonalnych | Puste stany, selekcja właściwego rekordu, sortowanie i paginacja |
-| Daty i liczby | Koniec miesiąca, zakres od/do, taka sama data, separator dziesiętny, strefa czasowa zgodna z zakresem funkcji | Zgodność widoku z zapisanym wynikiem i ustaloną regułą |
-| Kolejność działań | Zapis dwa razy, Enter i kliknięcie, anulowanie i ponowne otwarcie, powrót do poprzedniego kroku | Duplikaty, blokady przycisków, resztki stanu |
-| Nawigacja | Odświeżenie w połowie, Wstecz/Dalej, bezpośredni link, nowa karta, ponowne wejście | Utrata danych, błędny routing, niespójny stan |
-| Współbieżność | Ten sam własny rekord w dwóch kartach, zapis starego formularza po zmianie w drugiej | Nadpisanie zmian, brak komunikatu konfliktu, pozorny sukces |
-| Filtry i wyszukiwanie | Brak wyników, wyczyszczenie, kombinacja filtrów, zmiana filtra na dalszej stronie | Zgubiona selekcja, błędne liczniki, nieaktualne wyniki |
-| Uprawnienia | Dostępne konta testowe o różnych rolach, dozwolone przełączenie organizacji, stary link do własnego rekordu | Ujawnienie danych, akcja niedozwolona przez kontrakt |
-| Pliki i import | Dozwolony plik, pusty plik, błędny format, duplikat, przerwanie wyboru; realistyczne małe próbki | Częściowy zapis, mylący sukces, brak informacji o błędzie |
-| Przerwanie | Anulowanie, utrata połączenia w kontrolowanej sesji, ponowienie po błędzie | Odzyskanie kontroli, brak zdublowanej operacji, zachowanie danych |
-| Obsługa UI | Tab/Shift+Tab, Enter/Escape, fokus po dialogu, rozsądny mały ekran, zoom | Zablokowana akcja, niewidoczny błąd, zasłonięte kontrolki |
-| Trwałość i integracja | Ponowne otwarcie, sprawdzenie listy i szczegółów, odczyt po ponownym wejściu | Rozbieżność zapisu i widoku, nieaktualne podsumowanie |
+| Data boundaries | Empty field, spaces only, zero, negative value, the limit and just past it, long text, Unicode, pasting | Validation, readable message, valid fields not lost |
+| Collections | No records, one, many of reasonable size, duplicates, similar names, missing optional fields | Empty states, selecting the right record, sorting and pagination |
+| Dates and numbers | End of month, from/to range, same date, decimal separator, time zone within the feature's scope | View matches the saved result and the agreed rule |
+| Order of actions | Save twice, Enter and click, cancel and reopen, go back a step | Duplicates, button locking, leftover state |
+| Navigation | Refresh halfway, Back/Forward, direct link, new tab, re-entry | Data loss, wrong routing, inconsistent state |
+| Concurrency | The same own record in two tabs, saving a stale form after a change in the other | Overwritten changes, no conflict message, fake success |
+| Filters and search | No results, clearing, combined filters, changing a filter on a later page | Lost selection, wrong counters, stale results |
+| Permissions | Available test accounts with different roles, allowed organization switch, old link to own record | Data exposure, action not allowed by the contract |
+| Files and import | Allowed file, empty file, wrong format, duplicate, aborted selection; realistic small samples | Partial write, misleading success, no error information |
+| Interruption | Cancel, connection loss in a controlled session, retry after an error | Regaining control, no duplicated operation, data preserved |
+| UI handling | Tab/Shift+Tab, Enter/Escape, focus after a dialog, a reasonable small screen, zoom | Blocked action, invisible error, covered controls |
+| Persistence and integration | Reopen, check list and details, read after re-entry | Mismatch between write and view, stale summary |
 
-Łącz dwie powiązane próby, gdy ujawniają nowe ryzyko: np. filtr + paginacja, dwie karty + edycja, nieudany zapis + ponowienie. Zmieniaj jedną rzecz naraz podczas zawężania reprodukcji.
+Combine two related probes when they reveal a new risk: e.g. filter + pagination, two tabs + edit, failed save + retry. Change one thing at a time while narrowing a reproduction.
 
-Nie myl kreatywności z przypadkowym klikaniem. Każda próba ma hipotezę i obserwowalny rezultat. „Użytkownik robi głupotki” oznacza realistyczną pomyłkę, powtórzenie, złą kolejność lub próbę użycia danych niezgodnie z oczekiwaniem formularza. Nie oznacza DoS, masowej wysyłki, realnych zakupów ani testowania cudzych kont.
+Do not confuse creativity with random clicking. Every probe has a hypothesis and an observable result. "The user does silly things" means a realistic mistake, repetition, wrong order or using data contrary to what the form expects. It does not mean DoS, mass sending, real purchases or testing other people's accounts.
 
-Jeśli scenariusz wymaga niedostępnej funkcji narzędzia (np. symulacji sieci), sprawdź inny wykonalny wariant lub odnotuj ograniczenie. Nie deklaruj wykonania symulacji na podstawie samej analizy kodu.
+If a scenario needs a tool capability that is not available (e.g. network simulation), check another feasible variant or record the limitation. Do not claim a simulation was run based on code analysis alone.

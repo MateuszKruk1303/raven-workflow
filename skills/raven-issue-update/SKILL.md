@@ -1,40 +1,41 @@
 ---
 name: raven-issue-update
-description: Wpleć dodatkowe lub doprecyzowane wymaganie do treści wskazanego istniejącego GitHub issue. Opcjonalny helper do aktualizacji zakresu i kryteriów odbioru, bez reorganizacji roadmapy ani realizacji change.
+description: "Weave an additional or clarified requirement into the body of a given existing GitHub issue. Optional helper for updating scope and acceptance criteria, without reorganizing the roadmap or implementing the change."
+argument-hint: "[#issue] [requirement]"
 ---
 
 # Raven Issue Update
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
+Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md). Talk to the user in their language; keep the issue's existing language.
 
-Zlecenie „zaktualizuj issue o…” obejmuje zapis **body jednego wskazanego istniejącego issue**. Nie wymagaj dodatkowej rutynowej zgody na ten zapis. Samo pytanie, pomysł bez polecenia zapisu lub prośba o propozycję pozostaje read-only. Nie twórz nowych issues, komentarzy ani lokalnego backlogu; nie zmieniaj tytułu, zależności, kolejności, statusu, assignee, planu, kodu, PRD ani Jira. Nie podejmuj taska jako In progress: zapis wymagania nie rozpoczyna planowania lub implementacji. To opcjonalny helper, bez obowiązkowego review każdej aktualizacji.
+The instruction "update the issue with…" covers writing **the body of one given existing issue**. Do not require additional routine consent for that write. A plain question, an idea without a write instruction or a request for a proposal stays read-only. Do not create new issues, comments or a local backlog; do not change the title, dependencies, order, status, assignee, plan, code, PRD or Jira. Do not take up the task as In progress: writing a requirement does not start planning or implementation. This is an optional helper, without a mandatory review of every update.
 
-## Ustal źródło i intencję
+## Establish the target and intent
 
-Rozwiąż dokładny URL/numer issue albo change ID na podstawie instrukcji repo, remote i wskazanego planu. Sam numer wymaga jednoznacznego repo, a change ID jednoznacznego mapowania. Nie wybieraj najnowszego/podobnego issue i nie skanuj całej kolejki. Przy brakującym celu zapytaj tylko o identyfikację.
+Resolve the exact issue URL/number or change ID from the repo instructions, the remote and the given plan. A bare number needs an unambiguous repo, a change ID needs an unambiguous mapping. Do not pick the newest/similar issue and do not scan the whole queue. With a missing target, ask only for its identification.
 
-Odczytaj aktualny pełny body, stan issue i powiązanie z PR/change. Przeczytaj potrzebne do redakcji źródła i decyzje, w tym wskazane wątki. Nie kopiuj całej historii ani ticketów Jira. Rozróżnij nowe wymaganie użytkownika od dotychczasowej decyzji i od propozycji technicznej.
+Read the current full body, the issue state and its link to a PR/change. Read the sources and decisions needed for the edit, including referenced threads. Do not copy the whole history or Jira tickets. Distinguish a new user requirement from an existing decision and from a technical proposal.
 
-Jeśli issue jest zamknięty lub jego change został zmergowany, przed edycją wyjaśnij, czy chodzi o korektę opisu dostarczonego zachowania, czy nowy zakres. Nie dopisuj niespełnionego zakresu do ukończonej pracy, nie otwieraj issue ponownie i nie twórz następnego przy okazji.
+If the issue is closed or its change is merged, clarify before editing whether this corrects the description of delivered behavior or is new scope. Do not add unfulfilled scope to finished work, do not reopen the issue and do not create a follow-up on the side.
 
-Istotna sprzeczność z wcześniejszym wymaganiem, wyłączeniem lub decyzją wymaga rozstrzygnięcia użytkownika przed zależnym zapisem. Pokaż konkretną sprzeczność i zapytaj o intencję; nie osłabiaj dodatku ani nie rozszerzaj go samodzielnie, aby pasował do starego tekstu. Jednoznaczne polecenie zastąpienia wcześniejszego wymagania jest już decyzją. Drobne redakcyjne szczegóły rozwiąż sam. Gdy dodatek wymaga zmiany innych issues lub podziału pracy, nazwij potrzebę osobnego [raven-roadmap](../raven-roadmap/SKILL.md), bez reorganizacji w tym wywołaniu.
+A significant contradiction with an earlier requirement, exclusion or decision needs the user's resolution before the dependent write. Show the concrete contradiction and ask about intent; do not weaken the addition or widen it yourself to fit the old text. An unambiguous instruction to replace an earlier requirement is already a decision. Settle minor editorial details yourself. When the addition requires changing other issues or splitting work, name the need for a separate [raven-roadmap](../raven-roadmap/SKILL.md), without reorganizing in this invocation.
 
-## Wpleć wymaganie
+## Weave the requirement in
 
-Przygotuj najmniejszą semantyczną zmianę istniejącego opisu: uzupełnij odpowiedni zakres i obserwowalne kryteria odbioru, ewentualnie bezpośrednio dotknięte wyłączenie lub opis wyniku. Zachowaj strukturę issue. Nie kończ na luźnym „do zapamiętania”, komentarzu czy dopisku pod gotową treścią. AC opisują wynik wymagany przez użytkownika, bez wymyślania parametrów, gwarancji lub decyzji implementacyjnych.
+Prepare the smallest semantic change to the existing description: extend the relevant scope and observable acceptance criteria, and possibly the directly affected exclusion or outcome description. Keep the issue's structure. Do not end with a loose "to remember", a comment or a note under the finished text. AC describe the outcome the user requires, without inventing parameters, guarantees or implementation decisions.
 
-Zachowaj pozostałą treść, identyfikatory AC, linki, decyzje, markery/zarządzane fragmenty i postęp. Nie rozszerzaj znaczenia zaznaczonego `[x]` o niesprawdzony warunek: zachowaj zaliczony punkt, a nowy obowiązek zapisz jako osobne niezaznaczone AC. Nie resetuj istniejących checkboxów ani nie oznaczaj nowych jako wykonanych. Jeśli wymaganie już wynika z zakresu i AC, zakończ no-op z odwołaniem do istniejącego zapisu; sama inna fraza nie uzasadnia duplikatu.
+Keep the rest of the content, AC identifiers, links, decisions, managed markers/sections and progress. Do not extend the meaning of a checked `[x]` with an unverified condition: keep the passed item and record the new duty as a separate unchecked AC. Do not reset existing checkboxes or mark new ones as done. If the requirement already follows from the scope and AC, finish as a no-op pointing to the existing text; a different phrasing alone does not justify a duplicate.
 
-Issue opisuje wymagania biznesowe; plan jest jednorazowym kontekstem roboczym agenta, nie kontraktem. Przy aktywnym change zapis w issue wystarcza: nie aktualizuj planu, nie wskazuj potrzeby jego review i nie uruchamiaj cyklu. Implementacja weźmie wymaganie z issue lub polecenia. Nie edytuj historycznych decyzji ani PASS; wcześniejsze dowody nie potwierdzają nowego zakresu.
+The issue holds business requirements; the plan is one-off working agent context, not a contract. For an active change, writing to the issue is enough: do not update the plan, do not suggest it needs review and do not start a cycle. Implementation will take the requirement from the issue or the instruction. Do not edit historical decisions or PASS results; earlier evidence does not confirm the new scope.
 
-## Zapisz i potwierdź
+## Write and confirm
 
-Użyj dostępnego connectora/API lub `gh` według jego aktualnej pomocy; nie wymagaj konkretnej integracji. Przed zapisem sprawdź różnicę: tylko uzgodniony dodatek i jego konieczne powiązania w body. Dla CLI przekaż dokładne wielowierszowe body przez plik tymczasowy i `--body-file`, bez interpolacji treści do polecenia shell.
+Use an available connector/API or `gh` per its current help; do not require a specific integration. Before writing, check the difference: only the agreed addition and its necessary connections in the body. For the CLI, pass the exact multi-line body through a temporary file and `--body-file`, without interpolating content into a shell command.
 
-Bezpośrednio przed zapisem ponownie odczytaj body i stan. Jeśli zmieniły się od redakcji, opracuj deltę na najnowszej treści, zachowując cudze zmiany; konflikt znaczenia wyjaśnij przed zapisem. Jeśli API obsługuje warunkowy zapis wersji, użyj go. Zwykły read → write nie jest blokadą: przy oznakach równoległej edycji, których nie da się bezpiecznie rozstrzygnąć, zatrzymaj zapis zamiast nadpisywać cudzą pracę. Nie wysyłaj pól spoza body ani starego payloadu po konflikcie wersji.
+Re-read the body and state right before writing. If they changed since drafting, build the delta on the latest content, preserving other people's changes; clarify a conflict of meaning before writing. If the API supports a conditional version write, use it. A plain read → write is not a lock: on signs of a concurrent edit that cannot be safely resolved, stop the write instead of overwriting someone else's work. Do not send fields outside the body or a stale payload after a version conflict.
 
-Po zapisie odczytaj issue i sprawdź wymaganie, AC oraz zachowanie wcześniejszej treści/postępu. Po timeout najpierw odczytaj stan: jeśli zmiana już istnieje, nie ponawiaj; jeśli jej brak, przygotuj ewentualne ponowienie na aktualnej treści. Brak odczytu nie oznacza nieudanego zapisu. Po dwóch nieskutecznych próbach tego samego zapisu zakończ z jawnym niepotwierdzonym wynikiem i gotową propozycją w rozmowie; nie wracaj automatycznie do starego body.
+After writing, read the issue and check the requirement, the AC and the preservation of earlier content/progress. After a timeout, read the state first: if the change already exists, do not retry; if it is missing, prepare a possible retry on the current content. A failed read does not mean a failed write. After two unsuccessful attempts at the same write, finish with an explicit unconfirmed result and a ready proposal in the conversation; do not automatically restore the old body.
 
-Brak dostępu do GH lub prawa zapisu nie tworzy lokalnego backlogu: oddaj w rozmowie gotowy fragment do wplecenia albo pełny proponowany body, jeśli odczytano oryginał, oraz nazwij niewykonaną operację. Bez oryginału nie deklaruj kompletnego scalenia. Przy wznowieniu odczytaj rzeczywisty stan i uwzględnij wcześniejsze próby zamiast zakładać, że ostatnia mutacja zawiodła.
+No GitHub access or write permission does not create a local backlog: give in the conversation a ready fragment to weave in, or the full proposed body if the original was read, and name the operation not performed. Without the original, do not claim a complete merge. When resuming, read the actual state and account for earlier attempts instead of assuming the last mutation failed.
 
-Oddaj link do issue, krótko co wpleciono i wynik readback albo no-op/niewykonany zapis. Nie deklaruj gotowej implementacji ani aktualizacji innych artefaktów.
+Give the issue link, briefly what was woven in, and the readback result or no-op/unperformed write. Do not claim finished implementation or updates of other artifacts.

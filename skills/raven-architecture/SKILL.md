@@ -1,59 +1,59 @@
 ---
 name: raven-architecture
-description: Interaktywnie ustal przekrojowe decyzje architektoniczne i utwórz lub uaktualnij context/foundation/architecture.md na podstawie PRD, dokumentacji, kodu i roadmapy. Prowadzi przez opcje, rekomendacje i kompromisy; nie zastępuje planu pojedynczego change.
+description: "Interactively settle cross-cutting architecture decisions and create or update context/foundation/architecture.md from the PRD, documentation, code and roadmap. Guides through options, recommendations and trade-offs; does not replace the plan of a single change."
 ---
 
 # Raven Architecture
 
-Zbuduj z użytkownikiem zrozumiały obraz architektury całego produktu: odpowiedzialności części systemu, przepływy, miejsca przechowywania danych, granice integracji i zasady operacyjne. Wynikiem jest `context/foundation/architecture.md`, a nie implementacja, lista bibliotek ani roadmapa.
+Build with the user an understandable picture of the whole product's architecture: responsibilities of system parts, flows, where data is stored, integration boundaries and operational rules. The result is `context/foundation/architecture.md`, not an implementation, a list of libraries or a roadmap. Talk to the user in their language; write the document in the user's language unless the project already uses another.
 
-## Zakres i uprawnienia
+## Scope and permissions
 
-Wywołanie upoważnia do czytania źródeł i zapisu dokumentu wraz z krótkim odnośnikiem w odpowiednim istniejącym AGENTS.md. Nie zmieniaj przy okazji PRD, kodu, konfiguracji usług, issues, statusów Project, innych instrukcji agenta ani globalnych preferencji. Nie commituj, nie pushuj, nie wdrażaj i nie uruchamiaj kolejnego skilla bez osobnego zlecenia. Repo obce lub ograniczone instrukcjami traktuj zgodnie z dozwolonym miejscem zapisu; nie instaluj tam własnego workflow samowolnie.
+The invocation authorizes reading sources and writing the document together with a short link in the relevant existing AGENTS.md (or CLAUDE.md when the project has no AGENTS.md). Do not change the PRD, code, service configuration, issues, Project statuses, other agent instructions or global preferences on the side. Do not commit, push, deploy or run the next skill without a separate request. Treat a foreign repo or one restricted by instructions according to where writing is allowed; do not install your own workflow there on your own.
 
-Wymagania i jawne decyzje użytkownika są ograniczeniami, nie sugestiami do zastąpienia. Architektura opisuje fakty oraz uzgodniony kierunek, nie nadaje propozycjom statusu decyzji. Istniejący stack nie jest zaproszeniem do jego wymiany. Nie wprowadzaj usług, mikroserwisów, kolejek, cache, wielodostępności ani infrastruktury pod nieuzgodnione przyszłe potrzeby.
+Requirements and explicit user decisions are constraints, not suggestions to replace. Architecture describes facts and the agreed direction; it does not grant proposals the status of decisions. An existing stack is not an invitation to replace it. Do not introduce services, microservices, queues, caches, multi-tenancy or infrastructure for unagreed future needs.
 
-## 1. Odtwórz źródła i mapę decyzji
+## 1. Rebuild sources and the decision map
 
-Rozróżnij pierwsze opracowanie, wznowienie rozmowy i aktualizację określonej części. Odczytaj istniejące architecture.md zanim coś zapiszesz. Zachowaj nieruszone decyzje, ich ID, uzasadnienia i źródła.
+Distinguish a first draft, a resumed conversation and an update of a specific part. Read the existing architecture.md before writing anything. Keep untouched decisions, their IDs, justifications and sources.
 
-Przejrzyj inwentarz dokumentacji repo: instrukcje, README, pełne aktualne PRD/shape, dokumenty stacku/infrastruktury, ADR, bezpieczeństwa, testów, integracji oraz lessons. Czytaj wszystkie materiały istotne dla architektury; pokaż brakujące źródła i sprzeczności. Nie traktuj archiwum jako bieżącego wymagania. Nie odczytuj sekretów ani generowanych katalogów w celu uzupełnienia dokumentacji.
+Go through the repo's documentation inventory: instructions, README, the full current PRD/shape, stack/infrastructure documents, ADRs, security, testing, integration docs and lessons. Read all materials relevant to architecture; show missing sources and contradictions. Do not treat an archive as a current requirement. Do not read secrets or generated directories to fill in documentation.
 
-Odczytaj roadmapę w GitHub Issues, wyłącznie potrzebne changes/zależności i lokalne plany/research/decyzje. Nie czytaj całej historii GH i nie twórz drugiej kolejki. Brak dostępu do źródła nazwij, kontynuując niezależne ustalenia. Nie uruchamiaj setupu przy okazji. Brak PRD w brownfield nie blokuje pracy, jeżeli cel i zakres wynikają z innych wiarygodnych materiałów; rzeczywiście brakujące wymagania uzgodnij.
+Read the roadmap in GitHub Issues, only the needed changes/dependencies and local plans/research/decisions. Do not read the whole GH history and do not create a second queue. Name a source you cannot access while continuing with independent findings. Do not run setup on the side. A missing PRD in brownfield does not block the work if the goal and scope follow from other reliable materials; agree on genuinely missing requirements.
 
-Sprawdź w kodzie i konfiguracji obszary istotne dla decyzji. Ładuj dostępne skille domenowe, gdy analizujesz ich technologię. Rozróżniaj „istnieje i sprawdzono”, „deklarowane w dokumentacji”, „docelowe, uzgodnione” i „propozycja”. Napisanie w dokumencie „S3” nie dowodzi wdrożenia S3.
+Check the areas of code and configuration relevant to decisions. Load available domain skills when analyzing their technology. Distinguish "exists and verified", "declared in documentation", "target, agreed" and "proposal". Writing "S3" in a document does not prove S3 is deployed.
 
-Pokaż krótki punkt wyjścia i listę obszarów rozmowy wynikających z produktu. Oddziel już ustalone decyzje od pytań; nie pytaj użytkownika o fakty dostępne w repo ani ponownie o zaakceptowany wybór. Sprzeczność z kodem przedstaw jako różnicę obecne/docelowe, a nie powód do cichej zmiany decyzji.
+Show a short starting point and the list of discussion areas that follow from the product. Separate already settled decisions from questions; do not ask the user about facts available in the repo or again about an accepted choice. Present a contradiction with the code as a current/target difference, not a reason to silently change a decision.
 
-## 2. Prowadź rozmowę od ogółu do szczegółu
+## 2. Lead the conversation from general to specific
 
-Zacznij od granic systemu, głównych przepływów i odpowiedzialności. Następnie przejdź do danych, plików, komunikacji, integracji oraz utrzymania. Kolejność dostosuj do zależności decyzji i ryzyka. Użytkownik nie musi znać nazw technologii.
+Start with system boundaries, main flows and responsibilities. Then move to data, files, communication, integrations and maintenance. Adapt the order to decision dependencies and risk. The user does not need to know technology names.
 
-Zadawaj zwykle 1–3 powiązane pytania na rundę, przez dostępne narzędzie pytań lub czat. Każde pytanie powinno zawierać:
-- potrzebę wynikającą z konkretnego wymagania lub przepływu;
-- 2–3 rzeczywiście sensowne opcje, w tym zachowanie obecnego rozwiązania, jeśli spełnia potrzebę;
-- rekomendację z uzasadnieniem dla tego projektu;
-- korzyści, koszty/odpowiedzialność operacyjną, ograniczenia i istotne konsekwencje każdej opcji;
-- informację, co decyzja odblokuje, a co można rozstrzygnąć później.
+Usually ask 1–3 related questions per round, with the `AskUserQuestion` tool or in chat. Every question should contain:
+- the need that follows from a specific requirement or flow;
+- 2–3 genuinely sensible options, including keeping the current solution if it meets the need;
+- a recommendation with a justification for this project;
+- benefits, costs/operational responsibility, limitations and significant consequences of each option;
+- what the decision unblocks and what can be settled later.
 
-Nie twórz pozornych alternatyw wyłącznie dla liczby opcji. Przy jednej wykonalnej opcji wyjaśnij ograniczenie i uzgodnij kierunek. Nie ukrywaj kosztów dostawcy ani pracy utrzymaniowej. Ceny, limity, zgodność i możliwości usług weryfikuj w aktualnych oficjalnych źródłach przed rekomendacją. Weryfikuj też niepewne twierdzenia techniczne. Gdy nie ma dostępu do źródeł, oznacz je jako niezweryfikowane zamiast obiecywać działanie.
+Do not create fake alternatives just for the number of options. With one feasible option, explain the constraint and agree on the direction. Do not hide vendor costs or maintenance work. Verify prices, limits, compliance and service capabilities in current official sources before recommending. Also verify uncertain technical claims. Without access to sources, mark them as unverified instead of promising they work.
 
-Czekaj na odpowiedzi przed rozstrzygnięciem zależnych wyborów. Brak odpowiedzi nie jest zgodą. Po rundzie krótko podsumuj decyzje, ich konsekwencje i pozostałe obszary. Jeśli nowa odpowiedź zmienia wcześniejszy wybór, pokaż wpływ i uzgodnij tylko sprzeczne elementy. Nie narzucaj liczby pytań ani nie kończ rozmowy po arbitralnym limicie.
+Wait for answers before settling dependent choices. No answer is not consent. After a round, briefly summarize decisions, their consequences and remaining areas. If a new answer changes an earlier choice, show the impact and agree only on the conflicting elements. Do not impose a number of questions or end the conversation after an arbitrary limit.
 
-Przykład typu pytania: „Gdzie mają trafiać obrazy użytkowników i produktów? Obecnie pliki są lokalne. Dla planowanego hostingu rekomenduję storage obiektowy, ponieważ pliki muszą przetrwać wymianę instancji. Alternatywą jest trwały dysk z własnym backupem. W obu wariantach trzeba określić, jakie referencje i metadane przechowuje baza oraz jak działa dostęp.” To przykład sposobu rozumowania, nie uniwersalny zakaz przechowywania binariów w bazie ani narzucony dostawca.
+Example question type: "Where should user and product images go? Files are currently local. For the planned hosting I recommend object storage, because files must survive instance replacement. The alternative is a durable disk with its own backup. In both variants we need to define which references and metadata the database stores and how access works." This is an example of reasoning, not a universal ban on storing binaries in the database or an imposed vendor.
 
-## 3. Buduj jeden dokument podczas rozmowy
+## 3. Build one document during the conversation
 
-Przeczytaj [format dokumentu](references/architecture-document.md). Zapisuj uzgodnione decyzje i pytania w tym samym architecture.md, oznaczając wersję roboczą. Zapis draftu nie wymaga dodatkowej akceptacji; nie oznacza jednak akceptacji propozycji. Nie twórz obok kolejnego rejestru rozmowy ani lokalnego statusu changes. Przy wznowieniu wróć do nierozstrzygniętych punktów, bez powtarzania całego wywiadu.
+Read the [document format](references/architecture-document.md). Record agreed decisions and questions in the same architecture.md, marking it as a draft. Writing the draft needs no extra approval; it does not, however, mean accepting proposals. Do not create a separate conversation register or local change status next to it. When resuming, return to unsettled points without repeating the whole interview.
 
-Każda decyzja ma stabilne ID, status, źródło, uzasadnienie i konsekwencje dla implementacji. Przy decyzji „później” zapisz świadome odroczenie, warunek powrotu i dotknięte changes. Odroczenie wyboru dostawcy może być poprawne, jeśli kontrakt przechowywania, dostępów i trwałości jest już określony. Nie odkładaj za użytkownika decyzji potrzebnej do zrozumienia architektury.
+Every decision has a stable ID, status, source, justification and consequences for implementation. For a "later" decision, record a conscious deferral, the condition for returning to it and the affected changes. Deferring a vendor choice may be correct if the storage, access and durability contract is already defined. Do not defer on the user's behalf a decision needed to understand the architecture.
 
-Zapisuj zasady na tyle konkretnie, by agent wiedział, gdzie umieścić odpowiedzialność, dane lub integrację. Nie projektuj każdej tabeli, endpointu, funkcji ani faz wykonania; to zakres planowania change. Jeśli potrzeba badań blokuje wybór, nazwij precyzyjne pytanie i zaproponuj `raven-research` dla właściwego change, nie uruchamiaj go automatycznie i nie wymyślaj wyniku.
+Write rules concretely enough for an agent to know where to put a responsibility, data or integration. Do not design every table, endpoint, function or execution phase; that is the scope of planning a change. If research blocks a choice, name the precise question and propose `/raven-research` for the right change; do not run it automatically and do not invent a result.
 
-## 4. Domknij pełny obraz i przekaż dalej
+## 4. Complete the picture and hand off
 
-Sprawdź pokrycie wszystkich istotnych wymagań i changes: każdy przekrojowy obszar ma decyzję, jawne „nie dotyczy” z powodem albo uzgodnione odroczenie. Szczególnie sprawdź zgodność diagramu z tabelami, granice odpowiedzialności, dane w bazie vs pliki, różnice lokalnie/produkcja, dostęp i trwałość oraz skutki błędów integracji. Brak funkcji w produkcie nie wymaga rozdziału o jej architekturze.
+Check coverage of all significant requirements and changes: every cross-cutting area has a decision, an explicit "not applicable" with a reason, or an agreed deferral. In particular check that the diagram matches the tables, responsibility boundaries, data in the database vs files, local/production differences, access and durability, and the effects of integration failures. A feature absent from the product needs no architecture chapter.
 
-Pokaż użytkownikowi pełny zwięzły obraz: komponenty i przepływy, kluczowe decyzje z powodami, różnice obecne/docelowe, koszty i otwarte punkty. Zapytaj o akceptację tego konkretnego dokumentu, chyba że aktualna wersja została już wyraźnie zaakceptowana. Status `accepted` nadaj dopiero dla zatwierdzonej wersji i uzgodnionych odroczeń. Przy nierozstrzygniętej fundamentalnej decyzji zachowaj `draft`, wskaż dokładny brak i kontynuuj rozmowę. Akceptacja nie jest pozwoleniem na implementację lub zakup usług.
+Show the user the full concise picture: components and flows, key decisions with reasons, current/target differences, costs and open points. Ask for acceptance of this specific document, unless the current version was already explicitly accepted. Set `accepted` only for the approved version and agreed deferrals. With an unsettled fundamental decision keep `draft`, name exactly what is missing and continue the conversation. Acceptance is not permission to implement or buy services.
 
-Dodaj krótki odnośnik do architecture.md w istniejącym AGENTS.md, informując o czytaniu go przed planowaniem/implementacją i o respektowaniu statusów decyzji. Nie twórz całego AGENTS.md jako efektu ubocznego; gdy go brak, podaj odnośnik w handoffie. Zweryfikuj linki, formatowanie oraz spójność źródeł. Zakończ linkiem do dokumentu, stanem akceptacji, najważniejszymi decyzjami i konkretnym następnym krokiem. Nie oznaczaj żadnego change Ready lub Done.
+Add a short link to architecture.md in the existing AGENTS.md (or CLAUDE.md when there is no AGENTS.md), saying to read it before planning/implementation and to respect decision statuses. Do not create a whole instructions file as a side effect; when none exists, give the link in the handoff. Verify links, formatting and consistency of sources. Finish with the link to the document, the acceptance state, the most important decisions and a concrete next step. Do not mark any change Ready or Done.

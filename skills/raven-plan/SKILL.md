@@ -1,31 +1,32 @@
 ---
 name: raven-plan
-description: "Przygotuj plan jednego change: wymagania z issue, decyzje i podejście w kodzie projektu. Opcjonalnie zleć jedno niezależne review planu. Plan jest jednorazowym kontekstem roboczym dla raven-auto-implement."
+description: "Prepare a plan for one change: requirements from the issue, decisions and approach in the project's code. Optionally request one independent plan review. The plan is one-off working context for raven-auto-implement."
+argument-hint: "[#issue | change-id]"
 ---
 
 # Raven Plan
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [granice change](../raven-workflow/references/change-scope.md).
+Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md) and [change boundaries](../raven-workflow/references/change-scope.md). Talk to the user in their language; write the plan in the user's language unless the project already uses another.
 
-Plan zbiera to, czego wykonawca potrzebuje, żeby zrobić robotę dobrze: wynik, rozstrzygnięte decyzje, podejście w realnym kodzie i sposób weryfikacji. Nie jest kontraktem ani trackerem. Drobna zmiana nie potrzebuje planu — wskaż od razu `raven-auto-implement`.
+The plan gathers what the implementer needs to do the job well: outcome, settled decisions, approach in the real code and how to verify it. It is neither a contract nor a tracker. A small change needs no plan — point straight to `raven-auto-implement`.
 
-## Wejście
+## Input
 
-Przyjmij issue, opis, change ID lub istniejący plan. Odczytaj body issue (zakres i AC), wskazane źródła i decyzje oraz `context/foundation/lessons.md`, jeśli istnieje. Przy nowym issue przypisz się, ustaw `in-progress` i utwórz branch według [pracy na taskach](../raven-workflow/references/git-workflow.md). Zlecenie planu jednego change nie upoważnia do reorganizacji kolejki.
+Accept an issue, description, change ID or an existing plan. Read the issue body (scope and AC), the referenced sources and decisions, and `context/foundation/lessons.md` if present. For a new issue, assign yourself, set `in-progress` and create a branch per [working on GitHub tasks](../raven-workflow/references/git-workflow.md). A request to plan one change does not authorize reorganizing the queue.
 
-## Kroki
+## Steps
 
-1. **Granice.** Zanim zaczniesz szczegółowy research, oceń, czy to jeden samodzielnie odbieralny wynik. Zbyt szeroki zakres wraca do użytkownika z propozycją podziału i pierwszym change.
-2. **Kod.** Zbadaj tylko to, co rozstrzyga wykonalność, kontrakty i odbiór: istniejące wzorce, architekturę, testy. Negatywny wynik wyszukiwania nie dowodzi nieobecności.
-3. **Pytania.** Pytaj tylko o rzeczywiste nierozstrzygnięte decyzje produktowe lub architektoniczne, z rekomendacją i kompromisem — [przykłady](references/questions.md). Detale techniczne w ustalonych granicach rozstrzygnij sam.
-4. **Zapis.** Zapisz `context/changes/<id>/plan.md` według [szablonu](references/plan-template.md), proporcjonalnie do zmiany. Testy są częścią kroków implementacji.
+1. **Boundaries.** Before detailed research, judge whether this is one independently acceptable outcome. A scope that is too wide goes back to the user with a split proposal and a first change.
+2. **Code.** Investigate only what settles feasibility, contracts and acceptance: existing patterns, architecture, tests. A negative search result does not prove absence.
+3. **Questions.** Ask only about real unsettled product or architecture decisions, with a recommendation and trade-off — [examples](references/questions.md). Settle technical details within the agreed boundaries yourself.
+4. **Write.** Save `context/changes/<id>/plan.md` following the [template](references/plan-template.md), proportionate to the change. Tests are part of the implementation steps.
 
-## Review planu (opcjonalne)
+## Plan review (optional)
 
-Uruchom, gdy użytkownik o nie prosi albo plan dotyka zmiany kosztownej lub trudnej do odwrócenia. Jeden świeży agent bez transkryptu autora dostaje plan, issue i dostęp do kodu. Ocenia read-only: jeden rezultat i pokrycie wymagań, wykonalność względem rzeczywistych plików i API, spójność z architekturą, obsługę błędów i migracji, obserwowalne AC i testy. Każda uwaga ma ważność (critical/warning/suggestion), miejsce, skutek i rekomendację.
+Run it when the user asks, or when the plan touches a costly or hard-to-reverse change. One fresh subagent without the author's transcript gets the plan, the issue and access to the code. It assesses read-only: one outcome and requirement coverage, feasibility against real files and APIs, fit with the architecture, error and migration handling, observable AC and tests. Every finding has a severity (critical/warning/suggestion), location, impact and recommendation.
 
-Potwierdzone uwagi w ustalonych granicach popraw sam w jednej rundzie; zmiana wymagań lub zakresu wraca do użytkownika. Wynik review podaj w czacie, bez osobnego pliku. Bez możliwości uruchomienia świeżego agenta zgłoś brak review; samoocena nie jest review.
+Fix confirmed findings within the agreed boundaries yourself in one round; a change of requirements or scope goes back to the user. Give the review result in chat, without a separate file. Without the ability to launch a fresh subagent, report the missing review; self-assessment is not a review.
 
-## Finał
+## Final message
 
-W czacie: ścieżka planu, kluczowe decyzje, otwarte kwestie (jeśli są), wynik review (jeśli był) i następny krok `raven-auto-implement <id>`. Zapis planu nie uruchamia implementacji. Gdy host nie pozwala zapisać pliku, oddaj plan w czacie.
+In chat: the plan path, key decisions, open issues (if any), the review result (if there was one) and the next step `/raven-auto-implement <id>`. Writing the plan does not start implementation. When the host does not allow writing the file, give the plan in chat.

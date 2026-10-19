@@ -1,82 +1,84 @@
 ---
 name: raven-browser
 description: >-
-  Weryfikuj działającą aplikację domyślnie przez Playwright CLI w osobnej sesji. Tylko na wyraźne polecenie lub zgodę użytkownika na użycie przeglądarki przełączaj się na Brave przez Playwright MCP, zachowując jego profil i zalogowanie. Używaj także automatycznie przy implementowaniu lub poprawianiu funkcjonalności aplikacji webowej wymagających weryfikacji w przeglądarce: interakcje, formularze, nawigacja, logowanie, responsywność i wygląd. Nie uruchamiaj dla zmian wyłącznie dokumentacyjnych lub backendowych bez scenariusza przeglądarkowego.
+  Verify the running application by default through Playwright CLI in a separate session. Switch to Brave via Playwright MCP, keeping its profile and sign-ins, only on the user's explicit instruction or consent to use the browser. Also use automatically when implementing or fixing web app functionality that needs browser verification: interactions, forms, navigation, sign-in, responsiveness and appearance. Do not use for documentation-only or backend-only changes without a browser scenario.
 ---
 
 # Raven Browser
 
-## Wybór trybu
+Talk to the user in their language.
 
-Domyślnie używaj **Playwright CLI** w osobnej sesji testowej. Automatyczna weryfikacja UI, polecenie „sprawdź aplikację”, wywołanie samego `raven-browser` ani instrukcja innego skilla o sprawdzeniu przeglądarkowym nie oznaczają wyboru osobistej przeglądarki.
+## Choosing the mode
 
-Tryb **Brave przez MCP** wybierz tylko wtedy, gdy użytkownik jasno polecił użycie przeglądarki, np. „użyj przeglądarki”, „sprawdź w moim Brave” albo „użyj Brave MCP”. Respektuj taki wybór z wcześniejszej części bieżącego zadania, dopóki użytkownik go nie zmieni. Jawne wskazanie CLI lub innego konkretnego narzędzia ma pierwszeństwo przed ogólnym słowem „przeglądarka”. Zgoda udzielona na uzasadnioną prośbę agenta opisaną poniżej również wybiera tryb MCP. Skill wywołujący raven-browser przekazuje rzeczywisty wybór użytkownika; sam nie tworzy zgody na MCP.
+By default use **Playwright CLI** in a separate test session. Automatic UI verification, the instruction "check the app", invoking `raven-browser` alone or another skill's instruction to check in the browser do not mean choosing the personal browser.
 
-## Domyślnie: Playwright CLI
+Choose **Brave via MCP** only when the user clearly instructed to use the browser, e.g. "use the browser", "check in my Brave" or "use Brave MCP". Respect such a choice from earlier in the current task until the user changes it. An explicit choice of the CLI or another specific tool takes precedence over the general word "browser". Consent given to the agent's justified request described below also selects MCP mode. The skill invoking raven-browser passes on the user's actual choice; it does not create consent for MCP itself.
 
-1. Sprawdź dostępne `playwright-cli --help` i wersję narzędzia. Wykorzystaj istniejącą instalację projektu lub środowiska; jeśli jej brak, użyj `npx -y @playwright/cli --help` i tego samego prefiksu w dalszych komendach, bez instalacji globalnej. Respektuj przypiętą wersję projektu.
-2. Używaj osobnej nazwanej sesji dla projektu i zadania (`-s=<projekt-zadanie>` przy każdym wywołaniu), bez podłączania osobistego profilu lub endpointu CDP. Otwórz URL aplikacji przez `playwright-cli -s=<projekt-zadanie> open <url>`; domyślny tryb jest headless.
-3. Pobierz `snapshot`, czytaj potrzebne fragmenty pliku wskazanego w wyniku i wykonuj `click`, `fill`, `press` na referencjach z aktualnego snapshotu. Pozostałe komendy sprawdzaj w `--help`. Screenshoty służą także ocenie wyglądu; snapshot nie potwierdza layoutu.
-4. Dla logowania użyj konta testowego lub istniejącego testowego `storageState` (po otwarciu sesji: `state-load <plik>`). Nie kopiuj cookies z osobistej przeglądarki. Snapshoty, logi i stan sesji przechowuj poza śledzonym kodem; sprawdź ignorowanie `.playwright-cli/` przed użyciem w repo. Nie wyświetlaj sekretów z plików ani wyników komend.
-5. Po sprawdzeniu zamknij wyłącznie własną sesję (`playwright-cli -s=<projekt-zadanie> close`), chyba że jest potrzebna do dalszej pracy. Nie używaj zbiorowego zamykania sesji innych zadań.
+## Default: Playwright CLI
 
-Brak CLI, powłoki lub możliwości uruchomienia sesji zgłoś jako konkretną blokadę. Nie przełączaj się automatycznie na osobiste Brave/MCP i nie uruchamiaj jego skryptu konfiguracyjnego. CLI służy eksploracji; trwałe testy nadal uruchamia runner projektu. Jeśli `raven-auto-implement` potrzebuje ponowienia interakcji UI, może wykorzystać poniższą technikę w bieżącym agencie, bez delegowania ani osobnego QA.
+1. Check the available `playwright-cli --help` and the tool version. Use the project's or environment's existing installation; if it is missing, use `npx -y @playwright/cli --help` and the same prefix in further commands, without a global install. Respect the project's pinned version.
+2. Use a separate named session for the project and task (`-s=<project-task>` on every call), without connecting the personal profile or a CDP endpoint. Open the app URL with `playwright-cli -s=<project-task> open <url>`; the default mode is headless.
+3. Take a `snapshot`, read the needed parts of the file named in the output and run `click`, `fill`, `press` on refs from the current snapshot. Check other commands in `--help`. Screenshots also serve to judge appearance; a snapshot does not confirm layout.
+4. For sign-in use a test account or an existing test `storageState` (after opening the session: `state-load <file>`). Do not copy cookies from the personal browser. Keep snapshots, logs and session state outside tracked code; check that `.playwright-cli/` is ignored before using it in a repo. Do not display secrets from files or command output.
+5. When done, close only your own session (`playwright-cli -s=<project-task> close`), unless it is needed for further work. Do not close other tasks' sessions in bulk.
 
-### Ponawianie interakcji w auto-implement
+Report a missing CLI, shell or inability to start a session as a concrete blocker. Do not switch automatically to the personal Brave/MCP and do not run its setup script. The CLI is for exploration; durable tests are still run by the project's runner. If `raven-auto-implement` needs to replay UI interactions, it may use the technique below in the current agent, without delegation or separate QA.
 
-W [technicznych wskazówkach UI auto-implement](../raven-auto-implement/references/browser-review.md) wykonawca może po rozpoznaniu UI zapisać tymczasowe scenariusze Playwright i wykonywać je przez dostępne CLI albo istniejącą bibliotekę/runner. Osobny kontekst przeglądarki runnera spełnia tu wymóg izolowanej sesji; nie łącz go z profilem osobistym. Dla takiego replay nie wymagaj snapshotu przed każdym działaniem ani ponownej eksploracji strony: używaj sprawdzonych stabilnych locatorów, asercji i jawnego setup/cleanup. Błąd selektora wymaga ponownej obserwacji odpowiedniego fragmentu UI, nie zgadywania ani osłabiania Expected. Kod/config pozostaje tymczasowy; zakres sprawdzania określa zlecona zmiana. Zastanego niezwiązanego locatora/harnessu nie naprawiaj automatycznie; ograniczenie i alternatywny kanał oceń zgodnie z tymi wskazówkami.
+### Replaying interactions in auto-implement
 
-Granice skilla wywołującego mają pierwszeństwo przed poleceniem naprawy regresji z sekcji „Weryfikacja implementowanych funkcjonalności”: read-only skille (`raven-manual-qa`, `raven-implement-review`) raportują defekt, nie zmieniają produktu ani trwałej suite. Wyraźny wybór osobistego Brave/MCP nadal obowiązuje; nie przenoś tego profilu do runnera.
+Under the [auto-implement UI guidance](../raven-auto-implement/references/browser-review.md), after getting to know the UI the implementer may write temporary Playwright scenarios and run them through the available CLI or an existing library/runner. The runner's separate browser context satisfies the isolated-session requirement here; do not connect it to the personal profile. For such a replay, do not require a snapshot before every action or re-exploring the page: use verified stable locators, assertions and explicit setup/cleanup. A selector failure requires re-observing the relevant part of the UI, not guessing or weakening Expected. The code/config stays temporary; the requested change defines the scope of checking. Do not automatically fix an unrelated pre-existing locator/harness; judge the limitation and alternative channel per that guidance.
 
-### Wyjątkowa prośba o osobistą przeglądarkę
+The boundaries of the invoking skill take precedence over the regression-fix instruction in "Verifying implemented functionality": read-only skills (`raven-manual-qa`, `raven-implement-review`) report the defect and do not change the product or the durable suite. An explicit choice of the personal Brave/MCP still applies; do not carry that profile over to the runner.
 
-Jeżeli konkretne, potwierdzone ograniczenie CLI uniemożliwia rzetelne sprawdzenie wymaganego scenariusza, możesz poprosić użytkownika o użycie jego Brave przez MCP. Dotyczy to np. problemu odtwarzalnego wyłącznie w istniejącym profilu, zależności od rozszerzenia lub sesji SSO/urządzenia, której nie da się odtworzyć na koncie testowym, albo awarii CLI, której dostępne MCP pozwoli uniknąć. Nie zakładaj, że MCP rozwiąże problem: wskaż, dlaczego w tym przypadku ma pomóc.
+### Exceptional request for the personal browser
 
-Najpierw sprawdź przyczynę i wykonalne rozwiązanie w CLI w granicach zadania (np. poprawną komendę, konto testowe lub tryb headed). Nie powtarzaj bezskutecznych prób. Sam brak globalnej instalacji, wygoda, wolniejsze działanie lub pojedynczy nieudany test nie uzasadniają przejścia na osobistą sesję.
+If a concrete, confirmed CLI limitation prevents reliably checking the required scenario, you may ask the user to use their Brave via MCP. This applies e.g. to a problem reproducible only in the existing profile, a dependency on an extension or an SSO/device session that cannot be recreated on a test account, or a CLI failure that the available MCP lets you avoid. Do not assume MCP will solve the problem: state why it should help in this case.
 
-Prośba powinna wskazać: nieweryfikowalny scenariusz, zaobserwowaną blokadę i wykonane próby, powód użycia osobistej przeglądarki oraz konkretny zakres (URL, konto/rola, planowane działania). Przywołaj tę sekcję raven-browser jako podstawę prośby.
+First check the cause and a feasible CLI solution within the task (e.g. the right command, a test account or headed mode). Do not repeat unsuccessful attempts. A missing global install, convenience, slower operation or a single failed test does not justify switching to the personal session.
 
-Poczekaj na wyraźną zgodę przed podłączeniem, uruchomieniem lub konfiguracją osobistej przeglądarki. Nie pytaj ponownie, jeśli użytkownik już upoważnił do tego samego zakresu. Do czasu decyzji możesz kontynuować niezależne kontrole; zablokowany scenariusz pozostaje BLOCKED/NOT VERIFIED. Odmowa lub brak odpowiedzi nie oznacza zgody. Zgoda na użycie przeglądarki nie rozszerza zakresu operacji na danych i nie oznacza automatycznie zgody na restart trwającej sesji. Sprawdzenie w osobistej sesji nie zastępuje powtarzalnego uruchomienia trwałych E2E w środowisku testowym.
+The request should name: the unverifiable scenario, the observed blocker and the attempts made, the reason for using the personal browser and the concrete scope (URL, account/role, planned actions). Cite this section of raven-browser as the basis of the request.
 
-Dokumentacja komend: [Playwright CLI](https://github.com/microsoft/playwright-cli).
+Wait for explicit consent before connecting, starting or configuring the personal browser. Do not ask again if the user already authorized the same scope. Until the decision you may continue independent checks; the blocked scenario stays BLOCKED/NOT VERIFIED. Refusal or no answer is not consent. Consent to use the browser does not extend the scope of data operations and does not automatically mean consent to restart a running session. A check in the personal session does not replace a repeatable run of durable E2E in the test environment.
 
-## Na wyraźne polecenie lub zgodę użytkownika: Brave przez MCP
+Command documentation: [Playwright CLI](https://github.com/microsoft/playwright-cli).
 
-Tylko w tym trybie pracuj w prawdziwym Brave użytkownika przez MCP `brave`. Domyślne połączenie to `http://127.0.0.1:9222`; zwykłe uruchomienie Brave z ikony nie włącza tego portu. Nie zastępuj tego osobnym Chromium, przeglądarką w aplikacji ani nowym profilem bez uzgodnienia — celem jest istniejąca sesja użytkownika.
+## On explicit instruction or consent: Brave via MCP
 
-### Wymagania środowiska Brave/MCP
+Only in this mode work in the user's real Brave through the `brave` MCP server. The default connection is `http://127.0.0.1:9222`; a normal Brave launch from its icon does not open that port. Do not substitute a separate Chromium, an in-app browser or a new profile without agreement — the goal is the user's existing session.
 
-Ten wariant jest dostosowany do macOS i Brave w `/Applications/Brave Browser.app`. Wymaga Python 3 oraz dostępnego serwera Playwright MCP `brave`; konfiguracja MCP należy do środowiska agenta i nie przenosi się przez samo skopiowanie skilli. Skrypt uruchamiający Brave obsługuje macOS. Na innym systemie zgłoś brak tego wariantu połączenia i uzgodnij sposób dostępu do przeglądarki, zachowując preferencję użytkownika; nie zastępuj jego profilu po cichu. Pozostałe etapy Raven nie wymagają macOS.
+### Brave/MCP environment requirements
 
-### Połączenie Brave/MCP
+This variant is built for macOS and Brave in `/Applications/Brave Browser.app`. It needs Python 3 and an available `brave` Playwright MCP server in Claude Code; MCP configuration belongs to the user's Claude Code setup and does not travel by copying skills. The Brave launch script supports macOS. On another system, report that this connection variant is unavailable and agree on how to access the browser, keeping the user's preference; do not silently replace their profile. Other Raven stages do not require macOS.
 
-1. Odkryj dostępne narzędzia MCP `brave` i sprawdź połączenie przez `browser_tabs`. Jeżeli działa, korzystaj z niego bez restartu.
-2. Gdy endpoint nie odpowiada, uruchom `python3 <katalog-skilla>/scripts/ensure_brave.py`. Skrypt ponownie wykorzystuje aktywny endpoint albo uruchamia zamknięte Brave z portem 9222.
-3. Jeżeli Brave już działa bez portu, potrzebny jest restart. Jeśli użytkownik zlecił uruchomienie/restart Brave pod MCP, poinformuj go i wykonaj skrypt z `--restart`. Przy automatycznej weryfikacji nie zamykaj trwającej prywatnej sesji bez istniejącego upoważnienia; zapytaj wyłącznie o niezbędny restart. Nigdy nie wymuszaj zamknięcia, nie odrzucaj niezapisanych formularzy. Skrypt kończy pracę, gdy przeglądarka nie zamknie się łagodnie.
-4. Zweryfikuj ponownie `browser_tabs`. Sam działający port lub zapis konfiguracji nie oznacza działającego MCP.
+### Brave/MCP connection
 
-Jeżeli serwera brak w konfiguracji hosta, sprawdź jego konfigurację MCP (w Codex: `codex mcp get brave`). Dodaj brakujący wpis w mechanizmie hosta (z uwzględnieniem uprawnień zapisu poza repozytorium); w Codex:
+1. Discover the available `brave` MCP tools and check the connection with `browser_tabs`. If it works, use it without a restart.
+2. When the endpoint does not respond, run `python3 <skill-dir>/scripts/ensure_brave.py`. The script reuses an active endpoint or starts a closed Brave with port 9222.
+3. If Brave is already running without the port, a restart is needed. If the user requested starting/restarting Brave for MCP, tell them and run the script with `--restart`. During automatic verification do not close an ongoing private session without existing authorization; ask only for the necessary restart. Never force quit and never discard unsaved forms. The script stops when the browser does not quit gracefully.
+4. Verify `browser_tabs` again. A listening port or a written config alone does not mean a working MCP.
+
+If the server is missing, check `claude mcp get brave`. Add the missing entry (mind write permissions outside the repository):
 
 ```sh
-codex mcp add brave -- npx -y @playwright/mcp@latest --cdp-endpoint http://127.0.0.1:9222
+claude mcp add --scope user brave -- npx -y @playwright/mcp@latest --cdp-endpoint http://127.0.0.1:9222
 ```
 
-Nie nadpisuj odmiennej istniejącej konfiguracji bez sprawdzenia jej przeznaczenia. Jeżeli wpis istnieje, ale narzędzia nie są dostępne w bieżącej sesji, powiedz, że trzeba ponownie uruchomić sesję agenta (np. Codex CLI). Nie traktuj tego jako błędu strony.
+Do not overwrite a different existing configuration without checking its purpose. If the entry exists but the tools are not available in the current session, tell the user to restart Claude Code (or reconnect via `/mcp`). Do not treat this as a page error.
 
-Po nieudanym starcie sprawdź parametry procesu oraz komunikat skryptu. Nie powtarzaj restartów w pętli. Nie kopiuj cookies ani profilu, nie czytaj haseł i nie obchodź ograniczeń profilu przez wyłączanie zabezpieczeń. Jeśli wersja Brave odrzuca debugowanie bieżącego profilu, zgłoś ten konkretny problem zamiast obiecywać zachowanie sesji w nowym profilu.
+After a failed start, check the process parameters and the script message. Do not repeat restarts in a loop. Do not copy cookies or the profile, do not read passwords and do not bypass profile restrictions by disabling protections. If the Brave version rejects debugging of the current profile, report that specific problem instead of promising to keep the session in a new profile.
 
-## Weryfikacja implementowanych funkcjonalności
+## Verifying implemented functionality
 
-Po zmianie zachowania widocznego w przeglądarce użyj tego skilla bez oczekiwania na osobne polecenie „przetestuj”.
+After a change of behavior visible in the browser, use this skill without waiting for a separate "test it" instruction.
 
-- Odczytaj polecenie uruchomienia, port i routing projektu; wykorzystaj istniejący serwer albo uruchom właściwy. W aplikacji wieloorganizacyjnej otwórz host i organizację objęte zadaniem, nie przypadkowy localhost.
-- W trybie CLI używaj własnej nazwanej sesji; w trybie Brave/MCP utwórz własną kartę testową przez `browser_tabs` z `action: new` i zapamiętaj ją. Zachowaj prywatne karty użytkownika i nie nawiguj po niezwiązanych kontach.
-- Przed interakcją pobierz snapshot. Używaj odnośników i selektorów wynikających z aktualnie zaobserwowanej strony. Wykonuj nawigację, kliknięcia, formularze i screenshoty narzędziem wybranym według powyższej reguły: domyślnie CLI, MCP na wyraźne polecenie lub zgodę użytkownika.
-- Przejdź rzeczywisty scenariusz zmienionej funkcjonalności. Sprawdź wynik po akcji, a nie tylko widoczność przycisku: np. zapis, ponowne odczytanie danych, walidację błędnych danych lub zmianę adresu. Dobierz przypadki do ryzyka zmiany.
-- Przy zmianach wyglądu obejrzyj screenshot i sprawdź istotny rozmiar mobilny oraz desktopowy; przy zmianie rozmiaru współdzielonego okna przywróć poprzedni rozmiar. Przy formularzach uwzględnij klawiaturę i widoczność komunikatów.
-- Sprawdź błędy konsoli i nieudane żądania związane ze scenariuszem. Nie uznawaj każdego ostrzeżenia zewnętrznego serwisu za regresję aplikacji.
-- Korzystaj z danych testowych. Zalogowanie w osobistym profilu nie oznacza zgody na zakup, wysłanie wiadomości, publikację lub usunięcie rzeczywistych danych. Zakres działań wynika z zadania użytkownika.
-- Jeśli skill wywołujący implementuje zmianę, napraw znalezioną regresję i ponownie sprawdź dotknięty scenariusz; skill read-only tylko ją raportuje. Bieżąca weryfikacja przez CLI lub MCP nie zastępuje wymaganych testów projektu.
-- Zapisuj screenshoty i logi w istniejącym katalogu artefaktów projektu lub katalogu tymczasowym; nie dodawaj prywatnych danych do repozytorium. Zamykaj wyłącznie własne karty testowe, jeśli nie są potrzebne do przeglądu wyniku. Pozostaw przeglądarkę użytkownikowi.
+- Read the project's start command, port and routing; use an existing server or start the right one. In a multi-organization app, open the host and organization the task covers, not a random localhost.
+- In CLI mode use your own named session; in Brave/MCP mode create your own test tab via `browser_tabs` with `action: new` and remember it. Keep the user's private tabs and do not navigate unrelated accounts.
+- Take a snapshot before interacting. Use refs and selectors from the currently observed page. Perform navigation, clicks, forms and screenshots with the tool chosen per the rule above: CLI by default, MCP on the user's explicit instruction or consent.
+- Go through the real scenario of the changed functionality. Check the result after the action, not just that a button is visible: e.g. a write, reading the data back, validation of wrong input or a URL change. Pick cases for the change's risk.
+- For appearance changes look at a screenshot and check a relevant mobile and desktop size; when resizing a shared window, restore the previous size. For forms include the keyboard and visibility of messages.
+- Check console errors and failed requests related to the scenario. Do not treat every warning from an external service as an app regression.
+- Use test data. Being signed in to the personal profile is not consent to buy, send a message, publish or delete real data. The scope of actions follows from the user's task.
+- If the invoking skill implements the change, fix a found regression and recheck the affected scenario; a read-only skill only reports it. Current verification via CLI or MCP does not replace the project's required tests.
+- Save screenshots and logs in the project's existing artifacts directory or a temporary directory; do not add private data to the repository. Close only your own test tabs, unless they are needed to review the result. Leave the browser to the user.
 
-W podsumowaniu podaj sprawdzony scenariusz, wynik i istotne ograniczenia. Nie deklaruj zaliczonej weryfikacji, jeśli blokowało ją logowanie, brak wybranego narzędzia, niedziałający serwer lub brak danych. Informuj o użyciu osobistego Brave krótko, bez powtarzania całej instrukcji konfiguracji.
+In the summary give the checked scenario, the result and significant limitations. Do not claim passed verification if it was blocked by sign-in, a missing chosen tool, a server that does not work or missing data. Mention the use of the personal Brave briefly, without repeating the whole setup instruction.

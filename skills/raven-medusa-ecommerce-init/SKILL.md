@@ -1,95 +1,96 @@
 ---
 name: raven-medusa-ecommerce-init
-description: "Inicjalizuj lub dokończ lokalne monorepo Medusa + Next.js z oficjalnego startera: Docker Compose, envy, migracje, seed, admin i działający storefront. Używaj do przygotowania środowiska ecommerce przed implementacją produktu; nie do wdrożenia produkcyjnego."
+description: "Initialize or complete a local Medusa + Next.js monorepo from the official starter: Docker Compose, envs, migrations, seed, admin and a working storefront. Use to prepare the ecommerce environment before product implementation; not for production deployment."
+argument-hint: "[shop-name]"
 ---
 
 # Raven Medusa Ecommerce Init
 
-Uruchom kompletne środowisko developerskie w bieżącym katalogu projektu. Domyślnie aplikacje działają na hoście z hot reload, a PostgreSQL i Redis w Docker Compose. Każdy sklep jest osobną aplikacją, repozytorium i zestawem danych. Reużywalny jest ten workflow.
+Set up a complete development environment in the current project directory. By default the apps run on the host with hot reload, and PostgreSQL and Redis in Docker Compose. Every shop is a separate app, repository and data set. This workflow is what gets reused. Talk to the user in their language.
 
-## Wynik
+## Result
 
-- Oficjalny starter Medusa: backend i Admin w `apps/backend`, Next.js w `apps/storefront`, wspólny workspace i lockfile.
-- Zgodne wersje Node LTS i pnpm zapisane w projekcie; zachowana orkiestracja startera.
-- PostgreSQL i Redis z healthcheckami oraz trwałymi, odizolowanymi wolumenami.
-- Rzeczywiste lokalne pliki env, bezpieczne sekrety, konto administratora i publishable key storefrontu.
-- Migracje, przykładowy katalog, region, ceny, dostawa lokalna oraz lokalny checkout z manualnym/systemowym providerem płatności dostępnym w wybranej wersji.
-- Polecenia do setupu, developmentu, zatrzymania i wznowienia oraz sprawdzony przepływ produkt → koszyk → zamówienie.
+- The official Medusa starter: backend and Admin in `apps/backend`, Next.js in `apps/storefront`, a shared workspace and lockfile.
+- Compatible Node LTS and pnpm versions recorded in the project; the starter's orchestration preserved.
+- PostgreSQL and Redis with healthchecks and durable, isolated volumes.
+- Real local env files, safe secrets, an admin account and the storefront's publishable key.
+- Migrations, a sample catalog, region, prices, local delivery and local checkout with the manual/system payment provider available in the chosen version.
+- Commands for setup, development, stopping and resuming, and a verified product → cart → order flow.
 
-Nie dodawaj drugiego backendu, ORM, systemu autoryzacji, CMS ani własnego frameworka ecommerce. Nie implementuj wymagań konkretnego sklepu, integracji kurierskich, płatności na żywo ani infrastruktury produkcyjnej. Nie uruchamiaj `raven-init-stack`: to inny stack. Samo tworzenie lub edytowanie tego skilla nie oznacza polecenia inicjalizacji aplikacji.
+Do not add a second backend, ORM, auth system, CMS or your own ecommerce framework. Do not implement a specific shop's requirements, courier integrations, live payments or production infrastructure. Do not run `raven-init-stack`: that is a different stack. Creating or editing this skill alone is not an order to initialize the application.
 
-## 1. Rozpoznaj projekt i aktualny starter
+## 1. Recognize the project and the current starter
 
-Przeczytaj lokalne `AGENTS.md`, istniejące manifesty i ustalenia projektu. Zachowaj `context/`, instrukcje agenta, `.git` i pliki użytkownika. PRD ani inne skille Raven nie są warunkiem uruchomienia. Nazwę wywnioskuj z projektu lub argumentu użytkownika; sprowadź ją do poprawnego sluga, nie interpretuj jako ścieżki lub kodu powłoki.
+Read the local AGENTS.md and CLAUDE.md, existing manifests and project findings. Keep `context/`, agent instructions, `.git` and user files. A PRD or other Raven skills are not a precondition. Derive the name from the project or the user's argument; reduce it to a valid slug, do not interpret it as a path or shell code.
 
-Przed generowaniem sprawdź aktualne źródła:
+Before generating, check the current sources:
 
 - [Next.js starter](https://docs.medusajs.com/resources/nextjs-starter)
 - [create-medusa-app](https://docs.medusajs.com/resources/create-medusa-app)
-- [Oficjalny starter DTC](https://github.com/medusajs/dtc-starter)
+- [Official DTC starter](https://github.com/medusajs/dtc-starter)
 - [Docker](https://docs.medusajs.com/learn/installation/docker)
 
-Użyj oficjalnego monorepo wskazanego przez aktualną dokumentację. Nie wybieraj historycznego, osobnego `nextjs-starter-medusa`, jeżeli dokumentacja oznacza go jako deprecated. Sprawdź rzeczywiste `engines`, `packageManager`, skrypty, envy i konfigurację startera: wymagania pakietów mogą być ostrzejsze od ogólnej strony instalacji.
+Use the official monorepo the current documentation points to. Do not choose the historical, separate `nextjs-starter-medusa` if the documentation marks it as deprecated. Check the starter's real `engines`, `packageManager`, scripts, envs and configuration: package requirements may be stricter than the general installation page.
 
-Sprawdź Git, zgodny Node, pnpm, Docker Compose v2, działający daemon i dostępność portów. Nie zmieniaj globalnego toolchainu innych projektów. Użyj istniejącego managera wersji lub podaj konkretny brak. Gdy Docker nie działa, możesz przygotować pliki, ale nie deklaruj zakończonego setupu.
+Check Git, a compatible Node, pnpm, Docker Compose v2, a running daemon and port availability. Do not change the global toolchain of other projects. Use the existing version manager or name the concrete gap. When Docker does not run, you may prepare the files, but do not claim a completed setup.
 
-Rozwiąż i zapisz konkretną wersję generatora, sprawdź jej `--help`. Przykładowy kierunek, dopiero po potwierdzeniu flag:
+Resolve and record a specific generator version, check its `--help`. Example direction, only after confirming the flags:
 
 ```sh
-pnpm dlx create-medusa-app@<wersja-cli> <nazwa> --with-nextjs-starter --skip-db --no-browser --use-pnpm
+pnpm dlx create-medusa-app@<cli-version> <name> --with-nextjs-starter --skip-db --no-browser --use-pnpm
 ```
 
-`--version` generatora może ustawiać wersję pakietów Medusy; nie traktuj tej flagi jako zwykłego wypisania wersji CLI. `--directory-path` może oznaczać katalog nadrzędny projektu. Sprawdź semantykę zamiast zgadywać.
+The generator's `--version` may set the Medusa package version; do not treat that flag as just printing the CLI version. `--directory-path` may mean the project's parent directory. Check the semantics instead of guessing.
 
-## 2. Utwórz lub uzupełnij monorepo
+## 2. Create or complete the monorepo
 
-Dla nowego projektu wygeneruj starter w osobnym katalogu tymczasowym poza docelowym repozytorium. Porównaj ścieżki i przenieś wynik do bieżącego katalogu, bez zagnieżdżania całego projektu w dodatkowym folderze. Nie kopiuj `.git`, `node_modules` ani artefaktów buildu. Instalację zależności wykonaj w miejscu docelowym. Scal istniejące pliki zamiast nadpisywać je w ciemno; sprawdzaj cele symlinków przed zapisem.
+For a new project generate the starter in a separate temporary directory outside the target repository. Compare paths and move the result into the current directory, without nesting the whole project in an extra folder. Do not copy `.git`, `node_modules` or build artifacts. Install dependencies in the target location. Merge existing files instead of overwriting them blindly; check symlink targets before writing.
 
-Dla istniejącego monorepo Medusy uzupełnij brakujące elementy bez regeneracji, automatycznego upgrade'u i rotowania sekretów. Jeśli katalog zawiera inną aplikację lub konfliktu nie można bezpiecznie scalić, przedstaw konkretny konflikt. Nie usuwaj projektu, by wymusić uruchomienie CLI. Po awarii popraw przyczynę przed ponowieniem; nie powtarzaj generowania na częściowym wyniku.
+For an existing Medusa monorepo complete the missing elements without regeneration, automatic upgrade or secret rotation. If the directory contains another application or a conflict cannot be merged safely, present the concrete conflict. Do not delete the project to force the CLI to run. After a failure fix the cause before retrying; do not repeat generation on a partial result.
 
-Zachowaj nazwy workspace'ów i strukturę oficjalnego startera, ustaw prywatny root workspace. Inicjalizuj Git tylko jeśli katalog nie należy do repozytorium/worktree; nie wykonuj automatycznie commitów, pushów ani tworzenia repozytorium zdalnego. Zatrzymaj wyłącznie własne procesy generatora, jeśli CLI zostawiło je uruchomione.
+Keep the official starter's workspace names and structure, set a private root workspace. Initialize Git only if the directory does not belong to a repository/worktree; do not automatically commit, push or create a remote repository. Stop only your own generator processes, if the CLI left them running.
 
-## 3. Podłącz infrastrukturę i envy
+## 3. Wire up infrastructure and envs
 
-Przeczytaj [local-development.md](references/local-development.md) przy konfigurowaniu usług, envów i seedowania. Wykorzystaj [compose.local.yaml](assets/compose.local.yaml) i [compose.env.example](assets/compose.env.example) jako bazę; dostosuj je do zastanego projektu i potwierdzonych wersji.
+Read [local-development.md](references/local-development.md) when configuring services, envs and seeding. Use [compose.local.yaml](assets/compose.local.yaml) and [compose.env.example](assets/compose.env.example) as the base; adapt them to the existing project and confirmed versions.
 
-Utwórz zarówno śledzone szablony, jak i rzeczywiste ignorowane pliki env. Domyślne porty: storefront 8000, backend/Admin 9000, PostgreSQL 5432, Redis 6379, Admin HMR 5173, jeśli używany. Przy kolizji wybierz wolny port i spójnie zmień komendy, URL-e, CORS oraz konfigurację uploadów. Nie zabijaj obcych procesów. Sam wpis `PORT` nie wystarcza: potwierdź, że skrypt go odczytuje.
+Create both tracked templates and real ignored env files. Default ports: storefront 8000, backend/Admin 9000, PostgreSQL 5432, Redis 6379, Admin HMR 5173 if used. On a collision pick a free port and consistently change commands, URLs, CORS and upload configuration. Do not kill other processes. A `PORT` entry alone is not enough: confirm the script reads it.
 
-Skonfiguruj Redis w kodzie Medusy, nie tylko w env: sesje i natywny event bus Redis, zgodnie z bieżącymi API. Zachowaj pozostałe moduły startera. Skonfiguruj lokalny provider plików bez zależności od S3. Sekrety generuj losowo i zachowuj przy ponowieniu.
+Configure Redis in Medusa code, not only in env: sessions and the native Redis event bus, per the current APIs. Keep the starter's other modules. Configure a local file provider without an S3 dependency. Generate secrets randomly and keep them on a retry.
 
-## 4. Przygotuj dane i wygodne polecenia
+## 4. Prepare data and convenient commands
 
-Sprawdź konfigurację Compose bez wypisywania sekretów, uruchom usługi i poczekaj na healthchecki z ograniczonym czasem oczekiwania. Przed migracjami i seedem potwierdź, że efektywny `DATABASE_URL` wskazuje lokalną bazę tego projektu, nie odziedziczoną bazę zewnętrzną. Użyj oficjalnych migracji i mechanizmów seedowania wybranej wersji.
+Check the Compose configuration without printing secrets, start the services and wait for healthchecks with a bounded wait time. Before migrations and seed confirm that the effective `DATABASE_URL` points to this project's local database, not an inherited external one. Use the official migration and seeding mechanisms of the chosen version.
 
-Zapewnij administratora, katalog, region z cenami, kanał sprzedaży, stany magazynowe oraz opcję dostawy i lokalnej płatności wystarczające do zamówienia. Publishable key musi być powiązany z właściwym kanałem i zapisany w env storefrontu. Dane logowania zapisz w ignorowanym pliku z ograniczonym dostępem; w raporcie podaj jego ścieżkę, nie hasło.
+Provide an admin, a catalog, a region with prices, a sales channel, stock levels and a delivery option and local payment sufficient for an order. The publishable key must be linked to the right channel and written to the storefront's env. Write the sign-in data to an ignored file with restricted access; in the report give its path, not the password.
 
-Setup musi być bezpieczny przy ponownym i częściowym wykonaniu. Nie zakładaj idempotencji oficjalnego seeda: sprawdź jego kod i rzeczywiste encje przed tworzeniem. Nie uznawaj dowolnego produktu ani samego pliku znacznika za dowód pełnego bootstrapu. Nie resetuj istniejących haseł, zamówień, kluczy ani wolumenów. Nie maskuj błędów połączenia jako „już istnieje”.
+The setup must be safe on a repeated and partial run. Do not assume the official seed is idempotent: check its code and the real entities before creating. Do not treat any product or a marker file alone as evidence of a full bootstrap. Do not reset existing passwords, orders, keys or volumes. Do not mask connection errors as "already exists".
 
-Dodaj lub dostosuj polecenia root workspace:
+Add or adapt root workspace commands:
 
-| Polecenie | Zachowanie |
+| Command | Behavior |
 |---|---|
-| `pnpm run setup` | Zależności/infrastruktura, lokalne envy, migracje i bezpieczny bootstrap; można ponowić |
-| `pnpm dev` | Zapewnia działającą infrastrukturę, uruchamia backend i storefront z hot reload; bez reseedowania |
-| `pnpm infra:up` | Uruchamia PostgreSQL i Redis, czeka na gotowość |
-| `pnpm infra:down` | Zatrzymuje Compose z zachowaniem danych |
-| `pnpm infra:logs` | Logi usług |
-| `pnpm db:migrate` | Migracje lokalnej bazy |
-| `pnpm db:seed` | Bezpieczny bootstrap danych developerskich |
+| `pnpm run setup` | Dependencies/infrastructure, local envs, migrations and a safe bootstrap; can be retried |
+| `pnpm dev` | Ensures running infrastructure, starts backend and storefront with hot reload; no reseeding |
+| `pnpm infra:up` | Starts PostgreSQL and Redis, waits for readiness |
+| `pnpm infra:down` | Stops Compose, keeping data |
+| `pnpm infra:logs` | Service logs |
+| `pnpm db:migrate` | Migrations of the local database |
+| `pnpm db:seed` | Safe bootstrap of development data |
 
-Zachowaj istniejące odpowiedniki i orkiestrator, jeśli realizują ten kontrakt. Skrypty uruchamiaj z właściwym cwd/env i propaguj błędy. `Ctrl+C` powinno kończyć oba własne procesy aplikacji; opisz, że infrastruktura pozostaje uruchomiona do `infra:down`. Nie dodawaj rozbudowanego process managera. Reset danych, jeśli opisany, ma być oddzielną, wyraźnie destrukcyjną operacją; nigdy nie wykonuj go jako weryfikacji setupu.
+Keep existing equivalents and the orchestrator if they meet this contract. Run scripts with the right cwd/env and propagate errors. `Ctrl+C` should end both own app processes; describe that the infrastructure stays running until `infra:down`. Do not add an elaborate process manager. A data reset, if described, must be a separate, explicitly destructive operation; never run it as setup verification.
 
-## 5. Zweryfikuj gotowość
+## 5. Verify readiness
 
-Nie kończ na istnieniu plików. Sprawdź:
+Do not stop at files existing. Check:
 
-1. Zdrowe kontenery, endpoint zdrowia backendu, dostępność Admina i storefrontu, poprawne logowanie administratora.
-2. Store API akceptuje publishable key, storefront pokazuje produkty i ceny we właściwym regionie.
-3. W przeglądarce: produkt → wariant → koszyk → checkout z lokalną dostawą i manualną/systemową płatnością → zapisane zamówienie. Nie wykonuj rzeczywistej płatności. Brak wsparcia UI lub przeglądarki zgłoś; test API nie jest dowodem przejścia UI.
-4. Upload lokalnego obrazu przez Medusę i jego wyświetlenie; hot reload backendu i storefrontu.
-5. Drugie `pnpm run setup` nie dubluje danych ani kluczy. Zatrzymanie i ponowny start zachowują admina, katalog, zamówienie i upload. Nigdy `down -v` ani `docker system prune`.
-6. Istniejące kontrole typów/build adekwatne do zmian. Nie dodawaj pełnego frameworka testowego tylko na potrzeby inicjalizacji.
+1. Healthy containers, the backend health endpoint, availability of Admin and storefront, correct admin sign-in.
+2. The Store API accepts the publishable key, the storefront shows products and prices in the right region.
+3. In the browser: product → variant → cart → checkout with local delivery and manual/system payment → saved order. Do not make a real payment. Report missing UI or browser support; an API test is not evidence of the UI flow.
+4. Upload of a local image through Medusa and its display; hot reload of backend and storefront.
+5. A second `pnpm run setup` does not duplicate data or keys. Stopping and restarting keep the admin, catalog, order and upload. Never `down -v` or `docker system prune`.
+6. Existing typecheck/build checks adequate to the changes. Do not add a full test framework just for initialization.
 
-Zapisz krótką instrukcję startu w README projektu: wersje, polecenia, URL-e, lokalizacje envów i danych logowania, zatrzymywanie/wznawianie, wykonane kontrole i braki. Nie zapisuj sekretów. Sam setup nie oznacza ukończenia biznesowego taska roadmapy ani gotowości produkcyjnej.
+Write a short start guide in the project README: versions, commands, URLs, env and sign-in data locations, stopping/resuming, checks done and gaps. Do not write secrets. The setup alone does not mean a business roadmap task is done or production readiness.
 
-W odpowiedzi podaj polecenie startu, URL storefrontu i Admina, lokalizację danych logowania oraz wynik weryfikacji. Wyraźnie oznacz niewykonane kontrole i blokery; manualny checkout lokalny nie oznacza podłączonych płatności online.
+In the answer give the start command, the storefront and Admin URLs, the sign-in data location and the verification result. Clearly mark checks not run and blockers; a manual local checkout does not mean online payments are connected.

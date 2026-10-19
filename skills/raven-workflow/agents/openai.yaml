@@ -1,7 +1,0 @@
-interface:
-  display_name: "Raven Workflow"
-  short_description: "Model pracy i mapa skilli Raven"
-  default_prompt: "Użyj $raven-workflow jako tutorialu: objaśnij model pracy Raven i pomóż wybrać właściwy skill bez uruchamiania kolejnych etapów."
-
-policy:
-  allow_implicit_invocation: false

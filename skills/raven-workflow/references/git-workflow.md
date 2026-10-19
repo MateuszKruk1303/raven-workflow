@@ -1,32 +1,32 @@
-# Praca na taskach GitHub
+# Working on GitHub tasks
 
-Pracujemy na taskach w GitHub Issues. Body issue opisuje wymagania biznesowe i kryteria odbioru. Jeśli źródłem jest Jira, issue linkuje ticket bez kopiowania treści.
+Work happens on tasks in GitHub Issues. The issue body holds the business requirements and acceptance criteria. When the source is Jira, the issue links the ticket without copying its content.
 
 ## Task, plan, branch
 
-- Jeden issue to jeden branch i jeden PR. Drobna zmiana z doskoku nie potrzebuje issue ani planu.
-- Plan (`context/changes/<id>/plan.md`) jest opcjonalnym, jednorazowym kontekstem roboczym agenta: wynik, decyzje, podejście, weryfikacja. Nie jest kontraktem. Nie wersjonuj go, nie trzymaj w nim checkpointów, statusów ani raportów. Nowe wymaganie trafia do issue albo do polecenia, bez aktualizacji planu.
-- Stan pracy czytaj z issue (stan, assignee), brancha, commitów i PR, nie z pamięci rozmowy. Nie skanuj boarda. Gdy użytkownik nie wskazał taska, a kolejność nie jest jednoznaczna, zapytaj.
-- Podejmując issue (`raven-plan` albo `raven-auto-implement` bez wcześniejszego planu), przypisz się i ustaw etykietę `in-progress` (oraz status In progress, jeśli projekt używa GitHub Project).
-- Dla nowego issue utwórz branch z aktualnej bazy (`git pull --ff-only`) według konwencji projektu. Przy wznowieniu użyj istniejącego brancha. Branch po zmergowanym PR nie wskazuje kolejnego taska.
-- Nie commituj ani nie pushuj bezpośrednio na branch domyślny. Drobna zmiana bez issue też dostaje krótki branch według konwencji projektu.
-- Zachowaj cudze zmiany w working tree. Nie przełączaj brancha ani nie aktualizuj bazy, gdy kolidują; zapytaj, jak je zachować. Bez samoczynnego stash, reset ani commitu cudzych zmian.
-- Commituj logiczne kroki zgodnie z konwencją projektu.
+- One issue is one branch and one PR. A quick drive-by change needs neither an issue nor a plan.
+- The plan (`context/changes/<id>/plan.md`) is optional, one-off working context for the agent: outcome, decisions, approach, verification. It is not a contract. Do not version it or keep checkpoints, statuses or reports in it. A new requirement goes into the issue or the instruction, without updating the plan.
+- Read the state of work from the issue (state, assignee), the branch, commits and the PR, not from conversation memory. Do not scan the board. When the user has not named a task and the order is not obvious, ask.
+- When taking up an issue (`raven-plan`, or `raven-auto-implement` without an earlier plan), assign yourself and set the `in-progress` label (plus the In progress status if the project uses a GitHub Project).
+- For a new issue, create a branch from the current base (`git pull --ff-only`) following the project's convention. When resuming, use the existing branch. A branch whose PR was merged does not point to the next task.
+- Never commit or push directly to the default branch. A drive-by change without an issue also gets a short branch following the project's convention.
+- Preserve other people's changes in the working tree. Do not switch branches or update the base when they conflict; ask how to preserve them. No automatic stash, reset or commit of someone else's changes.
+- Commit logical steps following the project's convention.
 
-## Publikacja
+## Publishing
 
-- Push, PR i merge tylko na wyraźne polecenie użytkownika.
-- PR linkuje issue (`Closes #N`), opisuje zmianę zwięźle i ma sekcję „Weryfikacja” (niżej).
-- Merge wymaga zielonego wymaganego CI i zgody użytkownika. Po merge sprawdź, że issue jest zamknięty. Deploy to osobna operacja.
+- Push, PR and merge only on an explicit user instruction.
+- The PR links the issue (`Closes #N`), describes the change briefly and has a "Verification" section (below).
+- Merge requires green required CI and the user's consent. After merge, check that the issue is closed. Deploy is a separate operation.
 
-## Weryfikacja i raportowanie
+## Verification and reporting
 
-- Niewykonana lub zablokowana kontrola nigdy nie jest raportowana jako zaliczona.
-- Wyniki weryfikacji i instrukcję odbioru podawaj w końcowej wiadomości czatu. Nie twórz raportów, acceptance.md ani ich kopii w issue, chyba że użytkownik o to prosi.
-- Wyjątkiem jest PR: sekcja „Weryfikacja” to krótki trwały ślad dla reviewera — poziom (`quick`/`standard`/`thorough`, jeśli był), wykonane kontrole z kanałem i wynikiem, czego nie sprawdzono. Tylko to, co faktycznie wykonano i widać w kontekście; bez dowodu wpisz „nie potwierdzono”. Lokalne kontrole nie są CI.
-- Review lub test zlecony osobnemu agentowi wykonuje świeży kontekst bez transkryptu autora. Reviewer nie poprawia ocenianej pracy.
+- A check that was not run or was blocked is never reported as passed.
+- Give verification results and acceptance instructions in the final chat message. Do not create reports, acceptance.md or copies of them in the issue unless the user asks.
+- The exception is the PR: its "Verification" section is a short durable trace for the reviewer — level (`quick`/`standard`/`thorough`, if there was one), checks run with channel and result, what was not checked. Only what was actually run and is visible in context; without evidence write "not confirmed". Local checks are not CI.
+- A review or test delegated to a separate agent runs in a fresh context without the author's transcript. The reviewer does not fix the work under review.
 
-## Ograniczenia
+## Limits
 
-- Brak dostępu do GitHub nie blokuje pracy lokalnej. Zgłoś niewykonaną operację; nie twórz lokalnego backlogu zastępczego.
-- Historyczne artefakty (stare plany, checkpointy, raporty, pola akceptacji) zostaw bez zmian. Nie są bramkami i nie wymagają migracji.
+- No GitHub access does not block local work. Report the operation that was not performed; do not create a substitute local backlog.
+- Leave historical artifacts (old plans, checkpoints, reports, acceptance fields) as they are. They are not gates and need no migration.

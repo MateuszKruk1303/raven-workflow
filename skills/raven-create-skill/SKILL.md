@@ -1,69 +1,68 @@
 ---
 name: raven-create-skill
-description: Zaprojektuj, dopracuj w rozmowie i utwórz lub zmień skill Raven wraz z rzeczywistymi zależnościami, routingiem, cookbookiem i walidacją. Użyj przy rozwijaniu rodziny Raven; nie do realizacji funkcji aplikacji ani samego pytania o pomysł na skill.
+description: Design, refine in conversation and create or change a Raven skill together with its real dependencies, routing, cookbook and validation. Use when developing the Raven family; not for implementing app features or for just asking for a skill idea.
 ---
 
 # Raven Create Skill
 
-Rozwijaj Raven jako spójny proces. Wynik to działający pakiet zmian w repo skilli: instrukcje, potrzebne zasoby, integracja i dowody sprawdzenia. Utworzenie nowego katalogu nie jest celem samym w sobie — rozszerzenie istniejącego skilla może lepiej rozwiązywać potrzebę.
+Develop Raven as a coherent process. The result is a working change set in the skills repo: instructions, needed resources, integration and evidence of checking. Creating a new directory is not a goal in itself — extending an existing skill may solve the need better. Talk to the user in their language; write skill files in English.
 
-Końcowe review wykonuje osobny świeży reviewer, bez transkryptu autora. Delegowany reviewer nie uruchamia ponownie całego metaskilla. Pytania użytkownika obsługuje koordynator.
+The final review is done by a separate fresh reviewer, without the author's transcript. A delegated reviewer does not rerun the whole metaskill. The coordinator handles user questions.
 
-## 1. Ustal repo i zakres
+## 1. Establish the repo and scope
 
-Przeczytaj bezpośrednio potrzebne wspólne referencje Raven oraz ogólny `skill-creator` z lokalizacji podanej przez katalog skilli hosta. Stosuj jego zasady tworzenia instrukcji i progressive disclosure; nie kopiuj jego treści do Raven. Jeśli zależność jest niedostępna, nazwij brak i kontynuuj rozpoznanie, ale nie deklaruj zakończonej walidacji procesu tworzenia.
+Read the needed shared Raven references directly, and Claude Code's `skill-creator` skill if available. Apply its rules for writing instructions and progressive disclosure; do not copy its content into Raven. If the dependency is unavailable, name the gap and continue, but do not claim validated creation.
 
-Znajdź wskazane repo źródłowe Raven: zawiera `skills/raven-workflow/SKILL.md`, `workflow-contract.json` i `tools/raven.py`. Sprawdź instrukcje repo, Git status oraz zakres istniejących zmian. Zainstalowana kopia skilla nie jest dowodem lokalizacji repo. Jeśli repo nie jest wskazane i cwd go nie identyfikuje, poproś o ścieżkę; nie szukaj po całym dysku ani nie twórz nowego repo. Nie edytuj wyłącznie instalacji globalnej. Zachowaj cudze zmiany, w szczególności w tutorialu raven-workflow i README.
+Find the indicated Raven source repo: it contains `skills/raven-workflow/SKILL.md`, `workflow-contract.json` and `tools/raven.py`. Check the repo instructions, Git status and the scope of existing changes. An installed copy of a skill is not evidence of the repo location. If the repo is not indicated and the cwd does not identify it, ask for the path; do not search the whole disk or create a new repo. Do not edit only a global installation. Keep other people's changes, in particular in the raven-workflow tutorial and README.
 
-Rozróżnij rozmowę o pomyśle od zlecenia utworzenia/zmiany. Dyskusja nie uruchamia zapisów. Przy zleceniu wykonania zapis skilla i koniecznych integracji jest objęty zadaniem. Nie wymuszaj aplikacyjnego cyklu plan → implementacja → testy ani tworzenia issue GH tylko dlatego, że rozwijasz same skille.
+Distinguish a conversation about an idea from an order to create/change. Discussion does not trigger writes. With an order to execute, writing the skill and necessary integrations is covered by the task. Do not force the app cycle plan → implementation → tests or creating GH issues just because you develop skills.
 
-## 2. Dopracuj zachowanie w rozmowie
+## 2. Refine the behavior in conversation
 
-Najpierw odczytaj katalog i najbliższe istniejące skille. Pytaj o rzeczywiste niewiadome, zwykle jedno pytanie lub małą powiązaną grupę. Nie pytaj ponownie o ustalenia dostępne w rozmowie. Gdy zakres jest kompletny, przejdź do wykonania bez sztucznego wywiadu.
+First read the catalog and the closest existing skills. Ask about real unknowns, usually one question or a small related group. Do not re-ask findings available in the conversation. When the scope is complete, move to execution without an artificial interview.
 
-Ustal i krótko podsumuj:
+Establish and briefly summarize:
 
-- problem użytkownika oraz 2–3 realistyczne przykłady wywołania, w tym przypadek, którego skill nie powinien obsługiwać;
-- wejścia, źródła prawdy, wynik i obserwowalne warunki ukończenia;
-- miejsce w workflow: opcjonalne narzędzie, wariant istniejącego etapu czy nowy etap;
-- co wykonuje agent, jakie decyzje należą do użytkownika i jakie zapisy obejmuje wywołanie;
-- narzędzia i zachowanie przy brakujących możliwościach, przerwaniu oraz wznowieniu.
+- the user's problem and 2–3 realistic invocation examples, including a case the skill should not handle;
+- inputs, sources of truth, result and observable completion conditions;
+- place in the workflow: optional tool, variant of an existing stage or a new stage;
+- what the agent does, which decisions belong to the user and which writes the invocation covers;
+- tools and behavior with missing capabilities, interruption and resumption.
 
-Porównaj nowy skill z rozszerzeniem istniejącego. Zarekomenduj rozwiązanie i wyjaśnij istotny kompromis. Nie zmieniaj wybranego przez użytkownika celu ani nie dodawaj obowiązkowego etapu pod pozorem integracji. Zmiana znaczenia istniejącego procesu (np. nowa bramka, automatyczne zapisy do innej usługi, inna odpowiedzialność za akceptację) wymaga jawnej decyzji użytkownika, chyba że już ją podjął. Pokaż konkretnie dotychczasowe i proponowane zachowanie; nie pytaj o zgodę na rutynowe odsyłacze, testy lub katalog.
+Compare a new skill with extending an existing one. Recommend a solution and explain the significant trade-off. Do not change the user's chosen goal or add a mandatory stage under the guise of integration. Changing the meaning of an existing process (e.g. a new gate, automatic writes to another service, different acceptance responsibility) needs the user's explicit decision, unless already made. Show the current and proposed behavior concretely; do not ask for consent to routine links, tests or the directory.
 
-## 3. Sprawdź zależności i przygotuj pakiet
+## 3. Check dependencies and prepare the package
 
-Użyj `rg` do wyszukania wywołań, odsyłaczy i nazw artefaktów. Czytaj tylko znalezionych producentów/konsumentów oraz ich wspólne kontrakty. Nie przepisuj całej rodziny Raven. Przed edycją wskaż krótko dotknięte pliki i powód każdej integracji.
+Use `rg` to find invocations, links and artifact names. Read only the found producers/consumers and their shared contracts. Do not rewrite the whole Raven family. Before editing, briefly name the affected files and the reason for each integration.
 
-- Utwórz lub zmień `skills/raven-<nazwa>/SKILL.md`: precyzyjny trigger, granice, wykonanie i handoff. Referencje i skrypty dodawaj tylko gdy skracają instrukcje lub zapewniają niezawodną, powtarzaną operację.
-- Metadane UI twórz według `skill-creator/references/openai_yaml.md`, odszukanego względem skilla hosta.
-- Dodaj skill do listy `skills` w `workflow-contract.json`, mapy skilli w tutorialu raven-workflow oraz właściwego wiersza w obu tabelach README (przewodnik „Po który sięgnąć” i Katalog). Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
-- Zmień powiązane skille wyłącznie tam, gdzie rzeczywiście zmieniają się wejścia, wyjścia, odpowiedzialności lub wywołania. Zachowaj kompatybilność i istniejące identyfikatory; nie migruj historycznych artefaktów projektów przy okazji.
-- Nie dodawaj etapów, bramek ani dowodów procesu: kontrakt jest tylko katalogiem. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
+- Create or change `skills/raven-<name>/SKILL.md` in English: a precise trigger, boundaries, execution and handoff. Use Claude Code frontmatter (`name`, `description`, and where it fits `argument-hint` or `disable-model-invocation: true` for manual-only skills). Add references and scripts only when they shorten instructions or give a reliable, repeated operation.
+- Add the skill to the `skills` list in `workflow-contract.json`, the skill map in the raven-workflow tutorial and the right row in both README tables (the "which one to use" guide and the Catalog). Extend a recipe/diagram only when the user path changes.
+- Change related skills only where inputs, outputs, responsibilities or invocations really change. Keep compatibility and existing identifiers; do not migrate historical project artifacts on the side.
+- Do not add stages, gates or process evidence: the contract is only a catalog. Do not weaken the validator just to get PASS.
 
-Wspólne zasady przechowuj w jednym miejscu. Nowy skill odwołuje się do [pracy na taskach GitHub](../raven-workflow/references/git-workflow.md), browsera lub niezależności, jeżeli faktycznie ich potrzebuje; nie duplikuj całych procedur i nie ładuj niepowiązanych referencji.
+Keep shared rules in one place. A new skill links to [working on GitHub tasks](../raven-workflow/references/git-workflow.md), browser or independence only if it really needs them; do not duplicate whole procedures or load unrelated references.
 
-## 4. Zweryfikuj zachowanie i niezależnie oceń
+## 4. Verify behavior and review independently
 
-W repo uruchom doctora oraz testy właściwe dla zmiany, używając jego udokumentowanego środowiska Python:
+In the repo run the doctor and the tests relevant to the change, using its documented Python environment:
 
 ```bash
 .venv/bin/python tools/raven.py doctor
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-Użyj także walidatora `quick_validate.py` z dostępnego `skill-creator` dla nowych/zmienionych skilli. Gdy `.venv` nie istnieje, przygotuj środowisko według README repo; nie instaluj zależności globalnie. Uruchom nowe/zmienione helpery na realistycznych danych. Brak środowiska jest niewykonaną kontrolą, nie PASS.
+Also use the `quick_validate.py` validator from the available `skill-creator` for new/changed skills. When `.venv` does not exist, prepare the environment per the repo README; do not install dependencies globally. Run new/changed helpers on realistic data. A missing environment is an unrun check, not PASS.
 
-Dobierz próby z [referencji scenariuszy](references/verification.md). Statyczny doctor nie dowodzi zgodności znaczenia instrukcji. Dla zmiany zachowania wykonaj forward-test w izolacji: autor dostarcza rzeczywiste wejście i źródła, świeży reviewer sam wyprowadza przebieg, a koordynator porównuje wynik z ustalonym kontraktem. Nie podawaj reviewerowi oczekiwanej odpowiedzi ani hipotezy błędu. Nie publikuj testowych issue, nie steruj prywatną przeglądarką i nie uruchamiaj produkcyjnych zapisów w ramach próby.
+Pick trials from the [scenario reference](references/verification.md). The static doctor does not prove the meaning of instructions. For a behavior change run an isolated forward-test: the author provides real input and sources, a fresh reviewer derives the run on its own, and the coordinator compares the result with the agreed contract. Do not give the reviewer the expected answer or the bug hypothesis. Do not publish test issues, drive the private browser or run production writes as part of a trial.
 
-Końcowy świeży reviewer otrzymuje wymagania użytkownika, publiczne decyzje, aktualny diff (także nowe pliki), zakres zmian, źródła i wyniki kontroli. Sprawdza spójność producent → konsument, granice uprawnień, niezależność, wznowienie, dublowanie zasad i koszt kontekstu. Pracuje read-only; raportuje konkretne błędy i lokalizacje. Gdy brak świeżego reviewera, oddaj draft i wskaż brak review; nie deklaruj pełnej gotowości.
+The final fresh reviewer gets the user's requirements, public decisions, the current diff (including new files), the scope of changes, sources and check results. It checks producer → consumer consistency, permission boundaries, independence, resumption, duplicated rules and context cost. It works read-only and reports concrete errors and locations. Without a fresh reviewer, hand off a draft and name the missing review; do not claim full readiness.
 
-Naprawiaj potwierdzone błędy w ustalonym zakresie. Po poprawce odśwież dotknięte testy i review. Po dwóch nieskutecznych próbach tego samego problemu zatrzymaj zależną pętlę z reprodukcją i decyzją potrzebną od użytkownika; zmiana agenta nie zeruje licznika. Uwagi zmieniające zakres wracają do decyzji, nie do automatycznej przebudowy.
+Fix confirmed errors within the agreed scope. After a fix, refresh the affected tests and review. After two unsuccessful attempts at the same problem, stop the dependent loop with a reproduction and the decision needed from the user; switching agents does not reset the counter. Remarks that change scope go back to decision, not automatic rework.
 
-## 5. Oddaj lub zainstaluj
+## 5. Hand off or install
 
-Zakończ konkretnym pakietem: ścieżka skilla, zmienione integracje, przykład użycia, wyniki walidacji/review i ograniczenia. Nie twórz dodatkowego raportu w repo, jeśli nie jest potrzebny do wznowienia. Przy przerwie podsumuj decyzje, pliki, otwarte problemy i następny krok; nie wznawiaj wywiadu od zera.
+Finish with a concrete package: skill path, changed integrations, a usage example, validation/review results and limitations. Do not create an extra report in the repo unless needed for resumption. On a break, summarize decisions, files, open problems and the next step; do not restart the interview.
 
-Instaluj globalnie tylko gdy jest to częścią zlecenia, również wcześniejszego w tej sesji. Uruchom `tools/raven.py sync --to <katalog-skilli>` bez `--apply`, przejrzyj cały diff instalacji i dopiero zastosuj `--apply`. Sync obejmuje całą zarejestrowaną rodzinę: nie nadpisuj niezwiązanych lokalnych modyfikacji, których użytkownik nie objął zleceniem. Przy takim konflikcie oddaj gotowy pakiet i ustal sposób scalenia przed instalacją. Po instalacji uruchom `doctor --installed <katalog-skilli>`; podaj wynik i ścieżkę backupu, jeśli powstał. Samo skopiowanie plików nie potwierdza odświeżenia katalogu skilli w aktywnym UI.
+Install globally only when it is part of the order, also an earlier one in this session. Run `tools/raven.py sync --to <skills-dir>` without `--apply`, review the whole installation diff and only then apply `--apply`. Sync covers the whole registered family: do not overwrite unrelated local modifications the user did not include in the order. With such a conflict, hand off the ready package and agree on merging before installing. After installing run `doctor --installed <skills-dir>`; give the result and the backup path, if one was created. Copying files alone does not confirm the skill catalog refreshed in the active session.
 
-Commit, push i publikacja PR nie wynikają z samego tworzenia skilla. Wykonuj je tylko w zakresie zlecenia. Nie instaluj draftu jako zweryfikowanej wersji po FAIL/BLOCKED wymaganej kontroli.
+Commit, push and PR publishing do not follow from creating a skill alone. Do them only within the order. Do not install a draft as a verified version after FAIL/BLOCKED of a required check.

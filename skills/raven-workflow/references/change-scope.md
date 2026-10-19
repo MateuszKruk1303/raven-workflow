@@ -1,51 +1,51 @@
-# Granice change i dekompozycja
+# Change boundaries and decomposition
 
-Wspólne zasady dla roadmapy i planowania. Nie ustanawiają nowego etapu, statusu ani punktacji.
+Shared rules for the roadmap and planning. They add no new stage, status or scoring.
 
-## Jednostka pracy
+## Unit of work
 
-**Change** dostarcza jeden ograniczony rezultat, który można osobno zrealizować, zweryfikować i zmergować. Nie musi sam umożliwiać premiery produktu; pełny proces użytkownika może wymagać wielu changes. Nie wymuszaj flag funkcji tylko po to, by uzasadnić podział. **Task/faza** jest krokiem wykonania tego jednego rezultatu. Fragment z własnym niezależnym odbiorem jest kandydatem na osobny change, a nie automatycznie kolejnym taskiem.
+A **change** delivers one bounded outcome that can be implemented, verified and merged on its own. It does not have to enable a product launch by itself; a full user journey may need several changes. Do not force feature flags just to justify a split. A **task/phase** is an execution step of that one outcome. A part with its own independent acceptance is a candidate for a separate change, not automatically another task.
 
-Zachowaj pionowy zakres: potrzebne UI, API, model danych i walidacja należą do rezultatu. Nie dziel zmian według warstw i nie łącz niezależnych funkcji dlatego, że korzystają z tego samego modelu, ekranu lub procesu. Zależność między rezultatami opisuje kolejność; sama nie uzasadnia ich sklejenia.
+Keep the scope vertical: the UI, API, data model and validation the outcome needs belong to it. Do not split by layer, and do not merge independent features because they share a model, screen or process. A dependency between outcomes describes order; it does not justify gluing them together.
 
-Zabezpieczenia konieczne do poprawności funkcji pozostają z nią. Przykładowo ponowienie płatności, brak podwójnego obciążenia i obsługa pobranej kwoty bez zamówienia nie są późniejszym „hardeningiem”. Konieczność zabezpieczenia nie upoważnia jednak do dobudowania niezamówionych podsystemów.
+Safeguards required for a feature to be correct stay with it. For example, payment retry, no double charge and handling of a captured amount without an order are not later "hardening". Needing a safeguard does not, however, authorize building unrequested subsystems.
 
-Change techniczny jest uzasadniony wykazanym problemem lub nazwanym rezultatem, który odblokowuje. Jeżeli potrzebna praca naturalnie mieści się w pierwszym konsumencie, wykonaj ją tam; potencjalna reużywalność nie uzasadnia osobnej infrastruktury „na przyszłość”.
+A technical change is justified by a demonstrated problem or a named outcome it unblocks. If the work fits naturally into its first consumer, do it there; potential reuse does not justify separate infrastructure "for the future".
 
-## Kontrola granic
+## Boundary check
 
-Przed publikacją change w roadmapie oraz przy planowaniu sprawdź:
+Before publishing a change in the roadmap and while planning, check:
 
-1. Czy opis nazywa jeden wynik, czy listę funkcji spiętą ogólnym tytułem?
-2. Czy fragmenty można niezależnie pokazać i odebrać przy spełnieniu ich zależności?
-3. Czy fragment wymaga osobnego wyboru dostawcy, kontraktu integracji lub rozstrzygnięcia ryzyka? To sygnał możliwej osobnej granicy, nie automatyczny nakaz podziału.
-4. Czy błąd jednej części powinien blokować odbiór i merge pozostałych? Odróżnij konieczne gwarancje jednej funkcji od niezależnych wyników.
-5. Czy kryteria odbioru sprawdzają jedną funkcję wraz z jej błędami i wyjątkami, czy kilka osobnych demonstracji?
+1. Does the description name one outcome, or a list of features under a general title?
+2. Can the parts be shown and accepted independently once their dependencies are met?
+3. Does a part need its own vendor choice, integration contract or risk decision? That signals a possible separate boundary, not an automatic split.
+4. Should a failure of one part block acceptance and merge of the others? Distinguish the required guarantees of one feature from independent outcomes.
+5. Do the acceptance criteria check one feature with its errors and exceptions, or several separate demos?
 
-Typowo change ma jeden główny wynik i 1–2 istotne fazy implementacji. Testy należą do kroków realizacji; nie traktuj dodatkowej czynności testowej jako niezależnego wyniku. Trzy lub więcej faz implementacji albo kilka integracji to ostrzeżenie do ponownej oceny granic, nie limit. Nie twórz tasków w roadmapie tylko po to, by je policzyć. Liczba plików, FR, checkboxów i estymacje nie mierzą właściwego rozmiaru change. Więcej tasków nie naprawia zbyt szerokiego zakresu.
+A change typically has one main outcome and 1–2 significant implementation phases. Tests belong to the implementation steps; an extra testing activity is not an independent outcome. Three or more implementation phases or several integrations are a warning to re-evaluate the boundary, not a limit. Do not create roadmap tasks just to count them. Number of files, FRs, checkboxes or estimates do not measure the right size of a change. More tasks do not fix a scope that is too wide.
 
-Większy change jest dopuszczalny, gdy krótkie rzeczowe uzasadnienie wskazuje nierozdzielną gwarancję lub konkretny skutek podziału, przez który części nie da się samodzielnie odebrać. Samo „to checkout” lub „wspólny model” nie wystarcza. Zapisz uzasadnienie w istniejącym opisie zakresu/podejścia, bez nowego formularza.
+A larger change is acceptable when a short factual justification names an inseparable guarantee or a concrete consequence of splitting that would make the parts impossible to accept on their own. "It's checkout" or "shared model" alone is not enough. Record the justification in the existing scope/approach description, without a new form.
 
-## Roadmapa
+## Roadmap
 
-W zleconym tworzeniu lub aktualizacji roadmapy dziel sensowne niezależne rezultaty autonomicznie. Pytaj, gdy propozycja zmienia wymagania lub priorytety albo odracza konieczne zachowanie; zwykła sekwencja zależnych changes nie jest takim odroczeniem. Prośba o status lub plan pojedynczego issue nie upoważnia do reorganizacji kolejki.
+When asked to create or update the roadmap, split sensible independent outcomes on your own. Ask when a proposal changes requirements or priorities or defers required behavior; an ordinary sequence of dependent changes is not such a deferral. A request for the status or plan of a single issue does not authorize reorganizing the queue.
 
-Pokryj cały uzgodniony PRD: wymaganie ma przypisany rezultat, dowód wcześniejszego dostarczenia albo jawnie zatwierdzone odroczenie. Dalsze changes opisuj przez wynik, granice, źródła, zależności i obserwowalne kryteria odbioru. Nie rozstrzygaj teraz szczegółów przyszłych integracji. Utrzymuj acykliczny graf zależności (DAG). Milestones są opcjonalnym grupowaniem; nie dodawaj epik ani kolejnej obowiązkowej hierarchii.
+Cover the whole agreed PRD: every requirement has an assigned outcome, evidence of earlier delivery, or an explicitly approved deferral. Describe later changes by outcome, boundaries, sources, dependencies and observable acceptance criteria. Do not settle details of future integrations now. Keep the dependency graph acyclic (DAG). Milestones are optional grouping; do not add epics or another mandatory hierarchy.
 
-## Planowanie jednego change
+## Planning one change
 
-Po odczytaniu wymagań, istniejących decyzji i postępu, **przed szczegółowym researchem i wywiadem**, zastosuj kontrolę granic. Istnienie issue nie dowodzi poprawnego podziału. Wystarczy kontekst potrzebny do oceny wyniku; nie badaj wszystkich integracji, by dopiero potem odkryć zbyt duży zakres.
+After reading the requirements, existing decisions and progress, **before detailed research and interviewing**, apply the boundary check. The existence of an issue does not prove the split is right. Gather just enough context to judge the outcome; do not investigate every integration only to discover afterwards that the scope is too large.
 
-Gdy zakres jest zbyt szeroki, przedstaw krótki powód, proponowane wyniki i zależności, mapowanie dotychczasowych wymagań oraz rekomendowany pierwszy change. Nie planuj szczegółowo wszystkich części. Planowanie może zaproponować podział; zapis zmian istniejącej kolejki wymaga autoryzacji użytkownika obejmującej tę reorganizację. Jeśli jej jeszcze nie ma, czekaj na tę decyzję przed reorganizacją kolejki lub szczegółowym planowaniem wybranego nowego zakresu.
+When the scope is too wide, present a short reason, the proposed outcomes and dependencies, the mapping of existing requirements, and the recommended first change. Do not plan all parts in detail. Planning may propose a split; writing changes to the existing queue requires user authorization covering that reorganization. Until you have it, wait for the decision before reorganizing the queue or planning the chosen new scope in detail.
 
-Drugą kontrolę wykonaj przed dopracowaniem struktury faz. Nowy niezależny rezultat odkryty w researchu wraca do propozycji podziału, zamiast stawać się kolejną fazą. Gdy odkrycie wymaga istotnego rozszerzenia bieżącego rezultatu, pokaż wpływ i uzyskaj decyzję użytkownika. Nowe rozszerzenie nie jest rutynowym uzupełnieniem planu.
+Run the second check before refining the phase structure. A new independent outcome discovered during research goes back to the split proposal instead of becoming another phase. When a discovery requires a significant extension of the current outcome, show the impact and get the user's decision. A new extension is not a routine plan addition.
 
-**Brak otwartych pytań** oznacza rozstrzygnięte wymagania, granice i istotne decyzje architektoniczne tego change. Nie wymaga zaprojektowania przyszłych changes ani każdej decyzji implementacyjnej. Zostaw wykonawcy detale, gdy kontrakt, ograniczenia i sposób weryfikacji są znane. Każde dodatkowe badanie musi odpowiadać na konkretną lukę mogącą zmienić zakres, wykonalność, kontrakt lub kryteria odbioru; zakończ je po rozstrzygnięciu tej luki.
+**No open questions** means the requirements, boundaries and significant architecture decisions of this change are settled. It does not require designing future changes or every implementation decision. Leave details to the implementer when the contract, constraints and verification are known. Every extra investigation must answer a concrete gap that could change scope, feasibility, contract or acceptance criteria; stop once that gap is settled.
 
-Każdy change ma własny odbiór i właściwy zakres trwałych testów. Nie odkładaj całej weryfikacji na koniec wieloetapowego procesu produktu. Mały change otrzymuje proporcjonalny plan, bez sztucznych tasków ani obowiązku testów każdej warstwy.
+Every change has its own acceptance and a fitting scope of durable tests. Do not defer all verification to the end of a multi-step product process. A small change gets a proportionate plan, without artificial tasks or a duty to test every layer.
 
-## Podział istniejącej pracy
+## Splitting existing work
 
-Zachowaj historię, identyfikatory, decyzje, źródła, dowody i postęp. Propozycja pokazuje mapowanie starego zakresu na nowe rezultaty oraz wpływ na istniejące taski i zależności. Nie pytaj ponownie o uzgodnionych dostawców ani reguły biznesowe; badaj tylko rzeczywistą nową lukę lub sprzeczność.
+Preserve history, identifiers, decisions, sources, evidence and progress. The proposal shows the mapping of the old scope onto new outcomes and the impact on existing tasks and dependencies. Do not re-ask about agreed vendors or business rules; investigate only a real new gap or contradiction.
 
-Po autoryzacji aktualizuj wyłącznie objęte nią issues. Zachowaj odsyłacze do historycznych planów. Nie zamykaj ani nie usuwaj issues/tasków bez osobnego jawnego zlecenia. Samo planowanie, regeneracja opisu lub aktualizacja instrukcji Raven nie migrują istniejących roadmap.
+After authorization, update only the issues it covers. Keep links to historical plans. Do not close or delete issues/tasks without a separate explicit instruction. Planning, regenerating a description or updating Raven instructions does not migrate existing roadmaps.

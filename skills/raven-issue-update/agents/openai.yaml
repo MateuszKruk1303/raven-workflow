@@ -1,4 +1,0 @@
-interface:
-  display_name: "Raven Issue Update"
-  short_description: "Wpleć wymaganie w istniejące issue GitHub"
-  default_prompt: "Użyj $raven-issue-update dla wskazanego issue. Wpleć podane wymaganie w jego zakres i kryteria odbioru, zachowując dotychczasową treść i postęp."

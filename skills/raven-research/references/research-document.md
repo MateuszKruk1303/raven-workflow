@@ -109,7 +109,7 @@ either file and again on the persisted bytes:
       condition and units.
 - [ ] Each prose number/boolean has a JSON leaf (or an explicit “prose-only” note).
 - [ ] No summary uses a broader quantifier than the JSON leaf it describes.
-- [ ] `node <loaded-skill-dir>/scripts/prose-json-check.mjs <research.md> <facts.json>`
+- [ ] `node <skill-dir>/scripts/prose-json-check.mjs <research.md> <facts.json>`
       when Node is available (leaf presence only; not a substitute for the
       checklist).
 

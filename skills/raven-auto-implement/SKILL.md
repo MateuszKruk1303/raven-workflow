@@ -1,75 +1,76 @@
 ---
 name: raven-auto-implement
-description: "Zrealizuj polecenie użytkownika, opcjonalnie ze wskazanym issue lub planem, zweryfikuj zmianę na poziomie `quick`, `standard` albo `thorough` dobranym do ryzyka i podsumuj wynik wyłącznie w końcowej wiadomości czatu."
+description: "Carry out the user's instruction, optionally with a given issue or plan, verify the change at a `quick`, `standard` or `thorough` level matched to risk, and summarize the result only in the final chat message."
+argument-hint: "[#issue | instruction]"
 ---
 
 # Raven Auto Implement
 
-Zrealizuj polecenie użytkownika i udowodnij, że zmiana działa w stopniu odpowiednim do jej ryzyka. Wskazany issue lub plan jest kontekstem; polecenie doprecyzowuje lub zmienia ich zakres bez ponownego planowania i review. Drobna zmiana nie potrzebuje issue ani planu. Czytaj tylko kod i kontekst potrzebny do zmiany; nie odtwarzaj cyklu Raven. Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
+Carry out the user's instruction and prove the change works to a degree matching its risk. A given issue or plan is context; the instruction refines or changes their scope without re-planning or review. A small change needs neither an issue nor a plan. Read only the code and context the change needs; do not replay the Raven cycle. Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md). Talk to the user in their language.
 
-## Zasady
+## Rules
 
-- **Wejście.** Specyfikacją jest polecenie, uzupełnione wskazanym issue lub planem; pytaj tylko, gdy cel jest niejednoznaczny. Gdy plan rozjeżdża się z rzeczywistym kodem, odejdź od niego minimalnie i opisz w finale, co zmieniłeś i dlaczego.
-- **Decyzje.** Rutynowe decyzje techniczne podejmuj samodzielnie. Pytaj tylko o brakującą decyzję produktową, która rzeczywiście blokuje wykonanie, i w tym czasie kontynuuj niezależną część.
-- **Wykonawca.** Pracujesz jako jeden bieżący agent: bez delegowania, osobnego planisty, testera ani QA. Jedynym wyjątkiem jest niezależne review na poziomie `thorough`. Nie dodajesz etapów, bramek akceptacji, raportów procesowych, checkpointów ani metryk; z GitHuba wykonujesz tylko podjęcie issue opisane niżej.
-- **Branch i issue.** Przed pierwszym commitem: przy wskazanym issue bez istniejącego brancha przypisz się, ustaw `in-progress` i utwórz branch z aktualnej bazy według [pracy na taskach](../raven-workflow/references/git-workflow.md); przy wznowieniu użyj istniejącego brancha. Bez issue pracuj na bieżącym branchu, a jeśli to branch domyślny, utwórz krótki branch według konwencji projektu. Nigdy nie commituj na branch domyślny.
-- **Repo.** Przed zmianami zanotuj bazowy SHA. Zachowaj cudzą pracę w working tree. Respektuj instrukcje projektu (także `context/foundation/lessons.md`, jeśli istnieje), bezpieczeństwo oraz rzeczywiste ograniczenia narzędzi i uprawnień. Instrukcje projektu (AGENTS.md) mają pierwszeństwo przed minimalizmem weryfikacji: jeśli wymagają kontroli przed commitem, wykonaj je. Commituj logiczne kroki zgodnie z konwencją projektu; bez push i PR.
-- **Testy.** Najpierw wykorzystaj istniejące testy; dodaj lub dostosuj test dla luki w zmienionym zachowaniu. Po każdej poprawce ponów kontrolę, która wykryła problem.
-- **Zastane awarie.** Nie naprawiaj niezwiązanych zastanych awarii testów, fixture, locatorów ani infrastruktury. Zgłoś ograniczenie i — jeśli to możliwe — sprawdź zmienione zachowanie innym adekwatnym kanałem.
-- **Niewykonana lub zablokowana kontrola nigdy nie jest raportowana jako zaliczona.**
+- **Input.** The specification is the instruction, supplemented by the given issue or plan; ask only when the goal is ambiguous. When the plan diverges from the real code, deviate minimally and describe in the final message what you changed and why.
+- **Decisions.** Make routine technical decisions yourself. Ask only about a missing product decision that genuinely blocks the work, and continue the independent part meanwhile.
+- **Executor.** You work as one current agent: no delegation, separate planner, tester or QA. The only exception is the independent review at `thorough`. Do not add stages, acceptance gates, process reports, checkpoints or metrics; on GitHub you only take up the issue as described below.
+- **Branch and issue.** Before the first commit: with a given issue and no existing branch, assign yourself, set `in-progress` and create a branch from the current base per [working on GitHub tasks](../raven-workflow/references/git-workflow.md); when resuming, use the existing branch. Without an issue work on the current branch, and if it is the default branch, create a short branch following the project's convention. Never commit to the default branch.
+- **Repo.** Before changing anything, note the base SHA. Preserve other people's work in the working tree. Respect project instructions (including `context/foundation/lessons.md` if present), security and real tool and permission limits. Project instructions (AGENTS.md, CLAUDE.md) take precedence over minimal verification: if they require checks before a commit, run them. Commit logical steps following the project's convention; no push and no PR.
+- **Tests.** Use existing tests first; add or adapt a test for a gap in the changed behavior. After every fix, rerun the check that found the problem.
+- **Pre-existing failures.** Do not fix unrelated pre-existing failures of tests, fixtures, locators or infrastructure. Report the limitation and, if possible, check the changed behavior through another adequate channel.
+- **A check that was not run or was blocked is never reported as passed.**
 
-## Wybór poziomu
+## Choosing the level
 
-Przed zmianami wybierz poziom i podaj go w jednym zdaniu z powodem. Użytkownik nadpisuje go słowem `quick`, `standard` lub `thorough` w poleceniu lub w trakcie pracy. Sam w trakcie pracy możesz poziom tylko podnieść, z adnotacją w finale — nigdy obniżyć.
+Before changing anything, pick the level and state it in one sentence with the reason. The user overrides it with the word `quick`, `standard` or `thorough` in the instruction or during the work. You may only raise the level during the work, noting it in the final message — never lower it.
 
-- `quick` — zmiana nie zmienia zachowania: copy, style, rename, config, drobny refactor. Przy wątpliwości wybierz `standard`.
-- `standard` — domyślny: zwykła funkcja lub poprawka bez sygnału ryzyka.
-- `thorough` — błąd w zmianie byłby kosztowny, trudny do odwrócenia lub trudny do zauważenia przed użytkownikiem. Oceń to sam na podstawie projektu i zmiany; przy wątpliwości między `standard` a `thorough` wybierz `thorough`.
+- `quick` — the change does not alter behavior: copy, styles, rename, config, small refactor. When in doubt, pick `standard`.
+- `standard` — the default: an ordinary feature or fix without a risk signal.
+- `thorough` — a mistake in the change would be costly, hard to reverse or hard to notice before a user does. Judge this yourself from the project and the change; when unsure between `standard` and `thorough`, pick `thorough`.
 
-Na poziomie `thorough` przeczytaj i wykonaj [references/thorough.md](references/thorough.md) zamiast kroków `quick` i `standard`; sekcje „Sprawdzenie działania”, „Budżet czasu” i „Finał” obowiązują nadal.
+At `thorough`, read and follow [references/thorough.md](references/thorough.md) instead of the `quick` and `standard` steps; the "Checking it works", "Time budget" and "Final message" sections still apply.
 
 ## `quick`
 
-Ma udowodnić: zmiana się kompiluje i nie psuje istniejących testów.
+Must prove: the change compiles and does not break existing tests.
 
-1. Implementacja.
-2. Typecheck dotkniętego workspace lub pakietu.
-3. Istniejące testy zmienionych plików lub modułów.
-4. Render tylko przy zmianie wizualnej.
+1. Implementation.
+2. Typecheck of the affected workspace or package.
+3. Existing tests of the changed files or modules.
+4. Render only for a visual change.
 
-Orientacyjny narzut weryfikacji: ~1–3 min.
+Approximate verification overhead: ~1–3 min.
 
 ## `standard`
 
-Ma udowodnić: zmieniona funkcja działa w uruchomionej aplikacji.
+Must prove: the changed feature works in the running application.
 
-1. Wszystko z `quick`.
-2. Sprawdzenie działania (niżej) — happy path zmienionego zachowania.
+1. Everything from `quick`.
+2. Checking it works (below) — the happy path of the changed behavior.
 
-Orientacyjny narzut weryfikacji: ~5–10 min (+~2 min przy zimnym starcie aplikacji).
+Approximate verification overhead: ~5–10 min (+~2 min for a cold app start).
 
-### Sprawdzenie działania
+### Checking it works
 
-Testy nie zastępują sprawdzenia, że funkcja działa. Uruchom aplikację (lub skorzystaj z już działającej) i przejdź zmienioną funkcję tak, jak zrobi to użytkownik lub klient API:
+Tests do not replace checking that the feature works. Start the application (or use one already running) and go through the changed feature the way a user or API client would:
 
-- UI → izolowana sesja Playwright i obserwowalny efekt na ekranie, według [wskazówek UI](references/browser-review.md);
-- API/backend → wywołanie lokalnego endpointu i sprawdzenie odpowiedzi;
-- logika bez interfejsu → test lub krótki skrypt wywołujący zmieniony kod.
+- UI → isolated Playwright session and an observable effect on screen, per the [UI guidance](references/browser-review.md);
+- API/backend → call the local endpoint and check the response;
+- logic without an interface → a test or a short script calling the changed code.
 
-Zapis danych potwierdź ponownym odczytem (reload, ponowny GET, widok w adminie). Scenariusze błędów sprawdzaj tylko, gdy zmiana dotyczy obsługi błędów albo wykryłeś problem. Gdy aplikacji nie da się uruchomić, wpisz to w finale jako ograniczenie, nie zaliczenie; jeśli to możliwe, sprawdź zachowanie innym kanałem i jasno opisz, co on faktycznie potwierdza.
+Confirm data writes by reading back (reload, repeated GET, admin view). Check error scenarios only when the change concerns error handling or you found a problem. When the app cannot be started, record it in the final message as a limitation, not a pass; if possible, check the behavior through another channel and state clearly what it actually confirms.
 
-## Budżet czasu
+## Time budget
 
-Narzuty są orientacyjne, nie limitem. Gdy weryfikacja wyraźnie przekracza narzut poziomu (np. ponad dwukrotnie), nie rozszerzaj jej dalej bez konkretnego wykrytego problemu, a w finale wskaż, co zajęło czas.
+Overheads are approximate, not limits. When verification clearly exceeds the level's overhead (e.g. more than twice), do not extend it further without a concrete detected problem, and in the final message say what took the time.
 
-## Finał
+## Final message
 
-Wynik podaj w końcowej wiadomości czatu; nie zapisuj go do Markdown, planu ani issue i nie twórz acceptance.md. Skrót weryfikacji trafi do PR dopiero przez `raven-pr`. Nie uruchamiaj kolejnego etapu. Finał zawiera:
+Give the result in the final chat message; do not write it to Markdown, the plan or the issue, and do not create acceptance.md. A summary of the verification reaches the PR only through `raven-pr`. Do not start the next stage. The final message contains:
 
-- poziom (i ewentualne podniesienie z powodem);
-- co zmieniono, w tym odejścia od planu (co, dlaczego);
-- co sprawdzono — na `standard` także co konkretnie zaobserwowano i jakim kanałem;
-- ograniczenia: niewykonane lub zablokowane kontrole i to, co pozostaje do sprawdzenia;
-- instrukcję odbioru krok po kroku: konkretne akcje lub polecenia i oczekiwany efekt, ze szczegółowością dobraną do zmiany.
+- the level (and any raise, with the reason);
+- what changed, including deviations from the plan (what, why);
+- what was checked — at `standard` also what exactly was observed and through which channel;
+- limitations: checks not run or blocked, and what remains to be checked;
+- step-by-step acceptance instructions: concrete actions or commands and the expected effect, with detail matched to the change.
 
-Przy blokadzie również podaj podsumowanie i instrukcję, jasno wskazując braki.
+When blocked, also give the summary and instructions, clearly naming what is missing.
