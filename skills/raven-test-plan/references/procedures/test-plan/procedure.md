@@ -6,7 +6,7 @@ Kanoniczny dokument: `context/foundation/test-plan.md`, historia: Git. Stosuj [k
 
 Potwierdź repo lub greenfield PRD. Odczytaj istniejącą strategię, potrzebne plany/checkpointy i dokładne powiązane issues GH, gdy ustalasz stan tasków; nie skanuj całej kolejki. `--status` jest read-only; pokazuje realne dowody i luki, nie naprawia stanu. `--refresh` tworzy zmianę strategii z dotychczasowym źródłem/wersją. Brak pliku nie oznacza braku ochrony: sprawdź istniejące testy/konfigurację; historyczne artefakty wykorzystaj tylko gdy dotyczą wskazanej pracy.
 
-Dla rollout rozróżniaj: brak change, rozpoznanie, plan, akceptacja, wykonanie, zweryfikowana ochrona i dostarczenie. Istnienie planu nie dowodzi zgody, a komplet checkboxów nie dowodzi merge. Każdy konkretny change rollout lub odświeżenia strategii wymaga issue GH; jego podjęcie podczas zleconego planowania/implementacji potwierdź zgodnie ze wspólnym kontraktem. Stan taska, właściciel i zależności należą do GH; postęp wykonania i dowody do planu/checkpointu. Osobny change.md ani Project nie są wymagane. Sam dokument strategii nie otrzymuje osobnego issue będącego jego kopią. Research jest opcjonalny, gdy brakuje wiedzy; nie wymagaj osobnego skilla, jeśli dowody już istnieją.
+Dla rollout rozróżniaj: brak change, rozpoznanie, plan, review, wykonanie, zweryfikowana ochrona i dostarczenie. Istnienie planu nie zleca implementacji, a komplet checkboxów nie dowodzi merge. Każdy konkretny change rollout lub odświeżenia strategii wymaga issue GH; jego podjęcie podczas zleconego planowania/implementacji potwierdź zgodnie ze wspólnym kontraktem. Stan taska, właściciel i zależności należą do GH; postęp wykonania i dowody do planu/checkpointu. Osobny change.md ani Project nie są wymagane. Sam dokument strategii nie otrzymuje osobnego issue będącego jego kopią. Research jest opcjonalny, gdy brakuje wiedzy; nie wymagaj osobnego skilla, jeśli dowody już istnieją.
 
 ## 1. Discovery
 
@@ -43,3 +43,5 @@ Zaproponuj pierwszy ograniczony change ochrony według wartości/zależności. K
 Oddaj ścieżkę strategii, źródła/wersję, bieżący stan, dowody i jedno następne działanie. Odróżnij rekomendację od autoryzacji. Nie wymagaj czyszczenia rozmowy ani schowka; nowa sesja odczytuje repo i checkpoint.
 
 Przy odświeżeniu badaj nowe/unieważnione ryzyka i zachowaj niezmienione ustalenia. Korekta wymagania lub istotnej strategii wraca do decyzji przed zależnym wykonaniem. Nie przepisuj §1/§2 na podstawie pojedynczego testu ani nie archiwizuj automatycznie starych changes. Aktualny plik i Git zastępują snapshoty komentarzy.
+
+Cookbook powinien pomagać raven-test znaleźć istniejący test i asercję, powiązać je z AC/ryzykiem, ocenić aktualność dowodu i nazwać lukę przed dodaniem testu. Standardowe domknięcie regresji po ręcznej weryfikacji nie jest nowym rolloutem ani nowym issue. Wystarczająca ochrona może zakończyć audyt bez zmian testów; nie twórz recept duplikujących całą suite.

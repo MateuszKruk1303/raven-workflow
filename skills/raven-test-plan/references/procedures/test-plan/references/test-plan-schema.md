@@ -343,6 +343,10 @@ If any of the above appears in a draft, revise before writing.
 
 Initial authoring fills the agreed strategy, risks, rollout, stack and response guidance; cookbook entries cite delivered patterns or clearly state the missing implementation. §8 records actual source/tool checks, never invented dates. Do not require a fixed interview question number.
 
-During write-authorized rollout updates, record verified protection evidence, links to the relevant issue/plan, and delivered cookbook guidance; do not copy task state, assignees or queue dependencies from GitHub. `--status` reads without editing any field or timestamp. Acceptance and review of a plan are separate from the existence of its file. A checked list alone does not prove delivery.
+During write-authorized rollout updates, record verified protection evidence, links to the relevant issue/plan, and delivered cookbook guidance; do not copy task state, assignees or queue dependencies from GitHub. `--status` reads without editing any field or timestamp. A plan file does not imply current independent review or an implementation request. A checked list alone does not prove delivery.
 
 `--refresh` prepares a scoped change to strategy and preserves decisions/history in Git. New or changed requirements and material risk decisions need user resolution before dependent execution. Routine evidence and cookbook updates do not need a new product interview.
+
+## Recipe: regression closure for an existing change
+
+Record delivered paths and commands for finding the existing AC/risk → assertion → result mapping, including implementation checks, review and QA. After manual verification, raven-test audits that evidence and its code/config/dependency/environment relevance. Add tests only for named gaps; selectively retain valuable temporary QA scenarios in the existing runner. Sufficient existing protection can complete closure without test edits. Do not prescribe a new suite, a full review/QA rerun, or a new issue for this stage. A cookbook entry links existing patterns rather than duplicating tests or reports.

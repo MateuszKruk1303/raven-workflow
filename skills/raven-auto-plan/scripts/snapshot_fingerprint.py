@@ -42,7 +42,7 @@ def main():
         parser.exit(2, f'{error}\n')
     print(actual)
     if args.expect and actual != args.expect:
-        parser.exit(1, 'Fingerprint mismatch; do not transfer approval/review\n')
+        parser.exit(1, 'Fingerprint mismatch; review does not cover the changed contract\n')
 
 
 if __name__ == '__main__':

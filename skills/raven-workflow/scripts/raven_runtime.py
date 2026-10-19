@@ -166,7 +166,7 @@ class Runtime:
             raise ValueError('Checkpoint must be a JSON object')
         return value
 
-    def checkpoint(self, session, stage, next_step, evidence=None, acceptance_ref=None, repair_attempts=None):
+    def checkpoint(self, session, stage, next_step, evidence=None, repair_attempts=None):
         with self.lock(session):
             j = self.journal()
             previous = self.plan_checkpoint()
@@ -189,16 +189,12 @@ class Runtime:
                     'pr': identity['pr'], 'issue': identity['issue'],
                     'code_tree': self.code_tree(),
                     'checkpoint_sequence': previous.get('checkpoint_sequence', 0) + 1}
-            if 'acceptance' in previous:
-                item['acceptance'] = previous['acceptance']
             if repair_attempts is not None:
                 if repair_attempts < 0:
                     raise ValueError('Repair attempts must be nonnegative')
                 item['repair_attempts'] = repair_attempts
             elif 'repair_attempts' in previous:
                 item['repair_attempts'] = previous['repair_attempts']
-            if acceptance_ref:
-                item['acceptance'] = {'fingerprint': item['fingerprint'], 'decision_ref': acceptance_ref, 'verified': False}
             text = self.plan.read_text()
             block = CHECK_START + '\n' + json.dumps(item, ensure_ascii=False, sort_keys=True, indent=2) + '\n' + CHECK_END
             if CHECK_START in text:
@@ -517,7 +513,6 @@ def main(argv=None):
             s.add_argument('--stage', required=True)
             s.add_argument('--next', required=True)
             s.add_argument('--evidence')
-            s.add_argument('--acceptance-ref')
             s.add_argument('--repair-attempts', type=int)
         if name == 'publish-pr':
             s.add_argument('--title', required=True)
@@ -548,7 +543,7 @@ def main(argv=None):
         elif a.command == 'start':
             result = runtime.start(a.session, a.worktree, a.base)
         elif a.command == 'checkpoint':
-            result = runtime.checkpoint(a.session, a.stage, a.next, a.evidence, a.acceptance_ref, a.repair_attempts)
+            result = runtime.checkpoint(a.session, a.stage, a.next, a.evidence, repair_attempts=a.repair_attempts)
         elif a.command == 'issue':
             if a.event != 'read' and not (a.dry_run or a.apply):
                 raise ValueError('Issue mutation requires --dry-run or --apply')

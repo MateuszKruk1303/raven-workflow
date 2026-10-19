@@ -7,6 +7,8 @@ description: "Utwórz lub odśwież kolejność samodzielnych changes na podstaw
 
 Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md) oraz [kontrakt pracy Git-first](../raven-workflow/references/change-contract.md).
 
+Do wplecenia dodatkowego wymagania w zakres i AC jednego wskazanego istniejącego issue użyj [raven-issue-update](../raven-issue-update/SKILL.md). Roadmapa potrafi aktualizować istniejące issues w ramach zleconej zmiany kolejki; pojedynczy dodatek nie wymaga jej reorganizacji ani ponownego podziału PRD.
+
 Przeczytaj [granice change](../raven-workflow/references/change-scope.md). Wejście to PRD/zaakceptowane wymagania, istniejąca architektura i stan produktu. Roadmapa ustala rezultaty oraz zależności, nie zatwierdza planu implementacji.
 
 Roadmapę utrzymuj wyłącznie w GitHub Issues ustalonego repo. Zlecenie utworzenia lub aktualizacji roadmapy obejmuje zapis jej issues w uzgodnionym zakresie. Project jest opcjonalnym widokiem; nie twórz lokalnej roadmapy, drugiego backlogu ani boarda przy okazji. Brak dostępu oznacza niewykonaną publikację: przedstaw propozycję w rozmowie i nazwij brak, bez udawania gotowej roadmapy. Sam odczyt/status nie mutuje.

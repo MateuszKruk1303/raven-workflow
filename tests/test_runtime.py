@@ -3,6 +3,7 @@ import io
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 import urllib.error
@@ -250,12 +251,43 @@ class RuntimeTests(unittest.TestCase):
         self.assertFalse(self.r.state.exists())
 
     def test_contract_change_invalidates_checkpoint_progress_does_not(self):
-        self.r.checkpoint('s1', 'plan', 'implement', acceptance_ref='user:message-1')
+        self.r.checkpoint('s1', 'plan', 'implement')
         self.plan.write_text(self.plan.read_text().replace('[ ]', '[x]'))
         self.assertTrue(self.r.status()['contract_current'])
         self.plan.write_text(self.plan.read_text().replace('implementation step S1', 'implementation step S2'))
         self.assertFalse(self.r.status()['contract_current'])
-        self.assertEqual(self.r.journal()['checkpoint']['acceptance']['decision_ref'], 'user:message-1')
+        self.assertNotIn('acceptance', self.r.journal()['checkpoint'])
+
+    def test_new_plan_can_checkpoint_without_acceptance_or_automatic_execution(self):
+        source = self.repo / 'product.py'
+        source.write_text('value = 1\n')
+        before = source.read_bytes()
+        item = self.r.checkpoint('planner', 'plan-review', 'raven-auto-implement C-01')['checkpoint']
+        self.assertNotIn('acceptance', item)
+        self.assertNotIn('user_acceptance', item)
+        self.assertEqual(item['stage'], 'plan-review')
+        self.assertEqual(source.read_bytes(), before)
+
+    def test_stale_plan_review_fingerprint_remains_stale_after_checkpoint(self):
+        review = {'fingerprint': self.r.digest(), 'result': 'PASS', 'path': 'plan-review.md'}
+        self.plan.write_text(self.plan.read_text() + '\n' + runtime.CHECK_START + '\n'
+                             + json.dumps({'plan_review': review}) + '\n' + runtime.CHECK_END + '\n')
+        self.plan.write_text(self.plan.read_text().replace('AC one', 'AC revised'))
+        item = self.r.checkpoint('implementer', 'implement', 'refresh plan review')['checkpoint']
+        self.assertEqual(item['plan_review'], review)
+        self.assertNotEqual(item['fingerprint'], item['plan_review']['fingerprint'])
+        self.assertNotIn('acceptance', item)
+
+    def test_removed_acceptance_cli_is_rejected_without_mutation(self):
+        before = self.plan.read_bytes()
+        result = subprocess.run([sys.executable, str(SPEC.origin), '--repo', str(self.repo),
+                                 'checkpoint', 'C-01', '--session', 's1', '--stage', 'implement',
+                                 '--next', 'test', '--acceptance-ref', 'old-decision'],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('unrecognized arguments', result.stderr)
+        self.assertEqual(self.plan.read_bytes(), before)
+        self.assertFalse(self.r.state.exists())
 
     def test_fingerprint_normalizes_line_endings_but_not_contract_spacing(self):
         text = self.plan.read_text()
@@ -342,12 +374,12 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(api.writes, 1)
 
     def test_checkpoint_travels_in_plan_without_journal(self):
-        self.r.checkpoint('s1', 'implement', 'test', acceptance_ref='decision-1')
+        self.r.checkpoint('s1', 'implement', 'test')
         (self.r.state / 'journal.json').unlink()
         status = self.r.status()
         self.assertTrue(status['contract_current'])
         self.assertEqual(status['checkpoint']['next'], 'test')
-        self.assertFalse(status['checkpoint']['acceptance']['verified'])
+        self.assertNotIn('acceptance', status['checkpoint'])
 
     def test_clone_checkpoint_preserves_versioned_base_and_pr_without_journal(self):
         base = runtime.git(self.repo, 'rev-parse', 'HEAD')
@@ -396,12 +428,46 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(updated['evidence'], 'caller supplied new result')
         self.assertEqual(updated['references'], extensions['references'])
 
-    def test_dirty_tree_and_decision_survive_checkpoint(self):
-        self.r.checkpoint('s1', 'plan', 'implement', acceptance_ref='decision-1', repair_attempts=2)
+    def test_resume_preserves_cycle_evidence_and_acceptance_versions_without_claiming_freshness(self):
+        old_head = runtime.git(self.repo, 'rev-parse', 'HEAD')
+        fields = {
+            'acceptance': {'fingerprint': 'legacy-fingerprint', 'decision_ref': 'user:plan-acceptance', 'verified': False},
+            'implementation': {'head': old_head, 'completed': True},
+            'checks': [{'ac': 'AC1', 'test': 'tests/save.py::test_reload',
+                        'command': 'pytest tests/save.py', 'result': 'PASS', 'head': old_head}],
+            'review': {'head': old_head, 'path': 'review.md', 'result': 'PASS'},
+            'qa': {'head': old_head, 'scenarios': ['S1'], 'result': 'PASS'},
+            'execution_mode': 'auto', 'qa_required': True,
+            'acceptance_instructions': {'path': 'acceptance.md', 'head': old_head},
+            'manual_verification': {'source': 'user:message-2', 'steps': ['S1']},
+            'test_stage': {'completed': True, 'sufficient': True, 'head': old_head,
+                           'evidence': ['tests/save.py::test_reload'], 'gaps': []},
+            'user_acceptance': {'source': 'user:raven-pr-C-01', 'scope': ['AC1'], 'head': old_head},
+            'publication': {'mode': 'ready', 'url': 'https://example.test/pr/7'},
+            'repair_attempts_by_problem': {'QA-1': 1, 'FEEDBACK-2': 0},
+        }
+        self.plan.write_text(self.plan.read_text() + '\n' + runtime.CHECK_START + '\n'
+                             + json.dumps(fields) + '\n' + runtime.CHECK_END + '\n')
+        self.r.checkpoint('first', 'test', 'pr')
+        (self.repo / 'docs.md').write_text('documentation update')
+        runtime.git(self.repo, 'add', '.')
+        runtime.git(self.repo, 'commit', '-m', 'documentation delta')
+        (self.r.state / 'journal.json').unlink()
+        status = self.r.status()
+        self.assertFalse(status['code_head_current'])
+        result = self.r.checkpoint('new-session', 'pr', 'merge')['checkpoint']
+        for key, value in fields.items():
+            self.assertEqual(result[key], value, key)
+        self.assertNotEqual(result['head'], result['user_acceptance']['head'])
+        self.assertEqual(result['acceptance']['decision_ref'], 'user:plan-acceptance')
+        self.assertIsNone(result['evidence'])
+
+    def test_dirty_tree_and_repair_count_survive_checkpoint_without_acceptance(self):
+        self.r.checkpoint('s1', 'plan', 'implement', repair_attempts=2)
         self.r.checkpoint('s2', 'implement', 'test')
         before = self.r.status()
         self.assertTrue(before['code_tree_current'])
-        self.assertEqual(before['checkpoint']['acceptance']['decision_ref'], 'decision-1')
+        self.assertNotIn('acceptance', before['checkpoint'])
         self.assertEqual(before['checkpoint']['repair_attempts'], 2)
         self.assertEqual(before['checkpoint']['checkpoint_sequence'], 2)
         (self.repo / 'untracked.py').write_text('new code')

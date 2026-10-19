@@ -23,7 +23,7 @@ Neutralne wejścia są w [zestawie prób granic change](fixtures/change-scope-in
 | Wybór Paczkomatu | Jeden pionowy wynik obejmuje potrzebne UI, API, dane i walidację; warstwy nie stają się osobnymi changes. |
 | Płatność i awarie | Retry, idempotencja i pobrana kwota bez zamówienia należą do odbioru płatności; bez odłożenia ich do hardeningu lub dodania nowych podsystemów. |
 | Wiele plików | Plan proporcjonalny do jednego rezultatu, bez sztucznych faz lub podziału według liczby plików. |
-| Odkrycie podczas planowania | Nowy niezależny wynik jest rozpoznany przed akceptacją faz, wymaganie nie ginie, a zmiana kolejki pozostaje propozycją wymagającą autoryzacji. |
+| Odkrycie podczas planowania | Nowy niezależny wynik jest rozpoznany przed dopracowaniem faz, wymaganie nie ginie, a zmiana kolejki pozostaje propozycją wymagającą autoryzacji. |
 | Wiele kroków | Ocena rzeczywistej nierozdzielności i zachowania gwarancji; liczba faz jest sygnałem do oceny, nie automatycznym FAIL. |
 | Rozpoczęta praca | Mapowanie starego zakresu, zależności i postępu; zachowane decyzje/dowody/ID, bez ponownego wywiadu o dostawcach, nieautoryzowanego przeorganizowania kolejki i zamykania tasków. |
 
@@ -43,9 +43,21 @@ Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poni
 | Równoległa praca lub żądanie izolacji | Osobny worktree poza repo, bez przełączania katalogu aktywnej pracy i mieszania zmian. |
 | Cudze zmiany w aktualnym checkout | Zachowane pliki i staging; brak przenoszenia zmian na nowy branch, automatycznego resetu/stasha/commitu. Izolacja lub ustalenie sposobu zachowania zmian przed kolidującą operacją. |
 | Wznowienie na branchu lub w worktree | Zachowany istniejący branch, katalog i base, bez tworzenia kolejnego worktree ani zerowania postępu. |
-| Wznowienie po checkboxie | Identyczny fingerprint i zachowana akceptacja; zmieniony kod unieważnia odpowiednie dowody osobno. |
-| Zmiana technicznego kontraktu | Nowy fingerprint, aktualne review i decyzja przed zależną implementacją; brak przenoszenia starej zgody. |
+| Wznowienie po checkboxie | Identyczny fingerprint i aktualne review planu; zmieniony kod unieważnia odpowiednie dowody osobno. |
+| Zmiana technicznego kontraktu | Nowy fingerprint i aktualne review przed zależną implementacją; jawne zlecenie nowego wymagania już rozstrzyga decyzję, pytanie dotyczy tylko rzeczywistej niewiadomej. |
 | Wcześniej autoryzowany draft | Wczesna publikacja w dokładnym zakresie polityki bez nowego pytania; sam task bez polityki nie daje praw push/PR. |
 | Normalny change | Testy wraz z implementacją, jedno niezależne review wymagań/kodu/testów, dodatkowe role tylko dla ryzyka. |
 | Merge bez boarda | Aktualne CI/dowody/odbiór/zgoda i SHA guard; brak Project nie blokuje merge; issue zamykany dopiero po potwierdzonym merge, deploy jest osobno. |
 | Jira lub historyczny Raven | Zachowane źródło wymagań i historia, issue GH śledzi wykonanie linkiem do źródła Jira, bez kopiowania treści i automatycznej migracji. |
+
+## Plan i zlecenie wykonania
+
+| Próba | Co ocenić po wykonaniu |
+| --- | --- |
+| Gotowy plan po review | Handoff wskazuje auto-implement; brak pola/statusu akceptacji i brak samoczynnego startu implementacji. |
+| Zlecone auto/manual implement | Jednoznaczny plan z aktualnym review jest wykonywany bez decyzji o akceptacji planu ani jej zastępczego rejestru. |
+| Zmieniony kontrakt, stare review | Zależne wykonanie czeka na aktualne review; brak formalnej akceptacji nie usuwa tej kontroli. |
+| Jawne nowe wymaganie w poprawce | Aktualizacja planu i dotkniętego review, następnie zlecona poprawka bez ponownego pytania o już ustaloną regułę. |
+| Nierozstrzygnięta reguła | Konkretne pytanie o wybór i wpływ, bez blanket gate akceptacji planu. |
+| Wznowienie historycznego planu | Legacy acceptance i nieznane pola pozostają bez zmian, nie są odczytywane jako bramka. |
+| PR i merge | Odbiór produktu i zgoda merge nadal wymagają rzeczywistych źródeł; gotowy plan, review, auto i test ich nie tworzą. |

@@ -1,4 +1,4 @@
 interface:
   display_name: "Raven Auto Implement"
-  short_description: "Implementacja, testy, review i niezależne QA"
-  default_prompt: "Użyj $raven-auto-implement. Zrealizuj zatwierdzony change wraz z testami, niezależnym review i wykonawczym QA świeżego testera; napraw defekty i ponawiaj kontrole do PASS albo konkretnej blokady."
+  short_description: "Wykonanie planu i szybka samoweryfikacja"
+  default_prompt: "Użyj $raven-auto-implement: wykonaj wskazany plan z uwzględnieniem mojego aktualnego polecenia, sprawdź zmienione zachowanie i wyłącznie w końcowej wiadomości czatu podaj krótkie podsumowanie oraz instrukcję odbioru krok po kroku."

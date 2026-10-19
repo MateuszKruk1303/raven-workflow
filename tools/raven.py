@@ -123,8 +123,8 @@ def validate_process(contract, skills):
         raise ValueError('Unsupported schema_version')
     invariants = contract['invariants']
     expected_invariants = {
-        'acceptance': 'contract_fingerprint',
-        'progress_invalidates_acceptance': False,
+        'plan_review': 'contract_fingerprint',
+        'progress_invalidates_plan_review': False,
         'tests_with_implementation': True,
         'normal_implementation_independent_reviews': 1,
         'mandatory_task_issues': True,
@@ -133,6 +133,11 @@ def validate_process(contract, skills):
         'project_optional': True,
         'full_history_read_required': False,
         'deploy_separate': True,
+        'regression_closure_after_manual_verification': True,
+        'test_stage_may_reuse_without_edits': True,
+        'evidence_freshness': 'dependency_impact',
+        'explicit_pr_records_user_acceptance': True,
+        'automatic_draft_records_user_acceptance': False,
     }
     if invariants != expected_invariants:
         raise ValueError('Invalid Git-first workflow invariants')
@@ -141,6 +146,7 @@ def validate_process(contract, skills):
         'change': 'context/changes/<id>/plan.md', 'history': 'git',
         'configuration': '.raven/config.json', 'collaboration': 'pull_request',
         'tracker': 'github_issues', 'roadmap': 'github_issues',
+        'manual_instructions': 'final_chat_message',
     }:
         raise ValueError('Invalid Git-first sources of truth')
     roles = contract['roles']
@@ -152,22 +158,24 @@ def validate_process(contract, skills):
         raise ValueError('Planning and independent assessment require Astra/high')
     if roles['implementer'] != {'model': 'gpt-6.1-sol', 'effort': 'low'}:
         raise ValueError('Default implementer must use Sol/low')
-    qa = contract.get('auto_implementation_qa')
-    expected_qa = {
+    # Standalone auto does not consume the standard workflow's gates or roles.
+    if contract.get('standard_workflow_scope') != 'stages_roles_sources_and_invariants_exclude_standalone_auto_implementation':
+        raise ValueError('Auto implementation must remain outside standard workflow scope')
+    expected_auto = {
         'skill': 'raven-auto-implement',
-        'role': 'tester',
-        'fresh_context': True,
-        'requires': ['implementation', 'test_evidence', 'code_review'],
-        'produces': ['qa_evidence'],
-        'required_before_completion': True,
-        'retry_limit_per_defect': 2,
+        'execution': 'standalone_current_agent',
+        'inputs': ['indicated_plan', 'current_user_instruction'],
+        'scope': 'current_instruction_updates_plan_without_replanning',
+        'checks': 'changed_behavior_and_directly_affected_functions',
+        'expand_checks': 'only_after_concrete_problem',
+        'existing_tests': 'reuse_before_adding',
+        'unrelated_failures': 'report_without_repair',
+        'handoff': 'final_chat_only',
     }
-    if (qa != expected_qa or not isinstance(qa, dict)
-            or qa.get('fresh_context') is not True
-            or qa.get('required_before_completion') is not True
-            or type(qa.get('retry_limit_per_defect')) is not int):
-        raise ValueError('Auto implementation QA must require independent tester evidence '
-                         'only for raven-auto-implement, with at most two retries per defect')
+    if (contract.get('auto_implementation') != expected_auto
+            or 'auto_implementation_qa' in contract):
+        raise ValueError('Auto implementation must use the current agent, plan and current instruction, '
+                         'focused checks and final chat only')
     stages = contract['stages']
     ids = [stage['id'] for stage in stages]
     if len(set(ids)) != len(ids):
@@ -175,16 +183,17 @@ def validate_process(contract, skills):
     required = {
         'plan': ('planner', {'requirements', 'issue_started'}, {'plan_contract'}),
         'plan_review': ('reviewer', {'plan_contract'}, {'plan_review'}),
-        'pr': ('implementer', {'plan_contract', 'publication_requested'}, {'pull_request'}),
-        'implement': ('implementer', {'plan_contract', 'plan_review', 'plan_accepted', 'issue_started'}, {'implementation', 'test_evidence'}),
+        'pr': ('implementer', {'plan_contract', 'implementation', 'regression_evidence', 'publication_requested', 'user_acceptance'}, {'pull_request'}),
+        'test': ('implementer', {'plan_contract', 'implementation', 'test_evidence', 'code_review', 'manual_verification'}, {'regression_evidence'}),
+        'implement': ('implementer', {'plan_contract', 'plan_review', 'issue_started'}, {'implementation', 'test_evidence'}),
         'code_review': ('reviewer', {'plan_contract', 'implementation', 'test_evidence'}, {'code_review'}),
-        'merge': ('implementer', {'pull_request', 'plan_accepted', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested'}, {'merged_pr', 'issue_done'}),
+        'merge': ('implementer', {'pull_request', 'code_review', 'test_evidence', 'user_acceptance', 'ci_passed', 'merge_requested', 'regression_evidence'}, {'merged_pr', 'issue_done'}),
     }
     by_id = {s['id']: s for s in stages}
     if set(by_id) != set(required):
         raise ValueError('Standard cycle requires exactly the defined stages')
     external = set(contract['initial_artifacts'])
-    if external != {'requirements', 'plan_accepted', 'user_acceptance', 'publication_requested', 'merge_requested', 'ci_passed', 'issue_started'}:
+    if external != {'requirements', 'user_acceptance', 'publication_requested', 'merge_requested', 'ci_passed', 'issue_started', 'manual_verification'}:
         raise ValueError('External artifacts must not bypass stage producers')
     for stage in stages:
         role, needs, output = required[stage['id']]
@@ -198,6 +207,12 @@ def validate_process(contract, skills):
             raise ValueError(f"Wrong artifact producer: {stage['id']}")
         if not stage['skills'] or not set(stage['skills']) <= skills:
             raise ValueError(f"Unknown/empty skills in {stage['id']}")
+        if stage['id'] == 'code_review' and stage['skills'] != ['raven-implement-review']:
+            raise ValueError('Code review must be separately invoked through raven-implement-review')
+        if 'raven-auto-implement' in stage['skills']:
+            raise ValueError('Auto implementation is standalone, not a workflow stage')
+        if stage['id'] == 'implement' and stage['skills'] != ['raven-implement']:
+            raise ValueError('Standard implementation must be owned by raven-implement')
         if stage['id'] == 'merge' and stage['skills'] != ['raven-merge']:
             raise ValueError(f"{stage['id']} must be owned by raven-merge")
         if role in ('reviewer', 'tester') and stage.get('fresh_context') is not True:
@@ -212,8 +227,20 @@ def validate_process(contract, skills):
         raise ValueError('Local implementation must not require publication')
     if set(by_id['code_review'].get('covers', [])) != {'requirements', 'code', 'tests'}:
         raise ValueError('Independent review must cover requirements, code and tests')
-    if by_id['pr'].get('side_operation') is not True:
-        raise ValueError('Publication must be a side operation, not a local implementation prerequisite')
+    if by_id['pr'].get('side_operation') or by_id['pr'].get('early_draft'):
+        raise ValueError('Standard PR follows regression closure; early drafts use explicit exceptions')
+    if by_id['test']['skills'] != ['raven-test']:
+        raise ValueError('Regression closure must be owned by raven-test')
+    expected_exceptions = {
+        'early_draft': {'authorization': 'explicit_unaccepted_draft_or_existing_policy',
+                        'user_acceptance': False, 'requires_completed_implementation': False},
+        'missing_test_evidence': {'requires_explicit_confirmation': True,
+                                  'records_gaps': True, 'waives_merge_gates': False},
+    }
+    if contract.get('publication_exceptions') != expected_exceptions:
+        raise ValueError('Publication exceptions must preserve acceptance and merge gates')
+    if 'raven-test' in contract.get('optional_workflows', {}).get('additional_validation', {}).get('skills', []):
+        raise ValueError('Standard regression closure cannot be only additional validation')
     for mode in ('manual', 'auto'):
         produced = set(external)
         for stage in stages:

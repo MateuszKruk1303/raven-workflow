@@ -74,10 +74,9 @@ Finish discovery when the agreed questions have sufficient evidence for the next
 decision and material contradictions are resolved. Close or cancel now-irrelevant
 work; do not wait for optional exploration merely because it was started. An
 unfinished required check remains an explicit gap, never a silent pass. Research
-may report that limitation; a plan must resolve blocking decisions before approval
-and finalization under its own contract.
+may report that limitation; a plan must resolve blocking decisions before finalization under its own contract.
 
-After approval, investigate only a newly identified blocking gap; reuse the
-approved findings for writing and save. When metrics exist, separate investigation,
+After resolving the required decisions, investigate only a newly identified
+blocking gap; reuse the verified findings for writing and save. When metrics exist, separate investigation,
 interview, synthesis and persistence and include worker/retry overhead. Unknown
 usage or cost remains unknown. Fewer workers or reads alone does not prove savings.

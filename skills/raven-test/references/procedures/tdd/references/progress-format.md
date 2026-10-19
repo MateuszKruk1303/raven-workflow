@@ -7,4 +7,4 @@
 
 Nie odhaczaj odbioru człowieka na podstawie kontroli agenta. Nie oznaczaj pominiętego testu jako PASS. Zmiana kodu unieważnia zależne dowody; aktualizuj odpowiednie wiersze i checkpoint. Historyczne wyniki pozostają w Git.
 
-Checkpoint zapisuje następny krok, branch/base/head, stan drzewa, fingerprint i źródło akceptacji, review/CI/PR, liczniki prób oraz istotne nierozwiązane kwestie. Przy przerwaniu zapisz stan przed handoffem, bez nowej kopii planu w issues. Manual i auto używają tego samego formatu.
+Checkpoint zapisuje następny krok, branch/base/head, stan drzewa, fingerprint, review/CI/PR, liczniki prób oraz istotne nierozwiązane kwestie. Przy przerwaniu zapisz stan przed handoffem, bez nowej kopii planu w issues. Manual i auto używają tego samego formatu.

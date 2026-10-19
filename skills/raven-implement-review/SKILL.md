@@ -12,3 +12,5 @@ Stosuj [politykę ról i dowodów](../raven-workflow/references/agent-policy.md)
 Normalne review obejmuje kod **oraz testy i wymagania**. Zweryfikuj mapę kryteriów na dowody, zachowania błędów, integracje, regresje, adekwatność asercji i luki. Testy autora są dowodem, nie wyrocznią wymagań. Nie wymagaj wcześniejszego osobnego testera ani ponownego test-review po pozytywnym pełnym review.
 
 Zapisz `review.md` z zakresem, fingerprintem, kontrolami, oceną i konkretnymi finding IDs. Dodatkowe role rekomenduj tylko przy nazwanym ryzyku. Koordynator realizuje autoryzowane rutynowe poprawki w zakresie i odświeża potrzebną część review; wybór nowego zakresu/ryzyka należy do użytkownika. Raport nie jest odbiorem człowieka ani zgodą na merge.
+
+Oceniaj bieżące testy i gotowość implementacji do ręcznej weryfikacji. Raport review nie udaje wykonania późniejszego raven-test ani nie zamyka audytu regresji samym PASS. Wskaż istniejącą ochronę i konkretne luki do ponownego użycia, bez odkładania wymaganej poprawności kodu.

@@ -11,4 +11,4 @@ Przeczytaj [procedurę frame](references/procedures/frame/procedure.md). Wejści
 
 Oddziel dosłowną obserwację, proponowaną przyczynę i rozwiązanie. Badaj wiarygodne hipotezy z dowodami; przy dużym zakresie procedura dopuszcza niezależne analizy read-only. Nie potwierdzaj hipotezy jedynie dlatego, że podał ją użytkownik. Nie wymyślaj przeformułowania, jeśli dowody wspierają pierwotny problem.
 
-Zapisz `context/changes/<id>/frame.md` z obserwacją, hipotezami, dowodami, pewnością, potwierdzonym/przeformułowanym problemem i wpływem na plan. Nowy raport może utworzyć lokalny folder; nie wymaga issue ani change.md. Zachowaj historyczne źródła, nie migruj archiwów. Zmiana zakresu planu wymaga decyzji; samo frame nie zmienia kodu, wymagań ani akceptacji.
+Zapisz `context/changes/<id>/frame.md` z obserwacją, hipotezami, dowodami, pewnością, potwierdzonym/przeformułowanym problemem i wpływem na plan. Nowy raport może utworzyć lokalny folder; nie wymaga issue ani change.md. Zachowaj historyczne źródła, nie migruj archiwów. Zmiana zakresu planu wymaga decyzji; samo frame nie zmienia kodu, wymagań ani zapisanych decyzji.

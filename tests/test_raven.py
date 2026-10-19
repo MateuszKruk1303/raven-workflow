@@ -81,61 +81,75 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Independent context'):
             self.check()
 
-    def test_auto_implementation_requires_independent_functional_qa(self):
-        self.contract.pop('auto_implementation_qa')
-        with self.assertRaisesRegex(ValueError, 'Auto implementation QA'):
+    def test_auto_implementation_contract_is_required(self):
+        self.contract.pop('auto_implementation')
+        with self.assertRaisesRegex(ValueError, 'Auto implementation'):
             self.check()
 
-    def test_auto_qa_contract_cannot_weaken_or_expand_its_scope(self):
-        original = copy.deepcopy(self.contract['auto_implementation_qa'])
+    def test_auto_execution_cannot_restore_workflow_requirements(self):
+        original = copy.deepcopy(self.contract['auto_implementation'])
         mutations = [
-            ('fresh_context', False),
-            ('fresh_context', 1),
-            ('role', 'implementer'),
-            ('role', 'reviewer'),
-            ('produces', []),
-            ('produces', ['test_evidence']),
-            ('produces', ['qa_evidence', 'user_acceptance']),
-            ('required_before_completion', False),
-            ('required_before_completion', 1),
-            ('retry_limit_per_defect', 3),
-            ('retry_limit_per_defect', 0),
-            ('retry_limit_per_defect', 2.0),
-            ('skill', 'raven-implement'),
-            ('skill', 'raven-auto-test'),
-            ('skills', ['raven-auto-implement', 'raven-implement']),
+            ('execution', 'delegated_implementer'), ('role', 'implementer'),
+            ('requires', ['plan_review', 'issue_started']),
+            ('inputs', ['plan_contract', 'plan_review']),
+            ('scope', 'replan_and_review_current_instruction'),
+            ('checks', 'full_suite'), ('critical_path', 'always'),
+            ('expand_checks', 'always'), ('existing_tests', 'duplicate_all_layers'),
+            ('unrelated_failures', 'repair_all'), ('handoff', 'acceptance.md'),
+            ('retry_limit_per_defect', 2), ('checkpoint', 'required'),
         ]
-        mutations.extend(('requires', [item for item in original['requires'] if item != artifact])
-                         for artifact in original['requires'])
         for key, value in mutations:
             with self.subTest(key=key, value=value):
-                self.contract['auto_implementation_qa'] = copy.deepcopy(original)
-                self.contract['auto_implementation_qa'][key] = value
-                with self.assertRaisesRegex(ValueError, 'Auto implementation QA'):
+                self.contract['auto_implementation'] = copy.deepcopy(original)
+                self.contract['auto_implementation'][key] = value
+                with self.assertRaisesRegex(ValueError, 'Auto implementation'):
                     self.check()
 
-    def test_auto_qa_does_not_add_manual_or_other_skill_gates(self):
+    def test_auto_inputs_are_sufficient_without_workflow_artifacts(self):
         self.check()
-        qa = self.contract['auto_implementation_qa']
-        self.assertEqual(qa['skill'], 'raven-auto-implement')
-        self.assertEqual(set(qa['requires']), {'implementation', 'test_evidence', 'code_review'})
+        auto = self.contract['auto_implementation']
+        self.assertEqual(auto['execution'], 'standalone_current_agent')
+        self.assertEqual(set(auto['inputs']), {'indicated_plan', 'current_user_instruction'})
         for stage in self.contract['stages']:
-            with self.subTest(stage=stage['id']):
-                self.assertEqual(set(stage.get('modes', ['manual', 'auto'])), {'manual', 'auto'})
-                self.assertNotIn('qa_evidence', stage['requires'])
-                self.assertNotIn('qa_evidence', stage['produces'])
-                self.assertFalse(stage.get('requires_by_mode'))
+            self.assertNotIn(auto['skill'], stage['skills'])
+        self.assertEqual(self.stage('implement')['skills'], ['raven-implement'])
+        self.assertEqual(set(self.stage('implement')['requires']),
+                         {'plan_contract', 'plan_review', 'issue_started'})
+        self.assertEqual(self.stage('code_review')['skills'], ['raven-implement-review'])
+        self.assertIn('code_review', self.stage('test')['requires'])
+        self.assertIn('regression_evidence', self.stage('pr')['requires'])
+        self.assertIn('code_review', self.stage('merge')['requires'])
 
-    def test_doctor_reports_missing_auto_qa_as_workflow_error(self):
+    def test_auto_cannot_be_attached_to_standard_implementation(self):
+        self.stage('implement')['skills'].append('raven-auto-implement')
+        with self.assertRaisesRegex(ValueError, 'standalone'):
+            self.check()
+
+    def test_auto_exception_cannot_change_standard_workflow_scope(self):
+        self.contract.pop('standard_workflow_scope')
+        with self.assertRaisesRegex(ValueError, 'outside standard workflow scope'):
+            self.check()
+
+    def test_auto_implementation_cannot_own_code_review(self):
+        self.stage('code_review')['skills'].append('raven-auto-implement')
+        with self.assertRaisesRegex(ValueError, 'separately invoked'):
+            self.check()
+
+    def test_legacy_automatic_qa_contract_cannot_return(self):
+        self.contract['auto_implementation_qa'] = {'required_before_completion': True}
+        with self.assertRaisesRegex(ValueError, 'Auto implementation'):
+            self.check()
+
+    def test_doctor_reports_missing_auto_execution_contract(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / 'repo'
             shutil.copytree(ROOT / 'skills', root / 'skills')
             shutil.copy2(ROOT / 'README.md', root / 'README.md')
-            self.contract.pop('auto_implementation_qa')
+            self.contract.pop('auto_implementation')
             (root / 'workflow-contract.json').write_text(json.dumps(self.contract))
             errors = raven.doctor(root)
             self.assertTrue(any(error['code'] == 'workflow.contract'
-                                and 'Auto implementation QA' in error['detail']
+                                and 'Auto implementation' in error['detail']
                                 for error in errors))
 
     def test_review_before_plan_is_rejected(self):
@@ -144,15 +158,31 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unmet handoff'):
             self.check()
 
-    def test_agent_cannot_grant_user_approval(self):
-        self.contract['stages'][0]['produces'].append('plan_accepted')
+    def test_agent_cannot_grant_product_acceptance(self):
+        self.contract['stages'][0]['produces'].append('user_acceptance')
         with self.assertRaisesRegex(ValueError, 'external acceptance'):
             self.check()
 
-    def test_approval_gate_cannot_disappear(self):
+    def test_plan_review_gate_cannot_disappear(self):
         stage = next(s for s in self.contract['stages'] if s['id'] == 'implement')
-        stage['requires'].remove('plan_accepted')
+        stage['requires'].remove('plan_review')
         with self.assertRaisesRegex(ValueError, 'must require'):
+            self.check()
+
+    def test_new_plan_handoff_has_review_without_plan_acceptance(self):
+        self.check()
+        self.assertNotIn('plan_accepted', self.contract['initial_artifacts'])
+        self.assertEqual(set(self.stage('implement')['requires']),
+                         {'plan_contract', 'plan_review', 'issue_started'})
+        self.assertEqual(self.contract['invariants']['plan_review'], 'contract_fingerprint')
+        self.assertFalse(self.contract['invariants']['progress_invalidates_plan_review'])
+        for stage in self.contract['stages']:
+            self.assertNotIn('plan_accepted', stage['requires'] + stage['produces'])
+
+    def test_retired_plan_acceptance_cannot_return_as_external_gate(self):
+        self.contract['initial_artifacts'].append('plan_accepted')
+        self.stage('implement')['requires'].append('plan_accepted')
+        with self.assertRaisesRegex(ValueError, 'External artifacts'):
             self.check()
 
     def test_cheaper_reviewer_is_rejected(self):
@@ -184,24 +214,75 @@ class ProcessTests(unittest.TestCase):
                     self.check()
                 self.stage('code_review')['requires'] = original
 
-    def test_standard_cycle_requires_issue_tracking_without_late_test_stage(self):
+    def test_standard_cycle_keeps_tests_with_implementation_and_closes_regression(self):
         self.check()
         self.assertEqual({s['id'] for s in self.contract['stages']},
-                         {'plan', 'plan_review', 'pr', 'implement', 'code_review', 'merge'})
+                         {'plan', 'plan_review', 'implement', 'code_review', 'test', 'pr', 'merge'})
         self.assertEqual(self.stage('merge')['produces'], ['merged_pr', 'issue_done'])
         self.assertNotIn('pull_request', self.stage('implement')['requires'])
-        self.assertTrue(self.stage('pr')['side_operation'])
+        self.assertNotIn('side_operation', self.stage('pr'))
+        self.assertEqual(self.stage('test')['produces'], ['regression_evidence'])
 
     def test_local_implementation_does_not_require_publication(self):
         self.stage('implement')['requires'].append('pull_request')
         with self.assertRaisesRegex(ValueError, 'Local implementation'):
             self.check()
 
-    def test_publication_can_start_before_tests(self):
+    def test_standard_publication_requires_regression_and_external_acceptance(self):
+        self.check()
         self.assertEqual(set(self.stage('pr')['requires']),
-                         {'plan_contract', 'publication_requested'})
-        self.assertLess(self.contract['stages'].index(self.stage('pr')),
-                        self.contract['stages'].index(self.stage('implement')))
+                         {'plan_contract', 'implementation', 'regression_evidence',
+                          'publication_requested', 'user_acceptance'})
+        self.assertLess(self.contract['stages'].index(self.stage('test')),
+                        self.contract['stages'].index(self.stage('pr')))
+        for artifact in ('implementation', 'regression_evidence', 'user_acceptance'):
+            original = self.stage('pr')['requires'][:]
+            self.stage('pr')['requires'].remove(artifact)
+            with self.assertRaisesRegex(ValueError, 'must require'):
+                self.check()
+            self.stage('pr')['requires'] = original
+
+    def test_regression_audit_cannot_be_replaced_with_implementation_pass(self):
+        self.stage('test')['requires'].remove('manual_verification')
+        with self.assertRaisesRegex(ValueError, 'must require'):
+            self.check()
+        self.stage('test')['requires'].append('manual_verification')
+        self.stage('test')['produces'] = ['test_evidence']
+        with self.assertRaisesRegex(ValueError, 'Wrong artifact producer'):
+            self.check()
+
+    def test_publication_exception_never_manufactures_acceptance_or_bypasses_merge(self):
+        exceptions = copy.deepcopy(self.contract['publication_exceptions'])
+        mutations = [('early_draft', 'user_acceptance', True),
+                     ('early_draft', 'authorization', 'automatic'),
+                     ('missing_test_evidence', 'requires_explicit_confirmation', False),
+                     ('missing_test_evidence', 'records_gaps', False),
+                     ('missing_test_evidence', 'waives_merge_gates', True)]
+        for section, key, value in mutations:
+            with self.subTest(section=section, key=key):
+                self.contract['publication_exceptions'] = copy.deepcopy(exceptions)
+                self.contract['publication_exceptions'][section][key] = value
+                with self.assertRaisesRegex(ValueError, 'Publication exceptions'):
+                    self.check()
+
+    def test_agent_cannot_produce_manual_verification_or_product_acceptance(self):
+        for stage, artifact in [('test', 'manual_verification'), ('pr', 'user_acceptance')]:
+            self.stage(stage)['produces'].append(artifact)
+            with self.assertRaisesRegex(ValueError, 'external acceptance'):
+                self.check()
+            self.stage(stage)['produces'].remove(artifact)
+
+    def test_manual_instructions_are_chat_only_and_do_not_accept_product(self):
+        self.assertEqual(self.contract['auto_implementation']['handoff'], 'final_chat_only')
+        self.assertNotIn('acceptance_instructions', self.contract['source_of_truth'])
+        self.contract['source_of_truth']['acceptance_instructions'] = 'acceptance.md'
+        with self.assertRaisesRegex(ValueError, 'sources of truth'):
+            self.check()
+
+    def test_regression_stage_cannot_become_only_optional(self):
+        self.contract['stages'].remove(self.stage('test'))
+        with self.assertRaisesRegex(ValueError, 'exactly'):
+            self.check()
 
     def test_merge_stage_cannot_disappear(self):
         self.contract['stages'].remove(self.stage('merge'))
@@ -226,7 +307,7 @@ class ProcessTests(unittest.TestCase):
             self.check()
 
     def test_merge_requires_its_own_authorization_and_current_evidence(self):
-        for artifact in ('merge_requested', 'ci_passed', 'user_acceptance', 'test_evidence', 'code_review', 'plan_accepted'):
+        for artifact in ('merge_requested', 'ci_passed', 'user_acceptance', 'test_evidence', 'code_review', 'regression_evidence'):
             with self.subTest(artifact=artifact):
                 original = self.stage('merge')['requires'][:]
                 self.stage('merge')['requires'].remove(artifact)

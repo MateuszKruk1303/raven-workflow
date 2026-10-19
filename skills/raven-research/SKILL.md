@@ -36,7 +36,7 @@ Zakończ, gdy uzgodnione pytania mają wystarczające dowody, a istotne konflikt
 
 ## 4. Zapisz i zweryfikuj artefakt badawczy
 
-Zapisz raport w `context/changes/<id>/research.md`, według [formatu raportu](references/research-document.md). Historia Git przechowuje wcześniejsze wersje; kontynuacja aktualizuje ustalenia i wskazuje nowe dowody, nie publikuje snapshotów do komentarzy. Nie zmieniaj zaakceptowanego planu ani nie rozpoczynaj implementacji.
+Zapisz raport w `context/changes/<id>/research.md`, według [formatu raportu](references/research-document.md). Historia Git przechowuje wcześniejsze wersje; kontynuacja aktualizuje ustalenia i wskazuje nowe dowody, nie publikuje snapshotów do komentarzy. Nie zmieniaj planu wykonawczego ani nie rozpoczynaj implementacji.
 
 Przed zapisem raportu zastosuj kontrole ograniczonych twierdzeń oraz prozy/JSON z tego odwołania. Każde ilościowe lub uniwersalne twierdzenie w prozie wymaga jawnego warunku, kwantyfikatora (dokładnego zbioru, liczby lub „this inspected path”) oraz kotwicy źródłowej. Nie pisz „always”, „never”, „every”, „only” ani „on the first attempt”, chyba że nazwany warunek i sprawdzona ścieżka faktycznie mają taki zakres. Rozstrzygaj każde twierdzenie historyczne osobno: dokument nieaktualny pod względem liczebności może nadal być poprawny w innym polu; pozytywna lista nie jest zbiorem wyłącznym, chyba że źródło tak mówi.
 
@@ -63,7 +63,7 @@ Jeśli host zabrania zapisów, przedstaw badanie i jawny status niezapisania w r
 
 ## 5. Przedstaw ustalenia i obsłuż kontynuacje
 
-Zacznij od odpowiedzi, lokalizacji artefaktu lub stanu niezapisania, decydujących referencji oraz istotnych ograniczeń. Badanie nie oznacza zatwierdzenia planu ani implementacji. Przy przekazaniu do planowania ujawnij rozstrzygnięte fakty, ich źródła, objęte kontrakty oraz nierozwiązane wybory produktowe, aby `raven-plan` lub `raven-auto-plan` budował na nich w tym samym change bez ponownego odkrywania. Raport wskazuje wejściowe wymagania i ich wersję/hash, SHA kodu i dirty state, zgodność z architecture.md, opcje z rekomendacją i kompromisami, ryzyka, luki oraz pytania wymagające decyzji użytkownika. Zalecenie badacza nie jest zaakceptowaną decyzją. Nie rozpisuj faz implementacji, kontraktów per plik ani Progress; to wynik późniejszego planowania.
+Zacznij od odpowiedzi, lokalizacji artefaktu lub stanu niezapisania, decydujących referencji oraz istotnych ograniczeń. Badanie nie zleca planowania ani implementacji. Przy przekazaniu do planowania ujawnij rozstrzygnięte fakty, ich źródła, objęte kontrakty oraz nierozwiązane wybory produktowe, aby `raven-plan` lub `raven-auto-plan` budował na nich w tym samym change bez ponownego odkrywania. Raport wskazuje wejściowe wymagania i ich wersję/hash, SHA kodu i dirty state, zgodność z architecture.md, opcje z rekomendacją i kompromisami, ryzyka, luki oraz pytania wymagające decyzji użytkownika. Zalecenie badacza nie jest zaakceptowaną decyzją. Nie rozpisuj faz implementacji, kontraktów per plik ani Progress; to wynik późniejszego planowania.
 
 Zapisz ustalenia z kontynuacji jako aktualizację pliku wersjonowanego w Git, z bieżącymi metadanymi, linkiem do poprzedniej i wskazaniem wniosków zastąpionych przez nowe dowody. Ponownie użyj niezmienionych wyników; zbadaj wyłącznie nowe lub unieważnione pytania. Zachowaj zakres, uprawnienia hosta oraz wszelkie pośrednie edycje dokonane przez ludzi.
 ## Brownfield: Deep Focus

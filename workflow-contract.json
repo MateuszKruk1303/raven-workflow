@@ -15,6 +15,7 @@
     "raven-implement",
     "raven-implement-review",
     "raven-init-stack",
+    "raven-issue-update",
     "raven-jira-roadmap",
     "raven-lesson",
     "raven-manual-qa",
@@ -55,12 +56,12 @@
   },
   "initial_artifacts": [
     "requirements",
-    "plan_accepted",
     "publication_requested",
     "merge_requested",
     "ci_passed",
     "user_acceptance",
-    "issue_started"
+    "issue_started",
+    "manual_verification"
   ],
   "stages": [
     {
@@ -94,32 +95,14 @@
       "fresh_context": true
     },
     {
-      "id": "pr",
-      "skills": [
-        "raven-pr"
-      ],
-      "role": "implementer",
-      "requires": [
-        "plan_contract",
-        "publication_requested"
-      ],
-      "produces": [
-        "pull_request"
-      ],
-      "side_operation": true,
-      "early_draft": true
-    },
-    {
       "id": "implement",
       "skills": [
-        "raven-implement",
-        "raven-auto-implement"
+        "raven-implement"
       ],
       "role": "implementer",
       "requires": [
         "plan_contract",
         "plan_review",
-        "plan_accepted",
         "issue_started"
       ],
       "produces": [
@@ -130,8 +113,7 @@
     {
       "id": "code_review",
       "skills": [
-        "raven-implement-review",
-        "raven-auto-implement"
+        "raven-implement-review"
       ],
       "role": "reviewer",
       "requires": [
@@ -150,6 +132,40 @@
       ]
     },
     {
+      "id": "test",
+      "skills": [
+        "raven-test"
+      ],
+      "role": "implementer",
+      "requires": [
+        "plan_contract",
+        "implementation",
+        "test_evidence",
+        "code_review",
+        "manual_verification"
+      ],
+      "produces": [
+        "regression_evidence"
+      ]
+    },
+    {
+      "id": "pr",
+      "skills": [
+        "raven-pr"
+      ],
+      "role": "implementer",
+      "requires": [
+        "plan_contract",
+        "implementation",
+        "regression_evidence",
+        "publication_requested",
+        "user_acceptance"
+      ],
+      "produces": [
+        "pull_request"
+      ]
+    },
+    {
       "id": "merge",
       "skills": [
         "raven-merge"
@@ -157,12 +173,12 @@
       "role": "implementer",
       "requires": [
         "pull_request",
-        "plan_accepted",
         "code_review",
         "test_evidence",
         "ci_passed",
         "merge_requested",
-        "user_acceptance"
+        "user_acceptance",
+        "regression_evidence"
       ],
       "produces": [
         "merged_pr",
@@ -176,11 +192,10 @@
     "configuration": ".raven/config.json",
     "collaboration": "pull_request",
     "tracker": "github_issues",
-    "roadmap": "github_issues"
+    "roadmap": "github_issues",
+    "manual_instructions": "final_chat_message"
   },
   "invariants": {
-    "acceptance": "contract_fingerprint",
-    "progress_invalidates_acceptance": false,
     "tests_with_implementation": true,
     "mandatory_task_issues": true,
     "full_history_read_required": false,
@@ -188,26 +203,59 @@
     "normal_implementation_independent_reviews": 1,
     "issue_started_before_plan_or_implementation": true,
     "issue_done_after_merge": true,
-    "project_optional": true
+    "project_optional": true,
+    "regression_closure_after_manual_verification": true,
+    "test_stage_may_reuse_without_edits": true,
+    "evidence_freshness": "dependency_impact",
+    "explicit_pr_records_user_acceptance": true,
+    "automatic_draft_records_user_acceptance": false,
+    "plan_review": "contract_fingerprint",
+    "progress_invalidates_plan_review": false
   },
-  "auto_implementation_qa": {
+  "auto_implementation": {
     "skill": "raven-auto-implement",
-    "role": "tester",
-    "fresh_context": true,
-    "requires": ["implementation", "test_evidence", "code_review"],
-    "produces": ["qa_evidence"],
-    "required_before_completion": true,
-    "retry_limit_per_defect": 2
+    "execution": "standalone_current_agent",
+    "inputs": [
+      "indicated_plan",
+      "current_user_instruction"
+    ],
+    "scope": "current_instruction_updates_plan_without_replanning",
+    "checks": "changed_behavior_and_directly_affected_functions",
+    "expand_checks": "only_after_concrete_problem",
+    "existing_tests": "reuse_before_adding",
+    "unrelated_failures": "report_without_repair",
+    "handoff": "final_chat_only"
   },
   "optional_workflows": {
     "additional_validation": {
       "skills": [
         "raven-manual-qa",
-        "raven-test",
         "raven-auto-test",
         "raven-test-review"
       ],
       "trigger": "risk_or_explicit_request"
+    },
+    "standalone_tests": {
+      "skills": [
+        "raven-test",
+        "raven-auto-test",
+        "raven-test-review"
+      ],
+      "trigger": "separate_test_task_or_before_change"
     }
-  }
+  },
+  "external_artifact_semantics": "Required actual external evidence, not pre-granted decisions; explicit raven-pr binds user acceptance to its source, scope and version.",
+  "publication_exceptions": {
+    "early_draft": {
+      "authorization": "explicit_unaccepted_draft_or_existing_policy",
+      "user_acceptance": false,
+      "requires_completed_implementation": false
+    },
+    "missing_test_evidence": {
+      "requires_explicit_confirmation": true,
+      "records_gaps": true,
+      "waives_merge_gates": false
+    }
+  },
+  "standard_workflow_scope": "stages_roles_sources_and_invariants_exclude_standalone_auto_implementation"
 }
