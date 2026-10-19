@@ -27,7 +27,7 @@ uses `getByRole`, generated tests do too. If the seed has
   an SPA) drops input typed before it hydrates. Wrap an idempotent fill + submit
   + `waitForURL(…, { timeout: 5_000 })` in `expect(async () => { … }).toPass()`,
   or wait for a hydration signal before the first input (the auth setup
-  template in `/raven-test` shows both). Inside `toPass`, clear before you
+  template in `e2e-setup/references/playwright-setup-templates.md` shows both). Inside `toPass`, clear before you
   fill (`fill('')`, then the value): re-filling the same text fires no change
   event, so a disabled submit stays disabled. When the submit is **not**
   idempotent (it creates a record), don't retry it — wait for the hydration
@@ -72,7 +72,7 @@ re-runs don't collide (see anti-pattern #5, "No cleanup", in
 
 ## Where the seed lives and how it signs in
 
-`/raven-test` writes the seed once per project (default
+The e2e-setup procedure writes the seed once per project (default
 `tests/e2e/seed.spec.ts`; the real path is recorded in
 `context/foundation/test-stack.md`, section `## E2E`) and runs it to green
 **from a cold server**: nothing listening on the port, so Playwright's

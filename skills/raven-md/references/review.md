@@ -1,21 +1,20 @@
 # Przegląd zasad Raven
 
-Oceń plik zasad dla AI w pięciu osiach i zwróć konkretne poprawki. Plikiem poddawanym przeglądowi jest dowolny markdown z zasadami dla AI przekazany przez użytkownika — ta umiejętność nie zakłada pliku konfiguracji AI projektu (AGENTS.md), AGENTS.md ani żadnego konkretnego narzędzia.
+Oceń plik zasad dla AI w pięciu osiach i zwróć konkretne poprawki. Plikiem poddawanym przeglądowi jest dowolny markdown z zasadami dla AI przekazany przez użytkownika — ta umiejętność nie zakłada AGENTS.md, CLAUDE.md ani żadnego konkretnego narzędzia.
 
 Tryb review nie edytuje pliku. Tworzy kartę wyników w czacie. Użytkownik decyduje, co wdrożyć.
 
 ## Rozpoznawanie danych wejściowych
 
-`$ARGUMENTS` powinno być ścieżką do pojedynczego pliku markdown (bezwzględną, względną względem repozytorium lub poprzedzoną `@`). Przykłady:
+Wejście powinno być ścieżką do pojedynczego pliku markdown (bezwzględną, względną względem repozytorium lub poprzedzoną `@`). Przykłady:
 
 - `@AGENTS.md`
 - `AGENTS.md`
 - `.cursor/rules/api.mdc`
 - `src/api/AGENTS.md`
 - `.github/copilot-instructions.md`
-- `~/the AI tool's configuration directory/AGENTS.md`
 
-Jeśli `$ARGUMENTS` jest puste, zapytaj użytkownika raz o ścieżkę. Nie zgaduj.
+Jeśli ścieżki nie podano, zapytaj użytkownika raz o ścieżkę. Nie zgaduj.
 
 Jeśli ścieżka wskazuje katalog, zapytaj, który plik poddać przeglądowi. Jeśli wskazuje wiele plików (np. `**/AGENTS.md`), oceniaj je po jednym i raportuj każdą kartę wyników osobno — nie łącz ich.
 
@@ -25,7 +24,7 @@ Jeśli plik nie istnieje, zatrzymaj się i zgłoś ścieżkę. Nie wymyślaj zaw
 
 - Nie edytuje pliku zasad *chyba że użytkownik wyraźnie zatwierdzi zmianę kolejności zaproponowaną przez Check 5*. Domyślne wyjście jest tylko do odczytu.
 - Nie generuje pełnej „poprawionej wersji” pliku. Co najwyżej Check 5 może przenieść/przegrupować sekcje; nigdy nie przepisuje treści zasad.
-- Nie zakłada docelowego narzędzia pliku. Plik konfiguracji AI projektu (AGENTS.md), AGENTS.md, `.mdc`, `.windsurfrules`, niestandardowe nazwy — wszystkie są traktowane jako „plik zasad dla AI”.
+- Nie zakłada docelowego narzędzia pliku. AGENTS.md, CLAUDE.md, `.mdc`, `.windsurfrules`, niestandardowe nazwy — wszystkie są traktowane jako „plik zasad dla AI”.
 - Nie ocenia *treści projektu* (architektury, wyborów technologicznych, konwencji). Ocenia *stan artefaktu zasad* — tak samo jak przegląd kodu ocenia kod, a nie produkt.
 
 ## Procedura
@@ -54,7 +53,7 @@ Dlaczego to ma znaczenie: długie pliki zasad wypierają prompt użytkownika z o
 
 Dla WARN/FAIL zasugeruj:
 - Podziel zasady dotyczące poszczególnych obszarów na zagnieżdżone pliki bliżej ich kodu (np. `src/api/AGENTS.md`).
-- Zastąp zduplikowaną dokumentację odwołaniami `@` do pliku kanonicznego.
+- Zastąp zduplikowaną dokumentację odwołaniem do pliku kanonicznego (względny link Markdown; import `@` tylko gdy narzędzie docelowe go obsługuje — AGENTS.md go nie obsługuje).
 - Usuń zasady, które nie są powiązane z powtarzającym się trybem błędu agenta.
 
 ### Check 2 — Bezpośrednie fragmenty kodu/konfiguracji
@@ -73,7 +72,7 @@ Oznacz każdy blok, który wygląda jak:
 
 Dla każdego oznaczonego bloku zasugeruj:
 - Przenieś fragment do prawdziwego pliku w repozytorium.
-- Zastąp blok jednoliniowym odwołaniem `@`, np. `@src/features/users/user.service.ts`, `@docs/api-errors.md`.
+- Zastąp blok jednoliniowym odwołaniem do pliku, np. `[user.service.ts](src/features/users/user.service.ts)`, `[api-errors](docs/api-errors.md)`.
 - Powód: przy następnym refaktorze przykład będzie błędny w dwóch miejscach; odwołanie nie może się rozjechać.
 
 Werdykt: OK przy 0 oznaczonych bloków · WARN przy 1–2 · FAIL przy 3+.
@@ -113,8 +112,6 @@ Przykłady (zauważ, że każde zastąpienie wykorzystuje nazwy/konwencje specyf
 
 Werdykt: OK przy 0 niejasnych sformułowań · WARN przy 1–3 · FAIL przy 4+.
 
-Werdykt: OK przy 0 niejasnych sformułowań · WARN przy 1–3 · FAIL przy 4+.
-
 ### Check 4 — Nadmiarowa wiedza
 
 Jesteś agentem wykonującym przegląd tego pliku. Przeczytaj go tak, jak przeczytałbyś go na początku sesji, i po każdym akapicie zadaj jedno pytanie:
@@ -128,7 +125,7 @@ Podczas skanowania korzystaj z tych samokontroli:
 - **Test „bez zaskoczenia”.** Czy mógłbyś sam utworzyć ten akapit na prośbę, bez dostępu do projektu? Jeśli tak — jest nadmiarowy.
 - **Test „domyślnego zachowania frameworka”.** Czy zasada powtarza coś, co framework, konfiguracja lintera, checker typów lub runner testów już wymusza (np. „używaj trybu ścisłego TypeScript”, „używaj cleanup `useEffect`”, „FastAPI używa Pydantic do walidacji”, „PostgreSQL obsługuje JSONB”)? Jeśli tak — jest nadmiarowa. Narzędzie wykryje naruszenie; opis prozą niczego nie doda.
 - **Test „definicji”.** Czy akapit definiuje ogólny termin inżynierski („czym jest warstwa usług”, „czym jest REST”, „czym są hooki”, „czym jest JSX”, „czym jest `Decimal`”)? Znasz je. Oznacz i usuń.
-- **Test „mogłoby być linkiem”.** Czy powiela `README.md`, skrypty z `package.json`, układ projektu lub ustawienia `.eslintrc`? Jeśli tak — zastąp go `@README.md` / `@package.json` / `@.eslintrc.json`. Odwołanie nie może się rozjechać; skopiowany opis prozą może.
+- **Test „mogłoby być linkiem”.** Czy powiela `README.md`, skrypty z `package.json`, układ projektu lub ustawienia `.eslintrc`? Jeśli tak — zastąp go linkiem do `README.md` / `package.json` / `.eslintrc.json`. Odwołanie nie może się rozjechać; skopiowany opis prozą może.
 - **Test „zapachu tutorialu”.** Jeśli akapit brzmi jak sekcja ze strony „Getting Started” frameworka lub artykułu na Medium — to treść tutorialowa, a nie wiedza o projekcie. Czytałeś takie materiały podczas treningu.
 
 Co **nie** jest nadmiarowe (nie oznaczaj):
@@ -139,7 +136,7 @@ Co **nie** jest nadmiarowe (nie oznaczaj):
 
 Dla każdego oznaczonego akapitu zasugeruj jedną z opcji:
 - **Usuń go** — już to wiedziałeś.
-- **Zastąp odwołaniem `@`** — `@README.md`, `@tsconfig.json`, `@docs/...`.
+- **Zastąp odwołaniem** — link do `README.md`, `tsconfig.json`, `docs/...`.
 - **Zachowaj tylko, jeśli jest poparty incydentem** — a jeśli tak, poproś autora o dodanie notatki o incydencie inline, aby zasada przetrwała przyszłe audyty.
 
 Werdykt: OK przy 0 nadmiarowych akapitów · WARN przy 1–3 · FAIL przy 4+.
@@ -179,7 +176,7 @@ Teraz opisz listę adnotacjami. Dla każdej sekcji podaj krótki tag i jednolini
 - **INTRO** — powitanie/misja/zespół — obniża gęstość sygnału na początku.
 - **REDUNDANT** — już oznaczone w Check 4 (domyślne zachowania frameworka, definicje, treść tutorialowa).
 - **VAGUE** — już oznaczone w Check 3.
-- **REFERENCE** — wskazuje na inne pliki przez składnię `@` (tanie, może być w dowolnym miejscu).
+- **REFERENCE** — wskazuje na inne pliki linkiem (tanie, może być w dowolnym miejscu).
 
 Następnie w jednym akapicie opisz problem strukturalny. Przykłady:
 
@@ -197,7 +194,7 @@ Proposed order:
 1. ## Hard rules         (was: line 312)        ← moved to top
 2. ## Project conventions (was: line 312, split) ← moved up
 3. ## Tech stack          (was: line 22)         ← kept
-4. ## Setup               (was: line 36)         ← kept, replace with @README.md if possible
+4. ## Setup               (was: line 36)         ← kept, replace with a link to README.md if possible
 5. ## Failure modes       (new section)          ← collect incident-driven rules here
 —   ## About the team / Mission / Values        ← remove (Check 3/4 already flagged these)
 ```
@@ -257,7 +254,7 @@ Wydrukuj dokładnie to, w tej kolejności. Użyj polskiego lub angielskiego, zgo
 - <suggestion if WARN/FAIL, otherwise omit>
 
 ### 2. Direct snippets — <verdict>
-- `path:line-range` — <what kind of snippet> → suggest `@<file>` reference.
+- `path:line-range` — <what kind of snippet> → suggest a link to `<file>`.
 - ...
 
 ### 3. Precise language — <verdict>
@@ -265,7 +262,7 @@ Wydrukuj dokładnie to, w tej kolejności. Użyj polskiego lub angielskiego, zgo
 - ...
 
 ### 4. Redundant knowledge — <verdict>
-- `path:line` — <what's redundant> → <delete | replace with @reference | keep only if backed by an incident>
+- `path:line` — <what's redundant> → <delete | replace with a link | keep only if backed by an incident>
 - ...
 
 ### 5. Rule ordering — <verdict>
@@ -287,7 +284,7 @@ Jeśli kontrola ma wynik OK, nadal umieść ją w tabeli, ale pomiń podsekcję 
 ## Przypadki brzegowe
 
 - **Plik poniżej 50 wierszy:** nadal wykonaj wszystkie pięć kontroli. Krótkie pliki najczęściej nie przechodzą Check 3 (niejasność) i Check 4 (nadmiarowość).
-- **Plik składa się głównie z odwołań (`@…`) i ma niewiele zasad inline:** to dobry znak dla Checks 2 i 4. Nie karz go za to.
+- **Plik składa się głównie z odwołań (linki, importy `@…`) i ma niewiele zasad inline:** to dobry znak dla Checks 2 i 4. Nie karz go za to.
 - **Plik jest `.mdc` z frontmatter (`globs:`, `alwaysApply:`):** licz wiersze zasad od miejsca po frontmatter. Sam frontmatter jest konfiguracją, a nie treścią zasad.
 - **Plik jest wygenerowanym stubem z `/init` i nie został zmieniony:** nadal go przejrzyj. Często Check 4 (nadmiarowość) będzie dominować — to sygnał, aby go oczyścić.
 - **W projekcie jest wiele plików zasad:** przejrzyj ten przekazany. Wspomnij o sąsiednich plikach w „Top 3 actions” tylko wtedy, gdy jest to istotne (np. duplikacja między głównym `AGENTS.md` a zagnieżdżonym).

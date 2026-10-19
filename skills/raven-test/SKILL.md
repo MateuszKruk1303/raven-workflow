@@ -5,7 +5,7 @@ description: "Zapewnij trwałą ochronę testami dla change, bugfixu lub refakto
 
 # Raven Test
 
-Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [dyscyplinę wykonania](references/implementation-discipline.md).
+Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md) i [dyscyplinę wykonania](references/implementation-discipline.md). Respektuj `context/foundation/lessons.md`, jeśli istnieje.
 
 Jedyny skill do trwałych testów. Na żądanie: domknięcie regresji po zmianie, osobne zadanie testowe albo ochrona przed zmianą. `raven-auto-implement` sam dopisuje testy potrzebne do swojej zmiany; ten skill jest na dodatkowe lub osobne potrzeby.
 

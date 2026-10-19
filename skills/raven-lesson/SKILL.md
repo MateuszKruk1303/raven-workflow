@@ -5,7 +5,7 @@ description: "Na wyraźne zlecenie zapisz jedną powtarzalną regułę projektu 
 
 # Raven Lesson
 
-Dopisz jedną regułę do `context/foundation/lessons.md`. Plik czytają `raven-research`, `raven-plan` i `raven-auto-implement`.
+Dopisz jedną regułę do `context/foundation/lessons.md`. Plik czytają `raven-research`, `raven-plan`, `raven-auto-implement`, `raven-test` i `raven-implement-review`.
 
 Lekcja to reguła, która będzie wracać i zmieniłaby sposób pracy — nie opis jednorazowej poprawki. Pojedynczy incydent bez wzorca odeślij do zwykłej poprawki.
 
@@ -28,7 +28,7 @@ Lekcja to reguła, która będzie wracać i zmieniłaby sposób pracy — nie op
    ```markdown
    # Lessons Learned
 
-   > Append-only register of recurring rules. Read by raven-research, raven-plan, raven-auto-implement.
+   > Append-only register of recurring rules. Read by raven-research, raven-plan, raven-auto-implement, raven-test, raven-implement-review.
    ```
 
    Wpis dopisz na końcu. Nie zmieniaj, nie porządkuj ani nie usuwaj istniejących wpisów — poprawki starych reguł użytkownik robi ręcznie. Po zapisie odczytaj plik i potwierdź, że nowy wpis jest ostatni.

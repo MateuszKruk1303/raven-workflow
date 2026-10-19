@@ -13,7 +13,7 @@ Przeprowadź użytkownika od pomysłu do notatek pozwalających napisać PRD. Wy
 2. Rozpoznaj greenfield albo brownfield z intencji i zawartości projektu. Sam manifest startera nie oznacza istniejącego produktu. Przy brownfield sprawdź tylko kod i dokumenty potrzebne do zrozumienia zmiany; rozróżnij zachowanie zaobserwowane od deklarowanego.
 3. Jeśli brakuje `context/foundation/`, utwórz tylko potrzebny katalog.
 4. Przeczytaj całe istniejące `shape-notes.md` i [format notatek](references/shape-notes.md). Wznów od checkpointu; jeśli wcześniejsze notatki nie mają checkpointu, ustal postęp z ich treści. Zachowaj sekcje, źródła i decyzje, których nie definiuje nowy format. Nie rozpoczynaj wywiadu ponownie bez powodu.
-5. Krótko podsumuj znane ustalenia i przejdź do najważniejszej niewiadomej. Gdy nie podano pomysłu i nie ma go w źródłach, poproś o krótki opis odbiorcy, problemu i zamierzonej zmiany.
+5. Krótko podsumuj znane ustalenia i przejdź do najważniejszej niewiadomej. Ustal nazwę projektu (`project`), jeśli jej brakuje — PRD jej nie wymyśla. Gdy nie podano pomysłu i nie ma go w źródłach, poproś o krótki opis odbiorcy, problemu i zamierzonej zmiany.
 
 ## Sposób rozmowy
 
@@ -60,4 +60,4 @@ Sprawdź kompletność problemu i odbiorcy, przepływu, dostępu, wymagań, regu
 
 Gdy brakuje decyzji zmieniającej produkt, zapytaj konkretnie. Użytkownik może zakończyć z lukami: zapisz `warned`, nie fikcyjne uzgodnienie. Bez luk ustaw `complete`; przy trwającej rozmowie `in_progress`. W podsumowaniu podaj plik, najważniejsze niewiadome i następny krok `$raven-prd`. Samo shape nie uruchamia PRD, budowy, testów ani publikacji.
 
-Nie edytuj istniejącego PRD, roadmapy, kodu ani archiwów. Jeśli nowe ustalenia zmieniają wcześniejsze PRD lub aktywne chunki, opisz rozbieżność w notatkach i wskaż konieczność aktualizacji w odpowiednim etapie Raven.
+Nie edytuj istniejącego PRD, roadmapy, kodu ani archiwów. Jeśli nowe ustalenia zmieniają wcześniejsze PRD lub istniejące issues roadmapy, opisz rozbieżność w notatkach i wskaż potrzebę aktualizacji przez `raven-prd`, `raven-roadmap` lub `raven-issue-update`.

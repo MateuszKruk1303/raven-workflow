@@ -7,7 +7,7 @@ description: "Niezależne review zmiany: zgodność z wymaganiami, poprawność 
 
 Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
 
-Review wykonuje świeży agent bez transkryptu autora. Nie edytuje produktu ani testów.
+Review wykonuje świeży agent bez transkryptu autora. Gdy wywołanie nastąpiło w sesji, w której powstała zmiana, uruchom review w świeżym subagencie hosta i przekaż mu tylko wejście poniżej; bez takiej możliwości wykonaj review sam i zgłoś w wyniku brak niezależności. Nie edytuje produktu ani testów. Respektuj `context/foundation/lessons.md`, jeśli istnieje.
 
 ## Wejście
 

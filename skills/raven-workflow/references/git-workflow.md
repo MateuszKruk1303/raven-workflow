@@ -7,8 +7,9 @@ Pracujemy na taskach w GitHub Issues. Body issue opisuje wymagania biznesowe i k
 - Jeden issue to jeden branch i jeden PR. Drobna zmiana z doskoku nie potrzebuje issue ani planu.
 - Plan (`context/changes/<id>/plan.md`) jest opcjonalnym, jednorazowym kontekstem roboczym agenta: wynik, decyzje, podejście, weryfikacja. Nie jest kontraktem. Nie wersjonuj go, nie trzymaj w nim checkpointów, statusów ani raportów. Nowe wymaganie trafia do issue albo do polecenia, bez aktualizacji planu.
 - Stan pracy czytaj z issue (stan, assignee), brancha, commitów i PR, nie z pamięci rozmowy. Nie skanuj boarda. Gdy użytkownik nie wskazał taska, a kolejność nie jest jednoznaczna, zapytaj.
-- Podejmując issue, przypisz się i ustaw In progress, jeśli projekt używa statusów.
-- Dla nowego issue zaproponuj branch z aktualnej bazy (`git pull --ff-only`) według konwencji projektu. Przy wznowieniu użyj istniejącego brancha. Branch po zmergowanym PR nie wskazuje kolejnego taska.
+- Podejmując issue (`raven-plan` albo `raven-auto-implement` bez wcześniejszego planu), przypisz się i ustaw etykietę `in-progress` (oraz status In progress, jeśli projekt używa GitHub Project).
+- Dla nowego issue utwórz branch z aktualnej bazy (`git pull --ff-only`) według konwencji projektu. Przy wznowieniu użyj istniejącego brancha. Branch po zmergowanym PR nie wskazuje kolejnego taska.
+- Nie commituj ani nie pushuj bezpośrednio na branch domyślny. Drobna zmiana bez issue też dostaje krótki branch według konwencji projektu.
 - Zachowaj cudze zmiany w working tree. Nie przełączaj brancha ani nie aktualizuj bazy, gdy kolidują; zapytaj, jak je zachować. Bez samoczynnego stash, reset ani commitu cudzych zmian.
 - Commituj logiczne kroki zgodnie z konwencją projektu.
 

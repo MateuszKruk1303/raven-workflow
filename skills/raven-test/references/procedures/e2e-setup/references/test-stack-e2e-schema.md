@@ -1,10 +1,10 @@
 # `test-stack.md` — the `## E2E` section (writer → reader contract)
 
 `context/foundation/test-stack.md` records how this project runs its tests.
-`/raven-test` is the **only writer** of its `## E2E` section. Readers:
+The raven-test e2e-setup procedure is the **only writer** of its `## E2E` section. Readers:
 
-- `/raven-test` (Setup step 5) reads these fields instead of scanning the repo;
-- `/raven-test` reads the file for runner and run commands;
+- the raven-test e2e procedure reads these fields instead of scanning the repo;
+- raven-hooks reads the file for runner and run commands.
 
 ## Ownership rules
 
@@ -34,7 +34,7 @@ Field labels are fixed; readers look them up by label. Keep the order.
 ```markdown
 ## E2E
 
-<!-- Written by /raven-test. Re-run it to change this section; other skills only read it. -->
+<!-- Written by the raven-test e2e-setup procedure. Re-run it to change this section; other skills only read it. -->
 
 - runner: Playwright Test, @playwright/test <installed version>
 - config: <path, e.g. playwright.config.ts>
@@ -46,7 +46,7 @@ Field labels are fixed; readers look them up by label. Keep the order.
 - auth setup project: <setup (tests/e2e/auth.setup.ts), credentials from E2E_USERNAME / E2E_PASSWORD in <env file> — or: none>
 - storageState: <playwright/.auth/user.json (gitignored) — or: none>
 - seed: <path, e.g. tests/e2e/seed.spec.ts> — protects <risk id + one-line risk>
-- browser CLI: <playwright-cli | npx -y @playwright/cli>, command skill at <path> — or: --help only
+- browser CLI: <playwright-cli | npx -y @playwright/cli>
 - updated: <YYYY-MM-DD>
 ```
 
@@ -60,7 +60,7 @@ Field labels are fixed; readers look them up by label. Keep the order.
 | `full-suite command` | How to run everything |
 | `base URL` | The URL tests and `playwright-cli` open |
 | `port` | The detected port, where it came from, and the `E2E_PORT` override |
-| `web server command` | What the app `webServer` entry (the one serving the base URL) starts: its build + preview command. Mock-server entries and mock hooks `/raven-test` adds are not recorded here, so they never make a re-run rewrite this section |
+| `web server command` | What the app `webServer` entry (the one serving the base URL) starts: its build + preview command. Mock-server entries and mock hooks the e2e procedure adds are not recorded here, so they never make a re-run rewrite this section |
 | `auth setup project` | Setup project name + file + where credentials come from, or `none` |
 | `storageState` | Path of the saved session, or `none` |
 | `seed` | Seed spec path and the risk it protects |

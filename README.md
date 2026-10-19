@@ -69,7 +69,7 @@ Drobna rzecz bez issue i planu: copy, styl, usunięcie elementu, config.
 raven-auto-implement — usuń numer telefonu ze stopki
 ```
 
-Agent zwykle wybiera `quick`, robi commit i podaje w czacie, jak sprawdzić efekt. Push, PR i merge zlecasz osobno, jeśli chcesz.
+Agent zwykle wybiera `quick`, robi commit na krótkim branchu (nigdy na domyślnym) i podaje w czacie, jak sprawdzić efekt. Push, PR i merge zlecasz osobno, jeśli chcesz.
 
 ### Task z issue
 

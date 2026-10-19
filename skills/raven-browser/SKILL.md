@@ -10,7 +10,7 @@ description: >-
 
 Domyślnie używaj **Playwright CLI** w osobnej sesji testowej. Automatyczna weryfikacja UI, polecenie „sprawdź aplikację”, wywołanie samego `raven-browser` ani instrukcja innego skilla o sprawdzeniu przeglądarkowym nie oznaczają wyboru osobistej przeglądarki.
 
-Tryb **Brave przez MCP** wybierz tylko wtedy, gdy użytkownik jasno polecił użycie przeglądarki, np. „użyj przeglądarki”, „sprawdź w moim Brave” albo „użyj Brave MCP”. Respektuj taki wybór z wcześniejszej części bieżącego zadania, dopóki użytkownik go nie zmieni. Jawne wskazanie CLI lub innego konkretnego narzędzia ma pierwszeństwo przed ogólnym słowem „przeglądarka”. Zgoda udzielona na uzasadnioną prośbę agenta opisaną poniżej również wybiera tryb MCP. Koordynator przekazuje testerowi rzeczywisty wybór użytkownika; sam nie tworzy zgody na MCP.
+Tryb **Brave przez MCP** wybierz tylko wtedy, gdy użytkownik jasno polecił użycie przeglądarki, np. „użyj przeglądarki”, „sprawdź w moim Brave” albo „użyj Brave MCP”. Respektuj taki wybór z wcześniejszej części bieżącego zadania, dopóki użytkownik go nie zmieni. Jawne wskazanie CLI lub innego konkretnego narzędzia ma pierwszeństwo przed ogólnym słowem „przeglądarka”. Zgoda udzielona na uzasadnioną prośbę agenta opisaną poniżej również wybiera tryb MCP. Skill wywołujący raven-browser przekazuje rzeczywisty wybór użytkownika; sam nie tworzy zgody na MCP.
 
 ## Domyślnie: Playwright CLI
 
@@ -26,7 +26,7 @@ Brak CLI, powłoki lub możliwości uruchomienia sesji zgłoś jako konkretną b
 
 W [technicznych wskazówkach UI auto-implement](../raven-auto-implement/references/browser-review.md) wykonawca może po rozpoznaniu UI zapisać tymczasowe scenariusze Playwright i wykonywać je przez dostępne CLI albo istniejącą bibliotekę/runner. Osobny kontekst przeglądarki runnera spełnia tu wymóg izolowanej sesji; nie łącz go z profilem osobistym. Dla takiego replay nie wymagaj snapshotu przed każdym działaniem ani ponownej eksploracji strony: używaj sprawdzonych stabilnych locatorów, asercji i jawnego setup/cleanup. Błąd selektora wymaga ponownej obserwacji odpowiedniego fragmentu UI, nie zgadywania ani osłabiania Expected. Kod/config pozostaje tymczasowy; zakres sprawdzania określa zlecona zmiana. Zastanego niezwiązanego locatora/harnessu nie naprawiaj automatycznie; ograniczenie i alternatywny kanał oceń zgodnie z tymi wskazówkami.
 
-Granice roli mają pierwszeństwo przed poniższym poleceniem naprawy regresji: niezależny tester raportuje defekt implementatorowi, nie zmienia produktu ani trwałej suite. Wyraźny wybór osobistego Brave/MCP nadal obowiązuje; nie przenoś tego profilu do runnera.
+Granice skilla wywołującego mają pierwszeństwo przed poleceniem naprawy regresji z sekcji „Weryfikacja implementowanych funkcjonalności”: read-only skille (`raven-manual-qa`, `raven-implement-review`) raportują defekt, nie zmieniają produktu ani trwałej suite. Wyraźny wybór osobistego Brave/MCP nadal obowiązuje; nie przenoś tego profilu do runnera.
 
 ### Wyjątkowa prośba o osobistą przeglądarkę
 
@@ -34,7 +34,7 @@ Jeżeli konkretne, potwierdzone ograniczenie CLI uniemożliwia rzetelne sprawdze
 
 Najpierw sprawdź przyczynę i wykonalne rozwiązanie w CLI w granicach zadania (np. poprawną komendę, konto testowe lub tryb headed). Nie powtarzaj bezskutecznych prób. Sam brak globalnej instalacji, wygoda, wolniejsze działanie lub pojedynczy nieudany test nie uzasadniają przejścia na osobistą sesję.
 
-Prośba powinna wskazać: nieweryfikowalny scenariusz, zaobserwowaną blokadę i wykonane próby, powód użycia osobistej przeglądarki oraz konkretny zakres (URL, konto/rola, planowane działania). Przywołaj tę sekcję raven-browser jako podstawę prośby. W pętli delegowanej tester przekazuje te informacje koordynatorowi, który pyta użytkownika.
+Prośba powinna wskazać: nieweryfikowalny scenariusz, zaobserwowaną blokadę i wykonane próby, powód użycia osobistej przeglądarki oraz konkretny zakres (URL, konto/rola, planowane działania). Przywołaj tę sekcję raven-browser jako podstawę prośby.
 
 Poczekaj na wyraźną zgodę przed podłączeniem, uruchomieniem lub konfiguracją osobistej przeglądarki. Nie pytaj ponownie, jeśli użytkownik już upoważnił do tego samego zakresu. Do czasu decyzji możesz kontynuować niezależne kontrole; zablokowany scenariusz pozostaje BLOCKED/NOT VERIFIED. Odmowa lub brak odpowiedzi nie oznacza zgody. Zgoda na użycie przeglądarki nie rozszerza zakresu operacji na danych i nie oznacza automatycznie zgody na restart trwającej sesji. Sprawdzenie w osobistej sesji nie zastępuje powtarzalnego uruchomienia trwałych E2E w środowisku testowym.
 
@@ -55,13 +55,13 @@ Ten wariant jest dostosowany do macOS i Brave w `/Applications/Brave Browser.app
 3. Jeżeli Brave już działa bez portu, potrzebny jest restart. Jeśli użytkownik zlecił uruchomienie/restart Brave pod MCP, poinformuj go i wykonaj skrypt z `--restart`. Przy automatycznej weryfikacji nie zamykaj trwającej prywatnej sesji bez istniejącego upoważnienia; zapytaj wyłącznie o niezbędny restart. Nigdy nie wymuszaj zamknięcia, nie odrzucaj niezapisanych formularzy. Skrypt kończy pracę, gdy przeglądarka nie zamknie się łagodnie.
 4. Zweryfikuj ponownie `browser_tabs`. Sam działający port lub zapis konfiguracji nie oznacza działającego MCP.
 
-Jeżeli serwera brak w konfiguracji, sprawdź `codex mcp get brave`. Dodaj brakujący wpis (z uwzględnieniem uprawnień zapisu poza repozytorium):
+Jeżeli serwera brak w konfiguracji hosta, sprawdź jego konfigurację MCP (w Codex: `codex mcp get brave`). Dodaj brakujący wpis w mechanizmie hosta (z uwzględnieniem uprawnień zapisu poza repozytorium); w Codex:
 
 ```sh
 codex mcp add brave -- npx -y @playwright/mcp@latest --cdp-endpoint http://127.0.0.1:9222
 ```
 
-Nie nadpisuj odmiennej istniejącej konfiguracji bez sprawdzenia jej przeznaczenia. Jeżeli wpis istnieje, ale narzędzia nie są dostępne w bieżącej sesji, powiedz, że trzeba ponownie uruchomić Codex CLI. Nie traktuj tego jako błędu strony.
+Nie nadpisuj odmiennej istniejącej konfiguracji bez sprawdzenia jej przeznaczenia. Jeżeli wpis istnieje, ale narzędzia nie są dostępne w bieżącej sesji, powiedz, że trzeba ponownie uruchomić sesję agenta (np. Codex CLI). Nie traktuj tego jako błędu strony.
 
 Po nieudanym starcie sprawdź parametry procesu oraz komunikat skryptu. Nie powtarzaj restartów w pętli. Nie kopiuj cookies ani profilu, nie czytaj haseł i nie obchodź ograniczeń profilu przez wyłączanie zabezpieczeń. Jeśli wersja Brave odrzuca debugowanie bieżącego profilu, zgłoś ten konkretny problem zamiast obiecywać zachowanie sesji w nowym profilu.
 
@@ -76,7 +76,7 @@ Po zmianie zachowania widocznego w przeglądarce użyj tego skilla bez oczekiwan
 - Przy zmianach wyglądu obejrzyj screenshot i sprawdź istotny rozmiar mobilny oraz desktopowy; przy zmianie rozmiaru współdzielonego okna przywróć poprzedni rozmiar. Przy formularzach uwzględnij klawiaturę i widoczność komunikatów.
 - Sprawdź błędy konsoli i nieudane żądania związane ze scenariuszem. Nie uznawaj każdego ostrzeżenia zewnętrznego serwisu za regresję aplikacji.
 - Korzystaj z danych testowych. Zalogowanie w osobistym profilu nie oznacza zgody na zakup, wysłanie wiadomości, publikację lub usunięcie rzeczywistych danych. Zakres działań wynika z zadania użytkownika.
-- Napraw znalezioną regresję i ponownie sprawdź dotknięty scenariusz. Bieżąca weryfikacja przez CLI lub MCP nie zastępuje wymaganych testów projektu.
+- Jeśli skill wywołujący implementuje zmianę, napraw znalezioną regresję i ponownie sprawdź dotknięty scenariusz; skill read-only tylko ją raportuje. Bieżąca weryfikacja przez CLI lub MCP nie zastępuje wymaganych testów projektu.
 - Zapisuj screenshoty i logi w istniejącym katalogu artefaktów projektu lub katalogu tymczasowym; nie dodawaj prywatnych danych do repozytorium. Zamykaj wyłącznie własne karty testowe, jeśli nie są potrzebne do przeglądu wyniku. Pozostaw przeglądarkę użytkownikowi.
 
 W podsumowaniu podaj sprawdzony scenariusz, wynik i istotne ograniczenia. Nie deklaruj zaliczonej weryfikacji, jeśli blokowało ją logowanie, brak wybranego narzędzia, niedziałający serwer lub brak danych. Informuj o użyciu osobistego Brave krótko, bez powtarzania całej instrukcji konfiguracji.

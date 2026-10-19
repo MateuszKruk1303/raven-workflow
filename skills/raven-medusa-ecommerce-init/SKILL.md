@@ -20,7 +20,7 @@ Nie dodawaj drugiego backendu, ORM, systemu autoryzacji, CMS ani własnego frame
 
 ## 1. Rozpoznaj projekt i aktualny starter
 
-Przeczytaj lokalne `AGENTS.md`, istniejące manifesty i ustalenia projektu. Zachowaj `context/`, `archive/`, `HANDOFF.md`, instrukcje, `.git` i pliki użytkownika. PRD ani workflow Raven Pilot nie są warunkiem uruchomienia. Nazwę wywnioskuj z projektu lub argumentu użytkownika; sprowadź ją do poprawnego sluga, nie interpretuj jako ścieżki lub kodu powłoki.
+Przeczytaj lokalne `AGENTS.md`, istniejące manifesty i ustalenia projektu. Zachowaj `context/`, instrukcje agenta, `.git` i pliki użytkownika. PRD ani inne skille Raven nie są warunkiem uruchomienia. Nazwę wywnioskuj z projektu lub argumentu użytkownika; sprowadź ją do poprawnego sluga, nie interpretuj jako ścieżki lub kodu powłoki.
 
 Przed generowaniem sprawdź aktualne źródła:
 
@@ -69,7 +69,7 @@ Dodaj lub dostosuj polecenia root workspace:
 
 | Polecenie | Zachowanie |
 |---|---|
-| `pnpm setup` | Zależności/infrastruktura, lokalne envy, migracje i bezpieczny bootstrap; można ponowić |
+| `pnpm run setup` | Zależności/infrastruktura, lokalne envy, migracje i bezpieczny bootstrap; można ponowić |
 | `pnpm dev` | Zapewnia działającą infrastrukturę, uruchamia backend i storefront z hot reload; bez reseedowania |
 | `pnpm infra:up` | Uruchamia PostgreSQL i Redis, czeka na gotowość |
 | `pnpm infra:down` | Zatrzymuje Compose z zachowaniem danych |
@@ -87,7 +87,7 @@ Nie kończ na istnieniu plików. Sprawdź:
 2. Store API akceptuje publishable key, storefront pokazuje produkty i ceny we właściwym regionie.
 3. W przeglądarce: produkt → wariant → koszyk → checkout z lokalną dostawą i manualną/systemową płatnością → zapisane zamówienie. Nie wykonuj rzeczywistej płatności. Brak wsparcia UI lub przeglądarki zgłoś; test API nie jest dowodem przejścia UI.
 4. Upload lokalnego obrazu przez Medusę i jego wyświetlenie; hot reload backendu i storefrontu.
-5. Drugie `setup` nie dubluje danych ani kluczy. Zatrzymanie i ponowny start zachowują admina, katalog, zamówienie i upload. Nigdy `down -v` ani `docker system prune`.
+5. Drugie `pnpm run setup` nie dubluje danych ani kluczy. Zatrzymanie i ponowny start zachowują admina, katalog, zamówienie i upload. Nigdy `down -v` ani `docker system prune`.
 6. Istniejące kontrole typów/build adekwatne do zmian. Nie dodawaj pełnego frameworka testowego tylko na potrzeby inicjalizacji.
 
 Zapisz krótką instrukcję startu w README projektu: wersje, polecenia, URL-e, lokalizacje envów i danych logowania, zatrzymywanie/wznawianie, wykonane kontrole i braki. Nie zapisuj sekretów. Sam setup nie oznacza ukończenia biznesowego taska roadmapy ani gotowości produkcyjnej.

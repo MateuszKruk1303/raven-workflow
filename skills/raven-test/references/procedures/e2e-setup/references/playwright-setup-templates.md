@@ -1,6 +1,6 @@
 # Playwright setup templates
 
-Starting points for the files `/raven-test` creates. Replace every
+Starting points for the files the e2e-setup procedure creates. Replace every
 `<placeholder>` with a value you **detected** in the project; never keep a
 number or path from this file just because it is here.
 
@@ -63,7 +63,7 @@ Notes:
   `test-stack.md`.
 - **Preview env.** Some adapters serve the preview from a different env file than
   dev (for example a Cloudflare Workers build reads `.dev.vars`). If the project's
-  CI workflow or README prepares such a file, the learner needs the same file
+  CI workflow or README prepares such a file, the developer needs the same file
   locally; point that out rather than creating secrets yourself.
 - **No auth in the app.** Drop the `setup` project, the `storageState` line and
   `dependencies`, and record `auth: none` in `test-stack.md`.
@@ -90,10 +90,10 @@ Notes:
 
 ### Who owns what in the config
 
-`/raven-test` owns the **app entry**: the `webServer` entry whose `url` is the
+The e2e-setup procedure owns the **app entry**: the `webServer` entry whose `url` is the
 base URL, together with the fields `test-stack.md` records (base URL, port,
 build + preview command, `reuseExistingServer`, the `setup` project,
-`storageState`). `/raven-test` may later:
+`storageState`). The e2e procedure may later:
 
 - turn `webServer` into an array and add entries for local mock servers (an
   external API the app calls server-side);

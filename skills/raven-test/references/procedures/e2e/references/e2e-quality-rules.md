@@ -3,8 +3,8 @@
 These rules govern every E2E test the agent writes. They are **not** copied into
 your agent's rules file (`CLAUDE.md`, `AGENTS.md`, …): they matter only while
 you work on E2E tests, so they ship with the skills and load when one runs.
-`/raven-test` writes the seed to follow them; `/raven-test` reads this file
-before it generates a test and reviews every test against it. The rules
+The e2e-setup procedure writes the seed to follow them; the e2e procedure reads
+this file before it generates a test and reviews every test against it. The rules
 constrain the agent's output so generated tests are stable by default — agents
 apply known patterns far more reliably than they invent new ones.
 

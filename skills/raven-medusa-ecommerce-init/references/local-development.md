@@ -71,6 +71,6 @@ Do sprawdzenia checkoutu użyj dostępnego natywnego manualnego/systemowego prov
 
 ## Polecenia i odbiór
 
-`setup` odpowiada za przygotowanie i uzupełnianie środowiska; `dev` tylko za jego start i HMR. Wykorzystaj orkiestrator startera. Każdy skrypt ma propagować błędy, korzystać z właściwego env i sprzątać wyłącznie własne procesy. Unikaj globalnego `pkill` i dopisywania `|| true` do migracji lub seedowania.
+`setup` odpowiada za przygotowanie i uzupełnianie środowiska; `dev` tylko za jego start i HMR. Skrypt `setup` uruchamiaj przez `pnpm run setup` — samo `pnpm setup` to wbudowana komenda pnpm. Wykorzystaj orkiestrator startera. Każdy skrypt ma propagować błędy, korzystać z właściwego env i sprzątać wyłącznie własne procesy. Unikaj globalnego `pkill` i dopisywania `|| true` do migracji lub seedowania.
 
 Weryfikacja obejmuje rzeczywisty drugi setup i restart bez usuwania wolumenów. Nie zastępuj tego kontrolą składni. Zapisz wykonane polecenia, wersje CLI/Medusy/Next/Node/pnpm/obrazów oraz wyniki bez sekretów. Nie ogłaszaj gotowego środowiska, jeśli Docker, logowanie lub checkout nadal są zablokowane.

@@ -7,7 +7,7 @@ Two contracts live here:
 1. **PRD frontmatter + required sections (10 greenfield / 11 brownfield)** — what `prd.md` must contain.
 2. **shape-notes.md checkpoint format** — what `shape-notes.md` must carry so a session can resume from disk.
 
-Renames or restructurings of either contract are load-bearing. Update this doc *first*, then both skill bodies, then any sibling change folder that points at it.
+Renames or restructurings of either contract are load-bearing. Update this doc *first*, then both skill bodies.
 
 PRD frontmatter captures only **product-level priors** — what the product is, who it's for, when it ships. Fields that depend on team composition, runtime, or deployment target belong to a separate downstream tech-stack-selection step, not to PRD. Frame the PRD as the product's identity, not its architecture.
 
@@ -18,7 +18,7 @@ Every PRD declares this YAML frontmatter block. Field order is suggested, not lo
 ```yaml
 ---
 project: <string>                    # human-readable project name, e.g. "Recipe Fridge"
-version: <integer>                   # 1 for first PRD; bumped only when a versioned save lands (prd-v2.md → version: 2)
+version: <integer>                   # 1 for first PRD; +1 on each overwrite of prd.md (history lives in Git)
 status: <enum>                       # draft | reviewed | locked
 created: <YYYY-MM-DD>                # date the PRD was first written
 context_type: <enum>                 # greenfield | brownfield
@@ -31,13 +31,13 @@ timeline_budget: <object>            # greenfield: { mvp_weeks: <int>, hard_dead
 
 Field semantics:
 
-- **`project`** — short proper-noun name. The skill never invents this; if the user did not name the project, `/raven-shape` asks before `/raven-prd` runs.
-- **`version`** — starts at `1`. Versioned saves (`prd-v2.md`, `prd-v3.md`) increment this so downstream tooling can sort by recency.
+- **`project`** — short proper-noun name, taken from `project` in `shape-notes.md`. The skill never invents this; if it is `null`, `/raven-prd` writes the TODO and an Open Question.
+- **`version`** — starts at `1` and increments each time `/raven-prd` overwrites `prd.md`. There is one current PRD file; earlier versions live in Git history.
 - **`context_type`** — `greenfield` for new projects built from scratch; `brownfield` for changes to existing systems. Determines which section list (10 greenfield vs 11 brownfield) the PRD uses. Set by `/raven-shape`'s auto-detection; `/raven-prd` reads it from `shape-notes.md` frontmatter.
-- **`status`** — `draft` on first write. `/raven-prd` does not promote past `draft`; downstream skills (review, sign-off) flip it.
+- **`status`** — `draft` on every write. `/raven-prd` does not promote past `draft`; the user changes it after human review.
 - **`product_type`** — enum + free-text fallback. Use the closest enum value and put nuance in `## Open Questions` if the project genuinely sits between categories.
 - **`target_scale.users`** — `small` (single-digit), `medium` (≤ 100), `large` (≤ 10k), `enterprise` (≥ 10k). The skill uses ballparks, not point estimates.
-- **`timeline_budget.mvp_weeks`** (greenfield) / **`timeline_budget.delivery_weeks`** (brownfield) — integer week count for the first shippable version / change. Three weeks of after-hours work is a good default target — short enough to maintain momentum, long enough to build something real. Longer timelines are valid when the team has acknowledged the sustained-effort cost up front.
+- **`timeline_budget.mvp_weeks`** (greenfield) / **`timeline_budget.delivery_weeks`** (brownfield) — integer week count for the first shippable version / change, taken from the notes. Never default it; an unknown value becomes a TODO and an Open Question.
 
 Stack-shaped concerns — team composition, language preferences, technology avoid-lists, deployment mode, region, budget tier, CI/CD shape — are intentionally absent from this frontmatter. They belong to the tech-stack-selection step that runs after `/raven-prd` and are gathered there. If `/raven-shape` captures forward-looking notes about them, those notes live in `shape-notes.md` body, not in PRD frontmatter or sections.
 
@@ -124,9 +124,9 @@ Each FR is a single line in this exact format:
 
 `NNN` is a zero-padded three-digit index. Group thematically with `###` subheadings (e.g., `### Authentication`, `### Recipe matching`) when there are more than ~6 FRs.
 
-`must-have` is binding for the MVP; `nice-to-have` is explicitly out of MVP scope and noted as such in `## Non-Goals` if it would otherwise be assumed.
+`must-have` is binding for the MVP (shape priority `pilot`; shape `later` maps to `nice-to-have`); `nice-to-have` is explicitly out of MVP scope and noted as such in `## Non-Goals` if it would otherwise be assumed.
 
-If `/raven-shape` ran a Socratic round, each FR may carry a `> Socratic:` blockquote underneath capturing the strongest counter-argument and the user's resolution.
+If the notes record a challenged assumption for an FR, the FR may carry a `> Rationale:` blockquote underneath with the counter-argument and the user's resolution.
 
 ## Non-Functional Requirements
 
@@ -135,7 +135,7 @@ Bulleted. Each NFR is a property an outside observer — a user, an operator, a 
 Do not name mechanism, enforcement strategy, runtime location, or UI affordance. "Per IP", "client-side", "via streaming", "with a spinner", "in the cache" all describe *how* the property is achieved and belong to downstream design. The NFR says **what must be true at the product's outer boundary**; downstream picks the means.
 
 Examples:
-- A learner sees acknowledgement of any input within 200 ms, and continuous visible progress during any operation that takes longer than two seconds.
+- A user sees acknowledgement of any input within 200 ms, and continuous visible progress during any operation that takes longer than two seconds.
 - A failed login does not lock out a legitimate user who mistypes their password three times in a row, but credential-stuffing at scale is rejected before reaching the auth check.
 - Source text submitted for processing leaves no trace in operator-accessible storage after the request that consumed it completes.
 - The product remains usable on the latest two major versions of the four mainstream desktop browsers.

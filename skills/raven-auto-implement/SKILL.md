@@ -5,13 +5,14 @@ description: "Zrealizuj polecenie użytkownika, opcjonalnie ze wskazanym issue l
 
 # Raven Auto Implement
 
-Zrealizuj polecenie użytkownika i udowodnij, że zmiana działa w stopniu odpowiednim do jej ryzyka. Wskazany issue lub plan jest kontekstem; polecenie doprecyzowuje lub zmienia ich zakres bez ponownego planowania i review. Drobna zmiana nie potrzebuje issue ani planu. Czytaj tylko kod i kontekst potrzebny do zmiany; nie odtwarzaj cyklu Raven.
+Zrealizuj polecenie użytkownika i udowodnij, że zmiana działa w stopniu odpowiednim do jej ryzyka. Wskazany issue lub plan jest kontekstem; polecenie doprecyzowuje lub zmienia ich zakres bez ponownego planowania i review. Drobna zmiana nie potrzebuje issue ani planu. Czytaj tylko kod i kontekst potrzebny do zmiany; nie odtwarzaj cyklu Raven. Stosuj [pracę na taskach GitHub](../raven-workflow/references/git-workflow.md).
 
 ## Zasady
 
 - **Wejście.** Specyfikacją jest polecenie, uzupełnione wskazanym issue lub planem; pytaj tylko, gdy cel jest niejednoznaczny. Gdy plan rozjeżdża się z rzeczywistym kodem, odejdź od niego minimalnie i opisz w finale, co zmieniłeś i dlaczego.
 - **Decyzje.** Rutynowe decyzje techniczne podejmuj samodzielnie. Pytaj tylko o brakującą decyzję produktową, która rzeczywiście blokuje wykonanie, i w tym czasie kontynuuj niezależną część.
-- **Wykonawca.** Pracujesz jako jeden bieżący agent: bez delegowania, osobnego planisty, testera ani QA. Jedynym wyjątkiem jest niezależne review na poziomie `thorough`. Nie dodajesz etapów, bramek akceptacji, trackingu GitHub, raportów procesowych, checkpointów ani metryk.
+- **Wykonawca.** Pracujesz jako jeden bieżący agent: bez delegowania, osobnego planisty, testera ani QA. Jedynym wyjątkiem jest niezależne review na poziomie `thorough`. Nie dodajesz etapów, bramek akceptacji, raportów procesowych, checkpointów ani metryk; z GitHuba wykonujesz tylko podjęcie issue opisane niżej.
+- **Branch i issue.** Przed pierwszym commitem: przy wskazanym issue bez istniejącego brancha przypisz się, ustaw `in-progress` i utwórz branch z aktualnej bazy według [pracy na taskach](../raven-workflow/references/git-workflow.md); przy wznowieniu użyj istniejącego brancha. Bez issue pracuj na bieżącym branchu, a jeśli to branch domyślny, utwórz krótki branch według konwencji projektu. Nigdy nie commituj na branch domyślny.
 - **Repo.** Przed zmianami zanotuj bazowy SHA. Zachowaj cudzą pracę w working tree. Respektuj instrukcje projektu (także `context/foundation/lessons.md`, jeśli istnieje), bezpieczeństwo oraz rzeczywiste ograniczenia narzędzi i uprawnień. Instrukcje projektu (AGENTS.md) mają pierwszeństwo przed minimalizmem weryfikacji: jeśli wymagają kontroli przed commitem, wykonaj je. Commituj logiczne kroki zgodnie z konwencją projektu; bez push i PR.
 - **Testy.** Najpierw wykorzystaj istniejące testy; dodaj lub dostosuj test dla luki w zmienionym zachowaniu. Po każdej poprawce ponów kontrolę, która wykryła problem.
 - **Zastane awarie.** Nie naprawiaj niezwiązanych zastanych awarii testów, fixture, locatorów ani infrastruktury. Zgłoś ograniczenie i — jeśli to możliwe — sprawdź zmienione zachowanie innym adekwatnym kanałem.

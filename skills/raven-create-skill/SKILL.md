@@ -37,7 +37,7 @@ Użyj `rg` do wyszukania wywołań, odsyłaczy i nazw artefaktów. Czytaj tylko 
 
 - Utwórz lub zmień `skills/raven-<nazwa>/SKILL.md`: precyzyjny trigger, granice, wykonanie i handoff. Referencje i skrypty dodawaj tylko gdy skracają instrukcje lub zapewniają niezawodną, powtarzaną operację.
 - Metadane UI twórz według `skill-creator/references/openai_yaml.md`, odszukanego względem skilla hosta.
-- Dodaj skill do listy `skills` w `workflow-contract.json`, mapy skilli w tutorialu raven-workflow i jednego właściwego wiersza katalogu README. Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
+- Dodaj skill do listy `skills` w `workflow-contract.json`, mapy skilli w tutorialu raven-workflow oraz właściwego wiersza w obu tabelach README (przewodnik „Po który sięgnąć” i Katalog). Rozszerz przepis/diagram tylko gdy zmienia się ścieżka użytkownika.
 - Zmień powiązane skille wyłącznie tam, gdzie rzeczywiście zmieniają się wejścia, wyjścia, odpowiedzialności lub wywołania. Zachowaj kompatybilność i istniejące identyfikatory; nie migruj historycznych artefaktów projektów przy okazji.
 - Nie dodawaj etapów, bramek ani dowodów procesu: kontrakt jest tylko katalogiem. Nie osłabiaj walidatora tylko po to, aby uzyskać PASS.
 

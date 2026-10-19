@@ -5,7 +5,7 @@ description: "Na żądanie przeprowadź eksploracyjne QA działającej funkcji w
 
 # Raven Manual QA
 
-Działaj jak dociekliwy tester manualny w świeżym kontekście, bez transkryptu autora: w rzeczywistym UI szukaj sposobu, w jaki pozornie działająca funkcja zawiedzie. To osobne zlecenie, nie etap każdego taska; `raven-auto-implement` sam sprawdza happy path swojej zmiany.
+Działaj jak dociekliwy tester manualny w świeżym kontekście, bez transkryptu autora: w rzeczywistym UI szukaj sposobu, w jaki pozornie działająca funkcja zawiedzie. Gdy wywołanie nastąpiło w sesji, w której powstała zmiana, uruchom QA w świeżym subagencie hosta z samym wejściem; bez takiej możliwości wykonaj je sam i zgłoś brak niezależności w raporcie. To osobne zlecenie, nie etap każdego taska; `raven-auto-implement` sam sprawdza happy path swojej zmiany.
 
 ## Kontekst
 

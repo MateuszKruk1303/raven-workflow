@@ -128,11 +128,12 @@ the steps live, then writing the code from what actually happened:
 
   ```ts
   // risk: AC1 — flashcard data persists after reload
-  // seed: tests/seed.spec.ts
+  // seed: tests/e2e/seed.spec.ts
   ```
 
-A generated spec still goes through the five-anti-pattern review and the
-deliberate-break verification before it counts as done — driving the browser gets
+A generated spec still goes through the five-anti-pattern review, the control
+question and — when assertion effectiveness is uncertain — a deliberate break
+(see `../procedure.md`) before it counts as done — driving the browser gets
 you a *plausible* test fast; review and verification make it a *protective* one.
 
 ## The auto-heal boundary
@@ -160,7 +161,7 @@ the test failed:
 | **PLAN** | You explore the flow for the risk and write a short scenario list that names `seed.spec.ts` |
 | **GENERATE** | You execute the plan live and write one spec per scenario from the real run |
 | **REVIEW** | You check the spec against the five anti-patterns and re-prompt by name |
-| **VERIFY** | You run the spec green, then deliberately break the protected behavior and confirm it goes red |
+| **VERIFY** | You run the spec green and repeat it for isolation; when protection is uncertain, deliberately break the protected behavior and confirm it goes red |
 
 The prompt-template path (`e2e-prompt-template.md`) collapses PLAN+GENERATE into a
 single filled prompt — simpler for one clear scenario, no live browser needed.

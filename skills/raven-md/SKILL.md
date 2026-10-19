@@ -33,7 +33,7 @@ Dla podkatalogu skup się na sąsiednich plikach, lokalnych konfiguracjach i jed
 
 ## Kontekst Raven
 
-Jeśli projekt używa Raven, przeczytaj istotne dokumenty w `context/foundation/` (PRD, architektura). Zapisz tylko reguły potrzebne przyszłemu agentowi i linki do kanonicznych źródeł; nie kopiuj instrukcji skilli.
+Jeśli projekt używa Raven, przeczytaj istotne dokumenty w `context/foundation/` (PRD, architektura, tech-stack, test-stack, lessons). Zapisz tylko reguły potrzebne przyszłemu agentowi i linki do kanonicznych źródeł; nie kopiuj instrukcji skilli.
 
 Nie twórz zależności od osobistych ścieżek `~/.codex/skills`. Nie narzucaj modeli agentów, procesu, zakazów edycji testów ani struktury archiwów projektowi, który ich nie przyjął. Nie inicjalizuj `context/` przy okazji edycji instrukcji; potrzebne katalogi tworzy właściwy etap Raven.
 

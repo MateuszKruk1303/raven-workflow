@@ -60,7 +60,7 @@ const OPENROUTER_URL = `${OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1'}
 ### 3. An extra `webServer` entry, before the app entry
 
 Turn `webServer` into an array. Put the mock first and leave the app entry's own
-fields as `/raven-test` wrote them — the one exception is the prep hook in
+fields as the e2e-setup procedure wrote them — the one exception is the prep hook in
 step 4, which may extend the app entry's `command` (or add an `env` key) so this
 build talks to the mock:
 
@@ -79,8 +79,8 @@ webServer: [
 ],
 ```
 
-This is the one config change `/raven-test` makes. `/raven-test` owns the app
-entry and the fields `test-stack.md` records, and its re-run ignores extra
+This is the one config change the e2e procedure makes. The e2e-setup procedure owns
+the app entry and the fields `test-stack.md` records, and its re-run ignores extra
 entries. Tell the user what you added.
 
 Before the first run, check the mock port is free (`lsof -nP -iTCP:<port> -sTCP:LISTEN`):
@@ -131,5 +131,5 @@ before previewing by hand.
   everything else real.
 - **GENERATE:** the spec asserts the app's behaviour on the mocked response (the
   cards it saved, the error it shows), never the mock itself.
-- **VERIFY:** the deliberate break goes into the app's code, not the mock. A test
+- **VERIFY:** when you run a deliberate break, it goes into the app's code, not the mock. A test
   that only turns red when the mock changes protects the mock, not the risk.

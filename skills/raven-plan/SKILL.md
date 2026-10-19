@@ -11,7 +11,7 @@ Plan zbiera to, czego wykonawca potrzebuje, żeby zrobić robotę dobrze: wynik,
 
 ## Wejście
 
-Przyjmij issue, opis, change ID lub istniejący plan. Odczytaj body issue (zakres i AC), wskazane źródła i decyzje. Przy nowym issue przypisz się i ustaw In progress, jeśli projekt używa statusów; przygotuj branch według [pracy na taskach](../raven-workflow/references/git-workflow.md). Zlecenie planu jednego change nie upoważnia do reorganizacji kolejki.
+Przyjmij issue, opis, change ID lub istniejący plan. Odczytaj body issue (zakres i AC), wskazane źródła i decyzje oraz `context/foundation/lessons.md`, jeśli istnieje. Przy nowym issue przypisz się, ustaw `in-progress` i utwórz branch według [pracy na taskach](../raven-workflow/references/git-workflow.md). Zlecenie planu jednego change nie upoważnia do reorganizacji kolejki.
 
 ## Kroki
 

@@ -63,7 +63,7 @@ last_updated_by: [Researcher name]
 [Relevant insights from referenced current and historical changes, with file/commit or source links]
 
 - [Change file/commit/source link] - Historical decision about X
-- [Research comment URL] - Past exploration of Y
+- [Prior research file/commit] - Past exploration of Y
 
 ## Options and Recommendation
 
