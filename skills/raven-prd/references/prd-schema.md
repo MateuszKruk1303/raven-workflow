@@ -258,7 +258,7 @@ The canonical input format is [raven-shape notes](../../raven-shape/references/s
 # How `/raven-shape` and `/raven-prd` use this doc
 
 - Shape captures decisions and gaps in the user's language. Its topics and headings need not match PRD sections. `checkpoint.status` describes the discovery session, not proof of requirements completeness.
-- PRD reads those notes, uses a resolved greenfield/brownfield context, preserves FR IDs and sources, and maps their meaning to the 10/11 sections defined above. Necessary missing decisions go into Open Questions; justified non-applicability remains explicit. Technical context outside this schema is retained in source notes and identified in the handoff to raven-workflow.
+- PRD reads those notes, uses a resolved greenfield/brownfield context, preserves FR IDs and sources, and maps their meaning to the 10/11 sections defined above. Necessary missing decisions go into Open Questions; justified non-applicability remains explicit. Technical context outside this schema is retained in source notes and listed in the PRD handoff for architecture and stack selection.
 
 # Drift detection
 

@@ -1,6 +1,6 @@
 # Raporty brownfield w Git
 
-Raport konkretnego change zapisz w `context/changes/<id>/`: `research.md`, `frame.md`, `domain.md`, `glossary.md`, `qa-plan.md`, `qa-report.md` lub `rule-review.md`, zależnie od zadania. Raport przekrojowy ma jedno miejsce w `context/foundation/`, np. `repo-map.md`, `domain.md`, `glossary.md` albo `rule-review.md`. Nie twórz issues artefaktów, snapshotów komentarzy ani drugiej kopii raportu.
+Mapa całego repo ma jedno miejsce: `context/foundation/repo-map.md`. Mapa ograniczona do obszaru jednego change trafia do `context/changes/<id>/repo-map.md`. Nie twórz issues artefaktów, snapshotów komentarzy ani drugiej kopii raportu.
 
 Raport zawiera cel/zakres, źródła i wersje, HEAD/branch/dirty state, czas badania, dowody path:line, metodę, niepewności i następny krok. Używaj rzeczywistych metadanych; nieznane oznacz. Odróżniaj fakty, interpretacje i decyzje. Aktualizuj plik z czytelnym diffem; historię przechowuje Git.
 

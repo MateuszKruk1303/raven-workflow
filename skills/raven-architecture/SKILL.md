@@ -5,7 +5,7 @@ description: Interaktywnie ustal przekrojowe decyzje architektoniczne i utwórz 
 
 # Raven Architecture
 
-Zbuduj z użytkownikiem zrozumiały obraz architektury całego produktu: odpowiedzialności części systemu, przepływy, miejsca przechowywania danych, granice integracji i zasady operacyjne. Wynikiem jest `context/foundation/architecture.md`, a nie implementacja, lista bibliotek ani roadmapa. Czytaj najpierw [raven-workflow](../raven-workflow/SKILL.md).
+Zbuduj z użytkownikiem zrozumiały obraz architektury całego produktu: odpowiedzialności części systemu, przepływy, miejsca przechowywania danych, granice integracji i zasady operacyjne. Wynikiem jest `context/foundation/architecture.md`, a nie implementacja, lista bibliotek ani roadmapa.
 
 ## Zakres i uprawnienia
 

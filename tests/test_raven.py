@@ -54,6 +54,18 @@ class DoctorTests(unittest.TestCase):
         (self.root / 'skills/raven-implement').mkdir()
         self.assertIn('skill.retired', self.codes())
 
+    def test_retired_skill_mention_fails(self):
+        self.skill.write_text(self.skill.read_text() + '\nNajpierw uruchom raven-plan-review.\n')
+        self.assertIn('text.retired', self.codes())
+
+    def test_retired_artifact_mention_fails(self):
+        self.skill.write_text(self.skill.read_text() + '\nZapisz wynik w `context/changes/<id>/frame.md`.\n')
+        self.assertIn('text.retired', self.codes())
+
+    def test_current_skill_with_retired_prefix_passes(self):
+        self.skill.write_text(self.skill.read_text() + '\nPotem raven-implement-review.\n')
+        self.assertNotIn('text.retired', self.codes())
+
     def test_catalog_omission_fails(self):
         p = self.root / 'README.md'
         p.write_text(p.read_text().replace('(skills/raven-browser/SKILL.md)', '(skills/raven-workflow/SKILL.md)'))
@@ -92,7 +104,7 @@ class CatalogTests(unittest.TestCase):
     def test_merged_skills_cannot_return(self):
         for name in ('raven-auto-plan', 'raven-plan-review', 'raven-auto-test', 'raven-test-review',
                      'raven-test-plan', 'raven-frame', 'raven-agents-md', 'raven-rule-review',
-                     'raven-jira-roadmap'):
+                     'raven-jira-roadmap', 'raven-domain-distillation'):
             with self.subTest(name=name):
                 self.assertTrue(raven.retired(name))
                 self.assertNotIn(name, self.contract['skills'])

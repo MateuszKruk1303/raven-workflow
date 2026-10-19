@@ -15,13 +15,14 @@ Pracujemy na taskach w GitHub Issues. Body issue opisuje wymagania biznesowe i k
 ## Publikacja
 
 - Push, PR i merge tylko na wyraźne polecenie użytkownika.
-- PR linkuje issue (`Closes #N`) i opisuje zmianę zwięźle.
+- PR linkuje issue (`Closes #N`), opisuje zmianę zwięźle i ma sekcję „Weryfikacja” (niżej).
 - Merge wymaga zielonego wymaganego CI i zgody użytkownika. Po merge sprawdź, że issue jest zamknięty. Deploy to osobna operacja.
 
 ## Weryfikacja i raportowanie
 
 - Niewykonana lub zablokowana kontrola nigdy nie jest raportowana jako zaliczona.
-- Wyniki weryfikacji i instrukcję odbioru podawaj w końcowej wiadomości czatu. Nie twórz raportów, acceptance.md ani ich kopii w issue lub PR, chyba że użytkownik o to prosi.
+- Wyniki weryfikacji i instrukcję odbioru podawaj w końcowej wiadomości czatu. Nie twórz raportów, acceptance.md ani ich kopii w issue, chyba że użytkownik o to prosi.
+- Wyjątkiem jest PR: sekcja „Weryfikacja” to krótki trwały ślad dla reviewera — poziom (`quick`/`standard`/`thorough`, jeśli był), wykonane kontrole z kanałem i wynikiem, czego nie sprawdzono. Tylko to, co faktycznie wykonano i widać w kontekście; bez dowodu wpisz „nie potwierdzono”. Lokalne kontrole nie są CI.
 - Review lub test zlecony osobnemu agentowi wykonuje świeży kontekst bez transkryptu autora. Reviewer nie poprawia ocenianej pracy.
 
 ## Ograniczenia

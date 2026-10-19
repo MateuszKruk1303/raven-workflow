@@ -63,7 +63,7 @@ Narzuty są orientacyjne, nie limitem. Gdy weryfikacja wyraźnie przekracza narz
 
 ## Finał
 
-Wynik podaj wyłącznie w końcowej wiadomości czatu; nie zapisuj ani nie kopiuj go do Markdown, planu, issue ani PR i nie twórz acceptance.md. Nie uruchamiaj kolejnego etapu. Finał zawiera:
+Wynik podaj w końcowej wiadomości czatu; nie zapisuj go do Markdown, planu ani issue i nie twórz acceptance.md. Skrót weryfikacji trafi do PR dopiero przez `raven-pr`. Nie uruchamiaj kolejnego etapu. Finał zawiera:
 
 - poziom (i ewentualne podniesienie z powodem);
 - co zmieniono, w tym odejścia od planu (co, dlaczego);

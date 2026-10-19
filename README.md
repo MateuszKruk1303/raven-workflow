@@ -13,7 +13,7 @@ Pracujemy na taskach w GitHub Issues, bez dodatkowej maszynerii procesu.
 - **Stan pracy** to issue, branch, commity i PR.
 - **Drobna zmiana** (usunięcie przycisku, zmiana numeru telefonu) nie potrzebuje issue ani planu: `raven-auto-implement` z samym poleceniem.
 - **Push, PR i merge** tylko na wyraźne polecenie.
-- **Wyniki i instrukcja odbioru** trafiają do czatu, nie do raportów.
+- **Wyniki i instrukcja odbioru** trafiają do czatu, nie do raportów. PR dostaje krótką sekcję „Weryfikacja”: co faktycznie sprawdzono i czego nie.
 
 Zasady: [praca na taskach GitHub](skills/raven-workflow/references/git-workflow.md), [granice change](skills/raven-workflow/references/change-scope.md).
 
@@ -50,7 +50,6 @@ Istniejący projekt. Dobierz tylko to, czego brakuje; mały znany task nie wymag
 ```text
 Nieznany kod?                    raven-repo-map            mapa obszarów, zależności, historii, ryzyk
 Konkretne pytanie do kodu?       raven-research            odpowiedź z dowodami path:line
-Język biznesu ≠ model w kodzie?  raven-domain-distillation słownik i rozbieżności
 Decyzja przekrojowa?             raven-architecture        architecture.md
 Brak AGENTS.md / CI / etykiet?   raven-md · raven-hooks · raven-github-setup
 Słabe AGENTS.md?                 raven-md (tryb review)    karta wyników, bez przepisywania
@@ -155,14 +154,13 @@ Skille są ułożone w kolejności, w jakiej zwykle pojawiają się w pracy. Ża
 | | _„Przypomniało mi się jeszcze jedno wymaganie.”_ | [`raven-issue-update`](skills/raven-issue-update/SKILL.md) | Wymaganie wplecione w treść i AC istniejącego issue. |
 | **4. Wchodzę w nieznany kod** | _„Dostałem cudze repo i nie wiem, co gdzie jest.”_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Obszary, zależności, historia, ryzyka — raport z dowodami. |
 | | _„Muszę wiedzieć, jak to naprawdę działa.”_ | [`raven-research`](skills/raven-research/SKILL.md) | Odpowiedź z dowodami, opcje i luki w `context/changes/<id>/research.md`. |
-| | _„Biznes mówi jednym językiem, kod drugim.”_ | [`raven-domain-distillation`](skills/raven-domain-distillation/SKILL.md) | Słownik (`glossary.md`) i rozbieżności (`domain.md`); do większych przebudów domeny. |
 | **5. Robię change** | _„Task jest ryzykowny, agent nie może strzelać.”_ | [`raven-plan`](skills/raven-plan/SKILL.md) | Plan jednego change w realnym kodzie; review planu na żądanie. |
 | | _„Po prostu to zrób — i udowodnij, że działa.”_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Commity, weryfikacja `quick`/`standard`/`thorough`, instrukcja odbioru w czacie. |
 | | _„Chcę zobaczyć to w przeglądarce.”_ | [`raven-browser`](skills/raven-browser/SKILL.md) | Izolowana sesja Playwright dla innych skilli; Brave tylko na polecenie. |
 | | _„Niech ktoś spróbuje to zepsuć.”_ | [`raven-manual-qa`](skills/raven-manual-qa/SKILL.md) | Eksploracja w UI, defekty z reprodukcją w czacie. Niczego nie naprawia. |
 | | _„Chcę drugiej pary oczu na ten kod.”_ | [`raven-implement-review`](skills/raven-implement-review/SKILL.md) | Read-only review: wymagania, poprawność, skuteczność testów. |
 | | _„Nie chcę, żeby to się po cichu zepsuło.”_ | [`raven-test`](skills/raven-test/SKILL.md) | Tylko brakujące testy; before-change przed refaktorem. |
-| **6. Oddaję pracę** | _„Jestem zadowolony — wystawiam to.”_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push i PR powiązany z issue, bez merge. |
+| **6. Oddaję pracę** | _„Jestem zadowolony — wystawiam to.”_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push i PR powiązany z issue, z sekcją „Weryfikacja”; bez merge. |
 | | _„CI zielone, akceptuję — zamykamy.”_ | [`raven-merge`](skills/raven-merge/SKILL.md) | Merge po zielonym CI i Twojej zgodzie, zamknięty issue. |
 | **7. Uczę się na błędach** | _„Znowu ten sam błąd.”_ | [`raven-lesson`](skills/raven-lesson/SKILL.md) | Jedna reguła w `context/foundation/lessons.md`, czytana przez kolejne skille. |
 | | _„Brakuje mi narzędzia w Raven.”_ | [`raven-create-skill`](skills/raven-create-skill/SKILL.md) | Nowy lub zmieniony skill Raven z walidacją. |
@@ -175,7 +173,6 @@ Skille są ułożone w kolejności, w jakiej zwykle pojawiają się w pracy. Ża
 | [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Realizuje polecenie, opcjonalnie z issue lub planem; jeden agent. | **Tak:** wykorzystuje istniejące, dopisuje dla luk; `quick`/`standard`/`thorough`. | Commity (bez push/PR) i finał w czacie |
 | [raven-browser](skills/raven-browser/SKILL.md) | Steruje przeglądarką (domyślnie osobna sesja Playwright CLI) dla innych skilli. | Scenariusze ad hoc; nie zastępuje trwałych E2E. | Obserwacje, screenshoty, logi |
 | [raven-create-skill](skills/raven-create-skill/SKILL.md) | Projektuje i zmienia skille Raven z niezależnym review. | Doctor, testy repo, forward-test zachowania. | Pakiet skilla w tym repo |
-| [raven-domain-distillation](skills/raven-domain-distillation/SKILL.md) | Porównuje język dokumentów z modelem kodu. | Nie pisze. | `domain.md`, `glossary.md` |
 | [raven-github-setup](skills/raven-github-setup/SKILL.md) | Repo, włączone Issues, etykiety in-progress/blocked; Project na zlecenie. | Nie dotyczy. | Konfiguracja GitHub |
 | [raven-hooks](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck i właściwe testy po PR. | Uruchamia w CI; nie pisze testów produktu. | Pliki workflow CI |
 | [raven-implement-review](skills/raven-implement-review/SKILL.md) | Świeży reviewer: wymagania, poprawność, architektura, bezpieczeństwo, skuteczność testów. | Ocenia; nie poprawia. | Uwagi i werdykt w czacie |
@@ -187,7 +184,7 @@ Skille są ułożone w kolejności, w jakiej zwykle pojawiają się w pracy. Ża
 | [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Lokalny starter Medusa + Next.js: baza, Redis, migracje, seed, admin, storefront. | Sprawdza start i podstawowy przepływ zakupu. | Działające lokalne monorepo |
 | [raven-merge](skills/raven-merge/SKILL.md) | Merge po zielonym CI dokładnego head, potem zamknięcie issue. | Czyta wynik CI. | Zmergowany PR, zamknięty issue |
 | [raven-plan](skills/raven-plan/SKILL.md) | Plan jednego wyniku w realnym kodzie; opcjonalne review planu przez świeżego agenta. | Planuje; nie pisze. | `context/changes/<id>/plan.md` |
-| [raven-pr](skills/raven-pr/SKILL.md) | Push i utworzenie lub aktualizacja PR powiązanego z issue. | Nie uruchamia. | PR |
+| [raven-pr](skills/raven-pr/SKILL.md) | Push i utworzenie lub aktualizacja PR powiązanego z issue, z sekcją „Weryfikacja”. | Nie uruchamia; opisuje faktycznie wykonane kontrole. | PR |
 | [raven-prd](skills/raven-prd/SKILL.md) | PRD z notatek shape lub surowych ustaleń. | Nie pisze; definiuje zachowania do weryfikacji. | `context/foundation/prd.md` |
 | [raven-repo-map](skills/raven-repo-map/SKILL.md) | Mapa istniejącego repo: obszary, zależności, historia, ryzyka. | Nie pisze. | `context/foundation/repo-map.md` |
 | [raven-research](skills/raven-research/SKILL.md) | Odpowiedzi na konkretne pytania o kod lub wykonalność, z dowodami. | Uruchamia tylko, gdy odpowiada to na pytanie. | `research.md` |
@@ -213,6 +210,6 @@ python3 -m venv .venv
 
 Sync obejmuje tylko rodzinę Raven. Robi backup dotkniętych katalogów, usuwa nieaktualne pliki i wycofane skille. Przejrzyj podgląd, bo sync nadpisuje lokalne modyfikacje skilli Raven.
 
-Doctor sprawdza frontmatter, nazwy, lokalne linki i [katalog](workflow-contract.json): każdy skill zarejestrowany i opisany w README, a wycofany nie wraca. Katalog nie zawiera etapów, bramek, ról ani modeli. Statyczny PASS nie dowodzi zachowania agenta; zmiany instrukcji sprawdzaj próbami na rzeczywistych wejściach. [Raven integrity](.github/workflows/integrity.yml) uruchamia te kontrole w CI.
+Doctor sprawdza frontmatter, nazwy, lokalne linki i [katalog](workflow-contract.json): każdy skill zarejestrowany i opisany w README, a wycofany nie wraca — ani jako katalog, ani jako wzmianka lub artefakt w treści skilli (lista w `tools/raven.py`). Katalog nie zawiera etapów, bramek, ról ani modeli. Statyczny PASS nie dowodzi zachowania agenta; zmiany instrukcji sprawdzaj próbami na rzeczywistych wejściach. [Raven integrity](.github/workflows/integrity.yml) uruchamia te kontrole w CI.
 
 </details>

@@ -28,4 +28,4 @@ Metadane według kontraktu, następnie:
 - **Pierwszy dzień**: 5–8 plików wejściowych, albo mniej dla małego zakresu, i powód wyboru.
 - **Ograniczenia**: okno historii, narzędzia, nieznane elementy, koszt dalszej weryfikacji.
 
-Zakończ linkiem do mapy i propozycją jednego obszaru Deep Focus przez raven-research. Nie uruchamiaj researchu, planowania, refaktoryzacji ani zmiany AGENTS.md automatycznie. Mapa nie ustawia Ready/Done.
+Zakończ linkiem do mapy i propozycją jednego obszaru Deep Focus przez raven-research. Nie uruchamiaj researchu, planowania, refaktoryzacji ani zmiany AGENTS.md automatycznie.

@@ -17,8 +17,10 @@ IGNORED = {'.DS_Store', '__pycache__', '.git'}
 RETIRED = {
     'raven-seed', 'raven-implement', 'raven-auto-plan', 'raven-plan-review', 'raven-auto-test',
     'raven-test-review', 'raven-test-plan', 'raven-frame', 'raven-agents-md', 'raven-rule-review',
-    'raven-jira-roadmap',
+    'raven-jira-roadmap', 'raven-domain-distillation',
 }
+# Outputs of retired skills; current instructions must not route work to them.
+RETIRED_ARTIFACTS = {'frame.md', 'qa-plan.md', 'qa-report.md', 'rule-review.md', 'domain.md', 'glossary.md'}
 
 
 def retired(name):
@@ -103,6 +105,14 @@ def doctor(root, installed=None):
                 fail('link.outside', p.relative_to(root), link)
             elif not target.exists():
                 fail('link.missing', p.relative_to(root), link)
+    texts = [p for p in docs if p.exists()] + sorted((root / 'skills').rglob('*.yaml'))
+    for p in texts:
+        text = p.read_text()
+        for name in sorted(set(re.findall(r'(?<![\w/-])raven-[a-z0-9-]*[a-z0-9]', text))):
+            if retired(name):
+                fail('text.retired', p.relative_to(root), f'Mentions retired skill {name}')
+        for artifact in sorted(set(re.findall(r'(?<![\w-])[a-z-]+\.md\b', text)) & RETIRED_ARTIFACTS):
+            fail('text.retired', p.relative_to(root), f'Mentions retired artifact {artifact}')
     readme = (root / 'README.md').read_text() if (root / 'README.md').exists() else ''
     for name in names:
         if f'skills/{name}/SKILL.md' not in list(markdown_links(readme)):
@@ -202,7 +212,7 @@ def main():
                 for issue in issues:
                     print(f"FAIL [{issue['code']}] {issue['path']}: {issue['detail']}")
             else:
-                print('PASS: metadata, links, catalog' + (' and installation match' if args.installed else ''))
+                print('PASS: metadata, links, catalog, references' + (' and installation match' if args.installed else ''))
             return bool(issues)
         if issues:
             raise ValueError('Repository fails doctor; fix before synchronization')

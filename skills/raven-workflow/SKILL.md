@@ -25,10 +25,8 @@ Przy pytaniu o stan wskazanej pracy odczytaj issue (stan, assignee), branch, com
 
 **Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architektura](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) lub [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [AGENTS.md](../raven-md/SKILL.md), [CI](../raven-hooks/SKILL.md), [GitHub](../raven-github-setup/SKILL.md) → [roadmapa](../raven-roadmap/SKILL.md).
 
-**Brownfield:** w razie potrzeby [mapa repo](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md), [domena](../raven-domain-distillation/SKILL.md) lub [architektura](../raven-architecture/SKILL.md). Mały znany task nie wymaga żadnego z nich. Jira jako źródło wymagań: [raven-roadmap](../raven-roadmap/SKILL.md).
+**Brownfield:** w razie potrzeby [mapa repo](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md) lub [architektura](../raven-architecture/SKILL.md). Mały znany task nie wymaga żadnego z nich. Jira jako źródło wymagań: [raven-roadmap](../raven-roadmap/SKILL.md).
 
 ## Narzędzia
 
 [raven-issue-update](../raven-issue-update/SKILL.md) dopisuje wymaganie do istniejącego issue. [raven-browser](../raven-browser/SKILL.md) steruje przeglądarką dla innych skilli. [raven-lesson](../raven-lesson/SKILL.md) utrwala powtarzalną regułę na zlecenie. [raven-create-skill](../raven-create-skill/SKILL.md) rozwija Raven.
-
-Wycofane skille (raven-pilot-*, raven-seed, raven-implement, raven-auto-plan, raven-plan-review, raven-auto-test, raven-test-review, raven-test-plan, raven-frame, raven-agents-md, raven-rule-review, raven-jira-roadmap) nie wracają. Historyczne artefakty zostają bez zmian.

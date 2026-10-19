@@ -13,7 +13,7 @@ Końcowe review wykonuje osobny świeży reviewer, bez transkryptu autora. Deleg
 
 Przeczytaj bezpośrednio potrzebne wspólne referencje Raven oraz ogólny `skill-creator` z lokalizacji podanej przez katalog skilli hosta. Stosuj jego zasady tworzenia instrukcji i progressive disclosure; nie kopiuj jego treści do Raven. Jeśli zależność jest niedostępna, nazwij brak i kontynuuj rozpoznanie, ale nie deklaruj zakończonej walidacji procesu tworzenia.
 
-Znajdź wskazane repo źródłowe Raven: zawiera `skills/raven-workflow/SKILL.md`, `workflow-contract.json` i `tools/raven.py`. Sprawdź instrukcje repo, Git status oraz zakres istniejących zmian. Zainstalowana kopia skilla nie jest dowodem lokalizacji repo. Jeśli repo nie jest wskazane i cwd go nie identyfikuje, poproś o ścieżkę; nie szukaj po całym dysku ani nie twórz nowego repo. Nie edytuj wyłącznie instalacji globalnej. Zachowaj cudze zmiany, w szczególności w routerze i README.
+Znajdź wskazane repo źródłowe Raven: zawiera `skills/raven-workflow/SKILL.md`, `workflow-contract.json` i `tools/raven.py`. Sprawdź instrukcje repo, Git status oraz zakres istniejących zmian. Zainstalowana kopia skilla nie jest dowodem lokalizacji repo. Jeśli repo nie jest wskazane i cwd go nie identyfikuje, poproś o ścieżkę; nie szukaj po całym dysku ani nie twórz nowego repo. Nie edytuj wyłącznie instalacji globalnej. Zachowaj cudze zmiany, w szczególności w tutorialu raven-workflow i README.
 
 Rozróżnij rozmowę o pomyśle od zlecenia utworzenia/zmiany. Dyskusja nie uruchamia zapisów. Przy zleceniu wykonania zapis skilla i koniecznych integracji jest objęty zadaniem. Nie wymuszaj aplikacyjnego cyklu plan → implementacja → testy ani tworzenia issue GH tylko dlatego, że rozwijasz same skille.
 
