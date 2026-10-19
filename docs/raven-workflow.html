@@ -40,7 +40,7 @@
 <section><h2>04 / Dwa miejsca, różne odpowiedzialności</h2><p class="lead">Jira definiuje zadanie. GitHub przechowuje wykonanie agentowe. To ma być podział odpowiedzialności, bez dwóch niezależnych wersji wymagań.</p><div class="scroll"><table><thead><tr><th>Warstwa</th><th>Źródło prawdy</th><th>Zasada</th></tr></thead><tbody>
 <tr><td>Cel, akceptacja biznesowa, priorytet sprintu</td><td>Jira</td><td>Raven czyta wskazany zakres. Nie aktualizuje tasków ani nie dopisuje raportów AI bez osobnego zlecenia.</td></tr>
 <tr><td>Kontekst użyty przez agenta</td><td>Snapshot w prywatnej przestrzeni GH</td><td>Klucz Jiry + URL + wersja/data odczytu + hash treści. Kopia jest dowodem wejścia, nie konkurencyjnym backlogiem.</td></tr>
-<tr><td>Plan, taski techniczne, review, postęp agentów</td><td>Issues + Project Raven w firmowym GH</td><td>Powiązanie do Jiry i repo kodu. Zmiana źródłowych wymagań wymaga aktualizacji planu i dotkniętego review przed zleconą implementacją; nierozstrzygnięte wybory wracają do użytkownika.</td></tr>
+<tr><td>Plan, taski techniczne, review, postęp agentów</td><td>Issues + Project Raven w firmowym GH</td><td>Powiązanie do Jiry i repo kodu. Zmiana źródłowych wymagań trafia do issue; plan jest jednorazowym kontekstem roboczym i nie wymaga aktualizacji. Nierozstrzygnięte wybory wracają do użytkownika.</td></tr>
 <tr><td>Kod, testy, CI, PR</td><td>Repo produktu</td><td>Zmiany widoczne zespołowi według jego zasad. Artefakty agentowe nie muszą trafiać do tego repo.</td></tr>
 <tr><td>Finalny status biznesowy</td><td>Jira / proces zespołu</td><td>Merge jednego technicznego taska nie dowodzi ukończenia całej epiki lub wydania.</td></tr>
 </tbody></table></div>

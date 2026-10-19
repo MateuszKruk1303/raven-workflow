@@ -44,7 +44,7 @@ Wcześnie autoryzowany draft pozostaje możliwą operacją boczną, bez odbioru 
 
 ## Pozostałe narzędzia i historia
 
-[raven-issue-update](../raven-issue-update/SKILL.md) wplata wymaganie w zakres i AC jednego wskazanego istniejącego issue. To opcjonalny zapis wymagania, bez zmiany kolejki/statusu i bez uruchamiania planowania. Przy aktywnym change wskazuje potrzebę aktualizacji kontraktu przed zależną implementacją.
+[raven-issue-update](../raven-issue-update/SKILL.md) wplata wymaganie w zakres i AC jednego wskazanego istniejącego issue. To opcjonalny zapis wymagania, bez zmiany kolejki/statusu i bez uruchamiania planowania. Plan jest jednorazowym kontekstem roboczym, więc nie wymaga aktualizacji: wymaganie trafia do implementacji przez issue lub polecenie.
 
 [Granice change](references/change-scope.md) obowiązują roadmapę, plan i review. [Rule review](../raven-rule-review/SKILL.md) ocenia instrukcje; [lesson](../raven-lesson/SKILL.md) utrwala powtarzalną regułę na zlecenie; [create-skill](../raven-create-skill/SKILL.md) rozwija Raven. Skille domenowe stosuj do odpowiedniej pracy, bez dodawania etapów procesu.
 

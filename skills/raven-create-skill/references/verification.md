@@ -56,7 +56,7 @@ Dobierz neutralne wejścia do zmienionego zachowania; nie podawaj wykonawcy poni
 | --- | --- |
 | Gotowy plan po review | Handoff wskazuje auto-implement; brak pola/statusu akceptacji i brak samoczynnego startu implementacji. |
 | Zlecone auto-implement | Wskazany plan jest wykonywany od razu: samo zlecenie oznacza akceptację; brak sprawdzania review, fingerprintu i rejestru zgody. |
-| Jawne nowe wymaganie w poprawce | Aktualizacja planu i dotkniętego review, następnie zlecona poprawka bez ponownego pytania o już ustaloną regułę. |
+| Jawne nowe wymaganie w poprawce | Zlecona poprawka uwzględnia wymaganie z polecenia lub issue, bez aktualizacji planu, ponownego review i pytania o już ustaloną regułę. |
 | Nierozstrzygnięta reguła | Konkretne pytanie o wybór i wpływ, bez blanket gate akceptacji planu. |
 | Wznowienie historycznego planu | Legacy acceptance i nieznane pola pozostają bez zmian, nie są odczytywane jako bramka. |
 | PR i merge | Odbiór produktu i zgoda merge nadal wymagają rzeczywistych źródeł; gotowy plan, review, auto i test ich nie tworzą. |

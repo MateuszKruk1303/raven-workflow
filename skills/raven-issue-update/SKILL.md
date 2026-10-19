@@ -13,7 +13,7 @@ Zlecenie „zaktualizuj issue o…” obejmuje zapis **body jednego wskazanego i
 
 Rozwiąż dokładny URL/numer issue albo change ID na podstawie instrukcji repo i istniejących powiązań (`.raven/config.json`, historyczne `context/foundation/github.json`, wskazany plan). Sam numer wymaga jednoznacznego repo, a change ID jednoznacznego mapowania. Nie wybieraj najnowszego/podobnego issue i nie skanuj całej kolejki. Przy brakującym celu zapytaj tylko o identyfikację.
 
-Odczytaj aktualny pełny body, stan issue i powiązanie z PR/change. Przeczytaj potrzebne do redakcji źródła i decyzje, w tym wskazane wątki oraz kontrakt aktywnego planu, jeśli istnieje. Nie kopiuj całej historii ani ticketów Jira. Rozróżnij nowe wymaganie użytkownika od dotychczasowej decyzji i od propozycji technicznej.
+Odczytaj aktualny pełny body, stan issue i powiązanie z PR/change. Przeczytaj potrzebne do redakcji źródła i decyzje, w tym wskazane wątki. Nie kopiuj całej historii ani ticketów Jira. Rozróżnij nowe wymaganie użytkownika od dotychczasowej decyzji i od propozycji technicznej.
 
 Jeśli issue jest zamknięty lub jego change został zmergowany, przed edycją wyjaśnij, czy chodzi o korektę opisu dostarczonego zachowania, czy nowy zakres. Nie dopisuj niespełnionego zakresu do ukończonej pracy, nie otwieraj issue ponownie i nie twórz następnego przy okazji.
 
@@ -25,7 +25,7 @@ Przygotuj najmniejszą semantyczną zmianę istniejącego opisu: uzupełnij odpo
 
 Zachowaj pozostałą treść, identyfikatory AC, linki, decyzje, markery/zarządzane fragmenty i postęp. Nie rozszerzaj znaczenia zaznaczonego `[x]` o niesprawdzony warunek: zachowaj zaliczony punkt, a nowy obowiązek zapisz jako osobne niezaznaczone AC. Nie resetuj istniejących checkboxów ani nie oznaczaj nowych jako wykonanych. Jeśli wymaganie już wynika z zakresu i AC, zakończ no-op z odwołaniem do istniejącego zapisu; sama inna fraza nie uzasadnia duplikatu.
 
-Nowy mechanizm jest wymaganiem, nie planem wykonawczym. Przy aktywnym change wolno zapisać wymaganie w issue bez uruchamiania całego cyklu. Nie edytuj historycznych decyzji ani PASS. W wyniku wskaż rozbieżność z aktualnym kontraktem: przed zależną implementacją potrzebne są aktualizacja planu i review dotkniętego zakresu w ramach zleconej dalszej pracy, bez formalnej akceptacji planu. Wcześniejsze dowody pozostają obserwacją swojej wersji; nie potwierdzają nowego zakresu. Sam zapis issue nie wykonuje tych następnych etapów.
+Issue opisuje wymagania biznesowe; plan jest jednorazowym kontekstem roboczym agenta, nie kontraktem. Przy aktywnym change zapis w issue wystarcza: nie aktualizuj planu, nie wskazuj potrzeby jego review i nie uruchamiaj cyklu. Implementacja weźmie wymaganie z issue lub polecenia. Nie edytuj historycznych decyzji ani PASS; wcześniejsze dowody nie potwierdzają nowego zakresu.
 
 ## Zapisz i potwierdź
 
@@ -37,4 +37,4 @@ Po zapisie odczytaj issue i sprawdź wymaganie, AC oraz zachowanie wcześniejsze
 
 Brak dostępu do GH lub prawa zapisu nie tworzy lokalnego backlogu: oddaj w rozmowie gotowy fragment do wplecenia albo pełny proponowany body, jeśli odczytano oryginał, oraz nazwij niewykonaną operację. Bez oryginału nie deklaruj kompletnego scalenia. Przy wznowieniu odczytaj rzeczywisty stan i uwzględnij wcześniejsze próby zamiast zakładać, że ostatnia mutacja zawiodła.
 
-Oddaj link do issue, krótko co wpleciono i wynik readback albo no-op/niewykonany zapis. Dla aktywnego planu dodaj tylko potrzebny następny krok. Nie deklaruj gotowej implementacji ani aktualizacji innych artefaktów.
+Oddaj link do issue, krótko co wpleciono i wynik readback albo no-op/niewykonany zapis. Nie deklaruj gotowej implementacji ani aktualizacji innych artefaktów.
