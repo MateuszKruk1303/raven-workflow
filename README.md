@@ -1,6 +1,6 @@
 # Raven Workflow
 
-[Model pracy](#model-pracy) · [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Wzorce pracy](#wzorce-pracy) · [Katalog](#katalog-skilli)
+[Model pracy](#model-pracy) · [Greenfield](#greenfield) · [Brownfield](#brownfield) · [Wzorce pracy](#wzorce-pracy) · [Po który skill sięgnąć](#skille-raven--po-który-sięgnąć-i-kiedy) · [Katalog](#katalog-skilli)
 
 Skille Raven wywołujesz bezpośrednio. `raven-workflow` to opcjonalny tutorial uruchamiany wyłącznie ręcznie.
 
@@ -133,6 +133,39 @@ raven-roadmap — PROJ-120..PROJ-128   issues GH linkujące tickety, bez kopiowa
 ```
 
 Dalej wzorzec „Task z issue”. Wymagania zostają w Jirze, wykonanie śledzisz w GitHub.
+
+## Skille Raven — po który sięgnąć i kiedy
+
+Instalacja w projekcie: `npx skills add MateuszKruk1303/raven-workflow`, aktualizacja: `npx skills update -p -y`.
+
+Skille są ułożone w kolejności, w jakiej zwykle pojawiają się w pracy. Żaden etap nie jest obowiązkowy — drobną zmianę zrobisz samym `raven-auto-implement`.
+
+| Etap | Kiedy sięgasz | Skill | Co dostajesz |
+| --- | --- | --- | --- |
+| **0. Zgubiłem się** | _„Nie wiem, gdzie jestem i co dalej.”_ | [`raven-workflow`](skills/raven-workflow/SKILL.md) | Etap pracy z issue, brancha, commitów i PR oraz następny skill. Niczego nie zmienia. |
+| **1. Mam pomysł** | _„Mam pomysł, ale jest jeszcze mglisty.”_ | [`raven-shape`](skills/raven-shape/SKILL.md) | Problem, odbiorcy, MVP i reguły w `shape-notes.md`. Rozmowę można wznowić. |
+| | _„Wiem, czego chcę — niech to będzie porządny dokument.”_ | [`raven-prd`](skills/raven-prd/SKILL.md) | `context/foundation/prd.md`: wymagania, zakres, wyłączenia. |
+| **2. Stawiam fundamenty** | _„Chcę podjąć duże decyzje świadomie.”_ | [`raven-architecture`](skills/raven-architecture/SKILL.md) | Opcje z kompromisami i rekomendacją w `context/foundation/architecture.md`. |
+| | _„Chcę działający szkielet bez ręcznego klejenia.”_ | [`raven-init-stack`](skills/raven-init-stack/SKILL.md) | Better T Stack + lokalny Postgres; decyzje w `tech-stack.md`. |
+| | _„Robię sklep na Medusie i ma ruszyć lokalnie.”_ | [`raven-medusa-ecommerce-init`](skills/raven-medusa-ecommerce-init/SKILL.md) | Monorepo Medusa + Next.js: migracje, seed, admin, storefront. |
+| | _„Agent gubi się w repo albo łamie konwencje.”_ | [`raven-md`](skills/raven-md/SKILL.md) | `AGENTS.md` z faktów repo albo karta wyników (tryb review). |
+| | _„Nie chcę pamiętać o lincie i testach przed merge.”_ | [`raven-hooks`](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck, testy po PR. |
+| | _„Chcę pracować na taskach w GitHubie.”_ | [`raven-github-setup`](skills/raven-github-setup/SKILL.md) | Remote, Issues, etykiety `in-progress`/`blocked`; Project na zlecenie. |
+| **3. Układam kolejkę** | _„Mam PRD i nie wiem, od czego zacząć.”_ | [`raven-roadmap`](skills/raven-roadmap/SKILL.md) | Małe changes jako GitHub Issues w kolejności; źródło: PRD lub Jira. |
+| | _„Przypomniało mi się jeszcze jedno wymaganie.”_ | [`raven-issue-update`](skills/raven-issue-update/SKILL.md) | Wymaganie wplecione w treść i AC istniejącego issue. |
+| **4. Wchodzę w nieznany kod** | _„Dostałem cudze repo i nie wiem, co gdzie jest.”_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Obszary, zależności, historia, ryzyka — raport z dowodami. |
+| | _„Muszę wiedzieć, jak to naprawdę działa.”_ | [`raven-research`](skills/raven-research/SKILL.md) | Odpowiedź z dowodami, opcje i luki w `context/changes/<id>/research.md`. |
+| | _„Biznes mówi jednym językiem, kod drugim.”_ | [`raven-domain-distillation`](skills/raven-domain-distillation/SKILL.md) | Słownik (`glossary.md`) i rozbieżności (`domain.md`); do większych przebudów domeny. |
+| **5. Robię change** | _„Task jest ryzykowny, agent nie może strzelać.”_ | [`raven-plan`](skills/raven-plan/SKILL.md) | Plan jednego change w realnym kodzie; review planu na żądanie. |
+| | _„Po prostu to zrób — i udowodnij, że działa.”_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Commity, weryfikacja `quick`/`standard`/`thorough`, instrukcja odbioru w czacie. |
+| | _„Chcę zobaczyć to w przeglądarce.”_ | [`raven-browser`](skills/raven-browser/SKILL.md) | Izolowana sesja Playwright dla innych skilli; Brave tylko na polecenie. |
+| | _„Niech ktoś spróbuje to zepsuć.”_ | [`raven-manual-qa`](skills/raven-manual-qa/SKILL.md) | Eksploracja w UI, defekty z reprodukcją w czacie. Niczego nie naprawia. |
+| | _„Chcę drugiej pary oczu na ten kod.”_ | [`raven-implement-review`](skills/raven-implement-review/SKILL.md) | Read-only review: wymagania, poprawność, skuteczność testów. |
+| | _„Nie chcę, żeby to się po cichu zepsuło.”_ | [`raven-test`](skills/raven-test/SKILL.md) | Tylko brakujące testy; before-change przed refaktorem. |
+| **6. Oddaję pracę** | _„Jestem zadowolony — wystawiam to.”_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push i PR powiązany z issue, bez merge. |
+| | _„CI zielone, akceptuję — zamykamy.”_ | [`raven-merge`](skills/raven-merge/SKILL.md) | Merge po zielonym CI i Twojej zgodzie, zamknięty issue. |
+| **7. Uczę się na błędach** | _„Znowu ten sam błąd.”_ | [`raven-lesson`](skills/raven-lesson/SKILL.md) | Jedna reguła w `context/foundation/lessons.md`, czytana przez kolejne skille. |
+| | _„Brakuje mi narzędzia w Raven.”_ | [`raven-create-skill`](skills/raven-create-skill/SKILL.md) | Nowy lub zmieniony skill Raven z walidacją. |
 
 ## Katalog skilli
 
