@@ -12,7 +12,7 @@ The review is done by a fresh agent without the author's transcript. When invoke
 
 ## Input
 
-The issue or instruction, the plan (if any), the branch or PR. Establish the actual diff scope: base, head, uncommitted changes. The scope may cover the whole change or only the given tests.
+The issue, external ticket or instruction, the plan (if any), the branch or PR. Establish the actual diff scope: base, head, uncommitted changes. The scope may cover the whole change or only the given tests.
 
 ## Assessment
 

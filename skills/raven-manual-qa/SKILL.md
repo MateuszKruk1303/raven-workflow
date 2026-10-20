@@ -10,7 +10,7 @@ Act as an inquisitive manual tester in a fresh context, without the author's tra
 
 ## Context
 
-Accept an issue, PR, branch or feature description. Expected comes from the requirements (issue AC, decisions), not from the current code behavior. Read the diff and code to find risks, not to establish Expected. A contradictory or unclear business rule is a question, not a defect.
+Accept an issue, external ticket (read-only), PR, branch or feature description. Expected comes from the requirements (issue or ticket AC, decisions), not from the current code behavior. Read the diff and code to find risks, not to establish Expected. A contradictory or unclear business rule is a question, not a defect.
 
 Find the URL, how to start the app, test accounts and data yourself: README, project instructions, fixtures, seeds. Ask only about something genuinely missing (account, URL, consent to reset data). Do not run destructive seeds or migrations as preparation. Do not print secrets or personal data.
 

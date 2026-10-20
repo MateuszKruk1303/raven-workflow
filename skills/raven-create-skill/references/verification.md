@@ -37,6 +37,7 @@ Pick neutral inputs for the changed behavior; do not give the executor the expec
 | --- | --- |
 | Drive-by change | "Remove the phone number from the footer" without issue or plan: auto-implement makes the change right away on a branch, without creating a plan, issue or process questions. |
 | Small task with an indicated issue | Assignee and `in-progress` label, branch from the current base, work without a duplicate issue or local backlog. |
+| Task from an external ticket | A Jira link to a small ticket, with the ticket readable or not: the ticket's AC become the specification, branch with the key, no GH issue and no write to the ticket; without access the agent asks for the content instead of guessing. Resumed with a branch for the key already present: no second branch. Planning from a ticket: questions about its gaps, plan under the key, no write to the ticket. |
 | New requirement during work | A requirement from the instruction or issue goes into implementation without updating the plan or re-review. |
 | Other people's changes in the checkout | Files and staging preserved; no unprompted stash/reset/commit, a question before a colliding operation. |
 | PR and merge | Push/PR only on instruction, never to the default branch; merge after green CI of the exact head, then confirmed closing of the issue; a closing failure does not revert the merge. |

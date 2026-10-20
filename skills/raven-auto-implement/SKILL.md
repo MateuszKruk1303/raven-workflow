@@ -1,19 +1,20 @@
 ---
 name: raven-auto-implement
-description: "Carry out the user's instruction, optionally with a given issue or plan, verify the change at a `quick`, `standard` or `thorough` level matched to risk, and summarize the result only in the final chat message."
-argument-hint: "[#issue | instruction]"
+description: "Carry out the user's instruction, optionally with a given GitHub issue, plan or external ticket link (Jira, Linear and similar) read as the specification, verify the change at a `quick`, `standard` or `thorough` level matched to risk, and summarize the result only in the final chat message."
+argument-hint: "[#issue | ticket URL | instruction]"
 ---
 
 # Raven Auto Implement
 
-Carry out the user's instruction and prove the change works to a degree matching its risk. A given issue or plan is context; the instruction refines or changes their scope without re-planning or review. A small change needs neither an issue nor a plan. Read only the code and context the change needs; do not replay the Raven cycle. Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md). Talk to the user in their language.
+Carry out the user's instruction and prove the change works to a degree matching its risk. A given issue, ticket or plan is context; the instruction refines or changes their scope without re-planning or review. A small change needs neither an issue nor a plan. Read only the code and context the change needs; do not replay the Raven cycle. Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md). Talk to the user in their language.
 
 ## Rules
 
-- **Input.** The specification is the instruction, supplemented by the given issue or plan; ask only when the goal is ambiguous. When the plan diverges from the real code, deviate minimally and describe in the final message what you changed and why.
+- **Input.** The specification is the instruction, supplemented by the given issue, ticket or plan; ask only when the goal is ambiguous. When the plan diverges from the real code, deviate minimally and describe in the final message what you changed and why.
+- **External ticket.** A link or key from Jira, Linear or a similar tracker is the specification; read it and work from it per the [external ticket](../raven-workflow/references/git-workflow.md#external-ticket) rules (read-only, no GitHub issue). A plan at `context/changes/<KEY>/plan.md` is the plan for that ticket.
 - **Decisions.** Make routine technical decisions yourself. Ask only about a missing product decision that genuinely blocks the work, and continue the independent part meanwhile.
 - **Executor.** You work as one current agent: no delegation, separate planner, tester or QA. The only exception is the independent review at `thorough`. Do not add stages, acceptance gates, process reports, checkpoints or metrics; on GitHub you only take up the issue as described below.
-- **Branch and issue.** Before the first commit: with a given issue and no existing branch, assign yourself, set `in-progress` and create a branch from the current base per [working on GitHub tasks](../raven-workflow/references/git-workflow.md); when resuming, use the existing branch. Without an issue work on the current branch, and if it is the default branch, create a short branch following the project's convention. Never commit to the default branch.
+- **Branch and issue.** Before the first commit: with a given issue and no existing branch, assign yourself, set `in-progress` and create a branch from the current base per [working on GitHub tasks](../raven-workflow/references/git-workflow.md); when resuming, use the existing branch. With an external ticket, find or create its branch per the [external ticket](../raven-workflow/references/git-workflow.md#external-ticket) rules. Without an issue or ticket work on the current branch, and if it is the default branch, create a short branch following the project's convention. Never commit to the default branch.
 - **Repo.** Before changing anything, note the base SHA. Preserve other people's work in the working tree. Respect project instructions (including `context/foundation/lessons.md` if present), security and real tool and permission limits. Project instructions (AGENTS.md, CLAUDE.md) take precedence over minimal verification: if they require checks before a commit, run them. Commit logical steps following the project's convention; no push and no PR.
 - **Tests.** Use existing tests first; add or adapt a test for a gap in the changed behavior. After every fix, rerun the check that found the problem.
 - **Pre-existing failures.** Do not fix unrelated pre-existing failures of tests, fixtures, locators or infrastructure. Report the limitation and, if possible, check the changed behavior through another adequate channel.
@@ -68,6 +69,7 @@ Overheads are approximate, not limits. When verification clearly exceeds the lev
 Give the result in the final chat message; do not write it to Markdown, the plan or the issue, and do not create acceptance.md. A summary of the verification reaches the PR only through `raven-pr`. Do not start the next stage. The final message contains:
 
 - the level (and any raise, with the reason);
+- the source ticket (key and link), when there was one;
 - what changed, including deviations from the plan (what, why);
 - what was checked — at `standard` also what exactly was observed and through which channel;
 - limitations: checks not run or blocked, and what remains to be checked;

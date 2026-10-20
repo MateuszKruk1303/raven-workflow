@@ -5,7 +5,7 @@ Adapt to the size of the change; delete empty sections. The plan is a working do
 ````markdown
 # <id> — <outcome>
 
-- Issue: <URL>
+- Issue: <URL> (or Ticket: <KEY> and its link, if known)
 - Goal: <observable outcome for the user>
 
 ## Acceptance criteria

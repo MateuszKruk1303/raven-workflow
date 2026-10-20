@@ -12,12 +12,13 @@ Run only on explicit request, as a tutorial and hint. The tutorial is read-only:
 
 Work happens on tasks in GitHub Issues — details in [working on GitHub tasks](references/git-workflow.md). The issue carries business requirements, the plan is optional one-off agent context, and the state of work is the issue, branch, commits and PR. The boundaries of one change are described in [change boundaries](references/change-scope.md).
 
-When asked about the state of some work, read the issue (state, assignee), branch, commits and PR, explain where the work stands and suggest the fitting skill.
+When asked about the state of some work, read the issue (state, assignee), branch, commits and PR (for ticket work, the branch and PR found by its key), explain where the work stands and suggest the fitting skill.
 
 ## Typical path
 
 - **Small change:** [raven-auto-implement](../raven-auto-implement/SKILL.md) with just the instruction.
 - **Task:** issue → optionally [raven-plan](../raven-plan/SKILL.md) → [raven-auto-implement](../raven-auto-implement/SKILL.md) → manual acceptance following the chat instructions, plus fixes if needed → [raven-pr](../raven-pr/SKILL.md) → [raven-merge](../raven-merge/SKILL.md).
+- **Ticket from Jira or another tracker:** [raven-auto-implement](../raven-auto-implement/SKILL.md) with the ticket link (optionally [raven-plan](../raven-plan/SKILL.md) with it first) → acceptance → [raven-pr](../raven-pr/SKILL.md) → [raven-merge](../raven-merge/SKILL.md). The ticket is read-only; no GitHub issue.
 - **On request or when risky:** [raven-implement-review](../raven-implement-review/SKILL.md) (requirements, code, tests), [raven-test](../raven-test/SKILL.md) (durable tests, before-change), [raven-manual-qa](../raven-manual-qa/SKILL.md) (exploratory QA).
 
 `raven-auto-implement` matches verification to risk (`quick`/`standard`/`thorough`) and does not run further skills.

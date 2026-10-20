@@ -12,7 +12,7 @@ The only skill for durable tests. On request: closing regression gaps after a ch
 
 ## Steps
 
-1. **Map.** For every AC (from the issue, plan or instruction) and significant risk, establish which existing test protects it and with which assertion. No such test is a named gap. Derive Expected from the requirements, not from implementation output.
+1. **Map.** For every AC (from the issue, ticket, plan or instruction) and significant risk, establish which existing test protects it and with which assertion. No such test is a named gap. Derive Expected from the requirements, not from implementation output.
 2. **Gaps.** Add tests only for named gaps. Good existing protection stays unchanged and without duplicates. The cheapest effective layer: unit for logic, integration for DB/service/API boundaries, E2E for a real flow in the UI. Do not add a framework or layers in advance.
 3. **E2E.** When needed, read only what is needed: [Playwright setup](references/procedures/e2e-setup/procedure.md) and [writing tests](references/procedures/e2e/procedure.md). For new behavior driven by tests: [TDD](references/procedures/tdd/procedure.md).
 4. **Effectiveness.** Every new test must be able to fail: independent Expected, a meaningful assertion of the effect, isolation and cleanup, mocks only at external boundaries. When unsure, make a controlled perturbation of the code and always revert it. Do not weaken assertions for a green result.

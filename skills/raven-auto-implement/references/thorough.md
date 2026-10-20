@@ -15,7 +15,7 @@ Approximate verification overhead: ~25–45 min, including review with fixes ~10
 
 ## Independent review
 
-Launch one fresh subagent without the author's transcript. Give it the user's instruction, the given issue or plan, the diff from the base SHA to HEAD together with uncommitted changes and new files, and the check results. The reviewer works read-only and assesses requirement fit, correctness and test effectiveness, pointing to concrete locations.
+Launch one fresh subagent without the author's transcript. Give it the user's instruction, the given issue, plan or ticket content as read (key, link, description, AC), the diff from the base SHA to HEAD together with uncommitted changes and new files, and the check results. The reviewer works read-only and assesses requirement fit, correctness and test effectiveness, pointing to concrete locations.
 
 Do one round of fixes for confirmed findings and rerun the checks that concern the fixed code. Do not hide findings you do not fix: they go into the final message with a justification. Do not run further review rounds. When the host cannot launch a fresh subagent, report the missing review in the final message as a limitation; the author's self-assessment is not a review.
 

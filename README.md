@@ -8,7 +8,7 @@ Raven skills for Claude Code. You invoke them directly with `/raven-<name>`; wri
 
 We work on tasks in GitHub Issues, without extra process machinery.
 
-- **Issue** carries the business requirements and acceptance criteria. Jira, if used, stays the requirements source; the issue only links it.
+- **Issue** carries the business requirements and acceptance criteria. Jira, if used, stays the requirements source; the issue only links it, or `/raven-plan` and `/raven-auto-implement` with a ticket URL work straight from the ticket.
 - **Plan** (`context/changes/<id>/plan.md`) is an optional, one-off working context for the agent. It is not a contract: no fingerprint, checkpoints or statuses. A new requirement goes into the issue or the instruction.
 - **Work state** is the issue, branch, commits and PR.
 - **Small change** (removing a button, changing a phone number) needs no issue or plan: `/raven-auto-implement` with just the instruction.
@@ -134,6 +134,17 @@ None of them runs automatically and none is a precondition for a PR.
 
 Then the "Task from an issue" pattern. Requirements stay in Jira, execution is tracked in GitHub.
 
+Or straight from one ticket, without a GH issue:
+
+```text
+/raven-plan https://acme.atlassian.net/browse/PP-1234             (optional) plan from the ticket, with questions
+/raven-auto-implement https://acme.atlassian.net/browse/PP-1234   reads the ticket (and plan), branch feat/PP-1234, verification
+/raven-pr                                                         PR linking PP-1234
+/raven-merge                                                      green CI → merge; the ticket is not touched
+```
+
+The agent reads the ticket through an available connector or CLI (or asks you to paste it) and never writes to Jira.
+
 ## Raven skills — which one to use and when
 
 Install in a project: `npx skills add MateuszKruk1303/raven-workflow`, update: `npx skills update -p -y`.
@@ -156,13 +167,13 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | **4. Entering unknown code** | _"I got someone else's repo and don't know what's where."_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Areas, dependencies, history, risks — a report with evidence. |
 | | _"I need to know how this really works."_ | [`raven-research`](skills/raven-research/SKILL.md) | An answer with evidence, options and gaps in `context/changes/<id>/research.md`. |
 | **5. Doing a change** | _"The task is risky, the agent can't guess."_ | [`raven-plan`](skills/raven-plan/SKILL.md) | A plan of one change in the real code; plan review on request. |
-| | _"Just do it — and prove it works."_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Commits, `quick`/`standard`/`thorough` verification, acceptance instructions in chat. |
+| | _"Just do it — and prove it works."_ / _"Here's the Jira link, go."_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Instruction, issue or ticket link; commits, `quick`/`standard`/`thorough` verification, acceptance instructions in chat. |
 | | _"I want to see it in the browser."_ | [`raven-browser`](skills/raven-browser/SKILL.md) | An isolated Playwright session for other skills; Brave only on instruction. |
 | | _"Let someone try to break it."_ | [`raven-manual-qa`](skills/raven-manual-qa/SKILL.md) | Exploration in the UI, defects with reproduction in chat. Fixes nothing. |
 | | _"I want a second pair of eyes on this code."_ | [`raven-implement-review`](skills/raven-implement-review/SKILL.md) | Read-only review: requirements, correctness, test effectiveness. |
 | | _"I don't want this to break silently."_ | [`raven-test`](skills/raven-test/SKILL.md) | Only the missing tests; before-change before a refactor. |
-| **6. Handing off** | _"I'm happy — shipping it."_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push and a PR linked to the issue, with a "Verification" section; no merge. |
-| | _"CI is green, I accept — let's close."_ | [`raven-merge`](skills/raven-merge/SKILL.md) | Merge after green CI and your consent, issue closed. |
+| **6. Handing off** | _"I'm happy — shipping it."_ | [`raven-pr`](skills/raven-pr/SKILL.md) | Push and a PR linked to the issue or ticket, with a "Verification" section; no merge. |
+| | _"CI is green, I accept — let's close."_ | [`raven-merge`](skills/raven-merge/SKILL.md) | Merge after green CI and your consent, issue (if any) closed. |
 | **7. Learning from mistakes** | _"The same mistake again."_ | [`raven-lesson`](skills/raven-lesson/SKILL.md) | One rule in `context/foundation/lessons.md`, read by later skills. |
 | | _"I'm missing a tool in Raven."_ | [`raven-create-skill`](skills/raven-create-skill/SKILL.md) | A new or changed Raven skill with validation. |
 
@@ -171,7 +182,7 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | Skill | What it does | Tests | Result |
 | --- | --- | --- | --- |
 | [raven-architecture](skills/raven-architecture/SKILL.md) | Cross-cutting architecture decisions based on the PRD and code. | Does not write; accounts for testability. | `context/foundation/architecture.md` |
-| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Carries out an instruction, optionally with an issue or plan; one agent. | **Yes:** uses existing ones, adds them for gaps; `quick`/`standard`/`thorough`. | Commits (no push/PR) and a summary in chat |
+| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Carries out an instruction, optionally with an issue, plan or Jira/other ticket link (read-only); one agent. | **Yes:** uses existing ones, adds them for gaps; `quick`/`standard`/`thorough`. | Commits (no push/PR) and a summary in chat |
 | [raven-browser](skills/raven-browser/SKILL.md) | Drives the browser (by default a separate Playwright CLI session) for other skills. | Ad hoc scenarios; does not replace durable E2E. | Observations, screenshots, logs |
 | [raven-create-skill](skills/raven-create-skill/SKILL.md) | Designs and changes Raven skills with an independent review. | Doctor, repo tests, behavior forward-test. | Skill package in this repo |
 | [raven-github-setup](skills/raven-github-setup/SKILL.md) | Repo, enabled Issues, in-progress/blocked labels; a Project on request. | Not applicable. | GitHub configuration |
@@ -183,9 +194,9 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | [raven-manual-qa](skills/raven-manual-qa/SKILL.md) | Exploratory QA of a running feature in the browser. | Does not write or fix. | Defects with reproduction in chat |
 | [raven-md](skills/raven-md/SKILL.md) | Creates, updates or assesses AGENTS.md and CLAUDE.md based on repo facts. | Does not write. | `AGENTS.md` + `CLAUDE.md`, or a scorecard |
 | [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Local Medusa + Next.js starter: database, Redis, migrations, seed, admin, storefront. | Checks startup and the basic purchase flow. | Working local monorepo |
-| [raven-merge](skills/raven-merge/SKILL.md) | Merge after green CI of the exact head, then closing the issue. | Reads the CI result. | Merged PR, closed issue |
-| [raven-plan](skills/raven-plan/SKILL.md) | Plan of one outcome in the real code; optional plan review by a fresh agent. | Plans; does not write. | `context/changes/<id>/plan.md` |
-| [raven-pr](skills/raven-pr/SKILL.md) | Push and create or update the PR linked to the issue, with a "Verification" section. | Does not run; describes the checks actually done. | PR |
+| [raven-merge](skills/raven-merge/SKILL.md) | Merge after green CI of the exact head, then closing the GitHub issue (if any). | Reads the CI result. | Merged PR, closed issue (if any) |
+| [raven-plan](skills/raven-plan/SKILL.md) | Plan of one outcome in the real code, from an issue or Jira/other ticket; optional plan review by a fresh agent. | Plans; does not write. | `context/changes/<id>/plan.md` |
+| [raven-pr](skills/raven-pr/SKILL.md) | Push and create or update the PR linked to the issue or ticket, with a "Verification" section. | Does not run; describes the checks actually done. | PR |
 | [raven-prd](skills/raven-prd/SKILL.md) | PRD from shape notes or raw findings. | Does not write; defines behaviors to verify. | `context/foundation/prd.md` |
 | [raven-repo-map](skills/raven-repo-map/SKILL.md) | Map of an existing repo: areas, dependencies, history, risks. | Does not write. | `context/foundation/repo-map.md` |
 | [raven-research](skills/raven-research/SKILL.md) | Answers to concrete questions about the code or feasibility, with evidence. | Runs them only when that answers the question. | `research.md` |

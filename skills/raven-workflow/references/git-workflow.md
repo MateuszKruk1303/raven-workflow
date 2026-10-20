@@ -1,6 +1,6 @@
 # Working on GitHub tasks
 
-Work happens on tasks in GitHub Issues. The issue body holds the business requirements and acceptance criteria. When the source is Jira, the issue links the ticket without copying its content.
+Work happens on tasks in GitHub Issues. The issue body holds the business requirements and acceptance criteria. When the source is Jira, the issue links the ticket without copying its content. `raven-plan` and `raven-auto-implement` can also work straight from an external ticket, without a GitHub issue ([below](#external-ticket)).
 
 ## Task, plan, branch
 
@@ -13,11 +13,20 @@ Work happens on tasks in GitHub Issues. The issue body holds the business requir
 - Preserve other people's changes in the working tree. Do not switch branches or update the base when they conflict; ask how to preserve them. No automatic stash, reset or commit of someone else's changes.
 - Commit logical steps following the project's convention.
 
+## External ticket
+
+A Jira, Linear or similar ticket given to `raven-plan` or `raven-auto-implement` takes the place of the issue: the ticket is the specification, one ticket is one branch and one PR.
+
+- Read its description, acceptance criteria, comments and the attachments or linked items needed for the change through an available connector (MCP), the tracker's CLI or an authenticated fetch. A GitHub issue URL is an issue, not a ticket. When the ticket cannot be read, name the missing access and ask the user to paste its content; do not guess the scope from the URL or key.
+- Raven never writes to the ticket: no assigning, transitions, comments or edits, and no Jira smart-commit commands (`#comment`, `#time`, transitions) or closing words before the key (`Closes`/`Fixes`/`Resolves PP-1234`) in commits or the PR; reference it plainly, e.g. `Ticket: PP-1234 <link>`. The ticket's status is not work state.
+- Find existing work by the exact key (not followed by a digit, so `PP-12` does not match `PP-123`) in local and remote branches (after `git fetch`) and in open PRs. A branch whose PR was merged is not existing work; follow-up work on the same key gets a suffix, e.g. `feat/PP-1234-2`. With several candidates, ask. Without one, create a branch from the current base (`git pull --ff-only`) named `feat/<KEY>` (e.g. `feat/PP-1234`) unless the project instructions set another branch convention, and reference the key in commits where the convention allows it.
+- When an explicit `#issue` is also given, the issue path applies and the ticket stays a linked source.
+
 ## Publishing
 
 - Push, PR and merge only on an explicit user instruction.
-- The PR links the issue (`Closes #N`), describes the change briefly and has a "Verification" section (below).
-- Merge requires green required CI and the user's consent. After merge, check that the issue is closed. Deploy is a separate operation.
+- The PR links the issue (`Closes #N`), or the external ticket when the work came from one (key and link; with only the key known, give the key and do not construct a URL), describes the change briefly and has a "Verification" section (below).
+- Merge requires green required CI and the user's consent. After merge, check that the GitHub issue is closed; work from an external ticket has no issue to close and the ticket is not transitioned. Deploy is a separate operation.
 
 ## Verification and reporting
 

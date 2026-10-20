@@ -1,6 +1,6 @@
 ---
 name: raven-merge
-description: "Merge the given PR after green CI and the user's consent, then confirm its issue is closed. Deploy is separate."
+description: "Merge the given PR after green CI and the user's consent, then confirm its GitHub issue, if any, is closed. Deploy is separate."
 argument-hint: "[#PR | #issue]"
 ---
 
@@ -19,4 +19,4 @@ Use the method required by the repo policy; without a preference, the first allo
 
 ## After merge
 
-Check that the linked issue is closed; if not, close it and remove the `in-progress`/`blocked` labels. If that fails, report "PR merged; issue needs closing", without reverting the merge. In chat give the PR, merge commit, issue state and the state of the local checkout. Merge does not start the next task or a deploy.
+Check that the linked GitHub issue is closed (ticket-only work has none; never close or transition an external ticket); if not, close it and remove the `in-progress`/`blocked` labels. If that fails, report "PR merged; issue needs closing", without reverting the merge. In chat give the PR, merge commit, issue state (if there is an issue) and the state of the local checkout. Merge does not start the next task or a deploy.
