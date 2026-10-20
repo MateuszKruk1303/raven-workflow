@@ -55,11 +55,11 @@ class DoctorTests(unittest.TestCase):
         self.assertIn('skill.retired', self.codes())
 
     def test_retired_skill_mention_fails(self):
-        self.skill.write_text(self.skill.read_text() + '\nNajpierw uruchom raven-plan-review.\n')
+        self.skill.write_text(self.skill.read_text() + '\nFirst run raven-plan-review.\n')
         self.assertIn('text.retired', self.codes())
 
     def test_retired_artifact_mention_fails(self):
-        self.skill.write_text(self.skill.read_text() + '\nZapisz wynik w `context/changes/<id>/frame.md`.\n')
+        self.skill.write_text(self.skill.read_text() + '\nSave the result in `context/changes/<id>/frame.md`.\n')
         self.assertIn('text.retired', self.codes())
 
     def test_current_skill_with_retired_prefix_passes(self):
