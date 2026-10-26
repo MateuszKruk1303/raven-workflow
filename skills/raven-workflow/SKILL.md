@@ -27,7 +27,7 @@ When asked about the state of some work, read the issue (state, assignee), branc
 
 **Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architecture](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) or [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [AGENTS.md + CLAUDE.md](../raven-md/SKILL.md), [CI](../raven-hooks/SKILL.md), [GitHub](../raven-github-setup/SKILL.md) → [roadmap](../raven-roadmap/SKILL.md).
 
-**Brownfield:** as needed [repo map](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md) or [architecture](../raven-architecture/SKILL.md). A small known task needs none of them. Jira as the requirements source: [raven-roadmap](../raven-roadmap/SKILL.md).
+**Brownfield:** as needed [repo map](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md) or [architecture](../raven-architecture/SKILL.md). A small known task needs none of them. Jira or a plain task description as the requirements source: [raven-roadmap](../raven-roadmap/SKILL.md).
 
 ## Tools
 
