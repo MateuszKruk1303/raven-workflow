@@ -14,7 +14,7 @@ Only on the user's request (`--recording`). The recording is a run of the finish
 
 - In the Playwright CLI session run `video-start <file>`, `video-show-actions`, then one `video-chapter "AC<n>: <what>"` per acceptance criterion, and `video-stop`. Add `tracing-start`/`tracing-stop` when network or console behavior is part of a criterion. When the installed version lacks a command, check `--help` and use what it offers.
 - Show the full user path for each criterion and end it with a reload or read-back, so the durable effect is visible, not just a success message.
-- Look at the recording, or its frames at the chapter marks, before reporting. A recording that does not show the criterion working is a failed check.
+- The snapshots you take during the recorded run are the evidence that each criterion works; do not analyze the video afterwards. Check only that the file is usable: `ffprobe -v error -show_entries format=duration -of csv=p=0 <file>` gives a duration close to the run's. Only when something went wrong during the run (lost session, wrong tab, an error page), extract one contact sheet in one command, e.g. `ffmpeg -v error -i <file> -vf "fps=1/10,scale=320:-1,tile=4x4" -frames:v 1 <sheet>.png`, and look at it. Leave temporary files in place. A recording that does not show the criterion working is a failed check.
 - Save the files in a temporary directory, never in the repository. A trace keeps request headers, so record only test accounts.
 
 The recording shows that the recorded paths work. It is not a review and not acceptance. When it could not be made, say so in the final message; the browser check itself keeps its own result.
