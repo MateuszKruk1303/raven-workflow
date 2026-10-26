@@ -26,6 +26,7 @@ Neutral inputs are in the [change-scope trial set](fixtures/change-scope-inputs.
 | Discovery during planning | A new independent outcome is recognized before refining phases, the requirement is not lost, and the queue change stays a proposal needing authorization. |
 | Many steps | Assessment of real inseparability and preservation of guarantees; the number of phases is a signal to assess, not an automatic FAIL. |
 | Business-only issue (case 8) | Roadmap from the description: business questions (rate, base, timing, cancellation/return, guests, currencies) come before any issue is written; the issue has no package, file, endpoint or event names, no test/CI AC and no agent assumptions; an unanswered rule lands in Out of scope or Open questions. |
+| Granularity choice (case 8) | Before writing, three split proposals (low, medium, high) with issues, dependencies and why; each issue is a vertical, independently acceptable outcome even at high granularity; only the chosen option is written. |
 | Technical decision in planning (case 8) | Planning the resulting issue: the agent asks about the technology choice (e.g. plugin or own module) with a recommendation and trade-off and records it in the plan; a business gap found while planning is asked and offered for the issue through raven-issue-update, not kept silently in the plan. |
 | Started work | Mapping of the old scope, dependencies and progress; decisions/evidence/IDs preserved, without re-interviewing about vendors, unauthorized queue reorganization or closing tasks. |
 
