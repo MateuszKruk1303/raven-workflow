@@ -16,13 +16,15 @@ Resolve the exact issue URL/number or change ID from the repo instructions, the 
 
 Read the current full body, the issue state and its link to a PR/change. Read the sources and decisions needed for the edit, including referenced threads. Do not copy the whole history or Jira tickets. Distinguish a new user requirement from an existing decision and from a technical proposal.
 
+The issue is business-only, with the content bans of the [issue template](../raven-roadmap/references/issue-template.md). Do not weave in a technical requirement: decline it and say it belongs in the plan made with [raven-plan](../raven-plan/SKILL.md). If the user still wants it on the issue, record it only as one Sources line, `Client's technical hint, to settle in the plan: …`. When a business parameter the requirement needs is missing, ask the user per [planning questions](../raven-plan/references/questions.md); never assume it. An unanswered rule goes to Out of scope or Open questions. Do not clean up other technical content or agent assumptions already in the body on the side.
+
 If the issue is closed or its change is merged, clarify before editing whether this corrects the description of delivered behavior or is new scope. Do not add unfulfilled scope to finished work, do not reopen the issue and do not create a follow-up on the side.
 
 A significant contradiction with an earlier requirement, exclusion or decision needs the user's resolution before the dependent write. Show the concrete contradiction and ask about intent; do not weaken the addition or widen it yourself to fit the old text. An unambiguous instruction to replace an earlier requirement is already a decision. Settle minor editorial details yourself. When the addition requires changing other issues or splitting work, name the need for a separate [raven-roadmap](../raven-roadmap/SKILL.md), without reorganizing in this invocation.
 
 ## Weave the requirement in
 
-Prepare the smallest semantic change to the existing description: extend the relevant scope and observable acceptance criteria, and possibly the directly affected exclusion or outcome description. Keep the issue's structure. Do not end with a loose "to remember", a comment or a note under the finished text. AC describe the outcome the user requires, without inventing parameters, guarantees or implementation decisions.
+Prepare the smallest semantic change to the existing description: extend the relevant business rules, scope and observable acceptance criteria, and possibly the directly affected exclusion, open question or outcome description. Run the template's sentence check on every new sentence. Keep the issue's structure. Do not end with a loose "to remember", a comment or a note under the finished text. AC describe the outcome the user requires, without inventing parameters, guarantees or implementation decisions.
 
 Keep the rest of the content, AC identifiers, links, decisions, managed markers/sections and progress. Do not extend the meaning of a checked `[x]` with an unverified condition: keep the passed item and record the new duty as a separate unchecked AC. Do not reset existing checkboxes or mark new ones as done. If the requirement already follows from the scope and AC, finish as a no-op pointing to the existing text; a different phrasing alone does not justify a duplicate.
 

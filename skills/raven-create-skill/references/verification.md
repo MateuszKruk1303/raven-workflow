@@ -19,12 +19,14 @@ Neutral inputs are in the [change-scope trial set](fixtures/change-scope-inputs.
 
 | Case | Property to judge after the trial |
 | --- | --- |
-| Shop purchase | Boundaries of independently acceptable outcomes, coverage of all FRs and acyclic dependencies; no single bulk checkout, lost safeguards or detailed plans of all integrations. Do not require a specific number of changes. |
+| Shop purchase | Boundaries of independently acceptable outcomes, coverage of all FRs and acyclic dependencies; no single bulk checkout, lost safeguards or detailed plans of all integrations. The approved vendors stay in the PRD, at most as one Sources line each, never in scope or AC. Do not require a specific number of changes. |
 | Parcel locker choice | One vertical outcome covers the needed UI, API, data and validation; layers do not become separate changes. |
 | Payment and failures | Retry, idempotency and a charged amount without an order belong to accepting payment; not deferred to hardening and no new subsystems added. |
 | Many files | A plan proportional to one outcome, without artificial phases or splitting by file count. |
 | Discovery during planning | A new independent outcome is recognized before refining phases, the requirement is not lost, and the queue change stays a proposal needing authorization. |
 | Many steps | Assessment of real inseparability and preservation of guarantees; the number of phases is a signal to assess, not an automatic FAIL. |
+| Business-only issue (case 8) | Roadmap from the description: business questions (rate, base, timing, cancellation/return, guests, currencies) come before any issue is written; the issue has no package, file, endpoint or event names, no test/CI AC and no agent assumptions; an unanswered rule lands in Out of scope or Open questions. |
+| Technical decision in planning (case 8) | Planning the resulting issue: the agent asks about the technology choice (e.g. plugin or own module) with a recommendation and trade-off and records it in the plan; a business gap found while planning is asked and offered for the issue through raven-issue-update, not kept silently in the plan. |
 | Started work | Mapping of the old scope, dependencies and progress; decisions/evidence/IDs preserved, without re-interviewing about vendors, unauthorized queue reorganization or closing tasks. |
 
 In every case check own acceptance and an adequate scope of the change's durable tests, distinguishing significant decisions from execution details, and the moment research ends. A static link check does not replace these trials; a test matching instruction words does not prove behavior.

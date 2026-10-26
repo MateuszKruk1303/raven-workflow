@@ -1,6 +1,6 @@
 ---
 name: raven-plan
-description: "Prepare a plan for one change: requirements from the issue or an external ticket (Jira, Linear and similar), decisions and approach in the project's code. Optionally request one independent plan review. The plan is one-off working context for raven-auto-implement."
+description: "Prepare a plan for one change: business requirements from the issue or an external ticket (Jira, Linear and similar); every technical decision (technology, vendor, architecture, contracts, data, tests, CI) settled here with the user, and the approach in the project's code. Optionally request one independent plan review. The plan is one-off working context for raven-auto-implement."
 argument-hint: "[#issue | ticket URL | change-id]"
 ---
 
@@ -8,11 +8,11 @@ argument-hint: "[#issue | ticket URL | change-id]"
 
 Follow [working on GitHub tasks](../raven-workflow/references/git-workflow.md) and [change boundaries](../raven-workflow/references/change-scope.md). Talk to the user in their language; write the plan in the user's language unless the project already uses another.
 
-The plan gathers what the implementer needs to do the job well: outcome, settled decisions, approach in the real code and how to verify it. It is neither a contract nor a tracker. A small change needs no plan — point straight to `raven-auto-implement`.
+The plan gathers what the implementer needs to do the job well: outcome, settled decisions, approach in the real code and how to verify it. It is neither a contract nor a tracker. The issue holds only the business side; the plan owns the whole technical layer: technology and vendor choice, architecture, contracts, data, events, tests and CI. A small change needs no plan — point straight to `raven-auto-implement`.
 
 ## Input
 
-Accept an issue, description, change ID or an existing plan. Read the issue body (scope and AC), the referenced sources and decisions, and `context/foundation/lessons.md` if present. For a new issue, assign yourself, set `in-progress` and create a branch per [working on GitHub tasks](../raven-workflow/references/git-workflow.md). A request to plan one change does not authorize reorganizing the queue.
+Accept an issue, description, change ID or an existing plan. Read the issue body (outcome, business rules, scope, AC, open questions, Sources including the user's technical hints), the referenced sources and decisions, and `context/foundation/lessons.md` if present. For a new issue, assign yourself, set `in-progress` and create a branch per [working on GitHub tasks](../raven-workflow/references/git-workflow.md). A request to plan one change does not authorize reorganizing the queue.
 
 An external ticket link or key is the requirements source: read it, find or create its branch per the [external ticket](../raven-workflow/references/git-workflow.md#external-ticket) rules (read-only, no GitHub issue) and use the key as the change ID. Gaps and contradictions in the ticket go into the planning questions; the answers go into the plan, not the ticket.
 
@@ -20,8 +20,11 @@ An external ticket link or key is the requirements source: read it, find or crea
 
 1. **Boundaries.** Before detailed research, judge whether this is one independently acceptable outcome. A scope that is too wide goes back to the user with a split proposal and a first change.
 2. **Code.** Investigate only what settles feasibility, contracts and acceptance: existing patterns, architecture, tests. A negative search result does not prove absence.
-3. **Questions.** Ask only about real unsettled product or architecture decisions, with a recommendation and trade-off — [examples](references/questions.md). Settle technical details within the agreed boundaries yourself.
-4. **Write.** Save `context/changes/<id>/plan.md` following the [template](references/plan-template.md), proportionate to the change. Split the work into vertical slices with their contracts and dependencies, so independent slices can be built in parallel; name the flow tests in Verification.
+3. **Questions.** Ask about real unsettled decisions, each with a recommendation and trade-off — [examples](references/questions.md):
+   - **Business.** A missing or ambiguous business rule, including the issue's Open questions: ask the user, never assume it. Record the answer in the plan and propose recording it in the issue through [raven-issue-update](../raven-issue-update/SKILL.md), running it when the user agrees; do not keep a business rule silently only in the plan. For an external ticket or a plain description without an issue, the answer goes into the plan only and the final message names it (Raven never writes to the ticket).
+   - **Technical.** Technical and architecture decisions with a real alternative: technology or vendor, plugin or own module, where the data lives, synchronous call or event, contracts. A technical hint from the user in the issue's Sources, or a decision already recorded in the linked PRD, ticket or `context/foundation/architecture.md`, is the default; do not re-ask it unless the code shows a significant reason against it or it leaves a real choice open. Technical content or assumptions an agent wrote into an older issue are proposals, not decisions.
+   - Settle minor technical details within the agreed boundaries yourself.
+4. **Write.** Save `context/changes/<id>/plan.md` following the [template](references/plan-template.md), proportionate to the change. Split the work into vertical slices with their contracts and dependencies, so independent slices can be built in parallel. Name the flow tests and other technical criteria (lint, CI, migrations) in Verification; they never become issue AC.
 
 ## Plan review (optional)
 

@@ -62,3 +62,9 @@ Instruction: "Resume raven-plan for C-07 and fix the plan boundaries. Do not cha
 Issue C-07 "Purchases and shop operations": order, Stripe/COD, Furgonetka for orders and manual shipments, Resend confirmation and product ranking. Scope and rules as in case 1, recorded in PRD v2. C-08 "Invoice for an order" is blocked by C-07. C-09 "Daily payment report" is blocked by C-07. Other issues are outside the order.
 
 History: plan v1 and its review R-2 in Git history; decision D-3 accepted Stripe and COD, D-4 approved reusing Furgonetka for manual shipments, D-5 approved Resend and the retry rules. The new plan has no independent review yet. C-07/T-01 "Placing an order" In progress: model and service done on a branch, unit/integration evidence recorded; UI unfinished. C-07/T-02 "Payments and shipping" Backlog, no code. C-07/T-03 "Email and ranking" Backlog. The last checkpoint contains the SHA, the Progress mapping and the carrier research report R-6. No merge. The user did not authorize closing any issue or task.
+
+## 8. Loyalty program from a description
+
+Instruction: "Use raven-roadmap for: a simple loyalty program: points for orders, balance in the account."
+
+State: an online shop with accounts, orders, returns and an admin panel; no loyalty feature and no issues in scope. The user answers questions when asked and may decline some. Afterwards: "Use raven-plan for the resulting issue."

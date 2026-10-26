@@ -8,7 +8,7 @@ Raven skills for Claude Code. You invoke them directly with `/raven-<name>`; wri
 
 We work on tasks in GitHub Issues, without extra process machinery.
 
-- **Issue** carries the business requirements and acceptance criteria. Jira, if used, stays the requirements source; the issue only links it, or `/raven-plan` and `/raven-auto-implement` with a ticket URL work straight from the ticket.
+- **Issue** carries only the business requirements and behavioral acceptance criteria; technical decisions are made with you in `/raven-plan` (or, without a plan, asked during implementation). Jira, if used, stays the requirements source; the issue only links it, or `/raven-plan` and `/raven-auto-implement` with a ticket URL work straight from the ticket.
 - **Plan** (`context/changes/<id>/plan.md`) is an optional, one-off working context for the agent. It is not a contract: no fingerprint, checkpoints or statuses. A new requirement goes into the issue or the instruction.
 - **Work state** is the issue, branch, commits and PR.
 - **Small change** (removing a button, changing a phone number) needs no issue or plan: `/raven-auto-implement` with just the instruction.
@@ -162,7 +162,7 @@ The skills are in the order they usually appear in work. No stage is mandatory â
 | | _"The agent gets lost in the repo or breaks conventions."_ | [`raven-md`](skills/raven-md/SKILL.md) | `AGENTS.md` + `CLAUDE.md` from repo facts, or a scorecard (review mode). |
 | | _"I don't want to remember lint and tests before merge."_ | [`raven-hooks`](skills/raven-hooks/SKILL.md) | GitHub Actions: lint, typecheck, tests after a PR. |
 | | _"I want to work on tasks in GitHub."_ | [`raven-github-setup`](skills/raven-github-setup/SKILL.md) | Remote, Issues, `in-progress`/`blocked` labels; a Project on request. |
-| **3. Building the queue** | _"I have a PRD and don't know where to start."_ | [`raven-roadmap`](skills/raven-roadmap/SKILL.md) | Small changes as GitHub Issues in order; source: PRD or Jira. |
+| **3. Building the queue** | _"I have a PRD and don't know where to start."_ | [`raven-roadmap`](skills/raven-roadmap/SKILL.md) | Small business-only changes as GitHub Issues in order, after questions about business rules; source: PRD, Jira or a description. |
 | | _"I remembered one more requirement."_ | [`raven-issue-update`](skills/raven-issue-update/SKILL.md) | The requirement woven into the body and AC of an existing issue. |
 | **4. Entering unknown code** | _"I got someone else's repo and don't know what's where."_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Areas, dependencies, history, risks â€” a report with evidence. |
 | | _"I need to know how this really works."_ | [`raven-research`](skills/raven-research/SKILL.md) | An answer with evidence, options and gaps in `context/changes/<id>/research.md`. |
@@ -200,7 +200,7 @@ The skills are in the order they usually appear in work. No stage is mandatory â
 | [raven-prd](skills/raven-prd/SKILL.md) | PRD from shape notes or raw findings. | Does not write; defines behaviors to verify. | `context/foundation/prd.md` |
 | [raven-repo-map](skills/raven-repo-map/SKILL.md) | Map of an existing repo: areas, dependencies, history, risks. | Does not write. | `context/foundation/repo-map.md` |
 | [raven-research](skills/raven-research/SKILL.md) | Answers to concrete questions about the code or feasibility, with evidence. | Runs them only when that answers the question. | `research.md` |
-| [raven-roadmap](skills/raven-roadmap/SKILL.md) | Queue of changes as GitHub Issues, from a PRD or Jira. | Does not write. | Issues with AC and dependencies |
+| [raven-roadmap](skills/raven-roadmap/SKILL.md) | Queue of business-only changes as GitHub Issues, from a PRD, Jira or a description. | Does not write. | Issues with business rules, AC and dependencies |
 | [raven-shape](skills/raven-shape/SKILL.md) | Conversation structuring a messy idea: problem, audience, MVP, rules. | Does not write. | `context/foundation/shape-notes.md` |
 | [raven-test](skills/raven-test/SKILL.md) | Durable test protection: AC â†’ test map, only the missing tests, before-change. | **Yes:** only for named gaps. | Tests in the repo, map in chat |
 | [raven-workflow](skills/raven-workflow/SKILL.md) | Manual tutorial: working model and skill map. | Not applicable. | Explanation in the conversation |

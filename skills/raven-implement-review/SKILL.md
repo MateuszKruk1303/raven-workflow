@@ -16,7 +16,7 @@ The issue, external ticket or instruction, the plan (if any), the branch or PR. 
 
 ## Assessment
 
-1. **Requirements.** Every AC has coverage in code and evidence (test, check). Mark missing evidence as NOT VERIFIED.
+1. **Requirements.** Every AC, and the plan's Verification criteria if there is a plan, has coverage in code and evidence (test, check). Mark missing evidence as NOT VERIFIED.
 2. **Correctness.** Rules, error paths, edge cases, races. Trace critical paths from input to effect.
 3. **Architecture.** Fit with existing patterns and module boundaries.
 4. **Security and data.** Permissions, input validation, data loss or overwrite.

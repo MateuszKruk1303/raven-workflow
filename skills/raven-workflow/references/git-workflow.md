@@ -1,6 +1,6 @@
 # Working on GitHub tasks
 
-Work happens on tasks in GitHub Issues. The issue body holds the business requirements and acceptance criteria. When the source is Jira, the issue links the ticket without copying its content. `raven-plan` and `raven-auto-implement` can also work straight from an external ticket, without a GitHub issue ([below](#external-ticket)).
+Work happens on tasks in GitHub Issues. The issue body holds only the business requirements and behavioral acceptance criteria ([issue template](../../raven-roadmap/references/issue-template.md)); technical decisions belong to the plan (`raven-plan`), or without a plan to the implementer, who asks when there is a real alternative. When the source is Jira, the issue links the ticket without copying its content. `raven-plan` and `raven-auto-implement` can also work straight from an external ticket, without a GitHub issue ([below](#external-ticket)).
 
 ## Task, plan, branch
 
