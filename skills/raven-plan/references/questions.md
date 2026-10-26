@@ -56,4 +56,4 @@ AskUserQuestion with questions:
     description: "Surface the tie instead of resolving it. · Strength: No hidden rule — the ambiguity reaches whoever has the context to settle it. · Tradeoff: Every call site now handles a list where it expected one order; the dashboard and the invoice job both need a branch."
   multiSelect: false
 
-**Where the answer lands.** A term the user settles becomes an AC in "Acceptance criteria" or a named test in "Steps"; a term the user declines to handle goes into "Scope" as consciously out of scope, so a reviewer sees a decision rather than an omission. Neither gets a section of its own.
+**Where the answer lands.** A term the user settles becomes an AC in "Acceptance criteria" or a named test in "Verification"; a term the user declines to handle goes into "Scope" as consciously out of scope, so a reviewer sees a decision rather than an omission. Neither gets a section of its own.

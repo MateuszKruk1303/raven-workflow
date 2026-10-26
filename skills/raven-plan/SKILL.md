@@ -21,7 +21,7 @@ An external ticket link or key is the requirements source: read it, find or crea
 1. **Boundaries.** Before detailed research, judge whether this is one independently acceptable outcome. A scope that is too wide goes back to the user with a split proposal and a first change.
 2. **Code.** Investigate only what settles feasibility, contracts and acceptance: existing patterns, architecture, tests. A negative search result does not prove absence.
 3. **Questions.** Ask only about real unsettled product or architecture decisions, with a recommendation and trade-off — [examples](references/questions.md). Settle technical details within the agreed boundaries yourself.
-4. **Write.** Save `context/changes/<id>/plan.md` following the [template](references/plan-template.md), proportionate to the change. Tests are part of the implementation steps.
+4. **Write.** Save `context/changes/<id>/plan.md` following the [template](references/plan-template.md), proportionate to the change. Split the work into vertical slices with their contracts and dependencies, so independent slices can be built in parallel; name the flow tests in Verification.
 
 ## Plan review (optional)
 

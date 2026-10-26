@@ -98,7 +98,7 @@ When a mistake would be costly, hard to reverse or hard to notice before the use
 /raven-pr â†’ /raven-merge
 ```
 
-`thorough` adds a test baseline, tests of the whole area, an end-to-end path with a failure scenario and one independent review.
+`thorough` adds tests of the whole area (a baseline only when one fails for an unclear reason), an end-to-end path with a failure scenario and one independent review.
 
 ### Bugfix
 
@@ -182,7 +182,7 @@ The skills are in the order they usually appear in work. No stage is mandatory â
 | Skill | What it does | Tests | Result |
 | --- | --- | --- | --- |
 | [raven-architecture](skills/raven-architecture/SKILL.md) | Cross-cutting architecture decisions based on the PRD and code. | Does not write; accounts for testability. | `context/foundation/architecture.md` |
-| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Carries out an instruction, optionally with an issue, plan or Jira/other ticket link (read-only); one agent. | **Yes:** uses existing ones, adds them for gaps; `quick`/`standard`/`thorough`. | Commits (no push/PR) and a summary in chat |
+| [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Carries out an instruction, optionally with an issue, plan or Jira/other ticket link (read-only); a leading agent with optional parallel implementers; a recording on `--recording`. | **Yes:** once at the end, after the feature works; adds flow tests for gaps; `quick`/`standard`/`thorough`. | Commits (no push/PR) and a summary in chat |
 | [raven-browser](skills/raven-browser/SKILL.md) | Drives the browser (by default a separate Playwright CLI session) for other skills. | Ad hoc scenarios; does not replace durable E2E. | Observations, screenshots, logs |
 | [raven-create-skill](skills/raven-create-skill/SKILL.md) | Designs and changes Raven skills with an independent review. | Doctor, repo tests, behavior forward-test. | Skill package in this repo |
 | [raven-github-setup](skills/raven-github-setup/SKILL.md) | Repo, enabled Issues, in-progress/blocked labels; a Project on request. | Not applicable. | GitHub configuration |

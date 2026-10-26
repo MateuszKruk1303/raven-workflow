@@ -16,12 +16,12 @@ Adapt to the size of the change; delete empty sections. The plan is a working do
 <what is in; what is consciously out of scope>
 
 ## Decisions and approach
-<settled decisions, affected modules, API/data contracts, order of steps, migration or rollback if needed>
+<settled decisions, affected modules, API/data contracts, migration or rollback if needed>
 
-## Steps
-1. <step, affected areas, tests with it>
+## Slices
+1. <vertical slice: ACs it delivers; contract (types, interfaces); affected areas; depends on: — / slice N>
 2. <only if needed>
 
 ## Verification
-<which tests and which path in the running app to check; risks to watch>
+<which path in the running app to check; which flow tests to add or reuse; risks to watch>
 ````

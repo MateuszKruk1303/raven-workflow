@@ -22,7 +22,7 @@ Before publishing a change in the roadmap and while planning, check:
 4. Should a failure of one part block acceptance and merge of the others? Distinguish the required guarantees of one feature from independent outcomes.
 5. Do the acceptance criteria check one feature with its errors and exceptions, or several separate demos?
 
-A change typically has one main outcome and 1–2 significant implementation phases. Tests belong to the implementation steps; an extra testing activity is not an independent outcome. Three or more implementation phases or several integrations are a warning to re-evaluate the boundary, not a limit. Do not create roadmap tasks just to count them. Number of files, FRs, checkboxes or estimates do not measure the right size of a change. More tasks do not fix a scope that is too wide.
+A change typically has one main outcome and 1–2 significant implementation phases. Tests belong to the change (flow tests in the plan's Verification); an extra testing activity is not an independent outcome. Three or more implementation phases or several integrations are a warning to re-evaluate the boundary, not a limit. Do not create roadmap tasks just to count them. Number of files, FRs, checkboxes or estimates do not measure the right size of a change. More tasks do not fix a scope that is too wide.
 
 A larger change is acceptable when a short factual justification names an inseparable guarantee or a concrete consequence of splitting that would make the parts impossible to accept on their own. "It's checkout" or "shared model" alone is not enough. Record the justification in the existing scope/approach description, without a new form.
 
