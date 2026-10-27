@@ -15,7 +15,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.DS_Store', '__pycache__', '.git'}
 RETIRED = {
-    'raven-seed', 'raven-implement', 'raven-auto-plan', 'raven-plan-review', 'raven-auto-test',
+    'raven-seed', 'raven-implement', 'raven-plan-review', 'raven-auto-test',
     'raven-test-review', 'raven-test-plan', 'raven-frame', 'raven-agents-md', 'raven-rule-review',
     'raven-jira-roadmap', 'raven-domain-distillation',
 }

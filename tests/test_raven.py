@@ -102,7 +102,7 @@ class CatalogTests(unittest.TestCase):
             raven.validate_catalog(contract)
 
     def test_merged_skills_cannot_return(self):
-        for name in ('raven-auto-plan', 'raven-plan-review', 'raven-auto-test', 'raven-test-review',
+        for name in ('raven-plan-review', 'raven-auto-test', 'raven-test-review',
                      'raven-test-plan', 'raven-frame', 'raven-agents-md', 'raven-rule-review',
                      'raven-jira-roadmap', 'raven-domain-distillation'):
             with self.subTest(name=name):
