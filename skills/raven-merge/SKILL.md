@@ -12,7 +12,7 @@ The instruction "merge <PR/change>" is consent to merge the unambiguously identi
 
 ## Before merge
 
-Read the current head, base, draft state, mergeability, required checks and reviews, branch protection and merge queue. FAIL, a conflict or a missing required check blocks the merge; pending means waiting. No access to protection data does not mean there is none. Do not use `--admin` or any bypass, and do not approve your own PR.
+Read the current head, base, draft state, mergeability, required checks and reviews, branch protection and merge queue. FAIL, a conflict or a missing required check blocks the merge; pending means waiting. A repo with no required checks has nothing to wait for; say so in chat. No access to protection data does not mean there is none. Do not use `--admin` or any bypass, and do not approve your own PR.
 ## Merge
 
 Use the method required by the repo policy; without a preference, the first allowed of: squash, merge commit, rebase. Merge exactly the checked head (`gh pr merge --match-head-commit <SHA>`); with a queue, use its mechanics. After the request, including after a timeout, read `mergedAt` and the merge commit; do not blindly send a second request.
