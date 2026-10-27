@@ -24,9 +24,9 @@ A Jira, Linear or similar ticket given to `raven-plan` or `raven-auto-implement`
 
 ## Publishing
 
-- Push, PR and merge only on an explicit user instruction.
+- Push, PR and merge only on an explicit user instruction. Invoking [raven-auto-loop](../../raven-auto-loop/SKILL.md) with a scope is that instruction for the issues in its scope.
 - The PR links the issue (`Closes #N`), or the external ticket when the work came from one (key and link; with only the key known, give the key and do not construct a URL), describes the change briefly and has a "Verification" section (below).
-- Merge requires green required CI and the user's consent. After merge, check that the GitHub issue is closed; work from an external ticket has no issue to close and the ticket is not transitioned. Deploy is a separate operation.
+- Merge requires green required CI, when the repo has required checks, and the user's consent. After merge, check that the GitHub issue is closed; work from an external ticket has no issue to close and the ticket is not transitioned. Deploy is a separate operation.
 
 ## Verification and reporting
 
