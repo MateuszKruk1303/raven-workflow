@@ -19,6 +19,7 @@ When asked about the state of some work, read the issue (state, assignee), branc
 - **Small change:** [raven-auto-implement](../raven-auto-implement/SKILL.md) with just the instruction.
 - **Task:** issue → optionally [raven-plan](../raven-plan/SKILL.md) → [raven-auto-implement](../raven-auto-implement/SKILL.md) → manual acceptance following the chat instructions, plus fixes if needed → [raven-pr](../raven-pr/SKILL.md) → [raven-merge](../raven-merge/SKILL.md).
 - **Ticket from Jira or another tracker:** [raven-auto-implement](../raven-auto-implement/SKILL.md) with the ticket link (optionally [raven-plan](../raven-plan/SKILL.md) with it first) → acceptance → [raven-pr](../raven-pr/SKILL.md) → [raven-merge](../raven-merge/SKILL.md). The ticket is read-only; no GitHub issue.
+- **Unattended loop:** [raven-auto-plan](../raven-auto-plan/SKILL.md) instead of raven-plan when the user asks for planning without questions; the agent decides, records its decisions in the plan and stops only on an irreversible or contradicting one.
 - **On request or when risky:** [raven-implement-review](../raven-implement-review/SKILL.md) (requirements, code, tests), [raven-test](../raven-test/SKILL.md) (durable tests, before-change), [raven-manual-qa](../raven-manual-qa/SKILL.md) (exploratory QA).
 
 `raven-auto-implement` matches verification to risk (`quick`/`standard`/`thorough`) and does not run further skills.

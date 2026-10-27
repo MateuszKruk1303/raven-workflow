@@ -167,6 +167,7 @@ The skills are in the order they usually appear in work. No stage is mandatory â
 | **4. Entering unknown code** | _"I got someone else's repo and don't know what's where."_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Areas, dependencies, history, risks â€” a report with evidence. |
 | | _"I need to know how this really works."_ | [`raven-research`](skills/raven-research/SKILL.md) | An answer with evidence, options and gaps in `context/changes/<id>/research.md`. |
 | **5. Doing a change** | _"The task is risky, the agent can't guess."_ | [`raven-plan`](skills/raven-plan/SKILL.md) | A plan of one change in the real code; plan review on request. |
+| | _"Plan it without me, I'll review the decisions later."_ | [`raven-auto-plan`](skills/raven-auto-plan/SKILL.md) | The same plan as `raven-plan`, without questions: recommended options taken and listed as agent decisions; stops only on an irreversible or contradicting one. |
 | | _"Just do it â€” and prove it works."_ / _"Here's the Jira link, go."_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Instruction, issue or ticket link; commits, `quick`/`standard`/`thorough` verification, acceptance instructions in chat. |
 | | _"I want to see it in the browser."_ | [`raven-browser`](skills/raven-browser/SKILL.md) | An isolated Playwright session for other skills; Brave only on instruction. |
 | | _"Let someone try to break it."_ | [`raven-manual-qa`](skills/raven-manual-qa/SKILL.md) | Exploration in the UI, defects with reproduction in chat. Fixes nothing. |
@@ -183,6 +184,7 @@ The skills are in the order they usually appear in work. No stage is mandatory â
 | --- | --- | --- | --- |
 | [raven-architecture](skills/raven-architecture/SKILL.md) | Cross-cutting architecture decisions based on the PRD and code. | Does not write; accounts for testability. | `context/foundation/architecture.md` |
 | [raven-auto-implement](skills/raven-auto-implement/SKILL.md) | Carries out an instruction, optionally with an issue, plan or Jira/other ticket link (read-only); a leading agent with optional parallel implementers; a recording on `--recording`. | **Yes:** once at the end, after the feature works; adds flow tests for gaps; `quick`/`standard`/`thorough`. | Commits (no push/PR) and a summary in chat |
+| [raven-auto-plan](skills/raven-auto-plan/SKILL.md) | Unattended variant of raven-plan: decides instead of asking, records agent decisions; blocks the issue only on an irreversible or contradicting decision. | Plans; does not write. | `context/changes/<id>/plan.md` |
 | [raven-browser](skills/raven-browser/SKILL.md) | Drives the browser (by default a separate Playwright CLI session) for other skills. | Ad hoc scenarios; does not replace durable E2E. | Observations, screenshots, logs |
 | [raven-create-skill](skills/raven-create-skill/SKILL.md) | Designs and changes Raven skills with an independent review. | Doctor, repo tests, behavior forward-test. | Skill package in this repo |
 | [raven-github-setup](skills/raven-github-setup/SKILL.md) | Repo, enabled Issues, in-progress/blocked labels; a Project on request. | Not applicable. | GitHub configuration |
