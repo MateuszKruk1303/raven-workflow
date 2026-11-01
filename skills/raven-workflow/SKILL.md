@@ -32,4 +32,4 @@ When asked about the state of some work, read the issue (state, assignee), branc
 
 ## Tools
 
-[raven-issue-update](../raven-issue-update/SKILL.md) adds a requirement to an existing issue. [raven-browser](../raven-browser/SKILL.md) drives the browser for other skills. [raven-lesson](../raven-lesson/SKILL.md) records a recurring rule on request. [raven-create-skill](../raven-create-skill/SKILL.md) extends Raven.
+[raven-issue-update](../raven-issue-update/SKILL.md) adds a requirement to an existing issue. [raven-prepare-env](../raven-prepare-env/SKILL.md) prepares an isolated checkout (worktree, ports, Compose project, database) before a task when other checkouts run in parallel, and cleans it up afterwards. [raven-browser](../raven-browser/SKILL.md) drives the browser for other skills. [raven-lesson](../raven-lesson/SKILL.md) records a recurring rule on request. [raven-create-skill](../raven-create-skill/SKILL.md) extends Raven.
