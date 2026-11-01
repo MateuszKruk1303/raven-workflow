@@ -145,6 +145,19 @@ Or straight from one ticket, without a GH issue:
 
 The agent reads the ticket through an available connector or CLI (or asks you to paste it) and never writes to Jira.
 
+### Parallel tasks
+
+Several tasks in one repo at the same time, each in its own checkout.
+
+```text
+/raven-prepare-env #42               worktree (or stash and work here), own ports, Compose project and database — after your acceptance
+cd .claude/worktrees/<branch> && claude
+/raven-auto-implement #42            then the "Task from an issue" pattern, in that checkout
+/raven-prepare-env cleanup <branch>  after merge: worktree, containers, volume and branch removed
+```
+
+The first run writes a machine-local environment recipe (`<git common dir>/raven/environment.md`, outside Git) that later runs and `raven-auto-implement` reuse. A collision that only a tracked-file change would fix is reported with the proposed change; you decide.
+
 ## Raven skills — which one to use and when
 
 Install in a project: `npx skills add MateuszKruk1303/raven-workflow`, update: `npx skills update -p -y`.
@@ -166,7 +179,8 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | | _"I remembered one more requirement."_ | [`raven-issue-update`](skills/raven-issue-update/SKILL.md) | The requirement woven into the body and AC of an existing issue. |
 | **4. Entering unknown code** | _"I got someone else's repo and don't know what's where."_ | [`raven-repo-map`](skills/raven-repo-map/SKILL.md) | Areas, dependencies, history, risks — a report with evidence. |
 | | _"I need to know how this really works."_ | [`raven-research`](skills/raven-research/SKILL.md) | An answer with evidence, options and gaps in `context/changes/<id>/research.md`. |
-| **5. Doing a change** | _"The task is risky, the agent can't guess."_ | [`raven-plan`](skills/raven-plan/SKILL.md) | A plan of one change in the real code; plan review on request. |
+| **5. Doing a change** | _"Another task is already running in this repo."_ | [`raven-prepare-env`](skills/raven-prepare-env/SKILL.md) | A checkout of its own (new worktree or stash and work here) with its own ports, Compose project and database, after your acceptance; a machine-local recipe reused next time; cleanup on request. |
+| | _"The task is risky, the agent can't guess."_ | [`raven-plan`](skills/raven-plan/SKILL.md) | A plan of one change in the real code; plan review on request. |
 | | _"Plan it without me, I'll review the decisions later."_ | [`raven-auto-plan`](skills/raven-auto-plan/SKILL.md) | The same plan as `raven-plan`, without questions: recommended options taken and listed as agent decisions; stops only on an irreversible or contradicting one. |
 | | _"Deliver these issues overnight, I'll review the decisions tomorrow."_ | [`raven-auto-loop`](skills/raven-auto-loop/SKILL.md) | Per ready issue a fresh agent: `raven-auto-plan` → `raven-auto-implement` → `raven-pr`; the loop merges and moves on; blocked issues are set aside. |
 | | _"Just do it — and prove it works."_ / _"Here's the Jira link, go."_ | [`raven-auto-implement`](skills/raven-auto-implement/SKILL.md) | Instruction, issue or ticket link; commits, `quick`/`standard`/`thorough` verification, acceptance instructions in chat. |
@@ -200,6 +214,7 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | [raven-medusa-ecommerce-init](skills/raven-medusa-ecommerce-init/SKILL.md) | Local Medusa + Next.js starter: database, Redis, migrations, seed, admin, storefront. | Checks startup and the basic purchase flow. | Working local monorepo |
 | [raven-merge](skills/raven-merge/SKILL.md) | Merge after green CI of the exact head, then closing the GitHub issue (if any). | Reads the CI result. | Merged PR, closed issue (if any) |
 | [raven-plan](skills/raven-plan/SKILL.md) | Plan of one outcome in the real code, from an issue or Jira/other ticket; optional plan review by a fresh agent. | Plans; does not write. | `context/changes/<id>/plan.md` |
+| [raven-prepare-env](skills/raven-prepare-env/SKILL.md) | Isolated checkout for a task next to parallel ones: worktree or stash, own ports, Compose project and database after acceptance; cleanup of a finished worktree. | Checks the app and database start in the checkout. | Ready worktree, env files, recipe in `<git common dir>/raven/environment.md` |
 | [raven-pr](skills/raven-pr/SKILL.md) | Push and create or update the PR linked to the issue or ticket, with a "Verification" section. | Does not run; describes the checks actually done. | PR |
 | [raven-prd](skills/raven-prd/SKILL.md) | PRD from shape notes or raw findings. | Does not write; defines behaviors to verify. | `context/foundation/prd.md` |
 | [raven-repo-map](skills/raven-repo-map/SKILL.md) | Map of an existing repo: areas, dependencies, history, risks. | Does not write. | `context/foundation/repo-map.md` |

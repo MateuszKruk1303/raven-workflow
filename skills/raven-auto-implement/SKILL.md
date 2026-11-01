@@ -23,7 +23,7 @@ Carry out the user's instruction and prove the change works to a degree matching
 
 ## Order of work
 
-1. **Start.** Pick the level. Start the long-running tools in the background: the dev server (at `standard` and `thorough`) and the typecheck in watch mode, when the project has one. Read their output instead of rerunning the commands. Send independent reads and commands as parallel tool calls.
+1. **Start.** Pick the level. Start the long-running tools in the background: the dev server (at `standard` and `thorough`) and the typecheck in watch mode, when the project has one. When this checkout was prepared by [raven-prepare-env](../raven-prepare-env/SKILL.md#recipe) (its env files set the recipe's isolation variables), start the services by the recipe with those ports; leave running the Compose services you did not start. Read their output instead of rerunning the commands. Send independent reads and commands as parallel tool calls.
 2. **Contract first.** When the change crosses layers or will be split, write the shared types and interface signatures (API procedures, endpoints, props) with stubs, and check that they compile. From here the parts that depend only on the contract can proceed independently.
 3. **Implementation.** Work alone or spawn implementers per [parallel implementers](references/parallel.md). While building, rely on the background typecheck and quick local runs; do not run test suites yet.
 4. **See it work.** After integration, check the whole changed behavior once per the level (below).
