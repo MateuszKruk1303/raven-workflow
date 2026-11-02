@@ -1,6 +1,6 @@
 # Issue template
 
-The issue holds what to achieve and the business rules, never how to build it. Every technical decision (technology, vendor, architecture, contracts, data, events, tests, CI) belongs to the plan made with `raven-plan`. Translate the headings when the issue is written in another language; delete empty optional sections.
+The issue holds what to achieve and the business rules, never how to build it. Every technical decision (technology, vendor, architecture, contracts, data, events, tests, CI) belongs to the plan made with `raven-plan`. Translate the headings when the issue is written in another language; delete empty optional sections. Keep it short.
 
 ````markdown
 ## Outcome
@@ -13,7 +13,7 @@ The issue holds what to achieve and the business rules, never how to build it. E
 <behaviors included>
 
 ## Out of scope
-<behaviors excluded, including rules the user consciously left unhandled>
+<behaviors the source or the user excluded, including rules the user consciously left unhandled>
 
 ## Acceptance criteria
 - [ ] <observable behavior from the customer, admin or shop perspective: situation → what happens → what they see>
@@ -22,7 +22,7 @@ The issue holds what to achieve and the business rules, never how to build it. E
 - <business rule the user could not answer yet; raven-plan settles it with the user>
 
 ## Dependencies
-<issues that must be delivered first, or "none">
+<issues that must be delivered first, one `#N` per line (also set as "blocked by" relations), or "none">
 
 ## Sources
 - <PRD section, Jira ticket with ID and update date, user's description>
@@ -35,9 +35,11 @@ The issue holds what to achieve and the business rules, never how to build it. E
 - Code-level names (identifiers) of libraries, packages, versions, files, paths, endpoints, events, workflows, hooks, tables or fields. Domain words such as "order placed" or "delivery address" are fine.
 - A technology or vendor choice, except one of the two Sources lines above: a hint from the user or a decision their source already records.
 - Tests, lint, CI, build or migrations as acceptance criteria. They live in the plan's Verification.
-- An "Assumptions" section or any business rule the agent made up. A rule nobody settled goes to Out of scope or Open questions.
+- An "Assumptions" section or any business rule the agent made up. A rule nobody settled goes to Open questions; to Out of scope only when the user chose to leave it unhandled.
+- A scope item, exclusion or acceptance criterion the agent derived without the user agreeing to it (extra edge cases, message wording, admin views). Ask about it or leave it out.
 - Technical findings from reading the code. The code only prevents duplicates, conflicts and wrong dependencies.
 
 ## Check every sentence
 
-Would this sentence still be true if the change were built a different way (another library, module, data model or vendor)? If not, it does not belong in the issue: cut it, or rephrase it as the behavior the user observes.
+1. Would this sentence still be true if the change were built a different way (another library, module, data model or vendor)? If not, it does not belong in the issue: cut it, or rephrase it as the behavior the user observes.
+2. Can you point to where the source or the user said it? If not, cut it, or ask the user before writing. Answers given in the interview count.

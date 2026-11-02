@@ -12,6 +12,8 @@ The roadmap is GitHub Issues in the established repo: one issue = one independen
 
 An issue is business-only: outcome, business rules, scope and behavioral AC per the [issue template](references/issue-template.md). Every technical decision is made later in [raven-plan](../raven-plan/SKILL.md), together with the user. A business rule is the user's to settle; never assume one.
 
+Every sentence of an issue traces to the source or to the user's answer. Content you derived yourself (an extra edge case, a message wording, an admin view, an exclusion) is left out, or asked about in the interview only when it changes scope or an acceptance criterion. A short issue with only agreed content beats a complete one with additions the user never settled.
+
 ## Source
 
 - **PRD** (`context/foundation/prd.md` or a given document): cover the whole agreed PRD — every requirement has its change, evidence of earlier delivery or an explicit deferral.
@@ -37,11 +39,11 @@ Ask only about business rules, for example:
 - edge cases: return, cancellation, partial refund, negative balance;
 - what the customer sees and what the admin sees.
 
-Keep it proportionate: do not ask what the source already states unambiguously, and group at most 4 questions per round, asking first the rules that change scope or that other answers depend on. Stop when every rule that changes scope or an AC is answered or placed in Out of scope or Open questions, or when the user asks to stop; remaining unknowns go to Open questions. Never ask about technology, architecture or implementation. When the user does not know an answer or declines to decide, the rule goes to Out of scope as consciously unhandled or to the issue's Open questions — never into an assumption made by the agent.
+Keep it proportionate: do not ask what the source already states unambiguously, and group at most 4 questions per round, asking first the rules that change scope or that other answers depend on. Stop when every rule that changes scope or an AC is answered, placed in Open questions or left out of scope by the user, or when the user asks to stop; remaining unknowns go to Open questions. Never ask about technology, architecture or implementation. When the user does not know an answer or declines to decide, the rule goes to Out of scope as consciously unhandled or to the issue's Open questions — never into an assumption made by the agent.
 
 ## Split
 
-Split into vertical outcomes (UI, API, data and validation together), not layers or phases; the issue describes that outcome as behavior, without naming the layers. The dependency graph is acyclic. Briefly justify a larger inseparable scope. Do an ordinary split of a PRD or Jira scope yourself; changing requirements or priorities needs the user's decision.
+Split into vertical outcomes (UI, API, data and validation together), not layers or phases; the issue describes that outcome as behavior, without naming the layers. The dependency graph is acyclic. Briefly justify a larger inseparable scope. Propose the split of a PRD or Jira scope yourself after the business interview, then show it to the user (issue titles, one-line outcomes, dependencies and any PRD requirement you propose to defer) and write only after they accept it; on a refresh show only the added and changed issues; changing requirements or priorities needs the user's decision.
 
 **Task description: the user chooses the granularity.** After the business interview and before writing, present three split proposals through `AskUserQuestion` (one question, a `preview` per option):
 
@@ -55,6 +57,22 @@ Each option lists its issues (title and one-line outcome) with dependencies, and
 
 Write every issue per the [issue template](references/issue-template.md) and run its sentence check before creating it. Before creating, check existing issues in scope to avoid duplicates (also after a timeout). New issues join the existing queue: follow its title and numbering convention, link dependencies on open and delivered issues, and state where they fall in the order. When refreshing, update only the differences, preserving people's text, assignees and statuses; show added/changed/unchanged/out-of-scope. Do not rewrite existing issues to the template on the side. Do not set In progress or close issues while building the queue. Read the issues back after writing. Without GitHub access, give the proposal in chat and name the write that was not performed.
 
+### Dependencies on GitHub
+
+Every dependency in an issue's Dependencies section is also set as a native GitHub "blocked by" relation, so GitHub shows the issue as blocked until the blocker is closed. Create issues in dependency order, then link each one (`gh issue` has no flag for it; use the REST API):
+
+```bash
+id=$(gh api repos/<owner>/<repo>/issues/<blocker> --jq .id)   # numeric id, not the number
+gh api -X POST repos/<owner>/<repo>/issues/<blocked>/dependencies/blocked_by -F issue_id="$id"
+gh api repos/<owner>/<repo>/issues/<blocked>/dependencies/blocked_by --jq '.[].number'   # read back
+gh api -X DELETE repos/<owner>/<repo>/issues/<blocked>/dependencies/blocked_by/<blocker id>   # remove
+```
+
+- A relation to a delivered (closed) issue does not block, but records the order.
+- On a refresh, add missing relations for the issues you write. Remove a relation only for a dependency the user agreed to drop; keep relations people set themselves, and name any that contradict the Dependencies section instead of changing them.
+- Do not use the `blocked` label for dependencies: it means the issue waits for a user decision and is removed by hand.
+- When the API refuses (e.g. a GitHub Enterprise Server without issue dependencies), keep the Dependencies section and name the relations not set.
+
 ## Final message
 
-In chat: links to the issues, order and dependencies, open business questions, the first change ready for work, gaps. Do not create plans for all changes or start implementation.
+In chat: links to the issues, order and dependencies (with relations not set on GitHub, if any), open business questions, the first change ready for work, gaps. Do not create plans for all changes or start implementation.
