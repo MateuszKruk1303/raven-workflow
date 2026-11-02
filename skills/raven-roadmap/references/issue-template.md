@@ -30,6 +30,18 @@ The issue holds what to achieve and the business rules, never how to build it. E
 - Technical decision recorded in <source and section>: <one line, only if the user's PRD, ticket or decision record already settles it, e.g. an approved vendor>
 ````
 
+## Epic
+
+An epic holds only what its issues deliver together; business rules, scope and AC stay in the issues. Its sub-issues are attached on GitHub, not listed in the body.
+
+```markdown
+## Outcome
+<what the group of outcomes gives the customer, admin or business, one or two sentences>
+
+## Sources
+- <PRD section, Jira epic with ID and update date, user's description>
+```
+
 ## Never in the issue body
 
 - Code-level names (identifiers) of libraries, packages, versions, files, paths, endpoints, events, workflows, hooks, tables or fields. Domain words such as "order placed" or "delivery address" are fine.
