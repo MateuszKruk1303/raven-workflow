@@ -26,6 +26,7 @@ The issue holds what to achieve and the business rules, never how to build it. E
 
 ## Sources
 - <PRD section, Jira ticket with ID and update date, user's description>
+- Prototype: flow <flow name>, accepted <date> (only when an accepted prototype shows this outcome)
 - Client's technical hint, to settle in the plan: <hint given by the user, verbatim and only if they gave one>
 - Technical decision recorded in <source and section>: <one line, only if the user's PRD, ticket or decision record already settles it, e.g. an approved vendor>
 ````

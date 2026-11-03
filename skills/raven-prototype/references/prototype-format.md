@@ -39,16 +39,13 @@ A feature from an issue adds a flow folder or extends an existing one, and gets 
 - <destinations shown as stubs and why>
 
 ## Client feedback
-- <date>: <remark> → <PRD | issue #N | listed for the ticket | open>
-
-## Issues
-- <issues delivering this flow, once they exist>
+- <date>: <remark> → <PRD section | issue #N | listed for the ticket | open>
 
 ## Check
 - <date>: passed | failed | not checked — <what was walked, what was not>
 ```
 
-Leave out sections with nothing to say. Rules keep their source's meaning; a rule that exists only here is an open question, not a decision.
+Leave out sections with nothing to say. Rules keep their source's meaning. A rule settled only here is pending transfer to the PRD or an issue; later skills confirm it rather than treat it as settled. Issues point back to the flow from their Sources (`Prototype: flow <name>, accepted <date>`), so `notes.md` keeps no issue list.
 
 ## Building a flow
 
@@ -59,4 +56,4 @@ Leave out sections with nothing to say. Rules keep their source's meaning; a rul
 - **States the flow needs.** Validation errors with correction and resubmission, empty, loading, failure and recovery where the source implies them. State switches may sit in a small labeled "Test states" panel. Do not invent business policy to fill a state.
 - **Variants for open questions.** A labeled switch between the alternatives, each consistent through the whole flow.
 - **Honest boundaries.** A control outside the prototype leads to a stub saying so, with a way back; no active-looking control does nothing; no success screen stands in for an unbuilt required step. A part that would need custom work on the platform is labeled as such when known.
-- **Usable.** Real links and buttons, labeled form fields, visible focus, readable on a phone, browser back works between screens. Put any user-provided text into text nodes, not HTML strings.
+- **Usable.** Real links and buttons, labeled form fields, visible focus, readable on a phone. Screens switch by URL hash (`#cart`), so browser back works under `file://`, where `history.pushState` does not; an unknown hash leads back to the start. Put any user-provided text into text nodes, not HTML strings.
