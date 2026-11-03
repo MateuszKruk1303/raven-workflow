@@ -29,6 +29,9 @@ raven-shape          messy idea, notes, conversations → structured problem, au
 raven-prd            requirements and acceptance criteria
 │                    context/foundation/prd.md
 ▼
+raven-prototype      (optional) clickable flows the client walks through and accepts
+│                    context/prototypes/
+▼
 raven-architecture   cross-cutting decisions: data, integrations, auth, module boundaries
 │                    context/foundation/architecture.md
 ▼
@@ -169,6 +172,7 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | **0. I'm lost** | _"I don't know where I am or what's next."_ | [`raven-workflow`](skills/raven-workflow/SKILL.md) | The work stage from the issue, branch, commits and PR, and the next skill. Changes nothing. |
 | **1. I have an idea** | _"I have an idea, but it's still vague."_ | [`raven-shape`](skills/raven-shape/SKILL.md) | Problem, audience, MVP and rules in `shape-notes.md`. The conversation can be resumed. |
 | | _"I know what I want — make it a proper document."_ | [`raven-prd`](skills/raven-prd/SKILL.md) | `context/foundation/prd.md`: requirements, scope, exclusions. |
+| | _"I want the client to click through it before we build."_ | [`raven-prototype`](skills/raven-prototype/SKILL.md) | Clickable HTML flows in `context/prototypes/` from the PRD, an epic, issue, ticket, plan or prompt; rules, assumptions and client feedback in `notes.md`. |
 | **2. Laying foundations** | _"I want to make the big decisions consciously."_ | [`raven-architecture`](skills/raven-architecture/SKILL.md) | Options with trade-offs and a recommendation in `context/foundation/architecture.md`. |
 | | _"I want a working skeleton without manual gluing."_ | [`raven-init-stack`](skills/raven-init-stack/SKILL.md) | Better T Stack + local Postgres; decisions in `tech-stack.md`. |
 | | _"I'm building a Medusa shop and it has to run locally."_ | [`raven-medusa-ecommerce-init`](skills/raven-medusa-ecommerce-init/SKILL.md) | Medusa + Next.js monorepo: migrations, seed, admin, storefront. |
@@ -215,6 +219,7 @@ The skills are in the order they usually appear in work. No stage is mandatory �
 | [raven-merge](skills/raven-merge/SKILL.md) | Merge after green CI of the exact head, then closing the GitHub issue (if any). | Reads the CI result. | Merged PR, closed issue (if any) |
 | [raven-plan](skills/raven-plan/SKILL.md) | Plan of one outcome in the real code, from an issue or Jira/other ticket; optional plan review by a fresh agent. | Plans; does not write. | `context/changes/<id>/plan.md` |
 | [raven-prepare-env](skills/raven-prepare-env/SKILL.md) | Isolated checkout for a task next to parallel ones: worktree or stash, own ports, Compose project and database after acceptance; cleanup of a finished worktree. | Environment checks: healthy services, config pointing to this checkout, database and migrations, install and typecheck, app start, smoke requests. | Ready worktree, env files, recipe in `<git common dir>/raven/environment.md` |
+| [raven-prototype](skills/raven-prototype/SKILL.md) | Clickable prototype of a flow or the whole app for the client, on the project's design tokens, with simulated data; feedback routed to the PRD or issue. | Walks each flow in the browser; does not write product tests. | `context/prototypes/` |
 | [raven-pr](skills/raven-pr/SKILL.md) | Push and create or update the PR linked to the issue or ticket, with a "Verification" section. | Does not run; describes the checks actually done. | PR |
 | [raven-prd](skills/raven-prd/SKILL.md) | PRD from shape notes or raw findings. | Does not write; defines behaviors to verify. | `context/foundation/prd.md` |
 | [raven-repo-map](skills/raven-repo-map/SKILL.md) | Map of an existing repo: areas, dependencies, history, risks. | Does not write. | `context/foundation/repo-map.md` |

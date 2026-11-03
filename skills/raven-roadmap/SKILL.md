@@ -20,6 +20,8 @@ Every sentence of an issue traces to the source or to the user's answer. Content
 - **Jira** (keys, URL, sprint, epic): fetch descriptions, AC and relations only for that scope. A Jira epic or sprint is a container, not a change (a natural candidate for one GitHub epic); one ticket can be a change, a too-wide one gets split. The GH issue links the ticket (with ID and update date) without copying its text or status; it holds the business rules and behavioral AC in its own words, including the answers from the interview. Never write to Jira. A Jira Done status does not prove a merge.
 - **Task description** (text in the prompt): the user's description is the requirement; no PRD or Jira is needed. Cover only what it asks for; the user chooses the granularity of the split (below); quote it in Sources. Its gaps go into the business interview, never into assumptions. Read the PRD when it exists only to check the task does not contradict it.
 
+An accepted prototype in `context/prototypes/` (from [raven-prototype](../raven-prototype/SKILL.md)) shows how its flow should work: read its `notes.md` with the source. A rule that lives only there is a business question, not a source. After writing the issues, list those delivering a flow in its `notes.md` Issues section.
+
 Technical hints in the user's own words (e.g. "use the official plugin") do not enter the issue body; record each as one Sources line, `Client's technical hint, to settle in the plan: …`. Technical content of a PRD or ticket stays in that source; a technical decision the source already settles (e.g. an approved vendor) gets at most one Sources line pointing to it, per the template.
 
 ## Code

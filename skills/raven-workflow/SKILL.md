@@ -26,10 +26,10 @@ When asked about the state of some work, read the issue (state, assignee), branc
 
 ## Project setup
 
-**Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → [architecture](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) or [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [AGENTS.md + CLAUDE.md](../raven-md/SKILL.md), [CI](../raven-hooks/SKILL.md), [GitHub](../raven-github-setup/SKILL.md) → [roadmap](../raven-roadmap/SKILL.md).
+**Greenfield:** [shape](../raven-shape/SKILL.md) → [PRD](../raven-prd/SKILL.md) → optionally [prototype](../raven-prototype/SKILL.md) → [architecture](../raven-architecture/SKILL.md) → [stack](../raven-init-stack/SKILL.md) or [Medusa](../raven-medusa-ecommerce-init/SKILL.md) → [AGENTS.md + CLAUDE.md](../raven-md/SKILL.md), [CI](../raven-hooks/SKILL.md), [GitHub](../raven-github-setup/SKILL.md) → [roadmap](../raven-roadmap/SKILL.md).
 
 **Brownfield:** as needed [repo map](../raven-repo-map/SKILL.md), [research](../raven-research/SKILL.md) or [architecture](../raven-architecture/SKILL.md). A small known task needs none of them. Jira or a plain task description as the requirements source: [raven-roadmap](../raven-roadmap/SKILL.md).
 
 ## Tools
 
-[raven-issue-update](../raven-issue-update/SKILL.md) adds a requirement to an existing issue. [raven-prepare-env](../raven-prepare-env/SKILL.md) prepares an isolated checkout (worktree, ports, Compose project, database) before a task when other checkouts run in parallel, and cleans it up afterwards. [raven-browser](../raven-browser/SKILL.md) drives the browser for other skills. [raven-lesson](../raven-lesson/SKILL.md) records a recurring rule on request. [raven-create-skill](../raven-create-skill/SKILL.md) extends Raven.
+[raven-issue-update](../raven-issue-update/SKILL.md) adds a requirement to an existing issue. [raven-prepare-env](../raven-prepare-env/SKILL.md) prepares an isolated checkout (worktree, ports, Compose project, database) before a task when other checkouts run in parallel, and cleans it up afterwards. [raven-prototype](../raven-prototype/SKILL.md) builds clickable flows for the client to accept before they are built — after the PRD for the whole app, or for one epic, issue, ticket or plan. [raven-browser](../raven-browser/SKILL.md) drives the browser for other skills. [raven-lesson](../raven-lesson/SKILL.md) records a recurring rule on request. [raven-create-skill](../raven-create-skill/SKILL.md) extends Raven.
