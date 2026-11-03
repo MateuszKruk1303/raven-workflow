@@ -1,7 +1,7 @@
 ---
 name: raven-auto-loop
 description: "Deliver a given scope of GitHub issues unattended, one after another: for each ready issue a fresh agent runs raven-auto-plan, raven-auto-implement and raven-pr, then the loop merges the PR and moves on. Invoking it with a scope is consent to push and merge within that scope. Use only on an explicit request for an autonomous loop."
-argument-hint: "<#issues | #from..#to | milestone | label | all open> [— time limit]"
+argument-hint: "<#issues | #from..#to | epic #N | milestone | label | all open> [— time limit]"
 disable-model-invocation: true
 ---
 
@@ -11,13 +11,13 @@ Coordinate the delivery of a scope of issues without the user. You are the coord
 
 ## Scope and consent
 
-The argument sets the scope: explicit issues, a range, a milestone, a label or all open issues of the repo, optionally with a time limit. Without a scope, ask once and wait. Invoking the loop with a scope is the user's explicit instruction, for issues in that scope only, to take them up, push their branches, open PRs and merge them — what [raven-pr](../raven-pr/SKILL.md) and [raven-merge](../raven-merge/SKILL.md) require. It is not consent to change the queue: do not create, split, reorder or close issues other than by merging their PR.
+The argument sets the scope: explicit issues, a range, an epic (its open sub-issues), a milestone, a label or all open issues of the repo, optionally with a time limit. Without a scope, ask once and wait. Invoking the loop with a scope is the user's explicit instruction, for issues in that scope only, to take them up, push their branches, open PRs and merge them — what [raven-pr](../raven-pr/SKILL.md) and [raven-merge](../raven-merge/SKILL.md) require. It is not consent to change the queue: do not create, split, reorder or close issues other than by merging their PR.
 
 **Preflight**, once: note the start time (`date`); check `gh` access, the default branch and that the working tree is clean or holds only work of an `in-progress` issue in scope; make sure the `in-progress` and `blocked` labels exist (create the missing ones). Say in one line what will run and that an unattended run needs a permission mode in which git, `gh` and the project's commands do not prompt. Then continue without asking.
 
 ## The loop
 
-1. **Pick.** Check the time (`date`). Read the open issues in scope. An issue is ready when it has no `blocked` label and every issue in its Dependencies section and its GitHub "blocked by" relations (`gh api repos/<owner>/<repo>/issues/<n>/dependencies/blocked_by`; when the API does not offer them, the section alone) is closed; a dependency outside the scope that is still open leaves the issue not reached. Take an issue already `in-progress` first (resume), then the lowest-numbered ready one. Skip an issue whose branch `git worktree list` shows checked out in another worktree; it is worked on there, so report it as not reached. None ready → finish.
+1. **Pick.** Check the time (`date`). Read the open issues in scope. An epic (per [labels and epics](../raven-workflow/references/git-workflow.md#labels-and-epics)) is never picked; its sub-issues are. An issue is ready when it has no `blocked` label and every issue in its Dependencies section and its GitHub "blocked by" relations (`gh api repos/<owner>/<repo>/issues/<n>/dependencies/blocked_by`; when the API does not offer them, the section alone) is closed; a dependency outside the scope that is still open leaves the issue not reached. Take an issue already `in-progress` first (resume), then the lowest-numbered ready one. Skip an issue whose branch `git worktree list` shows checked out in another worktree; it is worked on there, so report it as not reached. None ready → finish.
 2. **Prepare.** New issue: `git switch <default>` and `git pull --ff-only`. Resumed issue: switch to its existing branch. An issue whose PR is already merged but which is still open is only closed (step 4 cleanup).
 3. **Delegate.** Spawn one fresh agent for the issue; it runs all three skills in one context, in order: `raven-auto-plan` (skip when the plan already exists), `raven-auto-implement` (skip to its final checks when the branch already holds the implementation), `raven-pr` (it updates an open PR). It reads their `SKILL.md` from the project's or the user's skills directory when the Skill tool cannot load them. Give it the repo path, the issue number, the consent above for push and PR of this issue, the reason of a previous failed attempt if any, and these rules:
    - Never ask the user and never merge. Choose the verification level yourself.
@@ -37,4 +37,4 @@ Do not force-push, use `--admin` or bypass protections, hooks or permission deni
 
 ## Final message
 
-In chat: merged PRs with their issues; agent decisions per issue, business ones first, for the user to confirm or move into the issue; blocked issues with their questions or failure reasons; issues in scope not reached and why; the local checkout (branch, clean or not).
+In chat: merged PRs with their issues; agent decisions per issue, business ones first, for the user to confirm or move into the issue; blocked issues with their questions or failure reasons; issues in scope not reached and why; epics whose sub-issues are now all closed, for the user to close; the local checkout (branch, clean or not).

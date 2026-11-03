@@ -30,7 +30,7 @@ A larger change is acceptable when a short factual justification names an insepa
 
 When asked to create or update the roadmap, propose the split of independent outcomes yourself and write only after the user accepts it; for a task description, `raven-roadmap` lets the user choose between low, medium and high granularity instead. Ask when a proposal changes requirements or priorities or defers required behavior; an ordinary sequence of dependent changes is not such a deferral. A request for the status or plan of a single issue does not authorize reorganizing the queue.
 
-Cover the whole agreed PRD: every requirement has an assigned outcome, evidence of earlier delivery, or an explicitly approved deferral. Describe every change per the business-only [issue template](../../raven-roadmap/references/issue-template.md); technical decisions belong to the plan, and details of future integrations are not settled now. Keep the dependency graph acyclic (DAG). Milestones are optional grouping; do not add epics or another mandatory hierarchy.
+Cover the whole agreed PRD: every requirement has an assigned outcome, evidence of earlier delivery, or an explicitly approved deferral. Describe every change per the business-only [issue template](../../raven-roadmap/references/issue-template.md); technical decisions belong to the plan, and details of future integrations are not settled now. Keep the dependency graph acyclic (DAG). Group related outcomes only into epics the user accepted, one level deep, as `raven-roadmap` describes; do not add another hierarchy or grouping by labels or milestones the repo does not already use.
 
 ## Planning one change
 

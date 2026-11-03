@@ -13,6 +13,11 @@ Work happens on tasks in GitHub Issues. The issue body holds only the business r
 - Preserve other people's changes in the working tree. Do not switch branches or update the base when they conflict; ask how to preserve them. No automatic stash, reset or commit of someone else's changes.
 - Commit logical steps following the project's convention.
 
+## Labels and epics
+
+- Raven's own labels are only `in-progress` (work taken up) and `blocked` (waits for a user decision); they may be created when missing. Use another label only when it already exists in the repo and the user or the repo's instructions call for it. Never create any other label without the user's explicit consent.
+- Grouping is done with epics, not labels or title prefixes. An epic is an issue with native GitHub sub-issues (`raven-roadmap` creates them); it groups outcomes and is never taken up itself: do not assign, plan or implement it or open a PR for it, and no dependency points at it. Detect one with `gh api repos/<owner>/<repo>/issues/<n> --jq .sub_issues_summary.total` (above 0). Given an epic, list its open sub-issues (`gh api --paginate 'repos/<owner>/<repo>/issues/<n>/sub_issues?per_page=100' --jq '.[] | select(.state=="open") | .number'`) and ask which one to take; an unattended skill stops and reports them instead. Only `raven-auto-loop` takes them as its scope.
+
 ## External ticket
 
 A Jira, Linear or similar ticket given to `raven-plan` or `raven-auto-implement` takes the place of the issue: the ticket is the specification, one ticket is one branch and one PR.
