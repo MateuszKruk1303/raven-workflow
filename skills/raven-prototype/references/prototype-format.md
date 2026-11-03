@@ -42,7 +42,7 @@ A feature from an issue adds a flow folder or extends an existing one, and gets 
 - <date>: <remark> → <PRD section | issue #N | listed for the ticket | open>
 
 ## Check
-- <date>: passed | failed | not checked — <what was walked, what was not>
+- <date>: passed | failed | not checked — <what was walked, defects found and fixed during the walk, what was not walked>
 ```
 
 Leave out sections with nothing to say. Rules keep their source's meaning. A rule settled only here is pending transfer to the PRD or an issue; later skills confirm it rather than treat it as settled. Issues point back to the flow from their Sources (`Prototype: flow <name>, accepted <date>`), so `notes.md` keeps no issue list.
