@@ -12,7 +12,7 @@ The plan gathers what the implementer needs to do the job well: outcome, settled
 
 ## Input
 
-Accept an issue, description, change ID or an existing plan. Read the issue body (outcome, business rules, scope, AC, open questions, Sources including the user's technical hints), the referenced sources and decisions, the accepted prototype in `context/prototypes/` that the issue's Sources name or whose `notes.md` Source names this issue, its epic or ticket (read `notes.md`; open its `index.html` only for UI states; the issue body wins, and a difference is a business question) and `context/foundation/lessons.md` if present. An epic is not planned; handle it per [labels and epics](../raven-workflow/references/git-workflow.md#labels-and-epics). Otherwise, for a new issue, assign yourself, set `in-progress` and create a branch per [working on GitHub tasks](../raven-workflow/references/git-workflow.md). A request to plan one change does not authorize reorganizing the queue.
+Accept an issue, description, change ID or an existing plan. Read the issue body (outcome, business rules, scope, AC, open questions, Sources including the user's technical hints), the referenced sources and decisions, the accepted prototype in `context/prototypes/` that the issue's Sources name or whose `notes.md` Source names this issue, its epic or ticket (read `notes.md`; open its `index.html` only for UI states; the issue body wins, and a difference is a business question) and `context/foundation/lessons.md` if present. An epic is not planned; handle it per [labels and epics](../raven-workflow/references/git-workflow.md#labels-and-epics). Otherwise, for a new issue, assign yourself, set `in-progress` and create a branch per [working on GitHub tasks](../raven-workflow/references/git-workflow.md); the issue number is the change ID. A request to plan one change does not authorize reorganizing the queue.
 
 An external ticket link or key is the requirements source: read it, find or create its branch per the [external ticket](../raven-workflow/references/git-workflow.md#external-ticket) rules (read-only, no GitHub issue) and use the key as the change ID. Gaps and contradictions in the ticket go into the planning questions; the answers go into the plan, not the ticket.
 
@@ -41,6 +41,10 @@ Run it when the user asks, or when the plan touches a costly or hard-to-reverse 
 Every finding has a severity (critical/warning/suggestion), location, impact and recommendation. The result ends with its limits: what was examined, what was not checked or lacked evidence.
 
 Fix confirmed findings within the agreed boundaries yourself in one round; a change of requirements or scope goes back to the user. Give the review result in chat, without a separate file. Without the ability to launch a fresh subagent, report the missing review; self-assessment is not a review.
+
+## Commit
+
+After the plan and any review fixes are written, commit only `context/changes/<id>/plan.md` on the change's branch following the project's commit convention (e.g. `docs: plan for #12`), so the plan travels with its branch and does not leak into another change. Skip the commit when the project instructions say not to commit plans. No push.
 
 ## Final message
 
